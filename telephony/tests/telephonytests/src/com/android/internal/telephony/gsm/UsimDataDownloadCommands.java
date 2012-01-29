@@ -609,6 +609,5 @@ class UsimDataDownloadCommands extends BaseCommands {
     public void requestIsimAuthentication(String nonce, Message response) {
     }
 
-    @Override
     public boolean needsOldRilFeature(String feature) { return false; }
 }
