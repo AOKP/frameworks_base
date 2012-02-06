@@ -377,19 +377,19 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
         mCarrier.setTextColor(0xffffffff);
 
         // until we get an update...
-	// Changing - ICS doesnt have LocksScreen.getCarrierString
-    	android.telephony.TelephonyManager manager = (android.telephony.TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
-	String carrierName = manager.getNetworkOperatorName() + " - " + manager.getSimOperatorName() ;
-	
+        // Changing - ICS doesnt have LocksScreen.getCarrierString
+        android.telephony.TelephonyManager manager = (android.telephony.TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        String carrierName = manager.getNetworkOperatorName() + " - " + manager.getSimOperatorName() ;
+
         mCarrier.setText( carrierName );
                /** LockScreen.getCarrierString(
                         mUpdateMonitor.getTelephonyPlmn(),
                         mUpdateMonitor.getTelephonySpn()); **/
-		
+
     }
 
     private void refreshEmergencyButtonText() {
-    	android.telephony.TelephonyManager manager = (android.telephony.TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        android.telephony.TelephonyManager manager = (android.telephony.TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
 
         mLockPatternUtils.updateEmergencyCallButtonState(mEmergencyAlone,manager.getCallState(), true);
         mLockPatternUtils.updateEmergencyCallButtonState(mEmergencyTogether,manager.getCallState(), true);
@@ -537,8 +537,8 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
 
     /** {@inheritDoc} */
     public void onRefreshCarrierInfo(CharSequence plmn, CharSequence spn) {
-    	android.telephony.TelephonyManager manager = (android.telephony.TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
-	String carrierName = manager.getNetworkOperatorName() + " - " + manager.getSimOperatorName() ;
+        android.telephony.TelephonyManager manager = (android.telephony.TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
+        String carrierName = manager.getNetworkOperatorName() + " - " + manager.getSimOperatorName() ;
         mCarrier.setText(carrierName);
         //mCarrier.setText(LockScreen.getCarrierString(plmn, spn));
     }
@@ -627,13 +627,19 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
                 m_bSendDelayedCancel = true;
             } else {
                 if (DEBUG) Log.d(TAG,"onPause send cancel");
-                if (!m_bCancelHasBeenSent)
-                {
+                //if (!m_bCancelHasBeenSent)
+                //{
                     GfxEngineRelayService.queueEvent("#cancel");
                     m_bCancelHasBeenSent = true;
-                }
+                //}
             }
         }
+        
+         // Finally interrupt the thread
+         if (mExecutionThread != null) 
+            mExecutionThread.interrupt();
+            Log.w (TAG, "onPause: Verified GfxEngine thread exited");
+            mUpdateMonitor.removeCallback(this);
     }
 
     private void resumeViews() {
@@ -734,6 +740,7 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
             if (!m_bAttemptLockout)
             {
                 mExecutionThread.start();
+                m_bGfxEngineAttached = true;
             }
             else
             {
@@ -751,14 +758,20 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
                 m_bSendDelayedCancel = true;
             } else {
                 if (DEBUG) Log.d(TAG,"cleanUp send cancel");
-                if (!m_bCancelHasBeenSent)
-                {
+               // if (!m_bCancelHasBeenSent)
+               // {
                     GfxEngineRelayService.queueEvent("#cancel");
                     m_bCancelHasBeenSent = true;
-                }
+                //}
             }
+            
         }
-
+        // Finally interrupt the thread
+        if (mExecutionThread != null) {
+            Log.d(TAG,"cleanUp interrupting thread");
+            
+            mExecutionThread.interrupt();
+        }
         // must make sure that the verify runner has terminated.
         while (mExecutionThread != null && mExecutionThread.isAlive()) {
             try {
@@ -770,7 +783,7 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
                 e.printStackTrace();
             }
         }
-
+        Log.w (TAG, "cleanUp: Verified GfxEngine thread exited");
         mUpdateMonitor.removeCallback(this);
     }
 
@@ -944,7 +957,13 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
                     // Give other tasks a chance.
                     Thread.sleep(10);
                 }
-            } catch (Exception e) {
+            } catch (InterruptedException ie) {
+                // Terminate thread silently
+                try{
+                    iResult = AM_STATUS.getDeclaredField("eAM_STATUS_USER_CANCELED").getInt(AM_STATUS);
+                    } catch (Exception e) {  e.printStackTrace();}
+                Log.w (TAG, "VerifyRunner: Caught InterruptedException in run() - " + ie.toString() );
+                } catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
