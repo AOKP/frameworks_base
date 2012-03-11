@@ -310,7 +310,9 @@ public class CDMAPhone extends PhoneBase {
     }
 
     public void setMute(boolean muted) {
-        mCT.setMute(muted);
+        if (mCT != null) {
+            mCT.setMute(muted);
+        }
     }
 
     public boolean getMute() {
