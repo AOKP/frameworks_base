@@ -30,4 +30,12 @@ LOCAL_STATIC_LIBRARIES := \
 
 LOCAL_MODULE:= libaudioflinger
 
+ifeq ($(BOARD_USE_MOTO_DOCK_HACK),true)
+   LOCAL_CFLAGS += -DMOTO_DOCK_HACK
+endif
+
+ifeq ($(ARCH_ARM_HAVE_NEON),true)	
+   LOCAL_CFLAGS += -D__ARM_HAVE_NEON
+endif
+
 include $(BUILD_SHARED_LIBRARY)
