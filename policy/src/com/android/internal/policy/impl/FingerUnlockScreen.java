@@ -20,6 +20,7 @@ import dalvik.system.DexClassLoader;
 
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.CountDownTimer;
@@ -221,8 +222,8 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
     }
 
     private AuthentecLoader loader = null;
-    private Class AM_STATUS = null;
-    private Class TSM = null;
+    private Class<?> AM_STATUS = null;
+    private Class<?> TSM = null;
 
     /**
      * @param context The context.
@@ -528,6 +529,13 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
         mPluggedIn = pluggedIn;
         mBatteryLevel = batteryLevel;
         updateStatusLines();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void onRefreshCalendarInfo()
+    {
+       // BS Placeholder
     }
 
     /** {@inheritDoc} */
@@ -913,7 +921,7 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
                     }
 
                     //iResult = TSM.LAP(m_Context).waitForUI().verify().exec();
-                    Class partTypes[] = new Class[1];
+                    Class<?> partTypes[] = new Class[1];
                     Object argList[] = new Object[1];
 
                     partTypes[0] = Context.class;
@@ -1444,5 +1452,11 @@ class FingerUnlockScreen extends LinearLayoutWithDefaultTouchRecepient
     public void onPhoneStateChanged(int PhoneState)
     {
     	// BS Placeholder
+    }
+
+    @Override
+    public void onRefreshWeatherInfo(Intent weatherIntent) {
+        // TODO Auto-generated method stub
+        
     }
 }
