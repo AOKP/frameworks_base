@@ -4027,6 +4027,8 @@ package android.app.admin {
     field public static final java.lang.String ACTION_ADD_DEVICE_ADMIN = "android.app.action.ADD_DEVICE_ADMIN";
     field public static final java.lang.String ACTION_SET_NEW_PASSWORD = "android.app.action.SET_NEW_PASSWORD";
     field public static final java.lang.String ACTION_START_ENCRYPTION = "android.app.action.START_ENCRYPTION";
+    field public static final int DISABLE_FINGER_LOCK = 4097; // 0x1001
+    field public static final int ENABLE_FINGER_LOCK = 4096; // 0x1000
     field public static final int ENCRYPTION_STATUS_ACTIVATING = 2; // 0x2
     field public static final int ENCRYPTION_STATUS_ACTIVE = 3; // 0x3
     field public static final int ENCRYPTION_STATUS_INACTIVE = 1; // 0x1
@@ -4037,6 +4039,7 @@ package android.app.admin {
     field public static final int PASSWORD_QUALITY_ALPHANUMERIC = 327680; // 0x50000
     field public static final int PASSWORD_QUALITY_BIOMETRIC_WEAK = 32768; // 0x8000
     field public static final int PASSWORD_QUALITY_COMPLEX = 393216; // 0x60000
+    field public static final int PASSWORD_QUALITY_FINGER = 393215; // 0x5ffff
     field public static final int PASSWORD_QUALITY_NUMERIC = 131072; // 0x20000
     field public static final int PASSWORD_QUALITY_SOMETHING = 65536; // 0x10000
     field public static final int PASSWORD_QUALITY_UNSPECIFIED = 0; // 0x0
@@ -5537,6 +5540,7 @@ package android.content {
     field public static final java.lang.String CATEGORY_SELECTED_ALTERNATIVE = "android.intent.category.SELECTED_ALTERNATIVE";
     field public static final java.lang.String CATEGORY_TAB = "android.intent.category.TAB";
     field public static final java.lang.String CATEGORY_TEST = "android.intent.category.TEST";
+    field public static final java.lang.String CATEGORY_TF101_KB_DOCK = "android.intent.category.TF101_KB_DOCK";
     field public static final java.lang.String CATEGORY_UNIT_TEST = "android.intent.category.UNIT_TEST";
     field public static final android.os.Parcelable.Creator CREATOR;
     field public static final java.lang.String EXTRA_ALARM_COUNT = "android.intent.extra.ALARM_COUNT";
@@ -5554,6 +5558,7 @@ package android.content {
     field public static final int EXTRA_DOCK_STATE_DESK = 1; // 0x1
     field public static final int EXTRA_DOCK_STATE_HE_DESK = 4; // 0x4
     field public static final int EXTRA_DOCK_STATE_LE_DESK = 3; // 0x3
+    field public static final int EXTRA_DOCK_STATE_TF101_KB = 10; // 0xa
     field public static final int EXTRA_DOCK_STATE_UNDOCKED = 0; // 0x0
     field public static final java.lang.String EXTRA_DONT_KILL_APP = "android.intent.extra.DONT_KILL_APP";
     field public static final java.lang.String EXTRA_EMAIL = "android.intent.extra.EMAIL";
@@ -6269,6 +6274,8 @@ package android.content.pm {
     field public static final java.lang.String FEATURE_TELEPHONY = "android.hardware.telephony";
     field public static final java.lang.String FEATURE_TELEPHONY_CDMA = "android.hardware.telephony.cdma";
     field public static final java.lang.String FEATURE_TELEPHONY_GSM = "android.hardware.telephony.gsm";
+    field public static final java.lang.String FEATURE_TF101_HALL_SENSOR = "aokp.hardware.hall_sensor";
+    field public static final java.lang.String FEATURE_TF101_KB_DOCK = "aokp.hardware.dock";
     field public static final java.lang.String FEATURE_TOUCHSCREEN = "android.hardware.touchscreen";
     field public static final java.lang.String FEATURE_TOUCHSCREEN_MULTITOUCH = "android.hardware.touchscreen.multitouch";
     field public static final java.lang.String FEATURE_TOUCHSCREEN_MULTITOUCH_DISTINCT = "android.hardware.touchscreen.multitouch.distinct";
@@ -22212,8 +22219,12 @@ package android.view {
     field public static final int KEYCODE_B = 30; // 0x1e
     field public static final int KEYCODE_BACK = 4; // 0x4
     field public static final int KEYCODE_BACKSLASH = 73; // 0x49
+    field public static final int KEYCODE_BLUETOOTH = 221; // 0xdd
     field public static final int KEYCODE_BOOKMARK = 174; // 0xae
     field public static final int KEYCODE_BREAK = 121; // 0x79
+    field public static final int KEYCODE_BRIGHTNESS_AUTO = 225; // 0xe1
+    field public static final int KEYCODE_BRIGHTNESS_DOWN = 224; // 0xe0
+    field public static final int KEYCODE_BRIGHTNESS_UP = 223; // 0xdf
     field public static final int KEYCODE_BUTTON_1 = 188; // 0xbc
     field public static final int KEYCODE_BUTTON_10 = 197; // 0xc5
     field public static final int KEYCODE_BUTTON_11 = 198; // 0xc6
@@ -22252,6 +22263,7 @@ package android.view {
     field public static final int KEYCODE_CAMERA = 27; // 0x1b
     field public static final int KEYCODE_CAPS_LOCK = 115; // 0x73
     field public static final int KEYCODE_CAPTIONS = 175; // 0xaf
+    field public static final int KEYCODE_CAPTURE = 226; // 0xe2
     field public static final int KEYCODE_CHANNEL_DOWN = 167; // 0xa7
     field public static final int KEYCODE_CHANNEL_UP = 166; // 0xa6
     field public static final int KEYCODE_CLEAR = 28; // 0x1c
@@ -22268,11 +22280,14 @@ package android.view {
     field public static final int KEYCODE_DPAD_UP = 19; // 0x13
     field public static final int KEYCODE_DVR = 173; // 0xad
     field public static final int KEYCODE_E = 33; // 0x21
+    field public static final int KEYCODE_EISU = 212; // 0xd4
     field public static final int KEYCODE_ENDCALL = 6; // 0x6
     field public static final int KEYCODE_ENTER = 66; // 0x42
     field public static final int KEYCODE_ENVELOPE = 65; // 0x41
     field public static final int KEYCODE_EQUALS = 70; // 0x46
     field public static final int KEYCODE_ESCAPE = 111; // 0x6f
+    field public static final int KEYCODE_EUROPE_1 = 217; // 0xd9
+    field public static final int KEYCODE_EUROPE_2 = 218; // 0xda
     field public static final int KEYCODE_EXPLORER = 64; // 0x40
     field public static final int KEYCODE_F = 34; // 0x22
     field public static final int KEYCODE_F1 = 131; // 0x83
@@ -22295,7 +22310,10 @@ package android.view {
     field public static final int KEYCODE_GRAVE = 68; // 0x44
     field public static final int KEYCODE_GUIDE = 172; // 0xac
     field public static final int KEYCODE_H = 36; // 0x24
+    field public static final int KEYCODE_HANKAKU_ZENKAKU = 211; // 0xd3
     field public static final int KEYCODE_HEADSETHOOK = 79; // 0x4f
+    field public static final int KEYCODE_HENKAN = 214; // 0xd6
+    field public static final int KEYCODE_HIRAGANA_KATAKANA = 215; // 0xd7
     field public static final int KEYCODE_HOME = 3; // 0x3
     field public static final int KEYCODE_I = 37; // 0x25
     field public static final int KEYCODE_INFO = 165; // 0xa5
@@ -22324,6 +22342,7 @@ package android.view {
     field public static final int KEYCODE_MINUS = 69; // 0x45
     field public static final int KEYCODE_MOVE_END = 123; // 0x7b
     field public static final int KEYCODE_MOVE_HOME = 122; // 0x7a
+    field public static final int KEYCODE_MUHENKAN = 213; // 0xd5
     field public static final int KEYCODE_MUSIC = 209; // 0xd1
     field public static final int KEYCODE_MUTE = 91; // 0x5b
     field public static final int KEYCODE_N = 42; // 0x2a
@@ -22374,6 +22393,7 @@ package android.view {
     field public static final int KEYCODE_SHIFT_LEFT = 59; // 0x3b
     field public static final int KEYCODE_SHIFT_RIGHT = 60; // 0x3c
     field public static final int KEYCODE_SLASH = 76; // 0x4c
+    field public static final int KEYCODE_SLEEP = 219; // 0xdb
     field public static final int KEYCODE_SOFT_LEFT = 1; // 0x1
     field public static final int KEYCODE_SOFT_RIGHT = 2; // 0x2
     field public static final int KEYCODE_SPACE = 62; // 0x3e
@@ -22385,6 +22405,7 @@ package android.view {
     field public static final int KEYCODE_SYSRQ = 120; // 0x78
     field public static final int KEYCODE_T = 48; // 0x30
     field public static final int KEYCODE_TAB = 61; // 0x3d
+    field public static final int KEYCODE_TOUCHPAD = 222; // 0xde
     field public static final int KEYCODE_TV = 170; // 0xaa
     field public static final int KEYCODE_TV_INPUT = 178; // 0xb2
     field public static final int KEYCODE_TV_POWER = 177; // 0xb1
@@ -22396,8 +22417,10 @@ package android.view {
     field public static final int KEYCODE_VOLUME_UP = 24; // 0x18
     field public static final int KEYCODE_W = 51; // 0x33
     field public static final int KEYCODE_WINDOW = 171; // 0xab
+    field public static final int KEYCODE_WIRELESS = 220; // 0xdc
     field public static final int KEYCODE_X = 52; // 0x34
     field public static final int KEYCODE_Y = 53; // 0x35
+    field public static final int KEYCODE_YEN = 216; // 0xd8
     field public static final int KEYCODE_Z = 54; // 0x36
     field public static final int KEYCODE_ZOOM_IN = 168; // 0xa8
     field public static final int KEYCODE_ZOOM_OUT = 169; // 0xa9
@@ -27755,6 +27778,23 @@ package com.android.internal.util {
 
   public abstract interface Predicate {
     method public abstract boolean apply(T);
+  }
+
+}
+
+package com.authentec.TrueSuiteMobile {
+
+  public abstract interface RelayReceiverService implements android.os.IInterface {
+    method public abstract void quit() throws android.os.RemoteException;
+    method public abstract java.lang.String receiveEvent() throws android.os.RemoteException;
+    method public abstract void sendCommand(java.lang.String, java.lang.String) throws android.os.RemoteException;
+  }
+
+  public static abstract class RelayReceiverService.Stub extends android.os.Binder implements com.authentec.TrueSuiteMobile.RelayReceiverService {
+    ctor public RelayReceiverService.Stub();
+    method public android.os.IBinder asBinder();
+    method public static com.authentec.TrueSuiteMobile.RelayReceiverService asInterface(android.os.IBinder);
+    method public boolean onTransact(int, android.os.Parcel, android.os.Parcel, int) throws android.os.RemoteException;
   }
 
 }
