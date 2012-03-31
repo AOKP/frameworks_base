@@ -914,7 +914,7 @@ public class LockPatternUtils {
      * @return Whether the lock finger is enabled.
      */
     public boolean isLockFingerEnabled() {
-        return getBoolean(LOCK_FINGER_ENABLED)
+        return getBoolean(LOCK_FINGER_ENABLED, false)
                 && getLong(PASSWORD_TYPE_KEY, 0)
                         == DevicePolicyManager.PASSWORD_QUALITY_FINGER;
     }
