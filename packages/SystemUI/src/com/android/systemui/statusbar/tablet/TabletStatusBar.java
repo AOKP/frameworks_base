@@ -16,8 +16,10 @@
 
 package com.android.systemui.statusbar.tablet;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import android.animation.LayoutTransition;
@@ -28,20 +30,25 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.inputmethodservice.InputMethodService;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -91,6 +98,7 @@ import com.android.systemui.statusbar.policy.CompatModeButton;
 import com.android.systemui.statusbar.policy.LocationController;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.Prefs;
+import com.android.systemui.statusbar.policy.buttons.ExtensibleKeyButtonView;
 import com.android.systemui.statusbar.policy.toggles.TogglesView;
 
 public class TabletStatusBar extends StatusBar implements
@@ -122,6 +130,31 @@ public class TabletStatusBar extends StatusBar implements
     final static boolean NOTIFICATION_PEEK_ENABLED = false;
     final static int NOTIFICATION_PEEK_HOLD_THRESH = 200; // ms
     final static int NOTIFICATION_PEEK_FADE_DELAY = 3000; // ms
+    
+    // stuff for custom NavBar
+    final static String ACTION_HOME = "**home**";
+    final static String ACTION_BACK = "**back**";
+    final static String ACTION_SEARCH = "**search**";
+    final static String ACTION_MENU = "**menu**";
+    final static String ACTION_POWER = "**power**";
+    final static String ACTION_RECENTS = "**recents**";
+    final static String ACTION_KILL = "**kill**";
+    final static String ACTION_NULL = "**null**";
+
+    int mNumberOfButtons = 3;
+
+    public String[] mClickActions = new String[5];
+    public String[] mLongpressActions = new String[5];
+    public String[] mPortraitIcons = new String[5];
+
+    public final static int StockButtonsQty = 3;
+    public final static String[] StockClickActions = {
+            "**back**", "**home**", "**recents**", "**null**", "**null**"
+    };
+
+    public final static String[] StockLongpress = {
+            "**null**", "**null**", "**null**", "**null**", "**null**"
+    };
 
     // The height of the bar, as definied by the build.  It may be taller if we're plugged
     // into hdmi.
@@ -415,6 +448,8 @@ public class TabletStatusBar extends StatusBar implements
         super.start(); // will add the main bar view
 
         Settings.System.putInt(mContext.getContentResolver(), Settings.System.IS_TABLET, 1);
+        SettingsObserver settingsObserver = new SettingsObserver(new Handler());
+        settingsObserver.observe();
     }
 
     @Override
@@ -524,13 +559,16 @@ public class TabletStatusBar extends StatusBar implements
         mNetworkController.addSignalCluster(signalCluster);
 
         // The navigation buttons
-        mBackButton = (ImageView)sb.findViewById(R.id.back);
+        mNavigationArea = (ViewGroup) sb.findViewById(R.id.navigationArea);
+        makeNavBar();
+        /*mBackButton = (ImageView)sb.findViewById(R.id.back);
         mNavigationArea = (ViewGroup) sb.findViewById(R.id.navigationArea);
         mHomeButton = mNavigationArea.findViewById(R.id.home);
         mMenuButton = mNavigationArea.findViewById(R.id.menu);
         mRecentButton = mNavigationArea.findViewById(R.id.recent_apps);
         mRecentButton.setOnClickListener(mOnClickListener);
-
+		*/
+        
         LayoutTransition lt = new LayoutTransition();
         lt.setDuration(250);
         // don't wait for these transitions; we just want icons to fade in/out, not move around
@@ -621,7 +659,7 @@ public class TabletStatusBar extends StatusBar implements
 
         // Add the windows
         addPanelWindows();
-        mRecentButton.setOnTouchListener(mRecentsPanel);
+        //mRecentButton.setOnTouchListener(mRecentsPanel);
 
         mPile = (ViewGroup)mNotificationPanel.findViewById(R.id.content);
         mPile.removeAllViews();
@@ -1024,11 +1062,12 @@ public class TabletStatusBar extends StatusBar implements
         boolean disableHome = ((visibility & StatusBarManager.DISABLE_HOME) != 0);
         boolean disableRecent = ((visibility & StatusBarManager.DISABLE_RECENT) != 0);
         boolean disableBack = ((visibility & StatusBarManager.DISABLE_BACK) != 0);
-
+        
+        /*  Need to address visibility
         mBackButton.setVisibility(disableBack ? View.INVISIBLE : View.VISIBLE);
         mHomeButton.setVisibility(disableHome ? View.INVISIBLE : View.VISIBLE);
         mRecentButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
-
+		*/
         mInputMethodSwitchButton.setScreenLocked(
                 (visibility & StatusBarManager.DISABLE_SYSTEM_INFO) != 0);
     }
@@ -1138,10 +1177,10 @@ public class TabletStatusBar extends StatusBar implements
     public void setLightsOn(boolean on) {
         // Policy note: if the frontmost activity needs the menu key, we assume it is a legacy app
         // that can't handle lights-out mode.
-        if (mMenuButton.getVisibility() == View.VISIBLE) {
+        /*if (mMenuButton.getVisibility() == View.VISIBLE) {
             on = true;
         }
-
+		*/
         Slog.v(TAG, "setLightsOn(" + on + ")");
         if (on) {
             setSystemUiVisibility(mSystemUiVisibility & ~View.SYSTEM_UI_FLAG_LOW_PROFILE);
@@ -1154,7 +1193,7 @@ public class TabletStatusBar extends StatusBar implements
         if (DEBUG) {
             Slog.d(TAG, (showMenu?"showing":"hiding") + " the MENU button");
         }
-        mMenuButton.setVisibility(showMenu ? View.VISIBLE : View.GONE);
+        //mMenuButton.setVisibility(showMenu ? View.VISIBLE : View.GONE);
 
         // See above re: lights-out policy for legacy apps.
         if (showMenu) setLightsOn(true);
@@ -1234,7 +1273,9 @@ public class TabletStatusBar extends StatusBar implements
                 }
                 break;
         }
-        mBackButton.setImageResource(res);
+        if (mBackButton != null) {
+        	mBackButton.setImageResource(res);
+        }
         if (FAKE_SPACE_BAR) {
             mFakeSpaceBar.setVisibility(((vis & InputMethodService.IME_VISIBLE) != 0)
                     ? View.VISIBLE : View.GONE);
@@ -1936,6 +1977,199 @@ public class TabletStatusBar extends StatusBar implements
         return true;
     }
 
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            // resolver.registerContentObserver(
+            // Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS),
+            // false,
+            // this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.MENU_LOCATION), false,
+                    this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.MENU_VISIBILITY), false,
+                    this);
+
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS_QTY), false,
+                    this);
+
+            for (int j = 0; j < 5; j++) { // watch all 5 settings for changes.
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.NAVIGATION_CUSTOM_ACTIVITIES[j]),
+                        false,
+                        this);
+                resolver.registerContentObserver(
+                        Settings.System
+                                .getUriFor(Settings.System.NAVIGATION_LONGPRESS_ACTIVITIES[j]),
+                        false,
+                        this);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j]),
+                        false,
+                        this);
+                resolver.registerContentObserver(
+                        Settings.System
+                                .getUriFor(Settings.System.NAVIGATION_LANDSCAPE_APP_ICONS[j]),
+                        false,
+                        this);
+            }
+            updateSettings();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
+    }
+
+    protected void updateSettings() {
+        ContentResolver resolver = mContext.getContentResolver();
+
+        mNumberOfButtons = Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_BUTTONS_QTY, StockButtonsQty);
+
+        for (int j = 0; j < mNumberOfButtons; j++) {
+            mClickActions[j] = Settings.System.getString(resolver,
+                    Settings.System.NAVIGATION_CUSTOM_ACTIVITIES[j]);
+            if (mClickActions[j] == null)
+                mClickActions[j] = StockClickActions[j];
+
+            mLongpressActions[j] = Settings.System.getString(resolver,
+                    Settings.System.NAVIGATION_LONGPRESS_ACTIVITIES[j]);
+            if (mLongpressActions[j] == null)
+                mLongpressActions[j] = StockLongpress[j];
+
+            mPortraitIcons[j] = Settings.System.getString(resolver,
+                    Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j]);
+        }
+        makeNavBar();
+
+    }
+
+    private Drawable getNavbarIconImage(boolean landscape, String uri) {
+
+        if (uri == null)
+            return getContext().getResources().getDrawable(R.drawable.ic_sysbar_null);
+
+        if (uri.startsWith("**")) {
+            if (uri.equals(ACTION_HOME)) {
+
+                return mContext.getResources().getDrawable(R.drawable.ic_sysbar_home);
+            } else if (uri.equals(ACTION_BACK)) {
+
+                return mContext.getResources().getDrawable(R.drawable.ic_sysbar_back);
+            } else if (uri.equals(ACTION_RECENTS)) {
+
+                return mContext.getResources().getDrawable(R.drawable.ic_sysbar_recent);
+            } else if (uri.equals(ACTION_SEARCH)) {
+
+                return mContext.getResources().getDrawable(R.drawable.ic_sysbar_search);
+            } else if (uri.equals(ACTION_MENU)) {
+
+                return mContext.getResources().getDrawable(R.drawable.ic_sysbar_menu_big);
+            } else if (uri.equals(ACTION_KILL)) {
+
+                return mContext.getResources().getDrawable(R.drawable.ic_sysbar_killtask);
+            } else if (uri.equals(ACTION_POWER)) {
+
+                return mContext.getResources().getDrawable(R.drawable.ic_sysbar_power);
+            }
+        } else {
+            try {
+                return mContext.getPackageManager().getActivityIcon(Intent.parseUri(uri, 0));
+            } catch (NameNotFoundException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return mContext.getResources().getDrawable(R.drawable.ic_sysbar_null);
+    }
+    
+    private void makeNavBar(){
+    	
+    	final boolean landscape = true;
+    	if (mNavigationArea != null) {
+    		mNavigationArea.removeAllViews();
+    	}
+    	for (int j = 0; j < mNumberOfButtons; j++) {
+            ExtensibleKeyButtonView v = null;
+            
+            String action = mClickActions[j];
+            v = generateKey(landscape, mClickActions[j], mLongpressActions[j], mPortraitIcons[j]);
+            v.setTag( "key_" + j);
+            
+            mNavigationArea.addView(v);
+            
+            if (action != null){
+            	
+            	if (action.equals(ACTION_BACK)) {
+            		mBackButton = v;
+            	} else if (action.equals(ACTION_RECENTS)) {
+            		mRecentButton = v;
+            	} else if (action.equals(ACTION_MENU)) {
+            		mMenuButton = v;
+            	} else if (action.equals(ACTION_MENU)) {
+            		mHomeButton = v;
+            	}
+            }
+        }
+    	
+    }
+    
+    private ExtensibleKeyButtonView generateKey(boolean landscape, String ClickAction,
+            String Longpress,
+            String IconUri) {
+        ExtensibleKeyButtonView v = null;
+        Resources r = mContext.getResources();
+
+        int btnWidth = 80;
+
+        v = new ExtensibleKeyButtonView(mContext, null, ClickAction, Longpress);
+        //v.setLayoutParams(getLayoutParams(landscape, btnWidth));
+        v.setGlowBackground(landscape ? R.drawable.ic_sysbar_highlight_land
+                : R.drawable.ic_sysbar_highlight);
+
+        // the rest is for setting the icon (or custom icon)
+        if (IconUri != null && IconUri.length() > 0) {
+            File f = new File(Uri.parse(IconUri).getPath());
+            if (f.exists())
+                v.setImageDrawable(new BitmapDrawable(r, f.getAbsolutePath()));
+        }
+
+        if (IconUri != null && !IconUri.equals("")
+                && IconUri.startsWith("file")) {
+            // it's an icon the user chose from the gallery here
+            File icon = new File(Uri.parse(IconUri).getPath());
+            if (icon.exists())
+                v.setImageDrawable(new BitmapDrawable(mContext.getResources(), icon.getAbsolutePath()));
+
+        } else if (IconUri != null && !IconUri.equals("")) {
+            // here they chose another app icon
+            try {
+                PackageManager pm = mContext.getPackageManager();
+                v.setImageDrawable(pm.getActivityIcon(Intent.parseUri(IconUri, 0)));
+            } catch (NameNotFoundException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // ok use default icons here
+            v.setImageDrawable(getNavbarIconImage(landscape, ClickAction));
+        }
+
+        return v;
+    }
+
+    
     public void dump(FileDescriptor fd, PrintWriter pw, String[] args) {
         pw.print("mDisabled=0x");
         pw.println(Integer.toHexString(mDisabled));
