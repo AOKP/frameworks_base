@@ -1068,6 +1068,21 @@ public class TabletStatusBar extends StatusBar implements
         mHomeButton.setVisibility(disableHome ? View.INVISIBLE : View.VISIBLE);
         mRecentButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
 		*/
+        for (int j = 0; j < mNumberOfButtons; j++) {
+            View v = (View) mNavigationArea.findViewWithTag( "key_" + j);
+            if (v != null) {
+                int vid = v.getId();
+                if (vid == R.id.back) {
+                    v.setVisibility(disableBack ? View.INVISIBLE : View.VISIBLE);
+                } else if (vid == R.id.recent_apps) {
+                    v.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
+                } else { // treat all other buttons as same rule as home
+                    v.setVisibility(disableHome ? View.INVISIBLE : View.VISIBLE);
+                }
+
+            }
+        }
+        
         mInputMethodSwitchButton.setScreenLocked(
                 (visibility & StatusBarManager.DISABLE_SYSTEM_INFO) != 0);
     }
@@ -2116,7 +2131,7 @@ public class TabletStatusBar extends StatusBar implements
             		mRecentButton = v;
             	} else if (action.equals(ACTION_MENU)) {
             		mMenuButton = v;
-            	} else if (action.equals(ACTION_MENU)) {
+            	} else if (action.equals(ACTION_HOME)) {
             		mHomeButton = v;
             	}
             }
