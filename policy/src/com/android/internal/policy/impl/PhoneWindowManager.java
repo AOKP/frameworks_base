@@ -685,11 +685,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     Runnable mTorchOff = new Runnable() {
         public void run() {
-            Intent i = new Intent(INTENT_TORCH_OFF);
-            i.setAction(INTENT_TORCH_OFF);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(i);
-            mFastTorchOn = false;
+            if (mFastTorchOn) {
+                Intent i = new Intent(INTENT_TORCH_OFF);
+                i.setAction(INTENT_TORCH_OFF);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(i);
+                mFastTorchOn = false;
+            }
         };
     };
 
