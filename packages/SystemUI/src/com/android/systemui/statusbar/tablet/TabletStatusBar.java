@@ -78,6 +78,7 @@ import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.LinearLayout.LayoutParams;
 
 import android.provider.Settings;
 import android.app.Activity;
@@ -179,10 +180,12 @@ public class TabletStatusBar extends StatusBar implements
     boolean mNotificationDNDMode;
     NotificationData.Entry mNotificationDNDDummyEntry;
 
+    boolean mTempMenu;
     ImageView mBackButton;
     View mHomeButton;
     View mMenuButton;
     View mRecentButton;
+    ExtensibleKeyButtonView mTempMenuButton;
 
     ViewGroup mFeedbackIconArea; // notification icons, IME icon, compat icon
     InputMethodButton mInputMethodSwitchButton;
@@ -1192,10 +1195,11 @@ public class TabletStatusBar extends StatusBar implements
     public void setLightsOn(boolean on) {
         // Policy note: if the frontmost activity needs the menu key, we assume it is a legacy app
         // that can't handle lights-out mode.
-        /*if (mMenuButton.getVisibility() == View.VISIBLE) {
-            on = true;
-        }
-		*/
+    	// we are using mTempMenu to put a temporary menu button on the NavBar when needed and the user
+    	// hasn't already placed a menu button in their custom choices.  	
+        if (mTempMenu)  // if mTempMenu is true, then mTempMenuButton had better not be null!
+        	if (mTempMenuButton.getVisibility() == View.VISIBLE)
+            	on = true;
         Slog.v(TAG, "setLightsOn(" + on + ")");
         if (on) {
             setSystemUiVisibility(mSystemUiVisibility & ~View.SYSTEM_UI_FLAG_LOW_PROFILE);
@@ -1208,8 +1212,25 @@ public class TabletStatusBar extends StatusBar implements
         if (DEBUG) {
             Slog.d(TAG, (showMenu?"showing":"hiding") + " the MENU button");
         }
-        //mMenuButton.setVisibility(showMenu ? View.VISIBLE : View.GONE);
-
+        // We will not show or hide the menu button if the user specifically created it for the
+        // NavBar.  If they did not, we will temporarily create one.
+        if (showMenu) { // we need to show the menu button
+        	if (mMenuButton == null) {  // User has not put their own menu button on the navbar.
+        		mTempMenu = true;
+        		// rather than constantly creating a new view, I'll just create one and keep it
+        		if (mTempMenuButton == null)
+        			mTempMenuButton = generateKey(true, ACTION_MENU,ACTION_NULL,"");
+        		mNavigationArea.addView(mTempMenuButton);
+        	}
+        } else {
+        	if (mMenuButton == null) { // only try to remove menu if user doesn't have custom button
+        		mTempMenu = false;
+        		if (mTempMenuButton != null) { // just a little sanity check.  It better not be null
+        			mNavigationArea.removeView(mTempMenuButton);
+        		// I'm not disposing of the tempview, we'll keep it for next time.
+        		}
+        	}
+        }
         // See above re: lights-out policy for legacy apps.
         if (showMenu) setLightsOn(true);
 
@@ -2145,10 +2166,10 @@ public class TabletStatusBar extends StatusBar implements
         ExtensibleKeyButtonView v = null;
         Resources r = mContext.getResources();
 
-        int btnWidth = 80;
+        int btnWidth = 48;
 
         v = new ExtensibleKeyButtonView(mContext, null, ClickAction, Longpress);
-        //v.setLayoutParams(getLayoutParams(landscape, btnWidth));
+        v.setLayoutParams(getLayoutParams(landscape, btnWidth));
         v.setGlowBackground(landscape ? R.drawable.ic_sysbar_highlight_land
                 : R.drawable.ic_sysbar_highlight);
 
@@ -2182,6 +2203,13 @@ public class TabletStatusBar extends StatusBar implements
         }
 
         return v;
+    }
+
+    private LayoutParams getLayoutParams(boolean landscape, float dp) {
+        float px = dp * mContext.getResources().getDisplayMetrics().density;
+        return landscape ?
+                new LayoutParams(LayoutParams.MATCH_PARENT, (int) px, 1f) :
+                new LayoutParams((int) px, LayoutParams.MATCH_PARENT, 1f);
     }
 
     
