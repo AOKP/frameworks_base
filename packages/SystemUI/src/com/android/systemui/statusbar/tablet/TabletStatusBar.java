@@ -2131,7 +2131,8 @@ public class TabletStatusBar extends StatusBar implements
     
     private void makeNavBar(){
     	
-    	final boolean landscape = true;
+    	final boolean landscape;
+    	landscape = (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
     	if (mNavigationArea != null) {
     		mNavigationArea.removeAllViews();
     	}
