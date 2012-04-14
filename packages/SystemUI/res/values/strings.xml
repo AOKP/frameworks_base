@@ -375,14 +375,14 @@
     <string name="toggle_wifi">Wi-Fi</string>
     <string name="toggle_gps">GPS</string>
     <string name="toggle_2g">2G</string>
-    <string name="toggle_wifiap">Wi-Fi AP</string>
+    <string name="toggle_wifiap">Tether</string>
     <string name="toggle_airplane">Airplane</string>
     <string name="toggle_vibrate">Vibrate</string>
     <string name="toggle_silent">Silent</string>
     <string name="toggle_torch">Torch</string>
     <string name="toggle_sync">Sync</string>
     <string name="toggle_swagger">Swagger</string>
-    <string name="toggle_fcharge">FastChrg</string>
+    <string name="toggle_fcharge">Charge</string>
     <string name="status_bar_settings_toggles">Toggles</string>
     <string name="weatherpanel_slash">/</string>
     
