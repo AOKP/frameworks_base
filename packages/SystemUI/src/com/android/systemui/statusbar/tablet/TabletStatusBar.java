@@ -163,6 +163,8 @@ public class TabletStatusBar extends StatusBar implements
     int mIconSize = -1;
     int mIconHPadding = -1;
     private int mMaxNotificationIcons = 5;
+    // this will control hiding the Status(Nav)Bar
+    public boolean mShowStatusBar = true; 
 
     H mHandler = new H();
 
@@ -2020,10 +2022,7 @@ public class TabletStatusBar extends StatusBar implements
 
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
-            // resolver.registerContentObserver(
-            // Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS),
-            // false,
-            // this);
+ 
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.MENU_LOCATION), false,
                     this);
@@ -2033,6 +2032,10 @@ public class TabletStatusBar extends StatusBar implements
 
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS_QTY), false,
+                    this);
+            
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS_SHOW), false,
                     this);
 
             for (int j = 0; j < 5; j++) { // watch all 5 settings for changes.
@@ -2049,11 +2052,6 @@ public class TabletStatusBar extends StatusBar implements
                         Settings.System.getUriFor(Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j]),
                         false,
                         this);
-                resolver.registerContentObserver(
-                        Settings.System
-                                .getUriFor(Settings.System.NAVIGATION_LANDSCAPE_APP_ICONS[j]),
-                        false,
-                        this);
             }
             updateSettings();
         }
@@ -2066,6 +2064,9 @@ public class TabletStatusBar extends StatusBar implements
 
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
+        
+        mShowStatusBar = (Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_BUTTONS_SHOW, 1)==1);
 
         mNumberOfButtons = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_BUTTONS_QTY, StockButtonsQty);
@@ -2085,7 +2086,8 @@ public class TabletStatusBar extends StatusBar implements
                     Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j]);
         }
         makeNavBar();
-
+        
+        mStatusBarView.setVisibility(mShowStatusBar ? View.VISIBLE : View.GONE);
     }
 
     private Drawable getNavbarIconImage(boolean landscape, String uri) {
