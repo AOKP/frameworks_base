@@ -80,9 +80,63 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
     private final static int EVENT_PLAYSTATUS_CHANGED = 0x1;
     private final static int EVENT_TRACK_CHANGED = 0x2;
 
-    /*AVRCP 1.3 Music App Intents */
-    private static final String PLAYSTATE_CHANGED = "com.android.music.playstatechanged";
-    private static final String META_CHANGED = "com.android.music.metachanged";
+    /*AVRCP 1.3 Android Stock Music App / Google Play Music App Intents */
+    private static final String ANDROID_PLAYSTATE_CHANGED = "com.android.music.playstatechanged";
+    private static final String ANDROID_META_CHANGED = "com.android.music.metachanged";
+
+    /*AVRCP 1.3 HTC Music App Intents */
+    private static final String HTC_PLAYSTATE_CHANGED = "com.htc.music.playstatechanged";
+    private static final String HTC_META_CHANGED = "com.htc.music.metachanged";
+
+    /*AVRCP 1.3 Winamp Music App Intents */
+    private static final String WINAMP_PLAYSTATE_CHANGED = "com.nullsoft.winamp.playstatechanged";
+    private static final String WINAMP_META_CHANGED = "com.nullsoft.winamp.metachanged";
+
+    /*AVRCP 1.3 MIUI Music App Intents */
+    private static final String MIUI_PLAYSTATE_CHANGED = "com.miui.player.playstatechanged";
+    private static final String MIUI_META_CHANGED = "com.miui.player.metachanged";
+
+    /*AVRCP 1.3 SEMC Music App Intents */
+    private static final String SEMC_PLAYSTATE_CHANGED = "com.sonyericsson.music.playstatechanged";
+    private static final String SEMC_META_CHANGED = "com.sonyericsson.music.metachanged";
+
+    /*AVRCP 1.3 RDIO Music App Intents */
+    private static final String RDIO_PLAYSTATE_CHANGED = "com.rdio.android.playstatechanged";
+    private static final String RDIO_META_CHANGED = "com.rdio.android.metachanged";
+
+    /*AVRCP 1.3 PowerAmp Music App Intents */
+    private static final String POWERAMP_PLAYSTATE_CHANGED = "com.maxmpz.audioplayer.playstatechanged";
+    private static final String POWERAMP_META_CHANGED = "com.maxmpz.audioplayer.metachanged";
+
+    /*AVRCP 1.3 Samsung Music App Intents */
+    private static final String SAMSUNG1_PLAYSTATE_CHANGED = "com.samsung.sec.android.MusicPlayer.playstatechanged";
+    private static final String SAMSUNG1_META_CHANGED = "com.samsung.sec.android.MusicPlayer.metachanged";
+    private static final String SAMSUNG2_PLAYSTATE_CHANGED = "com.sec.android.app.music.playstatechanged";
+    private static final String SAMSUNG2_META_CHANGED = "com.sec.android.app.music.metachanged";
+
+    /*AVRCP 1.3 Amazon Music App Intents */
+    private static final String AMAZON_PLAYSTATE_CHANGED = "com.amazon.mp3.playstatechanged";
+    private static final String AMAZON_META_CHANGED = "com.amazon.mp3.metachanged";
+
+    /*AVRCP 1.3 Rhapsody Music App Intents */
+    private static final String RHAPSODY_PLAYSTATE_CHANGED = "com.rhapsody.playstatechanged";
+    private static final String RHAPSODY_META_CHANGED = "com.rhapsody.metachanged";
+
+    /*AVRCP 1.3 Player Pro Music App Intents */
+    private static final String PLAYERPRO_PLAYSTATE_CHANGED = "com.tbig.playerpro.playstatechanged";
+    private static final String PLAYERPRO_META_CHANGED = "com.tbig.playerpro.metachanged";
+
+    /*AVRCP 1.3 Doubletwist Music App Intents */
+    private static final String DOUBLETWIST_PLAYSTATE_CHANGED = "com.doubleTwist.androidPlayer.playstatechanged";
+    private static final String DOUBLETWIST_META_CHANGED = "com.doubleTwist.androidPlayer.metachanged";
+
+    /*AVRCP 1.3 Last.fm Music App Intents */
+    private static final String LASTFM_PLAYSTATE_CHANGED = "fm.last.android.playstatechanged";
+    private static final String LASTFM_META_CHANGED = "fm.last.android.metachanged";
+
+    /*AVRCP 1.3 A simple last.fm scrobbler Music App Intents */
+    private static final String ASLFMS_PLAYSTATE_CHANGED = "com.adam.aslfms.notify.playstatechanged";
+    private static final String ASLFMS_META_CHANGED = "com.adam.aslfms.notify.metachanged";
 
     private final static String DEFAULT_METADATA_STRING = "Unknown";
     private final static String DEFAULT_METADATA_NUMBER = "0";
@@ -139,7 +193,14 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                         }
                     }
                 }
-            } else if (action.equals(META_CHANGED)) {
+            } else if (action.equals(ANDROID_META_CHANGED) || action.equals(HTC_META_CHANGED) ||
+                    action.equals(WINAMP_META_CHANGED) || action.equals(MIUI_META_CHANGED) ||
+                    action.equals(SEMC_META_CHANGED) || action.equals(RDIO_META_CHANGED) ||
+                    action.equals(POWERAMP_META_CHANGED) || action.equals(SAMSUNG1_META_CHANGED) ||
+                    action.equals(SAMSUNG2_META_CHANGED) || action.equals(AMAZON_META_CHANGED) ||
+                    action.equals(RHAPSODY_META_CHANGED) || action.equals(LASTFM_META_CHANGED) ||
+                    action.equals(ASLFMS_META_CHANGED) || action.equals(PLAYERPRO_META_CHANGED) ||
+                    action.equals(DOUBLETWIST_META_CHANGED)) {
                 mTrackName = intent.getStringExtra("track");
                 mArtistName = intent.getStringExtra("artist");
                 mAlbumName = intent.getStringExtra("album");
@@ -166,15 +227,25 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                     extra = 0;
                 mPosition = extra;
                 if(DBG) {
-                    Log.d(TAG, "Meta data info is trackname: "+ mTrackName+" artist: "+mArtistName);
-                    Log.d(TAG, "mMediaNumber: "+mMediaNumber+" mediaCount "+mMediaCount);
-                    Log.d(TAG, "mPostion "+ mPosition+" album: "+mAlbumName+ "duration "+mDuration);
+                    Log.d(TAG, "Meta changed " + mPlayStatus);
+                    Log.d(TAG, "player: " + action);
+                    Log.d(TAG, "trackname: "+ mTrackName + " artist: " + mArtistName);
+                    Log.d(TAG, "album: "+ mAlbumName);
+                    Log.d(TAG, "medianumber: " + mMediaNumber + " mediacount " + mMediaCount);
+                    Log.d(TAG, "postion "+ mPosition + " duration "+ mDuration);
                 }
                 for (String path: getConnectedSinksPaths()) {
                     sendMetaData(path);
                     sendEvent(path, EVENT_TRACK_CHANGED, Long.valueOf(mMediaNumber));
                 }
-            } else if (action.equals(PLAYSTATE_CHANGED)) {
+            } else if (action.equals(ANDROID_PLAYSTATE_CHANGED) || action.equals(HTC_PLAYSTATE_CHANGED) ||
+                    action.equals(WINAMP_PLAYSTATE_CHANGED) || action.equals(MIUI_PLAYSTATE_CHANGED) ||
+                    action.equals(SEMC_PLAYSTATE_CHANGED) || action.equals(RDIO_PLAYSTATE_CHANGED) ||
+                    action.equals(POWERAMP_PLAYSTATE_CHANGED) || action.equals(SAMSUNG1_PLAYSTATE_CHANGED) ||
+                    action.equals(SAMSUNG2_PLAYSTATE_CHANGED) || action.equals(AMAZON_PLAYSTATE_CHANGED) ||
+                    action.equals(RHAPSODY_PLAYSTATE_CHANGED) || action.equals(LASTFM_PLAYSTATE_CHANGED) ||
+                    action.equals(ASLFMS_PLAYSTATE_CHANGED) || action.equals(PLAYERPRO_PLAYSTATE_CHANGED) ||
+                    action.equals(DOUBLETWIST_PLAYSTATE_CHANGED)) {
                 String currentTrackName = intent.getStringExtra("track");
                 if ((currentTrackName != null) && (!currentTrackName.equals(mTrackName))) {
                     mTrackName = currentTrackName;
@@ -210,7 +281,15 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                 if (mPosition < 0)
                     mPosition = 0;
                 mPlayStatus = convertedPlayStatus(playStatus, mPosition);
-                if(DBG) Log.d(TAG, "PlayState changed "+ mPlayStatus);
+                if(DBG) {
+                    Log.d(TAG, "PlayState changed " + mPlayStatus);
+                    Log.d(TAG, "player: " + action);
+                    Log.d(TAG, "trackname: "+ mTrackName + " artist: " + mArtistName);
+                    Log.d(TAG, "album: "+ mAlbumName);
+                    Log.d(TAG, "medianumber: " + mMediaNumber + " mediacount " + mMediaCount);
+                    Log.d(TAG, "postion "+ mPosition + " duration "+ mDuration);
+                }
+
                 for (String path: getConnectedSinksPaths()) {
                     sendEvent(path, EVENT_PLAYSTATUS_CHANGED, (long)mPlayStatus);
                 }
@@ -231,25 +310,25 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
     private synchronized void sendMetaData(String path) {
         if(DBG) {
             Log.d(TAG, "sendMetaData "+ path);
-            Log.d(TAG, "Meta data info is trackname: "+ mTrackName+" artist: "+mArtistName);
-            Log.d(TAG, "mMediaNumber: "+mMediaNumber+" mediaCount "+mMediaCount);
-            Log.d(TAG, "mPostion "+ mPosition+" album: "+mAlbumName+ "duration "+mDuration);
         }
         sendMetaDataNative(path);
     }
 
     private synchronized void sendEvent(String path, int eventId, long data) {
-        if(DBG) Log.d(TAG, "sendEvent "+path+ " data "+ data);
+        if(DBG)
+            Log.d(TAG, "sendEvent "+path+ " data "+ data);
         sendEventNative(path, eventId, data);
     }
 
     private synchronized void sendPlayStatus(String path) {
-        if(DBG) Log.d(TAG, "sendPlayStatus"+ path);
+        if(DBG)
+            Log.d(TAG, "sendPlayStatus"+ path);
         sendPlayStatusNative(path, (int)Integer.valueOf(mDuration), (int)mPosition, mPlayStatus);
     }
 
     private void onGetPlayStatusRequest() {
-        if(DBG) Log.d(TAG, "onGetPlayStatusRequest");
+        if(DBG)
+            Log.d(TAG, "onGetPlayStatusRequest");
         for (String path: getConnectedSinksPaths()) {
             sendPlayStatus(path);
         }
@@ -290,8 +369,38 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
         mIntentFilter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
         mIntentFilter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         mIntentFilter.addAction(AudioManager.VOLUME_CHANGED_ACTION);
-        mIntentFilter.addAction(PLAYSTATE_CHANGED);
-        mIntentFilter.addAction(META_CHANGED);
+
+        mIntentFilter.addAction(ANDROID_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(ANDROID_META_CHANGED);
+        mIntentFilter.addAction(HTC_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(HTC_META_CHANGED);
+        mIntentFilter.addAction(WINAMP_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(WINAMP_META_CHANGED);
+        mIntentFilter.addAction(MIUI_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(MIUI_META_CHANGED);
+        mIntentFilter.addAction(SEMC_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(SEMC_META_CHANGED);
+        mIntentFilter.addAction(RDIO_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(RDIO_META_CHANGED);
+        mIntentFilter.addAction(POWERAMP_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(POWERAMP_META_CHANGED);
+        mIntentFilter.addAction(SAMSUNG1_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(SAMSUNG1_META_CHANGED);
+        mIntentFilter.addAction(SAMSUNG2_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(SAMSUNG2_META_CHANGED);
+        mIntentFilter.addAction(AMAZON_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(AMAZON_META_CHANGED);
+        mIntentFilter.addAction(RHAPSODY_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(RHAPSODY_META_CHANGED);
+        mIntentFilter.addAction(LASTFM_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(LASTFM_META_CHANGED);
+        mIntentFilter.addAction(ASLFMS_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(ASLFMS_META_CHANGED);
+        mIntentFilter.addAction(PLAYERPRO_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(PLAYERPRO_META_CHANGED);
+        mIntentFilter.addAction(DOUBLETWIST_PLAYSTATE_CHANGED);
+        mIntentFilter.addAction(DOUBLETWIST_META_CHANGED);
+
         mContext.registerReceiver(mReceiver, mIntentFilter);
 
         mAudioDevices = new HashMap<BluetoothDevice, Integer>();
@@ -344,6 +453,10 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
             for (String path: paths) {
                 String address = mBluetoothService.getAddressFromObjectPath(path);
                 BluetoothDevice device = mAdapter.getRemoteDevice(address);
+                if (DBG) {
+                    log("RemoteName: " + mBluetoothService.getRemoteName(address));
+                    log("RemoteAlias: " + mBluetoothService.getRemoteAlias(address));
+                }
                 ParcelUuid[] remoteUuids = mBluetoothService.getRemoteUuids(address);
                 if (remoteUuids != null)
                     if (BluetoothUuid.containsAnyUuid(remoteUuids,
@@ -353,7 +466,7 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
                     }
                 }
         }
-        mAudioManager.setParameters(BLUETOOTH_ENABLED+"=true");
+        mAudioManager.setParameters(BLUETOOTH_ENABLED + "=true");
         mAudioManager.setParameters("A2dpSuspended=false");
     }
 
@@ -503,7 +616,7 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
     public synchronized boolean suspendSink(BluetoothDevice device) {
         mContext.enforceCallingOrSelfPermission(BLUETOOTH_ADMIN_PERM,
                             "Need BLUETOOTH_ADMIN permission");
-        if (DBG) log("suspendSink(" + device + "), mTargetA2dpState: "+mTargetA2dpState);
+        if (DBG) log("suspendSink(" + device + "), mTargetA2dpState: "+ mTargetA2dpState);
         if (device == null || mAudioDevices == null) {
             return false;
         }
@@ -520,7 +633,7 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
     public synchronized boolean resumeSink(BluetoothDevice device) {
         mContext.enforceCallingOrSelfPermission(BLUETOOTH_ADMIN_PERM,
                             "Need BLUETOOTH_ADMIN permission");
-        if (DBG) log("resumeSink(" + device + "), mTargetA2dpState: "+mTargetA2dpState);
+        if (DBG) log("resumeSink(" + device + "), mTargetA2dpState: "+ mTargetA2dpState);
         if (device == null || mAudioDevices == null) {
             return false;
         }
@@ -627,7 +740,7 @@ public class BluetoothA2dpService extends IBluetoothA2dp.Stub {
 
         if (name.equals(PROPERTY_STATE)) {
             int state = convertBluezSinkStringToState(propValues[1]);
-            log("A2DP: onSinkPropertyChanged newState is: " + state + "mPlayingA2dpDevice: " + mPlayingA2dpDevice);
+            log("A2DP: onSinkPropertyChanged newState is: " + state + " mPlayingA2dpDevice: " + mPlayingA2dpDevice);
 
             if (mAudioDevices.get(device) == null) {
                 // This is for an incoming connection for a device not known to us.
