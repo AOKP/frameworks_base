@@ -413,6 +413,8 @@ public final class BluetoothAdapter {
      * @return true if the local adapter is turned on
      */
     public boolean isEnabled() {
+        if (mService == null)
+         return false;
         try {
             return mService.isEnabled();
         } catch (RemoteException e) {Log.e(TAG, "", e);}
@@ -431,6 +433,8 @@ public final class BluetoothAdapter {
      * @return current state of Bluetooth adapter
      */
     public int getState() {
+         if (mService == null)
+          return STATE_OFF;
         try {
             return mService.getBluetoothState();
         } catch (RemoteException e) {Log.e(TAG, "", e);}
@@ -465,6 +469,8 @@ public final class BluetoothAdapter {
      *         immediate error
      */
     public boolean enable() {
+        if (mService == null)
+         return false;
         try {
             return mService.enable();
         } catch (RemoteException e) {Log.e(TAG, "", e);}
@@ -496,6 +502,8 @@ public final class BluetoothAdapter {
      *         immediate error
      */
     public boolean disable() {
+        if (mService == null)
+         return false;
         try {
             return mService.disable(true);
         } catch (RemoteException e) {Log.e(TAG, "", e);}
@@ -510,6 +518,8 @@ public final class BluetoothAdapter {
      * @return Bluetooth hardware address as string
      */
     public String getAddress() {
+        if (mService == null)
+         return null;
         try {
             return mService.getAddress();
         } catch (RemoteException e) {Log.e(TAG, "", e);}
@@ -524,6 +534,8 @@ public final class BluetoothAdapter {
      * @return the Bluetooth name, or null on error
      */
     public String getName() {
+        if (mService == null)
+         return null;
         try {
             return mService.getName();
         } catch (RemoteException e) {Log.e(TAG, "", e);}
