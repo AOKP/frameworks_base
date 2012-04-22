@@ -229,8 +229,7 @@ public class KeyButtonView extends ImageView {
                     setDrawingAlpha(BUTTON_QUIESCENT_ALPHA);
                     as.playTogether(
                             ObjectAnimator.ofFloat(this, "glowAlpha", 1f),
-                            ObjectAnimator.ofFloat(this, "glowScale", GLOW_MAX_SCALE_FACTOR)
-                            );
+                            ObjectAnimator.ofFloat(this, "glowScale", GLOW_MAX_SCALE_FACTOR));                           	
                     as.setDuration(durationSpeedOff);
                 } else {
                     as.playTogether(
@@ -351,6 +350,9 @@ public class KeyButtonView extends ImageView {
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTON_ALPHA), false,
                     this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.IS_TABLET), false,
+                    this);
             updateSettings();
         }
 
@@ -362,7 +364,7 @@ public class KeyButtonView extends ImageView {
 
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
-
+        
         durationSpeedOff = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_GLOW_DURATION[0], 50);
         durationSpeedOn = Settings.System.getInt(resolver,
