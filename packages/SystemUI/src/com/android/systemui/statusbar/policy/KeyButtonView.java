@@ -52,6 +52,7 @@ public class KeyButtonView extends ImageView {
     protected static final String TAG = "StatusBar.KeyButtonView";
 
     final float GLOW_MAX_SCALE_FACTOR = 1.8f;
+    final float GLOW_MAX_SCALE_FACTOR_TABLET = 1.2f;
     float BUTTON_QUIESCENT_ALPHA = 1f;
 
     public IWindowManager mWindowManager;
@@ -64,6 +65,7 @@ public class KeyButtonView extends ImageView {
     protected boolean mHandlingLongpress = false;
     RectF mRect = new RectF(0f, 0f, 0f, 0f);
 
+    float mGLOW_MAX_SCALE_FACTOR = 1.8f;
     int durationSpeedOn = 500;
     int durationSpeedOff = 50;
     int mGlowBGColor = 0;
@@ -201,8 +203,8 @@ public class KeyButtonView extends ImageView {
             // this only works if we know the glow will never leave our bounds
             invalidate();
         } else {
-            final float rx = (w * (GLOW_MAX_SCALE_FACTOR - 1.0f)) / 2.0f + 1.0f;
-            final float ry = (h * (GLOW_MAX_SCALE_FACTOR - 1.0f)) / 2.0f + 1.0f;
+            final float rx = (w * (mGLOW_MAX_SCALE_FACTOR - 1.0f)) / 2.0f + 1.0f;
+            final float ry = (h * (mGLOW_MAX_SCALE_FACTOR - 1.0f)) / 2.0f + 1.0f;
             com.android.systemui.SwipeHelper.invalidateGlobalRegion(
                     this,
                     new RectF(getLeft() - rx,
@@ -222,15 +224,14 @@ public class KeyButtonView extends ImageView {
             if (pressed != isPressed()) {
                 AnimatorSet as = new AnimatorSet();
                 if (pressed) {
-                    if (mGlowScale < GLOW_MAX_SCALE_FACTOR)
-                        mGlowScale = GLOW_MAX_SCALE_FACTOR;
+                    if (mGlowScale < mGLOW_MAX_SCALE_FACTOR)
+                        mGlowScale = mGLOW_MAX_SCALE_FACTOR;
                     if (mGlowAlpha < BUTTON_QUIESCENT_ALPHA)
                         mGlowAlpha = BUTTON_QUIESCENT_ALPHA;
                     setDrawingAlpha(BUTTON_QUIESCENT_ALPHA);
                     as.playTogether(
                             ObjectAnimator.ofFloat(this, "glowAlpha", 1f),
-                            ObjectAnimator.ofFloat(this, "glowScale", GLOW_MAX_SCALE_FACTOR)
-                            );
+                            ObjectAnimator.ofFloat(this, "glowScale", mGLOW_MAX_SCALE_FACTOR));                           	
                     as.setDuration(durationSpeedOff);
                 } else {
                     as.playTogether(
@@ -351,6 +352,9 @@ public class KeyButtonView extends ImageView {
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTON_ALPHA), false,
                     this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.IS_TABLET), false,
+                    this);
             updateSettings();
         }
 
@@ -362,7 +366,10 @@ public class KeyButtonView extends ImageView {
 
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
-
+        
+        mGLOW_MAX_SCALE_FACTOR = ((Settings.System.getInt(resolver,
+                Settings.System.IS_TABLET, 0) == 1) ? GLOW_MAX_SCALE_FACTOR_TABLET :
+                GLOW_MAX_SCALE_FACTOR);
         durationSpeedOff = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_GLOW_DURATION[0], 50);
         durationSpeedOn = Settings.System.getInt(resolver,
