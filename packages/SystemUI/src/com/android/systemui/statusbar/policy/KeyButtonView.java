@@ -230,7 +230,8 @@ public class KeyButtonView extends ImageView {
                     as.playTogether(
                             ObjectAnimator.ofFloat(this, "glowAlpha", 1f),
                             ObjectAnimator.ofFloat(this, "glowScale", GLOW_MAX_SCALE_FACTOR)
-                            );
+                            
+                           );                 	
                     as.setDuration(durationSpeedOff);
                 } else {
                     as.playTogether(
