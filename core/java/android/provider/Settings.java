@@ -2330,14 +2330,14 @@ public final class Settings {
          * 0 = right (default)
          * 1 = left
          * 2 = both
-         * 
+         *
          * @hide
          */
         public static final String MENU_LOCATION = "menu_location";
 
         /**
          * Whether to show CRT off animation
-         * 
+         *
          * @hide
          */
         public static final String CRT_OFF_ANIMATION = "crt_off_animation";
@@ -2345,28 +2345,28 @@ public final class Settings {
         /**
          * Whether to show CRT on animation
          * currently doesn't work
-         * 
+         *
          * @hide
          */
-        public static final String CRT_ON_ANIMATION = "crt_on_animation";    
-        
+        public static final String CRT_ON_ANIMATION = "crt_on_animation";
+
         /**
          * Whether to enable unlocking from lockscreen via menu key
-         * 
+         *
          * @hide
          */
-        public static final String LOCKSCREEN_ENABLE_MENU_KEY = "lockscreen_enable_menu_key";        
+        public static final String LOCKSCREEN_ENABLE_MENU_KEY = "lockscreen_enable_menu_key";
 
         /**
          * whether to show the IME switcher when typing in the statusbar. Boolean value.
-         * 
+         *
          * @hide
          */
         public static final String SHOW_STATUSBAR_IME_SWITCHER = "show_statusbar_ime_switcher";
 
         /**
          * Setting to enable volume options.
-         * 
+         *
          * @hide
          */
         public static final String ENABLE_VOLUME_OPTIONS = "enable_volume_options";
@@ -2375,58 +2375,63 @@ public final class Settings {
          * Which layout to use to display the navigation menu at the bottom.
          * 0 = default
          * 1 = default w/search
-         * 
+         *
          * @hide
          */
         public static final String NAVIGATION_BAR_LAYOUT = "navigation_bar_layout";
 
         /**
          * How long to keep the notification LED on (in milliseconds)
-         * 
+         *
          * @hide
          */
         public static final String NOTIFICATION_LIGHT_ON = "notification_light_on";
 
         /**
          * How long to keep the notification LED off (in milliseconds)
-         * 
+         *
          * @hide
          */
         public static final String NOTIFICATION_LIGHT_OFF = "notification_light_off";
 
         /**
          * Menu visibility style
-         * 
+         *
          * @hide
          */
         public static final String MENU_VISIBILITY = "menu_visibility";
 
         /**
          * custom carrier text to display
-         * 
+         *
          * @hide
          */
         public static final String CUSTOM_CARRIER_LABEL = "custom_carrier_label";
 
         /**
-         * Settings button in drop down. Boolean value. 
+         * Settings button in drop down. Boolean value.
          * 0 = defualt, click for settings, longpress for toggles
          * 1 = click for toggles, long press for settings
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_SETTINGS_BEHAVIOR = "statusbar_settings_behavior";
 
         /**
          * whether to auto-hide the toggles when the statusbar collapes. Boolean value.
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_QUICKTOGGLES_AUTOHIDE = "statusbar_quicktoggles_autohide";
 
         /**
+         * @hide
+         */
+        public static final String STATUS_BAR_BATTERY = "status_bar_battery";
+
+        /**
          * Whether to control brightness from status bar
-         * 
+         *
          * @hide
          */
         public static final String STATUS_BAR_BRIGHTNESS_TOGGLE = "status_bar_brightness_toggle";
@@ -2435,7 +2440,7 @@ public final class Settings {
          * @hide
          */
         public static final String GOOGLE_MUSIC_IS_PLAYING = "google_music_is_playing";
-        
+
         /**
          * @hide
          */
@@ -2465,7 +2470,7 @@ public final class Settings {
         * @hide
         */
        public static final String STATUSBAR_FONT_SIZE = "statusbar_font_size";
-        
+
         /**
          * @hide
          */
@@ -2490,7 +2495,7 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_DIALOG_SHOW_TORCH_TOGGLE = "power_dialog_show_torch_toggle";
-        
+
         /**
          * @hide
          */
@@ -2500,7 +2505,7 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_DIALOG_SHOW_SCREENSHOT = "power_dialog_show_screenshot";
-        
+
         /**
          * @hide
          */
@@ -2560,7 +2565,7 @@ public final class Settings {
 
         /**
          * Whether to use the ToggleButton layout instead of the Switch layout for toggles
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_TOGGLES_USE_BUTTONS = "statusbar_toggles_use_buttons";
@@ -2577,18 +2582,18 @@ public final class Settings {
          * @hide
          */
         public static final String NAVIGATION_BAR_BUTTONS_SHOW = "navigation_bar_buttons_show";
-        
-        
+
+
         /**
          * Number of custom navbar buttons
          *
          * @hide
          */
         public static final String NAVIGATION_BAR_BUTTONS_QTY = "navigation_bar_buttons_qty";
-        
+
         /**
          * Custom navigation bar intents (short press)
-         * 
+         *
          * @hide
          */
         public static final String[] NAVIGATION_CUSTOM_ACTIVITIES = new String[] {
@@ -2598,10 +2603,10 @@ public final class Settings {
                 "navigation_custom_app_intent_3",
                 "navigation_custom_app_intent_4",
         };
-        
+
         /**
          * Custom navigation bar intents (long press)
-         * 
+         *
          * @hide
          */
         public static final String[] NAVIGATION_LONGPRESS_ACTIVITIES = new String[] {
@@ -2611,7 +2616,7 @@ public final class Settings {
                 "navigation_longpress_app_intent_3",
                 "navigation_longpress_app_intent_4",
         };
-        
+
         /**
          * Drawable URIs, each index needs to be matched up to NAVIGATION_CUSTOM_ACTIVITIES
          *
@@ -2626,10 +2631,10 @@ public final class Settings {
                 "navigation_custom_app_icon_3",
                 "navigation_custom_app_icon_4",
         };
-        
+
         /**
          * whether volume keys wake the screen. boolean value
-         * 
+         *
          * @hide
          */
         public static final String VOLUME_WAKE_SCREEN = "volume_wake_screen";
@@ -2637,12 +2642,12 @@ public final class Settings {
         /**
          * Toggle to force multiwaveview lockscreen silent mode toggle even if
          * we have a camera.
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_STYLE_MULTIWAVEVIEW_SILENTMODE =
                 "lockscreen_style_multiwaveview_silentmode";
-        
+
         /**
          * App to launch with custom app toggle enabled
          * @hide
@@ -2651,7 +2656,7 @@ public final class Settings {
 
         /**
          * Lockscreen custom app array 1 [0] - Left 2 [1] - Right 3 [2] - Top
-         * 
+         *
          * @hide
          */
         public static final String[] LOCKSCREEN_CUSTOM_APP_ACTIVITIES = new String[] {
@@ -2688,61 +2693,61 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_MUSIC_CONTROLS = "volume_music_controls";
-        
+
         /**
          * Setting to allow % on lockscreen always showing.
          * @hide
          */
         public static final String LOCKSCREEN_BATTERY = "lockscreen_battery";
-        
+
         /**
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR = "lockscreen_calendar";
-        
+
         /**
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_FLIP = "lockscreen_calendar_flip";
-        
+
         /**
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_SOURCES = "lockscreen_calendar_sources";
-        
+
         /**
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_RANGE = "lockscreen_calendar_range";
-        
+
         /**
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_HIDE_ONGOING = "lockscreen_calendar_hide_ongoing";
-        
+
         /**
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_USE_COLORS = "lockscreen_calendar_use_colors";
-        
+
         /**
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_INTERVAL = "lockscreen_calendar_interval";
-        
+
         /**
          * Setting to use lockscreen alongside secure lock
          * @hide
          */
         public static final String SHOW_LOCK_BEFORE_UNLOCK = "show_lock_before_unlock";
-        
+
         /**
          * custom lockscreen text color
          * @hide
@@ -2751,21 +2756,21 @@ public final class Settings {
 
         /**
          * The action to take when long pressing home
-         * 
+         *
          * @hide
          */
         public static final String NAVIGATION_BAR_HOME_LONGPRESS = "navigation_bar_home_longpress";
 
         /**
          * Whether to show the battery bar
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_BATTERY_BAR = "statusbar_battery_bar";
-        
+
         /**
          * Style of the battery icon
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_BATTERY_ICON = "statusbar_battery_icon";
@@ -2789,13 +2794,13 @@ public final class Settings {
          * 4 = 4tab
          * 5 = rotary
          * 6 = ring
-         * 
+         *
          * @hide
          */
 		public static final String LOCKSCREEN_LAYOUT = "lockscreen_layout";
-		
-		/**        
-         * 
+
+		/**
+         *
          * @hide
          */
 		public static final String LOCKSCREEN_4TAB = "lockscreen_4tab";
@@ -2807,16 +2812,16 @@ public final class Settings {
 		 */
         public static final String LOCKSCREEN_HIDE_NAV = "lockscreen_hide_nav";
 
-        /** 
+        /**
          * Whether to use horizontal recents tasks (WebAOKP)
-         * 
+         *
          * @hide
          */
         public static final String HORIZONTAL_RECENTS_TASK_PANEL = "horizontal_recents_task_panel";
 
         /**
          * thickness of the batteyr bar (in dp)
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_BATTERY_BAR_THICKNESS = "statusbar_battery_bar_thickness";
@@ -2824,28 +2829,28 @@ public final class Settings {
         /**
          * 0 = regular
          * 1 = mirrored from center
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_BATTERY_BAR_STYLE = "statusbar_battery_bar_style";
 
         /**
          * whether to show charging animation
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_BATTERY_BAR_ANIMATE = "statusbar_battery_bar_animate";
 
         /**
          * whether the device is a tablet (set by SystemUI)
-         * 
+         *
          * @hide
          */
         public static final String IS_TABLET = "is_tablet";
 
         /**
          * Whether to allow the device to use landscape lockscreen layouts
-         * 
+         *
          * @hide
          */
         public static final String LOCKSCREEN_LANDSCAPE = "lockscreen_landscape";
@@ -2853,7 +2858,7 @@ public final class Settings {
         /**
          * [0] = how long to animate glow off
          * [1] = how long to animate glow on
-         * 
+         *
          * @hide
          */
         public static final String[] NAVIGATION_BAR_GLOW_DURATION = new String[] {
@@ -2862,14 +2867,14 @@ public final class Settings {
         };
 
         /**
-         * 
+         *
          * @hide
          */
         public static final String NAVIGATION_BAR_BUTTON_ALPHA = "navigation_bar_button_alpha";
 
         /**
          * Boolean value whether to link ringtone and notification volumes
-         * 
+         *
          * @hide
          */
         public static final String VOLUME_LINK_NOTIFICATION = "volume_link_notification";
@@ -2878,7 +2883,7 @@ public final class Settings {
          * @hide
          */
         public static final String LOCKSCREEN_QUICK_UNLOCK_CONTROL = "lockscreen_quick_unlock_control";
-        
+
         /**
          * @hide
          */
@@ -2888,12 +2893,12 @@ public final class Settings {
          * @hide
          */
         public static final String USE_WEATHER = "use_weather";
-        
+
         /**
          * @hide
          */
         public static final String WEATHER_SHOW_LOCATION = "weather_show_location";
-        
+
         /**
          * @hide
          */
@@ -2901,42 +2906,42 @@ public final class Settings {
 
         /**
          * Whether to enable torch by long pressing power from a screen-off state
-         * 
+         *
          * @hide
          */
         public static final String ENABLE_FAST_TORCH = "enable_fast_torch";
 
         /**
          * Whether to show statusbar signal text
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_SIGNAL_TEXT = "statusbar_signal_text";
 
         /**
          * statusbar signal text color
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_SIGNAL_TEXT_COLOR = "statusbar_signal_text_color";
 
         /**
          * whether to hide the signal barss
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_HIDE_SIGNAL_BARS = "statusbar_hide_signal_bars";
 
         /**
          * Whether to show statusbar WiFi signal text
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_WIFI_SIGNAL_TEXT = "statusbar_wifi_signal_text";
 
         /**
          * statusbar WIFI signal text color
-         * 
+         *
          * @hide
          */
         public static final String STATUSBAR_WIFI_SIGNAL_TEXT_COLOR = "statusbar_wifi_signal_text_color";
@@ -2949,7 +2954,7 @@ public final class Settings {
          * @hide
          */
         public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
-        
+
         /**
          * Whether to enable quiet hours.
          * @hide
@@ -3265,10 +3270,10 @@ public final class Settings {
          * Whether ADB is enabled.
          */
         public static final String ADB_ENABLED = "adb_enabled";
-        
+
         /**
          * Whether to display the ADB notification.
-         * 
+         *
          * @hide
          */
         public static final String ADB_ICON = "adb_icon";
@@ -4692,7 +4697,7 @@ public final class Settings {
         /**
          * The {@link ComponentName} string of the service to be used as the
          * voice recognition service.
-         * 
+         *
          * @hide
          */
         public static final String VOICE_RECOGNITION_SERVICE = "voice_recognition_service";
@@ -4993,7 +4998,7 @@ public final class Settings {
         /**
          * use the lock screen timeout settings when the user turns the power off manually?
          * Boolean value.
-         * 
+         *
          * @hide
          */
         public static final String LOCK_SCREEN_LOCK_USER_OVERRIDE = "lock_screen_lock_suer_override";
@@ -5007,7 +5012,7 @@ public final class Settings {
          * @hide
          */
         public static final String POWER_SAVER_SYNC_DATA_MODE = "power_saver_sync_data_mode";
-        
+
         /**
          * @hide
          */
