@@ -2432,6 +2432,13 @@ public final class Settings {
         public static final String STATUS_BAR_BRIGHTNESS_TOGGLE = "status_bar_brightness_toggle";
 
         /**
+         * Whether to control volume from status bar
+         * 
+         * @hide
+         */
+        public static final String STATUS_BAR_VOLUME_TOGGLE = "status_bar_volume_toggle";
+
+        /**
          * @hide
          */
         public static final String GOOGLE_MUSIC_IS_PLAYING = "google_music_is_playing";
@@ -2536,6 +2543,11 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_TOGGLES_BRIGHTNESS_LOC = "statusbar_toggles_brightness_loc";
+
+        /**
+         * @hide
+         */
+        public static final String STATUSBAR_TOGGLES_VOLUME_LOC = "statusbar_toggles_volume_loc";
 
         /**
          * @hide

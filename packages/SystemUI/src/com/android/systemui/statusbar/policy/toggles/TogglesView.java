@@ -39,7 +39,13 @@ public class TogglesView extends LinearLayout {
     public static final int BRIGHTNESS_LOC_BOTTOM = 2;
     public static final int BRIGHTNESS_LOC_NONE = 3;
 
+    public static final int VOLUME_LOC_TOP = 1;
+    public static final int VOLUME_LOC_BOTTOM = 2;
+    public static final int VOLUME_LOC_NONE = 3;
+
     private int mBrightnessLocation = BRIGHTNESS_LOC_TOP;
+
+	private int mVolumeLocation = VOLUME_LOC_TOP;
 
     private static final String TOGGLE_AUTOROTATE = "ROTATE";
     private static final String TOGGLE_BLUETOOTH = "BT";
@@ -137,6 +143,12 @@ public class TogglesView extends LinearLayout {
                 PARAMS_BRIGHTNESS);
     }
 
+    private void addVolume() {
+        rows.add(new LinearLayout(mContext));
+        rows.get(rows.size() - 1).addView(new VolumeSlider(mContext).getView(),
+                PARAMS_BRIGHTNESS);
+    }
+
     private void addViews() {
         removeViews();
         rows = new ArrayList<LinearLayout>();
@@ -150,6 +162,8 @@ public class TogglesView extends LinearLayout {
 
         if (mBrightnessLocation == BRIGHTNESS_LOC_TOP)
             addBrightness();
+        if (mVolumeLocation == VOLUME_LOC_TOP)
+            addVolume();
 
         for (int i = 0; i < toggles.size(); i++) {
             if (i % mWidgetsPerRow == 0) {
@@ -191,6 +205,8 @@ public class TogglesView extends LinearLayout {
         }
         if (mBrightnessLocation == BRIGHTNESS_LOC_BOTTOM)
             addBrightness();
+        if (mVolumeLocation == VOLUME_LOC_BOTTOM)
+            addVolume();
 
         final int layout_type = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.STATUS_BAR_LAYOUT, 0);
@@ -241,6 +257,9 @@ public class TogglesView extends LinearLayout {
                     Settings.System.getUriFor(Settings.System.STATUSBAR_TOGGLES_BRIGHTNESS_LOC),
                     false, this);
             resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.STATUSBAR_TOGGLES_VOLUME_LOC),
+                    false, this);
+            resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.STATUSBAR_TOGGLES_NUMBER_PER_ROW),
                     false, this);
             resolver.registerContentObserver(
@@ -265,6 +284,9 @@ public class TogglesView extends LinearLayout {
 
         mBrightnessLocation = Settings.System.getInt(resolver,
                 Settings.System.STATUSBAR_TOGGLES_BRIGHTNESS_LOC, BRIGHTNESS_LOC_TOP);
+
+        mVolumeLocation = Settings.System.getInt(resolver,
+                Settings.System.STATUSBAR_TOGGLES_VOLUME_LOC, VOLUME_LOC_TOP);
 
         useAltButtonLayout = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.STATUSBAR_TOGGLES_USE_BUTTONS, 0) == 1;
