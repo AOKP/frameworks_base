@@ -24,6 +24,8 @@ import android.os.IBinder;
 import android.os.ServiceManager;
 import android.util.Log;
 
+import uk.co.lilhermit.android.TAframework.TAnotification;
+
 /**
  * Class to notify the user of events that happen.  This is how you tell
  * the user that something has happened in the background. {@more}
@@ -71,6 +73,8 @@ public class NotificationManager
     private static boolean localLOGV = false;
 
     private static INotificationManager sService;
+    private TAnotification notification_store = null; // temporary storage for the whole notification
+    private boolean hasFullColorNotificationLED = false;
 
     /** @hide */
     static public INotificationManager getService()
@@ -86,6 +90,14 @@ public class NotificationManager
     /*package*/ NotificationManager(Context context, Handler handler)
     {
         mContext = context;
+
+        hasFullColorNotificationLED = context.getResources().getBoolean
+            (com.android.internal.R.bool.config_has_full_color_notification_led);
+
+        if (hasFullColorNotificationLED) {
+            notification_store = new TAnotification(mContext);
+        }
+
     }
 
     /**
@@ -116,16 +128,21 @@ public class NotificationManager
      */
     public void notify(String tag, int id, Notification notification)
     {
-        int[] idOut = new int[1];
-        INotificationManager service = getService();
-        String pkg = mContext.getPackageName();
-        if (localLOGV) Log.v(TAG, pkg + ": notify(" + id + ", " + notification + ")");
-        try {
-            service.enqueueNotificationWithTag(pkg, tag, id, notification, idOut);
-            if (id != idOut[0]) {
-                Log.w(TAG, "notify: id corrupted: sent " + id + ", got back " + idOut[0]);
+        if (hasFullColorNotificationLED) {
+            notification_store.queueNotify(tag, id, notification);
+        }
+        else {
+            int[] idOut = new int[1];
+            INotificationManager service = getService();
+            String pkg = mContext.getPackageName();
+            if (localLOGV) Log.v(TAG, pkg + ": notify(" + id + ", " + notification + ")");
+            try {
+                service.enqueueNotificationWithTag(pkg, tag, id, notification, idOut);
+                if (id != idOut[0]) {
+                    Log.w(TAG, "notify: id corrupted: sent " + id + ", got back " + idOut[0]);
+                }
+            } catch (RemoteException e) {
             }
-        } catch (RemoteException e) {
         }
     }
 
@@ -146,12 +163,17 @@ public class NotificationManager
      */
     public void cancel(String tag, int id)
     {
-        INotificationManager service = getService();
-        String pkg = mContext.getPackageName();
-        if (localLOGV) Log.v(TAG, pkg + ": cancel(" + id + ")");
-        try {
-            service.cancelNotificationWithTag(pkg, tag, id);
-        } catch (RemoteException e) {
+        if (hasFullColorNotificationLED) {
+            notification_store.queueCancel(tag, id);
+        }
+        else {
+            INotificationManager service = getService();
+            String pkg = mContext.getPackageName();
+            if (localLOGV) Log.v(TAG, pkg + ": cancel(" + id + ")");
+            try {
+                service.cancelNotificationWithTag(pkg, tag, id);
+            } catch (RemoteException e) {
+            }
         }
     }
 
@@ -161,12 +183,17 @@ public class NotificationManager
      */
     public void cancelAll()
     {
-        INotificationManager service = getService();
-        String pkg = mContext.getPackageName();
-        if (localLOGV) Log.v(TAG, pkg + ": cancelAll()");
-        try {
-            service.cancelAllNotifications(pkg);
-        } catch (RemoteException e) {
+        if (hasFullColorNotificationLED) {
+            notification_store.queueCancelAll();
+        }
+        else {
+            INotificationManager service = getService();
+            String pkg = mContext.getPackageName();
+            if (localLOGV) Log.v(TAG, pkg + ": cancelAll()");
+            try {
+                service.cancelAllNotifications(pkg);
+            } catch (RemoteException e) {
+            }
         }
     }
 

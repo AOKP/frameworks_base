@@ -775,15 +775,15 @@
          [bootmode]:[original USB mode]:[USB mode used]-->
     <integer-array translatable="false" name="config_oemUsbModeOverride">
     </integer-array>
-    
+
     <!-- Whether to even allow system settings for crt animations
     		setting this to false will completely disable them -->
     <bool name="config_enableCrtAnimations">true</bool>
-    
+
     <!-- LUN file to be used by legacy USB manager.
           The existence of this file will be used to determine in the
           legacy USB manager should be started. -->
-    <string name="config_legacyUmsLunFile">/sys/devices/platform/usb_mass_storage/lun0/file</string>    
+    <string name="config_legacyUmsLunFile">/sys/devices/platform/usb_mass_storage/lun0/file</string>
 
 	<!-- Workaround for devices with broken keyboards -->
     <bool name="config_forceDisableHardwareKeyboard">false</bool>
@@ -793,5 +793,8 @@
 
     <!-- If this value is true, we handle Samsung CDMA's message ID method -->
     <bool name="config_smsSamsungCdmaAlternateMessageIDEncoding">false</bool>
+
+    <!-- If this value is true, we use the TrackballAlert notification methods -->
+    <bool name="config_has_full_color_notification_led">false</bool>
 
 </resources>
