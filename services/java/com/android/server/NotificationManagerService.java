@@ -809,9 +809,6 @@ public class NotificationManagerService extends INotificationManager.Stub
                     long identity = Binder.clearCallingIdentity();
                     try {
                         r.statusBarKey = mStatusBar.addNotification(n);
-                        if ((n.notification.flags & Notification.FLAG_SHOW_LIGHTS) != 0) {
-                            mAttentionLight.pulse();
-                        }
                     }
                     finally {
                         Binder.restoreCallingIdentity(identity);
