@@ -130,11 +130,20 @@ public class RecentsPanelView extends RelativeLayout implements OnItemClickListe
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder;
             if (convertView == null) {
-            	if (Settings.System.getInt(mContext.getContentResolver(),
-                      Settings.System.HORIZONTAL_RECENTS_TASK_PANEL,0) == 1)
+
+                int recent_style = Settings.System.getInt(mContext.getContentResolver(),
+                      Settings.System.RECENT_APP_SWITCHER,0);
+
+            	if (recent_style == 1) {
             		convertView = mInflater.inflate(R.layout.status_bar_recent_item_webaokp, parent, false);
-            	else 
-            		convertView = mInflater.inflate(R.layout.status_bar_recent_item, parent, false);
+                }
+                else if (recent_style == 2) {
+                    convertView = mInflater.inflate(R.layout.status_bar_recent_item_sense4, parent, false);
+                }
+                else {
+                    convertView = mInflater.inflate(R.layout.status_bar_recent_item, parent, false);
+                }
+
                 holder = new ViewHolder();
                 holder.thumbnailView = convertView.findViewById(R.id.app_thumbnail);
                 holder.thumbnailViewImage = (ImageView) convertView.findViewById(
@@ -255,7 +264,13 @@ public class RecentsPanelView extends RelativeLayout implements OnItemClickListe
 
     public void handleShowBackground(boolean show) {
         if (show) {
-            mRecentsScrim.setBackgroundResource(R.drawable.status_bar_recents_background_solid);
+            if(Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.RECENT_APP_SWITCHER,0) == 2) {
+                mRecentsScrim.setBackgroundResource(R.drawable.status_bar_recents_background_solid_sense4);
+            }
+            else {
+                mRecentsScrim.setBackgroundResource(R.drawable.status_bar_recents_background_solid);
+            }
         } else {
             mRecentsScrim.setBackgroundDrawable(null);
         }
@@ -334,15 +349,24 @@ public class RecentsPanelView extends RelativeLayout implements OnItemClickListe
     public void updateValuesFromResources() {
         final Resources res = mContext.getResources();
 
-        if (Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.HORIZONTAL_RECENTS_TASK_PANEL,0) == 1) {
+        int recent_style = Settings.System.getInt(mContext.getContentResolver(),
+                      Settings.System.RECENT_APP_SWITCHER,0);
+
+        if (recent_style == 1) {
         	mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy_webaokp);
         	mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width_webaokp));
         }
-        else{
+        else if (recent_style == 2) {
+        	mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy_sense4);
+        	mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width_sense4));
+        }
+        else {
             mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy);
         	mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width));
         }
+
+        if (DEBUG) Log.d(TAG, "mFitThumbnailToXY: " + mFitThumbnailToXY);
+        if (DEBUG) Log.d(TAG, "mThumbnailWidth: " + mThumbnailWidth);
     }
 
     @Override
@@ -426,9 +450,16 @@ public class RecentsPanelView extends RelativeLayout implements OnItemClickListe
                 h.thumbnailViewImageBitmap.getHeight() != thumbnail.getHeight()) {
                 if (mFitThumbnailToXY) {
                     h.thumbnailViewImage.setScaleType(ScaleType.FIT_XY);
+                    if(Settings.System.getInt(mContext.getContentResolver(),
+                        Settings.System.RECENT_APP_SWITCHER,0) == 2) {
+                        h.thumbnailViewImage.setRotationY(25.0f);
+                    }
                 } else {
                     Matrix scaleMatrix = new Matrix();
                     float scale = mThumbnailWidth / (float) thumbnail.getWidth();
+                    if (DEBUG) Log.d(TAG, "mThumbnailWidth: " + mThumbnailWidth);
+                    if (DEBUG) Log.d(TAG, "thumbnail.getWidth(): " + thumbnail.getWidth());
+                    if (DEBUG) Log.d(TAG, "scale: " + scale);
                     scaleMatrix.setScale(scale, scale);
                     h.thumbnailViewImage.setScaleType(ScaleType.MATRIX);
                     h.thumbnailViewImage.setImageMatrix(scaleMatrix);
