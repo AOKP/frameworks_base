@@ -76,7 +76,6 @@ import android.view.WindowManager;
 import android.view.WindowManagerImpl;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RemoteViews;
@@ -501,6 +500,14 @@ public class TabletStatusBar extends StatusBar implements
                 (mCurrentTheme == null || !mCurrentTheme.equals(newTheme))) {
             mCurrentTheme = (CustomTheme)newTheme.clone();
             recreateStatusBar();
+            Settings.System.putInt(mContext.getContentResolver(), Settings.System.STATUSBAR_CLOCK_COLOR,
+                    Integer.MIN_VALUE);
+            Settings.System.putInt(mContext.getContentResolver(), Settings.System.STATUSBAR_BATTERY_BAR_COLOR,
+                    Integer.MIN_VALUE);
+            Settings.System.putInt(mContext.getContentResolver(), Settings.System.STATUSBAR_SIGNAL_TEXT_COLOR,
+                    Integer.MIN_VALUE);
+            Settings.System.putInt(mContext.getContentResolver(), Settings.System.STATUSBAR_WIFI_SIGNAL_TEXT_COLOR,
+                    Integer.MIN_VALUE);
         }
             mHeightReceiver.updateHeight(); // display size may have changed
             loadDimens();
