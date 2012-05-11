@@ -17,7 +17,16 @@
 package android.util;
 
 import android.os.SystemProperties;
+import android.util.Log;
 
+import java.io.IOException;
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+
+import java.io.*;
 
 /**
  * A structure describing general information about a display, such as its
@@ -27,6 +36,12 @@ import android.os.SystemProperties;
  * getWindowManager().getDefaultDisplay().getMetrics(metrics);</pre>
  */
 public class DisplayMetrics {
+
+    /**
+     * AOKP Specific App Density (SAD) config. file
+     */
+    public static final String SAD_PROPERTIES = "/system/aokp.prop";
+
     /**
      * Standard quantized DPI for low-density screens.
      */
@@ -153,13 +168,34 @@ public class DisplayMetrics {
 
     public DisplayMetrics() {
     }
-    
+   
+    public String mAppName = "";
+    public String mAppPath = "";
+
     public void setTo(DisplayMetrics o) {
         widthPixels = o.widthPixels;
         heightPixels = o.heightPixels;
-        density = o.density;
-        densityDpi = o.densityDpi;
-        scaledDensity = o.scaledDensity;
+	density = o.density;
+       	scaledDensity = o.scaledDensity;
+       	densityDpi = o.densityDpi;
+		
+	// AOKP SPECIFIC APP DENSITY PATCH
+	boolean PerAppScaling = Integer.parseInt(getProperty("aokp.per_app_scaling", "0")) == 1;
+	int DefaultDpi = Integer.parseInt(getProperty(mAppPath.equals("/system/app") ? "aokp.system_default_dpi" : "aokp.user_default_dpi", "0"));
+	if (!mAppName.equals("") && PerAppScaling) {
+		try {
+			float densityProp       = Float.parseFloat(getProperty("aokp." + mAppName + ".d", "0"));
+			float scaledDensityProp = Float.parseFloat(getProperty("aokp." + mAppName + ".sd", "0"));
+			int densityDpiProp      = Integer.parseInt(getProperty("aokp." + mAppName + ".dd", String.valueOf(DefaultDpi)));
+			if (densityDpiProp != 0) {
+				densityDpi = densityDpiProp;				
+				density = densityProp == 0 ? densityDpi / (float) DENSITY_DEFAULT : densityProp;
+				scaledDensity = scaledDensityProp == 0 ? densityDpi / (float) DENSITY_DEFAULT : scaledDensityProp;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
         xdpi = o.xdpi;
         ydpi = o.ydpi;
         noncompatWidthPixels = o.noncompatWidthPixels;
@@ -180,6 +216,27 @@ public class DisplayMetrics {
         ydpi = DENSITY_DEVICE;
         noncompatWidthPixels = 0;
         noncompatHeightPixels = 0;
+    }
+
+    public String getProperty(String property, String value) {
+        if (new File(SAD_PROPERTIES).exists()) {
+            try {
+                FileInputStream fstream = new FileInputStream(SAD_PROPERTIES);
+                DataInputStream in = new DataInputStream(fstream);
+                BufferedReader br = new BufferedReader(new InputStreamReader(in));
+                String strLine;
+                while ((strLine = br.readLine()) != null) {
+                    if (strLine.contains("=")) {
+                        if (strLine.substring(0, strLine.lastIndexOf("=")).equals(property))
+                            return strLine.replace(property + "=", "");
+                    }
+                }
+                in.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return value;
     }
 
     @Override

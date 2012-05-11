@@ -201,6 +201,11 @@ public class Resources {
     public Resources(AssetManager assets, DisplayMetrics metrics,
             Configuration config, CompatibilityInfo compInfo) {
         mAssets = assets;
+
+	// AOKP SPECIFIC APP DENSITY PATCH
+	mMetrics.mAppName = metrics.mAppName;
+	mMetrics.mAppPath = metrics.mAppPath;
+
         mMetrics.setToDefaults();
         mCompatibilityInfo = compInfo;
         updateConfiguration(config, metrics);

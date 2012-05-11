@@ -1523,7 +1523,13 @@ public final class ActivityThread {
         }
 
         //Slog.i(TAG, "Resource: key=" + key + ", display metrics=" + metrics);
+
+	// AOKP SPECIFIC APP DENSITY PATCH
         DisplayMetrics metrics = getDisplayMetricsLocked(null, false);
+	metrics.mAppPath = resDir.substring(0, resDir.lastIndexOf("/"));        
+        int mLastIndex = resDir.lastIndexOf("-");
+        metrics.mAppName = resDir.substring(resDir.lastIndexOf("/") + 1, mLastIndex == -1 ? resDir.lastIndexOf(".") : mLastIndex);	
+	
         r = new Resources(assets, metrics, getConfiguration(), compInfo);
         if (false) {
             Slog.i(TAG, "Created app resources " + resDir + " " + r + ": "
