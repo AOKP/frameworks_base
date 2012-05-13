@@ -28,7 +28,6 @@
         android:id="@+id/wifi_combo"
         android:layout_height="match_parent"
         android:layout_width="wrap_content"
-        android:layout_marginRight="-6dp"
         >
         <ImageView
             android:id="@+id/wifi_signal"
