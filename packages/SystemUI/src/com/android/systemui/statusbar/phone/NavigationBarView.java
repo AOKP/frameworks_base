@@ -32,6 +32,7 @@ import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
@@ -42,6 +43,7 @@ import android.provider.Settings.System;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Slog;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -65,7 +67,7 @@ import com.android.systemui.statusbar.policy.buttons.ExtensibleKeyButtonView;
 
 public class NavigationBarView extends LinearLayout {
     final static boolean DEBUG = false;
-    final static String TAG = "PhoneStatusBar/NavigationBarView";
+    final static String TAG = "NavigationBarView";
 
     final static boolean DEBUG_DEADZONE = false;
 
@@ -162,15 +164,15 @@ public class NavigationBarView extends LinearLayout {
     public View getRightMenuButton() {
         return mCurrentView.findViewById(R.id.menu);
     }
-    
+
     public View getSearchButton() {
         return mCurrentView.findViewById(R.id.search);
     }
-	
+
     public View getRecentsButton() {
         return mCurrentView.findViewById(R.id.recent_apps);
     }
-    
+
     public View getBackButton() {
         return mCurrentView.findViewById(R.id.back);
     }
@@ -182,7 +184,7 @@ public class NavigationBarView extends LinearLayout {
     public View getBigMenuButton() {
         return mCurrentView.findViewById(R.id.menu_big);
     }
-	
+
     public NavigationBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
@@ -232,7 +234,7 @@ public class NavigationBarView extends LinearLayout {
                 ExtensibleKeyButtonView v = null;
 
                 v = generateKey(landscape, mClickActions[j], mLongpressActions[j],
-                         mPortraitIcons[j]);
+                        mPortraitIcons[j]);
                 v.setTag((landscape ? "key_land_" : "key_") + j);
 
                 addButton(navButtonLayout, v, landscape);
@@ -289,8 +291,6 @@ public class NavigationBarView extends LinearLayout {
         KeyButtonView v = null;
         Resources r = getResources();
 
-        int btnWidth = 80;
-
         switch (keyId) {
 
             case KEY_MENU_RIGHT:
@@ -326,49 +326,73 @@ public class NavigationBarView extends LinearLayout {
         return null;
     }
 
-    private ExtensibleKeyButtonView generateKey(boolean landscape, String ClickAction,
-            String Longpress,
-            String IconUri) {
-        ExtensibleKeyButtonView v = null;
-        Resources r = getResources();
+    private ExtensibleKeyButtonView generateKey(boolean landscape, String clickAction,
+            String longpress,
+            String iconUri) {
 
-        int btnWidth = 80;
+        final int iconSize = 80;
+        ExtensibleKeyButtonView v = new ExtensibleKeyButtonView(mContext, null, clickAction,
+                longpress);
+        v.setLayoutParams(getLayoutParams(landscape, iconSize));
 
-        v = new ExtensibleKeyButtonView(mContext, null, ClickAction, Longpress);
-        v.setLayoutParams(getLayoutParams(landscape, btnWidth));
+        boolean drawableSet = false;
+
+        if (iconUri != null) {
+            if (iconUri.startsWith("file")) {
+                // custom icon from the URI here
+                File f = new File(Uri.parse(iconUri).getPath());
+                if (f.exists()) {
+                    v.setImageDrawable(new BitmapDrawable(getResources(), f.getAbsolutePath()));
+                    drawableSet = true;
+                }
+            } else if(clickAction != null && !clickAction.startsWith("**")) {
+                // here it's not a system action (**action**), so it must be an app intent
+                try {
+                    Drawable d = mContext.getPackageManager().getActivityIcon(Intent.parseUri(clickAction, 0));
+                    final int[] appIconPadding = getAppIconPadding();
+                    if (landscape)
+                        v.setPaddingRelative(appIconPadding[1], appIconPadding[0],
+                                appIconPadding[3], appIconPadding[2]);
+                    else
+                        v.setPaddingRelative(appIconPadding[0], appIconPadding[1],
+                                appIconPadding[2], appIconPadding[3]);
+                    v.setImageDrawable(d);
+                    drawableSet = true;
+                } catch (NameNotFoundException e) {
+                    e.printStackTrace();
+                    drawableSet = false;
+                } catch (URISyntaxException e) {
+                    e.printStackTrace();
+                    drawableSet = false;
+                }
+            }
+        }
+
+        if (!drawableSet) {
+            v.setImageDrawable(getNavbarIconImage(landscape, clickAction));
+        }
+
         v.setGlowBackground(landscape ? R.drawable.ic_sysbar_highlight_land
                 : R.drawable.ic_sysbar_highlight);
-
-        // the rest is for setting the icon (or custom icon)
-        if (IconUri != null && IconUri.length() > 0) {
-            File f = new File(Uri.parse(IconUri).getPath());
-            if (f.exists())
-                v.setImageDrawable(new BitmapDrawable(r, f.getAbsolutePath()));
-        }
-
-        if (IconUri != null && !IconUri.equals("")
-                && IconUri.startsWith("file")) {
-            // it's an icon the user chose from the gallery here
-            File icon = new File(Uri.parse(IconUri).getPath());
-            if (icon.exists())
-                v.setImageDrawable(new BitmapDrawable(getResources(), icon.getAbsolutePath()));
-
-        } else if (IconUri != null && !IconUri.equals("")) {
-            // here they chose another app icon
-            try {
-                PackageManager pm = getContext().getPackageManager();
-                v.setImageDrawable(pm.getActivityIcon(Intent.parseUri(IconUri, 0)));
-            } catch (NameNotFoundException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        } else {
-            // ok use default icons here
-            v.setImageDrawable(getNavbarIconImage(landscape, ClickAction));
-        }
-
         return v;
+    }
+
+    private int[] getAppIconPadding() {
+        int[] padding = new int[4];
+        // left
+        padding[0] = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                .getDisplayMetrics());
+        // top
+        padding[1] = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 8, getResources()
+                .getDisplayMetrics());
+        // right
+        padding[2] = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                .getDisplayMetrics());
+        // bottom
+        padding[3] = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10,
+                getResources()
+                        .getDisplayMetrics());
+        return padding;
     }
 
     private LayoutParams getLayoutParams(boolean landscape, float dp) {
@@ -746,19 +770,19 @@ public class NavigationBarView extends LinearLayout {
 
         mNumberOfButtons = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_BUTTONS_QTY, 0);
-        if (mNumberOfButtons == 0){
-        	mNumberOfButtons = StockButtonsQty;
-        	Settings.System.putInt(resolver,
-            		Settings.System.NAVIGATION_BAR_BUTTONS_QTY, StockButtonsQty);    	
+        if (mNumberOfButtons == 0) {
+            mNumberOfButtons = StockButtonsQty;
+            Settings.System.putInt(resolver,
+                    Settings.System.NAVIGATION_BAR_BUTTONS_QTY, StockButtonsQty);
         }
 
         for (int j = 0; j < mNumberOfButtons; j++) {
             mClickActions[j] = Settings.System.getString(resolver,
                     Settings.System.NAVIGATION_CUSTOM_ACTIVITIES[j]);
-            if (mClickActions[j] == null){
+            if (mClickActions[j] == null) {
                 mClickActions[j] = StockClickActions[j];
                 Settings.System.putString(resolver,
-                		Settings.System.NAVIGATION_CUSTOM_ACTIVITIES[j], mClickActions[j]);
+                        Settings.System.NAVIGATION_CUSTOM_ACTIVITIES[j], mClickActions[j]);
             }
 
             mLongpressActions[j] = Settings.System.getString(resolver,
@@ -766,14 +790,14 @@ public class NavigationBarView extends LinearLayout {
             if (mLongpressActions[j] == null) {
                 mLongpressActions[j] = StockLongpress[j];
                 Settings.System.putString(resolver,
-                		Settings.System.NAVIGATION_LONGPRESS_ACTIVITIES[j], mLongpressActions[j]);
+                        Settings.System.NAVIGATION_LONGPRESS_ACTIVITIES[j], mLongpressActions[j]);
             }
             mPortraitIcons[j] = Settings.System.getString(resolver,
                     Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j]);
             if (mPortraitIcons[j] == null) {
                 mPortraitIcons[j] = "";
                 Settings.System.putString(resolver,
-                		Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j], "");
+                        Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j], "");
             }
         }
         makeBar();
@@ -807,14 +831,6 @@ public class NavigationBarView extends LinearLayout {
             } else if (uri.equals(ACTION_POWER)) {
 
                 return getResources().getDrawable(R.drawable.ic_sysbar_power);
-            }
-        } else {
-            try {
-                return mContext.getPackageManager().getActivityIcon(Intent.parseUri(uri, 0));
-            } catch (NameNotFoundException e) {
-                e.printStackTrace();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
             }
         }
 
