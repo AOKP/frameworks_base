@@ -2065,7 +2065,6 @@ public class PhoneStatusBar extends StatusBar {
         if (mNavigationBarView == null) {
             pw.println("null");
         } else {
-            mNavigationBarView.dump(fd, pw, args);
         }
 
         if (DUMPTRUCK) {
