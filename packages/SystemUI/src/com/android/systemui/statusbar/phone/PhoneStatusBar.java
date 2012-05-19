@@ -2034,6 +2034,8 @@ public class PhoneStatusBar extends StatusBar {
                 + ") " + v.getWidth() + "x" + v.getHeight() + "]";
     }
 
+    
+    
     public void dump(FileDescriptor fd, PrintWriter pw, String[] args) {
         synchronized (mQueueLock) {
             pw.println("Current Status Bar state:");

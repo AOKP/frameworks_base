@@ -47,6 +47,56 @@
 			android:id="@+id/lights_out"
 			android:visibility="gone" />
 
+		<com.android.systemui.statusbar.policy.MultiDirectionSlidingDrawer
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
+     			android:id="@+id/drawerleft"
+     			android:layout_width="match_parent"
+     			android:layout_height="match_parent"
+     			android:layout_alignParentLeft="true"
+     			systemui:direction="leftToRight"
+     			systemui:allowSingleTap="true"
+     			systemui:handle="@+id/handleleft"
+     			systemui:content="@+id/contentleft"
+				android:visibility="gone">
+			<ImageView
+     				android:id="@id/handleleft"
+     				android:layout_width="wrap_content"
+     				android:layout_height="match_parent"
+     				android:src="@drawable/ic_sysbar_leftdrawer"/>
+			<LinearLayout
+     				android:id="@id/contentleft"
+     				android:layout_width="fill_parent"
+     				android:layout_height="fill_parent"
+     				android:orientation="horizontal"/>
+		</com.android.systemui.statusbar.policy.MultiDirectionSlidingDrawer>
+
+
+		<com.android.systemui.statusbar.policy.MultiDirectionSlidingDrawer
+				xmlns:android="http://schemas.android.com/apk/res/android"
+				xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
+     			android:id="@+id/drawerright"
+     			android:layout_width="match_parent"
+     			android:layout_height="match_parent"
+     			android:layout_alignParentRight="true"
+     			systemui:direction="rightToLeft"
+     			systemui:allowSingleTap="true"
+     			systemui:handle="@+id/handleright"
+     			systemui:content="@+id/contentright"
+				android:visibility="gone">
+				<ImageView
+     				android:id="@id/handleright"
+     				android:layout_width="wrap_content"
+     				android:layout_height="match_parent"
+     				android:src="@drawable/ic_sysbar_rightdrawer"/>
+				<LinearLayout
+     				android:id="@id/contentright"
+     				android:layout_width="fill_parent"
+     				android:layout_height="fill_parent"
+     				android:orientation="horizontal"/>
+			</com.android.systemui.statusbar.policy.MultiDirectionSlidingDrawer>
+
+
 		<RelativeLayout
 			android:layout_height="match_parent"
 			android:layout_width="match_parent">

@@ -2641,6 +2641,34 @@ public final class Settings {
         };
         
         /**
+         * Enable Left Sliding Drawer in NavBar
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_LEFT_DRAWER_SHOW = "navigation_bar_left_drawer_show";
+        
+        /**
+         * Widget ID for Left Sliding Drawer
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_LEFT_DRAWER_WIDGET_ID = "navigation_bar_left_drawer_widget_id";
+        
+        /**
+         * Enable Right Sliding Drawer in NavBar
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_RIGHT_DRAWER_SHOW = "navigation_bar_right_drawer_show";
+        
+        /**
+         * Widget ID for Right Sliding Drawer
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_RIGHT_DRAWER_WIDGET_ID = "navigation_bar_right_drawer_widget_id";
+        
+        /**
          * whether volume keys wake the screen. boolean value
          * 
          * @hide

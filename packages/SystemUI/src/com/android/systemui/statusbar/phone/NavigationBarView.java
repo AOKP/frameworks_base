@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2008 The Android Open Source Project
  *
@@ -23,9 +24,16 @@ import java.net.URISyntaxException;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.appwidget.AppWidgetHost;
+import android.appwidget.AppWidgetHostView;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.ContentObserver;
@@ -37,6 +45,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ServiceManager;
 import android.provider.Settings;
+import android.provider.Settings.System;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Slog;
@@ -48,6 +57,7 @@ import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.WindowManagerImpl;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -56,9 +66,12 @@ import android.widget.LinearLayout;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.KeyButtonView;
+import com.android.systemui.statusbar.policy.MultiDirectionSlidingDrawer;
 import com.android.systemui.statusbar.policy.buttons.ExtensibleKeyButtonView;
 
-public class NavigationBarView extends LinearLayout {
+public class NavigationBarView extends LinearLayout implements MultiDirectionSlidingDrawer.OnDrawerScrollListener, 
+		MultiDirectionSlidingDrawer.OnDrawerOpenListener, MultiDirectionSlidingDrawer.OnDrawerCloseListener { 
+	
     final static boolean DEBUG = false;
     final static String TAG = "PhoneStatusBar/NavigationBarView";
 
@@ -119,6 +132,22 @@ public class NavigationBarView extends LinearLayout {
 
     public static final int KEY_MENU_RIGHT = 2;
     public static final int KEY_MENU_LEFT = 5;
+    
+    // stuff for sliding drawer
+    
+    public static final int APP_WIDGET_HOST_ID = 2112; 
+    public boolean mEnableLeftDrawer = false;
+    public boolean mEnableRightDrawer = false;
+    public MultiDirectionSlidingDrawer mrightDrawer = null;
+    public MultiDirectionSlidingDrawer mleftDrawer = null;
+    public AppWidgetHost mAppWidgetHost = null;
+    public AppWidgetManager mAppWidgetManager = null;
+    public AppWidgetHostView mrighthostView = null;
+    public AppWidgetHostView mlefthostView = null;
+    public LinearLayout mrightContent = null;
+    public LinearLayout mleftContent = null;
+    
+    
 
     // workaround for LayoutTransitions leaving the nav buttons in a weird state
     // (bug 5549288)
@@ -193,6 +222,14 @@ public class NavigationBarView extends LinearLayout {
         mVertical = false;
         mShowMenu = false;
         originalHeight = getHeight();
+        mAppWidgetHost = new AppWidgetHost(mContext, APP_WIDGET_HOST_ID);
+        mAppWidgetManager = AppWidgetManager.getInstance(mContext);
+        mAppWidgetHost.startListening();
+        
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        BroadcastReceiver mReceiver = new ScreenReceiver();
+        mContext.registerReceiver(mReceiver, filter);
     }
 
     FrameLayout rot0;
@@ -455,6 +492,12 @@ public class NavigationBarView extends LinearLayout {
 
             }
         }
+        if (mEnableLeftDrawer) {
+        	mleftDrawer.setVisibility(disableHome ? View.INVISIBLE : View.VISIBLE);
+        }
+        if (mEnableRightDrawer) {
+        	mrightDrawer.setVisibility(disableHome ? View.INVISIBLE : View.VISIBLE);
+        }
     }
 
     int originalHeight = 0;
@@ -587,6 +630,12 @@ public class NavigationBarView extends LinearLayout {
                     })
                     .start();
         }
+        if (mEnableLeftDrawer) {
+        	mleftDrawer.setVisibility(lightsOut ? View.INVISIBLE : View.VISIBLE);
+        }
+        if (mEnableRightDrawer) {
+        	mrightDrawer.setVisibility(lightsOut ? View.INVISIBLE : View.VISIBLE);
+        }
     }
 
     public void setHidden(final boolean hide) {
@@ -604,6 +653,15 @@ public class NavigationBarView extends LinearLayout {
     public void onFinishInflate() {
         rot0 = (FrameLayout) findViewById(R.id.rot0);
         rot90 = (FrameLayout) findViewById(R.id.rot90);
+        
+        mrightDrawer = (MultiDirectionSlidingDrawer) rot0.findViewById(R.id.drawerright);
+        mleftDrawer = (MultiDirectionSlidingDrawer) rot0.findViewById(R.id.drawerleft);
+        mrightContent = (LinearLayout) rot0.findViewById(R.id.contentright);
+        mleftContent = (LinearLayout) rot0.findViewById(R.id.contentleft);
+
+        // this takes care of making the buttons
+        SettingsObserver settingsObserver = new SettingsObserver(new Handler());
+        settingsObserver.observe();
 
         mRotatedViews[Surface.ROTATION_0] =
                 mRotatedViews[Surface.ROTATION_180] = findViewById(R.id.rot0);
@@ -621,10 +679,12 @@ public class NavigationBarView extends LinearLayout {
         }
         mCurrentView = mRotatedViews[Surface.ROTATION_0];
         
-        // this takes care of making the buttons
-        SettingsObserver settingsObserver = new SettingsObserver(new Handler());
-        settingsObserver.observe();
-
+        mleftDrawer.setOnDrawerCloseListener(this);
+        mleftDrawer.setOnDrawerOpenListener(this);
+        mleftDrawer.setOnDrawerScrollListener(this);
+        mrightDrawer.setOnDrawerCloseListener(this);
+        mrightDrawer.setOnDrawerOpenListener(this);
+        mrightDrawer.setOnDrawerScrollListener(this);  
     }
 
     public void reorient() {
@@ -704,6 +764,22 @@ public class NavigationBarView extends LinearLayout {
                         false,
                         this);
             }
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_LEFT_DRAWER_SHOW), false,
+                    this);
+            
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_RIGHT_DRAWER_SHOW), false,
+                    this);
+            
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_LEFT_DRAWER_WIDGET_ID), false,
+                    this);
+            
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_RIGHT_DRAWER_WIDGET_ID), false,
+                    this);
+            
             updateSettings();
         }
 
@@ -733,7 +809,7 @@ public class NavigationBarView extends LinearLayout {
             		Settings.System.NAVIGATION_BAR_BUTTONS_QTY, StockButtonsQty);    	
         }
 
-        for (int j = 0; j < 5; j++) {
+        for (int j = 0; j < mNumberOfButtons; j++) {
             mClickActions[j] = Settings.System.getString(resolver,
                     Settings.System.NAVIGATION_CUSTOM_ACTIVITIES[j]);
             if (mClickActions[j] == null){
@@ -758,6 +834,36 @@ public class NavigationBarView extends LinearLayout {
             }
         }
         makeBar();
+        
+        mEnableLeftDrawer =  (Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_LEFT_DRAWER_SHOW, 0) == 1);
+        int LeftWidgetId = Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_LEFT_DRAWER_WIDGET_ID, -1);
+        mEnableRightDrawer =  (Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_RIGHT_DRAWER_SHOW, 0) == 1);
+        int RightWidgetId = Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_RIGHT_DRAWER_WIDGET_ID, -1);
+        if (mEnableLeftDrawer) {
+        	mleftDrawer.setVisibility(View.VISIBLE);
+        	hostWidget(LeftWidgetId,mlefthostView,mleftContent);
+        } else {
+        	mleftDrawer.setVisibility(View.GONE);
+        	mleftContent.removeAllViews();
+        }
+        if (mEnableRightDrawer) {
+        	mrightDrawer.setVisibility(View.VISIBLE);
+        	hostWidget(RightWidgetId,mrighthostView,mrightContent);
+        } else {
+        	mrightDrawer.setVisibility(View.GONE);
+        	mrightContent.removeAllViews();
+        }
+        if (!mEnableLeftDrawer) {
+        	if (!mEnableRightDrawer) {
+        		mAppWidgetHost.stopListening();
+        	}
+        } else {
+        	mAppWidgetHost.startListening();
+        }
 
     }
 
@@ -789,9 +895,89 @@ public class NavigationBarView extends LinearLayout {
 
                 return getResources().getDrawable(R.drawable.ic_sysbar_power);
             }
+        } else {
+            try {
+                return mContext.getPackageManager().getActivityIcon(Intent.parseUri(uri, 0));
+            } catch (NameNotFoundException e) {
+                e.printStackTrace();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
 
         return getResources().getDrawable(R.drawable.ic_sysbar_null);
     }
 
+	@Override
+	public void onDrawerClosed() {
+		setNavVisibility(true,true,true);		   
+	}
+		
+	@Override
+	public void onDrawerOpened() {
+		if (mleftDrawer.isOpened()){
+			setNavVisibility(false,true,false);
+	   } else {
+		   setNavVisibility(false,false,true);
+	   }
+	}
+		
+	@Override
+	public void onScrollStarted() {
+		if (mleftDrawer.isMoving()){
+			setNavVisibility(false,true,false);
+	   } else {
+		   setNavVisibility(false,false,true);
+	   }
+	}
+			
+	@Override
+	public void onScrollEnded() {
+		if (mleftDrawer.isOpened()) {
+			setNavVisibility(false,true,false);
+		} else if (mrightDrawer.isOpened()){
+			setNavVisibility(false,false,true);
+		} else {
+			setNavVisibility(true,true,true);
+		}
+	}  		
+    
+	private void setNavVisibility(boolean navbar, boolean leftdrawer, boolean rightdrawer) {
+		leftdrawer = leftdrawer && mEnableLeftDrawer;
+		rightdrawer = rightdrawer && mEnableRightDrawer;
+		mCurrentView.findViewById(R.id.nav_buttons).setVisibility(navbar? View.VISIBLE : View.GONE);
+	   	mleftDrawer.setVisibility(leftdrawer? View.VISIBLE : View.GONE);
+	   	mrightDrawer.setVisibility(rightdrawer? View.VISIBLE : View.GONE);						
+	}
+  
+    
+    private void hostWidget (int appWidgetId, AppWidgetHostView hostView, LinearLayout ll){
+
+    	if (hostView != null) { // This Widget isn't blank - let's remove it first. 
+    		mAppWidgetHost.deleteAppWidgetId(hostView.getAppWidgetId());
+    	}	
+        //create the host view
+    	AppWidgetProviderInfo appWidgetInfo = mAppWidgetManager.getAppWidgetInfo(appWidgetId);
+        hostView = mAppWidgetHost.createView(mContext, appWidgetId, appWidgetInfo);
+        //set the desired widget
+        hostView.setAppWidget(appWidgetId, appWidgetInfo);
+        hostView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
+
+        //add the new host view to your activity's GUI
+        ll.removeAllViews();
+        ll.addView(hostView);
+        mAppWidgetHost.startListening();
+    }
+    
+    public class ScreenReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+                mAppWidgetHost.stopListening();                
+            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+                mAppWidgetHost.startListening();
+            }
+        }
+
+    }
 }
