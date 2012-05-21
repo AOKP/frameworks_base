@@ -25,14 +25,14 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="@drawable/ic_lockscreen_player_background">
-        <!-- We use ImageView for its cropping features, otherwise could be android:background -->
+        android:foreground="@drawable/ic_lockscreen_player_background"
+        android:background="#ff000000">
         <ImageView
             android:id="@+id/albumart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="fill"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:adjustViewBounds="false"
         />
     </FrameLayout>
