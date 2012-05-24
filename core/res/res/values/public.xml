@@ -3785,4 +3785,20 @@
   <java-symbol type="drawable" name="ic_lock_screenshot" />
   <java-symbol type="string" name="global_action_screenshot" />
 
+  <!-- Lockscreen Music Layout -->
+  <java-symbol type="id" name="album_aokp" />
+  <java-symbol type="id" name="albumart_aokp" />
+  <java-symbol type="id" name="albumart_stock" />
+  <java-symbol type="id" name="artist_aokp" />
+  <java-symbol type="id" name="btn_next_aokp" />
+  <java-symbol type="id" name="btn_next_stock" />
+  <java-symbol type="id" name="btn_play_aokp" />
+  <java-symbol type="id" name="btn_play_stock" />
+  <java-symbol type="id" name="btn_prev_aokp" />
+  <java-symbol type="id" name="btn_prev_stock" />
+  <java-symbol type="id" name="layout_aokp" />
+  <java-symbol type="id" name="layout_stock" />
+  <java-symbol type="id" name="title_aokp" />
+  <java-symbol type="id" name="title_stock" />
+
 </resources>
