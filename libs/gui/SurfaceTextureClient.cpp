@@ -57,7 +57,11 @@ void SurfaceTextureClient::init() {
     ANativeWindow::perform          = hook_perform;
 
     const_cast<int&>(ANativeWindow::minSwapInterval) = 0;
+#ifdef EGL_ALWAYS_ASYNC
+    const_cast<int&>(ANativeWindow::maxSwapInterval) = 0;
+#else
     const_cast<int&>(ANativeWindow::maxSwapInterval) = 1;
+#endif
 
     mReqWidth = 0;
     mReqHeight = 0;
