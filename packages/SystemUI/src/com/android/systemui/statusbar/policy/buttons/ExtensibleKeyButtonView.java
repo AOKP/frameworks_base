@@ -10,12 +10,10 @@ import android.app.IActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -27,6 +25,8 @@ import com.android.systemui.statusbar.policy.KeyButtonView;
 import com.android.systemui.R;
 
 
+import com.android.systemui.statusbar.phone.NavigationBarView;
+import com.android.systemui.statusbar.policy.KeyButtonView;
 
 public class ExtensibleKeyButtonView extends KeyButtonView {
 	
@@ -38,6 +38,7 @@ public class ExtensibleKeyButtonView extends KeyButtonView {
 	final static String ACTION_RECENTS = "**recents**";
 	final static String ACTION_KILL = "**kill**";
 	final static String ACTION_NULL = "**null**";
+	final static String ACTION_WIDGETS = "**widgets**";
 
     private static final String TAG = "Key.Ext";
 
@@ -77,7 +78,7 @@ public class ExtensibleKeyButtonView extends KeyButtonView {
         		setId(R.id.menu_big);
         	} else if (ClickAction.equals(ACTION_POWER)) {
         		setCode (KeyEvent.KEYCODE_POWER);
-        	} else { // the remaining options need to be handled by OnClick;
+            } else { // the remaining options need to be handled by OnClick;
         		setOnClickListener(mClickListener);
         		if (ClickAction.equals(ACTION_RECENTS))
         			setId(R.id.recent_apps);
@@ -154,6 +155,10 @@ public class ExtensibleKeyButtonView extends KeyButtonView {
                 }
                 return;
         		
+        	} else if (mClickAction.equals(ACTION_WIDGETS)) {
+                Intent toggleWidgets = new Intent(
+                        NavigationBarView.WidgetReceiver.ACTION_TOGGLE_WIDGETS);
+                mContext.sendBroadcast(toggleWidgets);
         	} else if (mClickAction.equals(ACTION_KILL)) {
         		
         		mHandler.postDelayed(mKillTask, ViewConfiguration.getGlobalActionKeyTimeout());
@@ -203,6 +208,11 @@ public class ExtensibleKeyButtonView extends KeyButtonView {
         	} else if (mLongpress.equals(ACTION_KILL)) {        		
         		mHandler.postDelayed(mKillTask, 0);  
         		return true;
+            } else if (mLongpress.equals(ACTION_WIDGETS)) {
+                Intent toggleWidgets = new Intent(
+                        NavigationBarView.WidgetReceiver.ACTION_TOGGLE_WIDGETS);
+                mContext.sendBroadcast(toggleWidgets);
+                return true;
         	} else if (mLongpress.equals(ACTION_RECENTS)) {
         		try {
                     mBarService.toggleRecentApps();
