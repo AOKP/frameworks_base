@@ -151,7 +151,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="302dip">
+        android:layout_height="342dip">
 
         <com.android.internal.widget.WaveView
             android:id="@+id/unlock_widget"
