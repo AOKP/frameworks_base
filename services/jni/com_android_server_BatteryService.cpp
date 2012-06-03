@@ -210,6 +210,21 @@ static void setIntField(JNIEnv* env, jobject obj, const char* path, jfieldID fie
     env->SetIntField(obj, fieldID, value);
 }
 
+#ifdef MOTO_PERCENT_BATTERY_MOD
+static void setIntFieldMax(JNIEnv* env, jobject obj, const char* path, jfieldID fieldID, int maxValue)
+{
+    const int SIZE = 128;
+    char buf[SIZE];
+    
+    jint value = 0;
+    if (readFromFile(path, buf, SIZE) > 0) {
+        value = atoi(buf);
+    }
+    if (value > maxValue) value = maxValue;
+    env->SetIntField(obj, fieldID, value);
+}
+#endif
+
 static void setVoltageField(JNIEnv* env, jobject obj, const char* path, jfieldID fieldID)
 {
     const int SIZE = 128;
@@ -313,7 +328,11 @@ int register_android_server_BatteryService(JNIEnv* env)
                 snprintf(path, sizeof(path), "%s/%s/present", POWER_SUPPLY_PATH, name);
                 if (access(path, R_OK) == 0)
                     gPaths.batteryPresentPath = strdup(path);
+#ifdef MOTO_PERCENT_BATTERY_MOD
+                snprintf(path, sizeof(path), "%s/%s/charge_counter", POWER_SUPPLY_PATH, name);
+#else
                 snprintf(path, sizeof(path), "%s/%s/capacity", POWER_SUPPLY_PATH, name);
+#endif
                 if (access(path, R_OK) == 0)
                     gPaths.batteryCapacityPath = strdup(path);
 
