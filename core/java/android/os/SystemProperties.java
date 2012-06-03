@@ -29,6 +29,9 @@ public class SystemProperties
     public static final int PROP_NAME_MAX = 31;
     public static final int PROP_VALUE_MAX = 91;
 
+    //OMAP4
+    public static final boolean OMAP_ENHANCEMENT = native_get_boolean("com.ti.omap_enhancement", false);
+
     //QCOM
     public static final boolean QCOM_HARDWARE = native_get_boolean("com.qc.hardware", false);
     public static final boolean QCOM_HDMI_OUT = native_get_boolean("com.qc.hdmi_out", false);
