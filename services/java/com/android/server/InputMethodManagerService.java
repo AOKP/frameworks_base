@@ -372,7 +372,12 @@ public class InputMethodManagerService extends IInputMethodManager.Stub
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.SELECTED_INPUT_METHOD_SUBTYPE), false, this);
             resolver.registerContentObserver(Settings.Secure.getUriFor(
-                    Settings.System.SHOW_STATUSBAR_IME_SWITCHER), false, this);
+                    Settings.System.SHOW_STATUSBAR_IME_SWITCHER),
+                    false, new ContentObserver(null) {
+                        public void onChange(boolean selfChange) {
+                            updateFromSettingsLocked();
+                        }
+                    });
         }
 
         @Override public void onChange(boolean selfChange) {
