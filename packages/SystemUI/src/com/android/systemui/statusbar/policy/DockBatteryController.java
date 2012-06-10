@@ -33,6 +33,7 @@ import android.os.BatteryManager;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.Slog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -117,18 +118,38 @@ public class DockBatteryController extends LinearLayout {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (action.equals(Intent.ACTION_BATTERY_CHANGED)) {
-                final int level = intent.getIntExtra(
-                        BatteryManager.EXTRA_DOCK_LEVEL, 0);
-                final boolean plugged = intent.getIntExtra(
-                        BatteryManager.EXTRA_DOCK_STATUS, 0) == BatteryManager.DOCK_STATE_CHARGING;
-                final boolean dockstatus = intent.getIntExtra(
-                        BatteryManager.EXTRA_DOCK_STATUS, 0) != BatteryManager.DOCK_STATE_UNDOCKED;
-                setBatteryIcon(level, plugged, dockstatus);
-            } else if (action.equals(Intent.ACTION_DOCK_EVENT)) {
-                state = intent.getIntExtra(Intent.EXTRA_DOCK_STATE,
-                        Intent.EXTRA_DOCK_STATE_UNDOCKED);
-                updateSettings();
+           
+            /* if we got a dock event get the dock status */
+            if (action.equals(Intent.ACTION_BATTERY_CHANGED) || action.equals(Intent.ACTION_DOCK_EVENT)) {
+                Slog.d(TAG, "Got intent for battery change or dock event");
+
+                mDockStatus = intent.getIntExtra(
+                    BatteryManager.EXTRA_DOCK_STATUS, 0) != BatteryManager.DOCK_STATE_UNDOCKED;
+
+                Slog.d(TAG, "Setting mDockStatus = " + mDockStatus);
+                
+                if (action.equals(Intent.ACTION_BATTERY_CHANGED) || 
+                    (action.equals(Intent.ACTION_DOCK_EVENT) && mDockStatus)) {
+    
+                    mLevel = intent.getIntExtra(
+                            BatteryManager.EXTRA_DOCK_LEVEL, 0);
+                    mPlugged = intent.getIntExtra(
+                            BatteryManager.EXTRA_DOCK_STATUS, 0) == BatteryManager.DOCK_STATE_CHARGING;
+
+                    Slog.d(TAG, "Setting mLevel = " + mLevel + ", mPlugged = " + mPlugged);
+                }
+            
+                if (action.equals(Intent.ACTION_BATTERY_CHANGED)) {
+                    Slog.d(TAG, "Setting battery level");
+                    setBatteryIcon(mLevel, mPlugged, mDockStatus);
+                } else if (action.equals(Intent.ACTION_DOCK_EVENT)) {
+                    Slog.d(TAG, "Dock event updating settings");
+                    state = intent.getIntExtra(Intent.EXTRA_DOCK_STATE,
+                            Intent.EXTRA_DOCK_STATE_UNDOCKED);
+
+                    Slog.d(TAG, "Dock state = " + state);
+                    updateSettings();
+                }
             }
         }
     };
@@ -220,7 +241,7 @@ public class DockBatteryController extends LinearLayout {
     }
 
     private void updateSettings() {
-        // Slog.i(TAG, "updated settings values");
+        //Slog.i(TAG, "updated settings values");
         ContentResolver cr = mContext.getContentResolver();
         mBatteryStyle = Settings.System.getInt(cr,
                 Settings.System.STATUSBAR_BATTERY_ICON, 0);
@@ -285,6 +306,8 @@ public class DockBatteryController extends LinearLayout {
             setVisibility(View.GONE);
         }
 
+
+        Slog.d(TAG, "Setting battery level from update settings");
         setBatteryIcon(mLevel, mPlugged, mDockStatus);
 
         int fontSize = Settings.System.getInt(cr,
