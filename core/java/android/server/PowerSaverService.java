@@ -312,15 +312,23 @@ public class PowerSaverService extends BroadcastReceiver {
             // restore data
             if (mScreenOffDataMode != DATA_UNTOUCHED) {
 
-                if (originalDataOn) {
-                    Slog.i(TAG, "screenOnTask: enabling data");
-                    connectivity.setMobileDataEnabled(true);
-                }
+                TelephonyManager telephony = (TelephonyManager) mContext
+                    .getSystemService(Context.TELEPHONY_SERVICE);
+                if (telephony.getCallState() != TelephonyManager.CALL_STATE_OFFHOOK
+                    && telephony.getCallState() != TelephonyManager.CALL_STATE_RINGING) {
 
-                if (mScreenOffDataMode == DATA_2G) {
-                    Slog.i(TAG, "screenOnTask: Requesting to restore to original network mode: " +
-                            originalNetworkMode);
-                    requestPhoneStateChange(originalNetworkMode);
+                    Slog.w(TAG, "Phone is not ringing or in a phone call, switching network mode");
+
+                    if (originalDataOn) {
+                        Slog.i(TAG, "screenOnTask: enabling data");
+                        connectivity.setMobileDataEnabled(true);
+                    }
+
+                    if (mScreenOffDataMode == DATA_2G) {
+                        Slog.i(TAG, "screenOnTask: Requesting to restore to original network mode: " +
+                                originalNetworkMode);
+                        requestPhoneStateChange(originalNetworkMode);
+                    }
                 }
             }
 
