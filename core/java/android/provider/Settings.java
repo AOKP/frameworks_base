@@ -2879,6 +2879,20 @@ public final class Settings {
         public static final String IS_TABLET = "is_tablet";
 
         /**
+         * Determine friction of scrolling
+         *
+         * @hide
+         */
+        public static final String SCROLL_FRICTION = "scroll_friction";
+
+        /**
+         * Determine custom fling velocity
+         *
+         * @hide
+         */
+        public static final String CUSTOM_FLING_VELOCITY = "custom_fling_velocity";
+
+        /**
          * Whether to allow the device to use landscape lockscreen layouts
          * 
          * @hide
