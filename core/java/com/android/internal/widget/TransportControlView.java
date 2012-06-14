@@ -43,6 +43,7 @@ import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -197,6 +198,12 @@ public class TransportControlView extends FrameLayout implements OnClickListener
     public TransportControlView(Context context, AttributeSet attrs) {
         super(context, attrs);
         Log.v(TAG, "Create TCV " + this);
+
+        if (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_STOCK_MUSIC_LAYOUT, 0) == 1) {
+            final LayoutInflater inflater = LayoutInflater.from(context);
+            inflater.inflate(R.layout.keyguard_transport_control_stock, this, true);
+        }
+
         mAudioManager = new AudioManager(mContext);
         mCurrentPlayState = RemoteControlClient.PLAYSTATE_NONE; // until we get a callback
         mIRCD = new IRemoteControlDisplayWeak(mHandler);
@@ -212,10 +219,12 @@ public class TransportControlView extends FrameLayout implements OnClickListener
         super.onFinishInflate();
         mTrackTitle = (TextView) findViewById(R.id.title);
         mTrackTitle.setSelected(true); // enable marquee
-        mTrackAlbum = (TextView) findViewById(R.id.album);
-        mTrackAlbum.setSelected(true); // enable marquee
-        mTrackArtist = (TextView) findViewById(R.id.artist);
-        mTrackArtist.setSelected(true); // enable marquee
+        if (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_STOCK_MUSIC_LAYOUT, 0) == 0) {
+            mTrackAlbum = (TextView) findViewById(R.id.album);
+            mTrackAlbum.setSelected(true); // enable marquee
+            mTrackArtist = (TextView) findViewById(R.id.artist);
+            mTrackArtist.setSelected(true); // enable marquee
+        }
         mAlbumArt = (ImageView) findViewById(R.id.albumart);
         mBtnPrev = (ImageView) findViewById(R.id.btn_prev);
         mBtnPlay = (ImageView) findViewById(R.id.btn_play);
@@ -288,9 +297,42 @@ public class TransportControlView extends FrameLayout implements OnClickListener
      * Populates the given metadata into the view
      */
     private void populateMetadata() {
-        mTrackTitle.setText(mMetadata.trackTitle);
-        mTrackAlbum.setText(mMetadata.albumTitle);
-        mTrackArtist.setText(mMetadata.artist);
+        if (Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_STOCK_MUSIC_LAYOUT, 0) == 0) {
+            mTrackTitle.setText(mMetadata.trackTitle);
+            mTrackAlbum.setText(mMetadata.albumTitle);
+            mTrackArtist.setText(mMetadata.artist);
+        }
+        else {
+            StringBuilder sb = new StringBuilder();
+            int trackTitleLength = 0;
+            if (!TextUtils.isEmpty(mMetadata.trackTitle)) {
+                sb.append(mMetadata.trackTitle);
+                trackTitleLength = mMetadata.trackTitle.length();
+            }
+            if (!TextUtils.isEmpty(mMetadata.artist)) {
+                if (sb.length() != 0) {
+                    sb.append(" - ");
+                }
+                sb.append(mMetadata.artist);
+            }
+            if (!TextUtils.isEmpty(mMetadata.albumTitle)) {
+                if (sb.length() != 0) {
+                    sb.append(" - ");
+                }
+                sb.append(mMetadata.albumTitle);
+            }
+            mTrackTitle.setText(sb.toString(), TextView.BufferType.SPANNABLE);
+            Spannable str = (Spannable) mTrackTitle.getText();
+            if (trackTitleLength != 0) {
+                str.setSpan(new ForegroundColorSpan(0xffffffff), 0, trackTitleLength,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                trackTitleLength++;
+            }
+            if (sb.length() > trackTitleLength) {
+                str.setSpan(new ForegroundColorSpan(0x7fffffff), trackTitleLength, sb.length(),
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+        }
         mAlbumArt.setImageBitmap(mMetadata.bitmap);
         final int flags = mTransportControlFlags;
         setVisibilityBasedOnFlag(mBtnPrev, flags, RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS);
