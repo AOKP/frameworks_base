@@ -24,6 +24,7 @@ public class WeatherPanel extends FrameLayout {
 
     public static final String EXTRA_CITY = "city";
     public static final String EXTRA_CONDITION = "condition";
+    public static final String EXTRA_LAST_UPDATE = "datestamp";
     public static final String EXTRA_CONDITION_CODE = "condition_code";
     public static final String EXTRA_FORECAST_DATE = "forecast_date";
     public static final String EXTRA_TEMP = "temp";
@@ -39,6 +40,7 @@ public class WeatherPanel extends FrameLayout {
     private TextView mHumidity;
     private TextView mWinds;
     private TextView mCondition;
+    private TextView mDatestamp;
     private ImageView mConditionImage;
     private Context mContext;
     private String mCondition_code = "";
@@ -61,6 +63,9 @@ public class WeatherPanel extends FrameLayout {
                 mWinds.setText(intent.getCharSequenceExtra(EXTRA_WIND));
             if (mCondition != null)
                 mCondition.setText(intent.getCharSequenceExtra(EXTRA_CONDITION));
+            if (mDatestamp != null)
+                mDatestamp.setText(context.getString(R.string.weather_last_updated) + " " +
+                        intent.getCharSequenceExtra(EXTRA_LAST_UPDATE));
             if (mConditionImage != null) {
                 String condition_filename = "weather_" + mCondition_code;
                 int resID = getResources().getIdentifier(condition_filename, "drawable",
@@ -111,6 +116,7 @@ public class WeatherPanel extends FrameLayout {
         mHumidity = (TextView) this.findViewById(R.id.humidity);
         mWinds = (TextView) this.findViewById(R.id.winds);
         mCondition = (TextView) this.findViewById(R.id.condition);
+        mDatestamp = (TextView) this.findViewById(R.id.datestamp);
         mConditionImage = (ImageView) this.findViewById(R.id.condition_image);
 
         if (mConditionImage != null) {
