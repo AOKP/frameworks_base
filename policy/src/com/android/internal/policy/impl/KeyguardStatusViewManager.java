@@ -101,6 +101,7 @@ class KeyguardStatusViewManager implements OnClickListener {
     private TextView mAlarmStatusView;
     private TransportControlView mTransportView;
     private ViewFlipper mCalendarView;
+    private WeatherPanel mWeatherPanelView;
 
     // Top-level container view for above views
     private View mContainer;
@@ -224,6 +225,7 @@ class KeyguardStatusViewManager implements OnClickListener {
         mEmergencyCallButton = (Button) findViewById(R.id.emergencyCallButton);
         mEmergencyCallButtonEnabledInScreen = emergencyButtonEnabledInScreen;
         mCalendarView = (ViewFlipper) findViewById(R.id.calendar);
+        mWeatherPanelView = (WeatherPanel) findViewById(R.id.weatherpanel);
 
         // Hide transport control view until we know we need to show it.
         if (mTransportView != null) {
@@ -444,6 +446,16 @@ class KeyguardStatusViewManager implements OnClickListener {
             }
             mWeatherView.setVisibility((weatherInfoEnabled && !wText.isEmpty()) ? View.VISIBLE
                     : View.GONE);
+
+        }
+
+        Log.v(TAG, "mWeatherPanelView");
+        if (mWeatherPanelView != null) {
+            Log.v(TAG, "mWeatherPanelView != null");
+            if (mWeatherInfo != null) {
+                Log.v(TAG, "mWeatherInfo != null");
+                mWeatherPanelView.updateWeather(mWeatherInfo);
+            }
         }
     }
 
