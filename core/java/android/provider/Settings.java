@@ -2949,6 +2949,13 @@ public final class Settings {
         public static final String WEATHER_STATUSBAR_STYLE = "weather_statusbar_style";
 
         /**
+         * String value holding a flattened version of the latest weather data
+         *
+         * @hide
+         */
+        public static final String WEATHER_LATEST_DATA = "weather_latest_data";
+
+        /**
          * Whether to enable torch by long pressing power from a screen-off state
          * 
          * @hide
