@@ -1857,9 +1857,12 @@ status_t MPEG4Writer::Track::threadEntry() {
     // XXX: Samsung's video encoder's output buffer timestamp
     // is not correct. see bug 4724339
     char value[PROPERTY_VALUE_MAX];
-    if (property_get("rw.media.record.hasb", value, NULL) &&
-        (!strcasecmp(value, "true") || !strcasecmp(value, "1"))) {
-        hasBFrames = true;
+    if (property_get("rw.media.record.hasb", value, NULL)) {
+        if (!strcasecmp(value, "true") || !strcasecmp(value, "1")) {
+            hasBFrames = true;
+        } else if (!strcasecmp(value, "false") || !strcasecmp(value, "0")) {
+            hasBFrames = false;
+        }
     }
 #endif
     if (mIsAudio) {
@@ -1993,6 +1996,10 @@ status_t MPEG4Writer::Track::threadEntry() {
             previousPausedDurationUs += pausedDurationUs - lastDurationUs;
             mResumed = false;
         }
+
+        // Work around for passion to avoid failing the CHECK
+        if (timestampUs < previousPausedDurationUs)
+            previousPausedDurationUs = mStartTimestampUs;
 
         timestampUs -= previousPausedDurationUs;
         CHECK(timestampUs >= 0);
