@@ -208,7 +208,7 @@
     <!-- Area to overlay FaceLock -->
     <TextView android:id="@+id/faceLockAreaView"
         android:visibility="invisible"
-        android:layout_row="6"
+        android:layout_row="7"
         android:layout_column="0"
         android:layout_rowSpan="1"
         android:layout_columnSpan="1"
