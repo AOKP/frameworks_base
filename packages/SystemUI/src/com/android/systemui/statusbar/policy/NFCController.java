@@ -76,20 +76,25 @@ public class NFCController extends BroadcastReceiver
     }
 
     private boolean getNfcState() {
-        return mNfcAdapter.isEnabled();
+        if (mNfcAdapter != null)
+            return mNfcAdapter.isEnabled();
+        else
+            return false;
     }
 
     private void setNfcState(final boolean desiredState) {
-        AsyncTask.execute(new Runnable() {
-            public void run() {
-                if (desiredState) {
-                    mNfcAdapter.enable();
-                } else {
-                    mNfcAdapter.disable();
+        if (mNfcAdapter != null) {
+            AsyncTask.execute(new Runnable() {
+                public void run() {
+                    if (desiredState) {
+                        mNfcAdapter.enable();
+                    } else {
+                        mNfcAdapter.disable();
+                    }
+                    return;
                 }
-                return;
-            }
-        });
+            });
+        }
     }
 }
 
