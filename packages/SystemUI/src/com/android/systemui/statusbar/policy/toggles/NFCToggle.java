@@ -15,11 +15,13 @@ import com.android.systemui.R;
 public class NFCToggle extends Toggle {
     private static final String TAG = "StatusBar.NFCToggle";
 
+    private Context mContext;
     private boolean mNfcEnabled;
     private NfcAdapter mNfcAdapter;
 
     public NFCToggle(Context context) {
         super(context);
+        mContext = context;
         mNfcAdapter = NfcAdapter.getDefaultAdapter(context);
         IntentFilter filter = new IntentFilter();
         filter.addAction(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED);
@@ -44,10 +46,19 @@ public class NFCToggle extends Toggle {
     };
     
     private boolean getNfcState() {
-        return mNfcAdapter.isEnabled();
+        if (mNfcAdapter == null) {
+            mNfcAdapter = NfcAdapter.getDefaultAdapter(mContext);
+            return false;
+        }
+        else {
+            return mNfcAdapter.isEnabled();
+        }
     }
     
     private void setNfcState(final boolean desiredState) {
+        if (mNfcAdapter == null) {
+            mNfcAdapter = NfcAdapter.getDefaultAdapter(mContext);
+        }
         AsyncTask.execute(new Runnable() {
             public void run() {
                 if (desiredState) {
