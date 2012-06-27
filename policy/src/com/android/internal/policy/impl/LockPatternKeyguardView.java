@@ -254,6 +254,12 @@ public class LockPatternKeyguardView extends KeyguardViewBase implements Handler
             if (DEBUG) Log.v(TAG, "View " + view + " requested show transports");
             view.setVisibility(View.VISIBLE);
 
+            // Hide the info views
+            View mScreenInfoView = findViewById(R.id.transport_bg_protect);
+            if (mScreenInfoView != null) {
+                    mScreenInfoView.setVisibility(View.INVISIBLE);
+            }
+
             // TODO: examine all widgets to derive clock status
             mUpdateMonitor.reportClockVisible(false);
 
@@ -270,6 +276,12 @@ public class LockPatternKeyguardView extends KeyguardViewBase implements Handler
         public void requestHide(View view) {
             if (DEBUG) Log.v(TAG, "View " + view + " requested hide transports");
             view.setVisibility(View.GONE);
+
+            // Show the info views
+            View mScreenInfoView = findViewById(R.id.transport_bg_protect);
+            if (mScreenInfoView != null) {
+                    mScreenInfoView.setVisibility(View.VISIBLE);
+            }
 
             // TODO: examine all widgets to derive clock status
             mUpdateMonitor.reportClockVisible(true);
