@@ -93,6 +93,7 @@ class KeyguardStatusViewManager implements OnClickListener {
     // Views that this class controls.
     // NOTE: These may be null in some LockScreen screens and should protect
     // from NPE
+    private View mScreenInfoView;
     private TextView mCarrierView;
     private TextView mDateView;
     private WeatherText mWeatherView;
@@ -215,6 +216,7 @@ class KeyguardStatusViewManager implements OnClickListener {
         mUpdateMonitor = updateMonitor;
         mCallback = callback;
 
+        mScreenInfoView = findViewById(R.id.screen_info);
         mCarrierView = (TextView) findViewById(R.id.carrier);
         mDateView = (TextView) findViewById(R.id.date);
         mWeatherView = (WeatherText) findViewById(R.id.weather);
@@ -894,7 +896,14 @@ class KeyguardStatusViewManager implements OnClickListener {
 
         /** {@inheritDoc} */
         public void onClockVisibilityChanged() {
-            // ignored
+            if (mScreenInfoView != null) {
+                if (mScreenInfoView.getVisibility() == View.VISIBLE) {
+                    mScreenInfoView.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    mScreenInfoView.setVisibility(View.VISIBLE);
+                }
+            }
         }
 
         public void onDeviceProvisioned() {
