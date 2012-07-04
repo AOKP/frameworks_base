@@ -139,6 +139,9 @@ class BatteryService extends Binder {
 
     private boolean mSentLowBatteryBroadcast = false;
 
+    // for enabling and disabling notification pulse behavior
+    private boolean mScreenOn = true;
+
     public BatteryService(Context context, LightsService lights) {
         mContext = context;
         mLed = new Led(context, lights);
@@ -167,6 +170,11 @@ class BatteryService extends Binder {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_DOCK_EVENT);
         mContext.registerReceiver(mDockBroadcastReceiver, filter);
+
+        IntentFilter scrnFilter = new IntentFilter();
+        scrnFilter.addAction(Intent.ACTION_SCREEN_ON);
+        scrnFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        mContext.registerReceiver(mIntentReceiver, scrnFilter);
 
         // set initial status
         update();
@@ -614,6 +622,26 @@ class BatteryService extends Binder {
 
     };
 
+    private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(Intent.ACTION_SCREEN_ON)) {
+                // Keep track of screen on/off state, but do not turn off the notification light
+                // until user passes through the lock screen or views the notification.
+                mScreenOn = true;
+            } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+                mScreenOn = false;
+            }
+            // if it matters, possibly turn on/off the charging LED
+            if (Settings.Secure.getInt(mContext.getContentResolver(),
+                        Settings.Secure.LED_SCREEN_ON, 0) != 1) {
+                updateLedPulse();
+            }
+        }
+    };
+
+
     class Led {
         private LightsService mLightsService;
         private LightsService.Light mBatteryLight;
@@ -650,14 +678,24 @@ class BatteryService extends Binder {
         void updateLightsLocked() {
             final int level = mBatteryLevel;
             final int status = mBatteryStatus;
-            if (level < mLowBatteryWarningLevel) {
+            // Get ROMControl "flash when screen ON" flag
+            boolean ledScreenOn = Settings.Secure.getInt(
+                mContext.getContentResolver(),
+                Settings.Secure.LED_SCREEN_ON, 0) == 1;
+
+            // mLedPulseEnabled will override the ledScreenOn..
+            if (mLedPulseEnabled && (level < mLowBatteryWarningLevel) &&
+                (status != BatteryManager.BATTERY_STATUS_CHARGING)) {
+                mBatteryLight.setFlashing(mBatteryLowARGB, LightsService.LIGHT_FLASH_TIMED,
+                        mBatteryLedOn, mBatteryLedOff);
+            // not low battery?  if screen on, possibly turn off charging LED
+            } else if (mScreenOn && !ledScreenOn) {
+                mBatteryLight.turnOff();
+            // either screen is off or they want the light always
+            } else if (level < mLowBatteryWarningLevel) {
                 if (status == BatteryManager.BATTERY_STATUS_CHARGING) {
-                    // Solid red when battery is charging
+                    // Solid red when battery is charging (the pulse case handled above)
                     mBatteryLight.setColor(mBatteryLowARGB);
-                } else if (mLedPulseEnabled) {
-                    // Flash red when battery is low and not charging
-                    mBatteryLight.setFlashing(mBatteryLowARGB, LightsService.LIGHT_FLASH_TIMED,
-                            mBatteryLedOn, mBatteryLedOff);
                 } else {
                     // "Pulse low battery light" is disabled, no lights.
                     mBatteryLight.turnOff();
