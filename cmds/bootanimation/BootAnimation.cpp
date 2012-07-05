@@ -531,11 +531,11 @@ bool BootAnimation::movie()
         const size_t fcount = part.frames.size();
 
         // can be 1, 0, or not set
-        #ifdef NO_TEXTURE_CACHE
-        const int noTextureCache = NO_TEXTURE_CACHE;
-        #else
+        #ifndef NO_TEXTURE_CACHE
         const int noTextureCache = ((animation.width * animation.height * fcount) >
                                  48 * 1024 * 1024) ? 1 : 0;
+        #else
+        const int noTextureCache = NO_TEXTURE_CACHE;
         #endif
 
         glBindTexture(GL_TEXTURE_2D, 0);
