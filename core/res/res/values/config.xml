@@ -806,4 +806,6 @@
     <!-- If this value is true, we handle Samsung CDMA's message ID method -->
     <bool name="config_smsSamsungCdmaAlternateMessageIDEncoding">false</bool>
 
+    <!-- Whether to prevent preloading of ap firmware, some devices need to disable this -->
+    <bool name="config_wifi_ap_firmware_reload">true</bool>
 </resources>
