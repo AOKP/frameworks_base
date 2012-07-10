@@ -1227,4 +1227,21 @@
     <string name="sending" msgid="8715108995741758718">"Wysyłanie..."</string>
     <string name="launchBrowserDefault" msgid="2057951947297614725">"Uruchomić przeglądarkę?"</string>
     <string name="SetupCallDefault" msgid="6870275517518479651">"Odebrać połączenie?"</string>
+    
+    <string name="reboot_system" product="tablet">Zrestartuj tablet</string>
+
+    <string name="reboot_system" product="default">Zrestartuj telefon</string>
+
+    <string name="global_action_screenshot">Zrzut ekranu</string>
+
+    <string name="reboot_reboot">Restart</string>
+
+    <string name="reboot_progress">Restartowanie\u2026</string>
+    <string name="reboot_confirm">Urządzenie zostanie zrestartowane.</string>
+    
+    <string name="global_action_reboot">Restartuj</string>
+
+    <string name="app_killed_message">Aplikacja zabita</string>
+
+    <string name="lockscreen_calendar_tomorrow">Jutro</string>
 </resources>

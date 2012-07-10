@@ -138,4 +138,31 @@
     <string name="gps_notification_searching_text" msgid="8574247005642736060">"Wyszukiwanie sygnału GPS"</string>
     <string name="gps_notification_found_text" msgid="4619274244146446464">"Lokalizacja ustawiona według GPS"</string>
     <string name="accessibility_clear_all" msgid="5235938559247164925">"Usuń wszystkie powiadomienia."</string>
+    
+    <string name="recent_apps_title">Ostatnie aplikacje</string>
+
+    <string name="toggle_data">Dane</string>
+    <string name="toggle_rotate">Obrót</string>
+    <string name="toggle_airplane">Samolot</string>
+    <string name="toggle_vibrate">Wibracje</string>
+    <string name="toggle_silent">Wycisz</string>
+    <string name="toggle_torch">Latarka</string>
+    <string name="toggle_sync">Synch.</string>
+    <string name="toggle_swagger">Lans</string>
+    <string name="toggle_fcharge">SzybŁad</string>
+    <string name="toggle_tether">Tether</string>
+    <string name="toggle_nfc">NFC</string>
+    <string name="status_bar_settings_toggles">Przełączniki</string>
+    
+    <string name="toggle_navbar">Wł./wył. pasek nawigacyjny</string>
+    
+    <string name="notifications_off_title">Powiadomienia wyłączone</string>
+
+    <!-- Content text for do-not-disturb mode notification -->
+    <string name="notifications_off_text">Naciśnij tutaj, by włączyć z powrotem powiadomienia.</string>
+
+    <string name="widgets">Widżety</string>
+
+    <!-- for weather last updated mod -->
+    <string name="weather_last_updated">Aktualizacja</string>
 </resources>
