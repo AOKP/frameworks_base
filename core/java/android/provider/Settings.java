@@ -2402,6 +2402,12 @@ public final class Settings {
          * 2 - Normal Day
          */
         public static final String STATUSBAR_CLOCK_WEEKDAY = "statusbar_clock_weekday";
+
+        /**
+         * @hide
+         * Whether to tint a toggle to indicate it has been pressed
+         */
+        public static final String STATUSBAR_TOGGLES_TINT_ON_CLICK = "statusbar_tint_on_click";
     }
 
     /**

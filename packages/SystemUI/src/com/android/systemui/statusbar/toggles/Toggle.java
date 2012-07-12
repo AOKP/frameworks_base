@@ -20,6 +20,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.provider.Settings;
@@ -50,14 +51,19 @@ public abstract class Toggle implements OnCheckedChangeListener {
 
     protected boolean mSystemChange = false;
     final boolean useAltButtonLayout;
+    final boolean tintOnClick;
     final int defaultColor;
 
     public Toggle(Context context) {
         mContext = context;
 
-        useAltButtonLayout = Settings.System.getInt(
+        useAltButtonLayout = Settings.System.getBoolean(
                 context.getContentResolver(),
-                Settings.System.STATUSBAR_TOGGLES_USE_BUTTONS, 1) == 1;
+                Settings.System.STATUSBAR_TOGGLES_USE_BUTTONS, true);
+
+        tintOnClick = Settings.System.getBoolean(
+                context.getContentResolver(),
+                Settings.System.STATUSBAR_TOGGLES_TINT_ON_CLICK, true);
 
         float[] hsv = new float[3];
         int color = context.getResources().getColor(
@@ -141,6 +147,7 @@ public abstract class Toggle implements OnCheckedChangeListener {
         if (mSystemChange)
             return;
         onCheckChanged(isChecked);
+        showToggleIsToggled();
     }
 
     public View getView() {
@@ -160,6 +167,28 @@ public abstract class Toggle implements OnCheckedChangeListener {
     public void setIcon(int res) {
         if (mIcon != null) {
             mIcon.setImageResource(res);
+        }
+    }
+
+    /**
+     * this method is called when the user manually toggles, and shows that the
+     * toggle was clicked by changing the color
+     */
+    public void showToggleIsToggled() {
+        if (!useAltButtonLayout)
+            return;
+
+        if (tintOnClick) {
+            Handler handler = new Handler();
+            if (mIcon != null) {
+                mIcon.setColorFilter(defaultColor, PorterDuff.Mode.MULTIPLY);
+                // add delay to switch color back to normal
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        mIcon.setColorFilter(null);
+                    }
+                }, 100);
+            }
         }
     }
 
