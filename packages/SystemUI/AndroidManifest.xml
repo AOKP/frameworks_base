@@ -53,6 +53,11 @@
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.NFC" />
+<<<<<<< HEAD
+=======
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+>>>>>>> 04299fb... SystemUI: toggles WIP
 
     <application
         android:persistent="true"

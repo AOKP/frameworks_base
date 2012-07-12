@@ -34,7 +34,10 @@ public class LteToggle extends Toggle {
     private static final String TAG = "Toggle.Lte";
 
     private int mNetworkMode = -1;
+<<<<<<< HEAD
     private boolean isCdma = false;
+=======
+>>>>>>> 04299fb... SystemUI: toggles WIP
 
     public LteToggle(Context c) {
         super(c);
@@ -50,7 +53,11 @@ public class LteToggle extends Toggle {
     protected void onCheckChanged(boolean isChecked) {
         TelephonyManager tm = (TelephonyManager) mView.getContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);
+<<<<<<< HEAD
 //        tm.toggleLTE(isChecked);
+=======
+        tm.toggleLTE(isChecked);
+>>>>>>> 04299fb... SystemUI: toggles WIP
         updateState();
     }
 

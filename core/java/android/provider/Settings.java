@@ -2319,6 +2319,13 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_LAYOUT = "statusbar_layout";
+
+        /**
+         * whether the device is a tablet (set by SystemUI)
+         * 
+         * @hide
+         */
+        public static final String IS_TABLET = "is_tablet";
     }
 
     /**

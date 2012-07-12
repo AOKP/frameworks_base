@@ -48,7 +48,11 @@ public class TwoGToggle extends Toggle {
     protected void onCheckChanged(boolean isChecked) {
         TelephonyManager tm = (TelephonyManager) mView.getContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);
+<<<<<<< HEAD
 //        tm.toggle2G(isChecked);
+=======
+        tm.toggle2G(isChecked);
+>>>>>>> 04299fb... SystemUI: toggles WIP
         updateState();
     }
 
