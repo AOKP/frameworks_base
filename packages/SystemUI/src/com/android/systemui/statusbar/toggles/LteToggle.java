@@ -51,7 +51,6 @@ public class LteToggle extends Toggle {
         TelephonyManager tm = (TelephonyManager) mView.getContext()
                 .getSystemService(Context.TELEPHONY_SERVICE);
 //        tm.toggleLTE(isChecked);
-        updateState();
     }
 
     class SettingsObserver extends ContentObserver {
