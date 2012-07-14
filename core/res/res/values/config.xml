@@ -925,4 +925,7 @@
 
     <!-- Set to true for Tegra3 devices -->
     <bool name="config_isTegra3">false</bool>
+
+    <!-- Boolean to enable Stylus gestures -->
+    <bool name="config_stylusGestures">false</bool>
 </resources>
