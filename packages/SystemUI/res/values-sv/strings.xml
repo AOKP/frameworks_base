@@ -138,4 +138,43 @@
     <string name="gps_notification_searching_text" msgid="8574247005642736060">"Sökning efter GPS pågår"</string>
     <string name="gps_notification_found_text" msgid="4619274244146446464">"Platsen har identifierats av GPS"</string>
     <string name="accessibility_clear_all" msgid="5235938559247164925">"Ta bort alla meddelanden."</string>
+
+    <!-- for Sense 4.0 style multitasking mod -->
+    <string name="recent_apps_title">Senaste applikation</string>
+
+    <string name="battery_test">99</string>
+    <string name="status_bar_settings_gps_button">GPS</string>
+    <string name="toggle_bt">BT</string>
+    <string name="toggle_data">Data</string>
+    <string name="toggle_lte">LTE</string>
+    <string name="toggle_rotate">Rotera</string>
+    <string name="toggle_wifi">Wi-Fi</string>
+    <string name="toggle_gps">GPS</string>
+    <string name="toggle_2g">2G</string>
+    <string name="toggle_wifiap">Wi-Fi AP</string>
+    <string name="toggle_airplane">Flygplan</string>
+    <string name="toggle_vibrate">Vibrera</string>
+    <string name="toggle_silent">Tyst</string>
+    <string name="toggle_torch">Ficklampa</string>
+    <string name="toggle_sync">Synka</string>
+    <string name="toggle_swagger">Swagger</string>
+    <string name="toggle_fcharge">SnabbLadd</string>
+    <string name="toggle_tether">Tether</string>
+    <string name="toggle_nfc">NFC</string>
+    <string name="status_bar_settings_toggles">Växla Snabbval</string>
+    <string name="weatherpanel_slash">/</string>
+    
+    <string name="toggle_navbar">Växla NavBar</string>
+    
+	<!-- Title for the pseudo-notification shown when notifications are disabled (do-not-disturb
+         mode) -->
+    <string name="notifications_off_title">Stäng av notifikationer</string>
+
+    <!-- Content text for do-not-disturb mode notification -->
+    <string name="notifications_off_text">Tryck här för att slå notifikationer igen.</string>
+
+    <string name="widgets">Widgetar</string>
+
+    <!-- for weather last updated mod -->
+    <string name="weather_last_updated">Uppdaterad</string>
 </resources>

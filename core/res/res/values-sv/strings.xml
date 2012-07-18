@@ -1227,4 +1227,41 @@
     <string name="sending" msgid="8715108995741758718">"Skickas ..."</string>
     <string name="launchBrowserDefault" msgid="2057951947297614725">"Vill du öppna webbläsaren?"</string>
     <string name="SetupCallDefault" msgid="6870275517518479651">"Vill du ta emot samtal?"</string>
+
+	<!-- Title of the Power Options dialog -->
+    <string name="reboot_system" product="tablet">Starta om platta</string>
+
+	<!-- Title of the Power Options dialog -->
+    <string name="reboot_system" product="default">Starta om telefon</string>
+
+	<!-- label for item that screenshots in phone options dialog -->
+	<string name="global_action_screenshot">Skärmdump</string>
+
+    <!-- Button to reboot the phone, within the Reboot Options dialog -->
+    <string name="reboot_reboot">Omstart</string>
+    <!-- Button to reboot the phone into recovery, within the Reboot Options dialog -->
+    <string name="reboot_recovery">Recovery</string>
+    <!-- Button to reboot the phone into bootloader, within the Reboot Options dialog -->
+    <string name="reboot_bootloader">Bootloader</string>
+    <!-- Button to reboot the phone into bootmenu, within the Reboot Options dialog -->
+    <string name="reboot_bootmenu">Bootmeny</string>
+    <!-- Button to reboot the phone into fastboot, within the Reboot Options dialog -->
+    <string name="reboot_fastboot">Snabb omstart</string>
+    <!-- Button to reboot the phone into download, within the Reboot Options dialog -->
+    <string name="reboot_download">Nerladdning</string>
+
+    <!-- Reboot Progress Dialog. This is shown if the user chooses to reboot the phone. -->
+    <string name="reboot_progress">Startar om\u2026</string>
+    <!-- Reboot Confirmation Dialog.  When the user chooses to reboot the phone, there will be a confirmation dialog.  This is the message. -->
+    <string name="reboot_confirm">Din telefon kommer att starta om.</string>
+    
+    <!-- label for item that reboots the phone in phone options dialog -->
+    <string name="global_action_reboot">Omstart</string>
+
+    <!--Application killed toast -->
+    <string name="app_killed_message">Applikationen avstängd</string>
+
+    <!-- Lockscreen calendar string -->
+    <string name="lockscreen_calendar_tomorrow">Imorgon</string>
+
 </resources>
