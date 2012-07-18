@@ -17,7 +17,6 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -26,9 +25,6 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.database.ContentObserver;
-import android.os.Handler;
-import android.provider.Settings;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
@@ -51,7 +47,7 @@ import com.android.internal.R;
  * This widget display an analogic clock with two hands for hours and
  * minutes.
  */
-public class Clock extends TextView {
+public class ClockStock extends TextView {
     private boolean mAttached;
     private Calendar mCalendar;
     private String mClockFormatString;
@@ -60,31 +56,18 @@ public class Clock extends TextView {
     private static final int AM_PM_STYLE_NORMAL  = 0;
     private static final int AM_PM_STYLE_SMALL   = 1;
     private static final int AM_PM_STYLE_GONE    = 2;
-    private static final int PROTEKK_O_CLOCK     = 3;
 
-    protected int mAmPmStyle = AM_PM_STYLE_GONE;
-    
-    public static final int WEEKDAY_STYLE_GONE    = 0;
-    public static final int WEEKDAY_STYLE_SMALL   = 1;
-    public static final int WEEKDAY_STYLE_NORMAL  = 2;
+    private static final int AM_PM_STYLE = AM_PM_STYLE_GONE;
 
-    protected int mWeekdayStyle = WEEKDAY_STYLE_GONE;
-    
-    public static final int STYLE_HIDE_CLOCK    = 0;
-    public static final int STYLE_CLOCK_RIGHT   = 1;
-    public static final int STYLE_CLOCK_CENTER  = 2;
-
-    protected int mClockStyle = STYLE_CLOCK_RIGHT;
-
-    public Clock(Context context) {
+    public ClockStock(Context context) {
         this(context, null);
     }
 
-    public Clock(Context context, AttributeSet attrs) {
+    public ClockStock(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public Clock(Context context, AttributeSet attrs, int defStyle) {
+    public ClockStock(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
@@ -111,12 +94,7 @@ public class Clock extends TextView {
         mCalendar = Calendar.getInstance(TimeZone.getDefault());
 
         // Make sure we update to the current time
-        //no need to updateClock here, since we call updateSettings() which has updateClock();
-        //updateClock();
-        
-        SettingsObserver settingsObserver = new SettingsObserver(new Handler());
-        settingsObserver.observe();
-        updateSettings();
+        updateClock();
     }
 
     @Override
@@ -145,18 +123,9 @@ public class Clock extends TextView {
 
     final void updateClock() {
         mCalendar.setTimeInMillis(System.currentTimeMillis());
-        
-        if (mAmPmStyle == PROTEKK_O_CLOCK) {
-        	setText("99:99");
-        } else {	
-        	if (mWeekdayStyle == WEEKDAY_STYLE_GONE)
-                setText(getSmallTime());
-            else 
-            	setText(getWeekDay(getSmallTime()));
-        }
-        
+        setText(getSmallTime());
     }
-    
+
     private final CharSequence getSmallTime() {
         Context context = getContext();
         boolean b24 = DateFormat.is24HourFormat(context);
@@ -179,7 +148,7 @@ public class Clock extends TextView {
              * add dummy characters around it to let us find it again after
              * formatting and change its size.
              */
-            if (mAmPmStyle != AM_PM_STYLE_NORMAL) {
+            if (AM_PM_STYLE != AM_PM_STYLE_NORMAL) {
                 int a = -1;
                 boolean quoted = false;
                 for (int i = 0; i < format.length(); i++) {
@@ -212,15 +181,15 @@ public class Clock extends TextView {
         }
         String result = sdf.format(mCalendar.getTime());
 
-        if (mAmPmStyle != AM_PM_STYLE_NORMAL) {
+        if (AM_PM_STYLE != AM_PM_STYLE_NORMAL) {
             int magic1 = result.indexOf(MAGIC1);
             int magic2 = result.indexOf(MAGIC2);
             if (magic1 >= 0 && magic2 > magic1) {
                 SpannableStringBuilder formatted = new SpannableStringBuilder(result);
-                if (mAmPmStyle == AM_PM_STYLE_GONE) {
+                if (AM_PM_STYLE == AM_PM_STYLE_GONE) {
                     formatted.delete(magic1, magic2+1);
                 } else {
-                    if (mAmPmStyle == AM_PM_STYLE_SMALL) {
+                    if (AM_PM_STYLE == AM_PM_STYLE_SMALL) {
                         CharacterStyle style = new RelativeSizeSpan(0.7f);
                         formatted.setSpan(style, magic1, magic2,
                                           Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
@@ -234,124 +203,6 @@ public class Clock extends TextView {
  
         return result;
 
-    }
-
-    /**
-     * This is used to pull the weekday and place it with the clock string
-     */
-    private final CharSequence getWeekDay(CharSequence theTime) {
-    	String results = "";
-    	Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-        
-        String todayIs = whatDay(day);
-        
-        if (mWeekdayStyle == WEEKDAY_STYLE_SMALL) {
-    		String todayAndTime = todayIs + theTime;
-    		SpannableStringBuilder formatDay = new SpannableStringBuilder(todayAndTime);
-    		CharacterStyle style = new RelativeSizeSpan(0.7f);
-        	if (mAmPmStyle == AM_PM_STYLE_SMALL) {	
-        		CharacterStyle style2 = new RelativeSizeSpan(0.7f);
-        		formatDay.setSpan(style2, todayAndTime.length()- 3, todayAndTime.length(),
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        		formatDay.setSpan(style, 0, 4,
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE); 
-        	} else {
-        		formatDay.setSpan(style, 0, 4,
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        	}
-        	return formatDay;
-        } else {
-        	if (mAmPmStyle == AM_PM_STYLE_SMALL) {
-        		SpannableStringBuilder formatTime = new SpannableStringBuilder(theTime);
-        		CharacterStyle style = new RelativeSizeSpan(0.7f);
-        		formatTime.setSpan(style, theTime.length() - 3, theTime.length(),
-                                  Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-        		
-        		results = todayIs + formatTime;
-        	} else {
-        		results = todayIs + theTime;
-        	}	
-        } 
-        return results;
-    }
-    
-    /**
-     * pull the int given by DAY_OF_WEEK into a day string
-     */
-    private String whatDay(int today) {
-    	String todayIs = null;
-    	switch (today) {
-    	case 1:
-			todayIs = "SUN ";
-			break;
-		case 2:
-			todayIs = "MON ";
-			break;
-		case 3:
-			todayIs = "TUE ";
-			break;
-		case 4:
-			todayIs = "WED ";
-			break;
-		case 5:
-			todayIs = "THU ";
-			break;
-		case 6:
-			todayIs = "FRI ";
-			break;
-		case 7:
-			todayIs = "SAT ";
-			break;
-    	}
-    		
-    	return todayIs;
-    }
-    
-    protected class SettingsObserver extends ContentObserver {
-        SettingsObserver(Handler handler) {
-            super(handler);
-        }
-
-        void observe() {
-            ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.STATUSBAR_CLOCK_AM_PM_STYLE),
-                    false, this);
-            resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.STATUSBAR_CLOCK_STYLE), false,
-                    this);
-            resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.STATUSBAR_CLOCK_WEEKDAY), false,
-                    this);
-            updateSettings();
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            updateSettings();
-        }
-    }
-
-    protected void updateSettings() {
-        ContentResolver resolver = mContext.getContentResolver();
-
-        mAmPmStyle = Settings.System.getInt(resolver,
-                Settings.System.STATUSBAR_CLOCK_AM_PM_STYLE, AM_PM_STYLE_GONE);   
-        mClockStyle = Settings.System.getInt(resolver,
-                Settings.System.STATUSBAR_CLOCK_STYLE, STYLE_CLOCK_RIGHT);
-        mWeekdayStyle = Settings.System.getInt(resolver,
-                Settings.System.STATUSBAR_CLOCK_WEEKDAY, WEEKDAY_STYLE_GONE);
-        
-        updateClockVisibility();
-        updateClock();
-    }
-
-    protected void updateClockVisibility() {
-        if (mClockStyle == STYLE_CLOCK_RIGHT)
-            setVisibility(View.VISIBLE);
-        else
-            setVisibility(View.GONE);
     }
 }
 
