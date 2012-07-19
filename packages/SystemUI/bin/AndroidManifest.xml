@@ -1,0 +1,181 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.android.systemui"
+        coreApp="true">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.INJECT_EVENTS" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <uses-permission android:name="android.permission.STATUS_BAR_SERVICE" />
+    <uses-permission android:name="android.permission.STATUS_BAR" />
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <uses-permission android:name="android.permission.REMOTE_AUDIO_PLAYBACK" />
+
+    <!-- Networking and telephony -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.MANAGE_NETWORK_POLICY" />
+
+    <!-- Physical hardware -->
+    <uses-permission android:name="android.permission.MANAGE_USB" />
+    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS" />
+    <uses-permission android:name="android.permission.MASTER_CLEAR" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- ActivityManager -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.GET_DETAILED_TASKS" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.REMOVE_TASKS" />
+    <uses-permission android:name="android.permission.STOP_APP_SWITCHES" />
+    <uses-permission android:name="android.permission.SET_SCREEN_COMPATIBILITY" />
+    <uses-permission android:name="android.permission.START_ANY_ACTIVITY" />
+
+    <!-- WindowManager -->
+    <uses-permission android:name="android.permission.INTERNAL_SYSTEM_WINDOW" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.READ_FRAME_BUFFER" />
+    <uses-permission android:name="android.permission.MANAGE_APP_TOKENS" />
+    <uses-permission android:name="android.permission.SET_ORIENTATION" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+
+    <application
+        android:persistent="true"
+        android:allowClearUserData="false"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:label="@string/app_label"
+        android:icon="@*android:drawable/platlogo">
+
+        <!-- Broadcast receiver that gets the broadcast at boot time and starts
+             up everything else.
+             TODO: Should have an android:permission attribute
+             -->
+        <service android:name="SystemUIService"
+            android:exported="true"
+            />
+
+        <!-- started from PhoneWindowManager
+             TODO: Should have an android:permission attribute -->
+        <service android:name=".screenshot.TakeScreenshotService"
+            android:process=":screenshot"
+            android:exported="false" />
+
+        <service android:name=".LoadAverageService"
+                android:exported="true" />
+
+        <service android:name=".ImageWallpaper"
+                android:permission="android.permission.BIND_WALLPAPER"
+                android:exported="true" />
+
+        <receiver android:name=".BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- should you need to launch the screensaver, this is a good way to do it -->
+        <activity android:name=".DreamsDockLauncher"
+                android:theme="@android:style/Theme.Dialog"
+                android:label="@string/dreams_dock_launcher">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- launch screensaver on (desk) dock event -->
+        <receiver android:name=".DreamsDockLauncher$DockEventReceiver" 
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.DOCK_EVENT" />
+            </intent-filter>
+        </receiver>
+
+
+        <activity android:name=".usb.UsbStorageActivity"
+                  android:label="@*android:string/usb_storage_activity_title"
+                  android:excludeFromRecents="true">
+        </activity>
+        <activity android:name="com.android.internal.app.ExternalMediaFormatActivity"
+                android:theme="@*android:style/Theme.Dialog.Alert"
+                android:excludeFromRecents="true">
+        </activity>
+
+        <!-- started from UsbDeviceSettingsManager -->
+        <activity android:name=".usb.UsbConfirmActivity"
+            android:exported="true"
+            android:permission="android.permission.MANAGE_USB"
+            android:theme="@*android:style/Theme.Holo.Dialog.Alert"
+            android:finishOnCloseSystemDialogs="true"
+            android:excludeFromRecents="true">
+        </activity>
+
+        <!-- started from UsbDeviceSettingsManager -->
+        <activity android:name=".usb.UsbPermissionActivity"
+            android:exported="true"
+            android:permission="android.permission.MANAGE_USB"
+            android:theme="@*android:style/Theme.Holo.Dialog.Alert"
+            android:finishOnCloseSystemDialogs="true"
+            android:excludeFromRecents="true">
+        </activity>
+
+        <!-- started from UsbDeviceSettingsManager -->
+        <activity android:name=".usb.UsbResolverActivity"
+            android:exported="true"
+            android:permission="android.permission.MANAGE_USB"
+            android:theme="@*android:style/Theme.Holo.Dialog.Alert"
+            android:finishOnCloseSystemDialogs="true"
+            android:excludeFromRecents="true">
+        </activity>
+
+        <!-- started from UsbDeviceSettingsManager -->
+        <activity android:name=".usb.UsbAccessoryUriActivity"
+            android:exported="true"
+            android:permission="android.permission.MANAGE_USB"
+            android:theme="@*android:style/Theme.Holo.Dialog.Alert"
+            android:finishOnCloseSystemDialogs="true"
+            android:excludeFromRecents="true">
+        </activity>
+
+        <!-- started from NetworkPolicyManagerService -->
+        <activity
+            android:name=".net.NetworkOverLimitActivity"
+            android:exported="true"
+            android:permission="android.permission.MANAGE_NETWORK_POLICY"
+            android:theme="@android:style/Theme.Holo.Panel"
+            android:finishOnCloseSystemDialogs="true"
+            android:launchMode="singleTop"
+            android:taskAffinity="com.android.systemui.net"
+            android:excludeFromRecents="true" />
+
+        <!-- started from ... somewhere -->
+        <activity
+            android:name=".BeanBag"
+            android:exported="true"
+            android:label="BeanBag"
+            android:icon="@drawable/redbeandroid"
+            android:theme="@android:style/Theme.Wallpaper.NoTitleBar.Fullscreen"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="com.android.internal.category.PLATLOGO" />
+<!--            <category android:name="android.intent.category.LAUNCHER" />-->
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
