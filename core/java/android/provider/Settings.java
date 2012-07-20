@@ -6925,6 +6925,20 @@ public final class Settings {
         public static final String VIBRATE_NOTIF_EXPAND = "vibrate_notif_expand";
 
         /**
+         * Setting to enable volume options.
+         *
+         * @hide
+         */
+        public static final String ENABLE_VOLUME_OPTIONS = "enable_volume_options";
+
+        /**
+         * Setting to Link Ringtone and Notification.
+         *
+         * @hide
+         */
+        public static final String VOLUME_LINK_NOTIFICATION = "volume_link_notification";
+
+        /**
          * The hostname for this device
          * @hide
          */
