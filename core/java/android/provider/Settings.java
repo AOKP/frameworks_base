@@ -6953,6 +6953,20 @@ public final class Settings {
         public static final String STATUSBAR_SIGNAL_TEXT_COLOR = "statusbar_signal_text_color";
 
         /**
+         * Setting to enable volume options.
+         *
+         * @hide
+         */
+        public static final String ENABLE_VOLUME_OPTIONS = "enable_volume_options";
+
+        /**
+         * Setting to Link Ringtone and Notification.
+         *
+         * @hide
+         */
+        public static final String VOLUME_LINK_NOTIFICATION = "volume_link_notification";
+
+        /**
          * The hostname for this device
          * @hide
          */
