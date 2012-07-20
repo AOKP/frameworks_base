@@ -6807,6 +6807,20 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_QUICK_UNLOCK_CONTROL = "lockscreen_quick_unlock_control";
 
+        /**
+         * Setting to enable volume options.
+         *
+         * @hide
+         */
+        public static final String ENABLE_VOLUME_OPTIONS = "enable_volume_options";
+
+        /**
+         * Setting to Link Ringtone and Notification.
+         *
+         * @hide
+         */
+        public static final String VOLUME_LINK_NOTIFICATION = "volume_link_notification";
+
     }
 
     /**
@@ -7024,3 +7038,4 @@ public final class Settings {
         return "android-" + Long.toHexString(androidId);
     }
 }
+
