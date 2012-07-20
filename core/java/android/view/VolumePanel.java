@@ -128,7 +128,24 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
     /** Currently active stream that shows up at the top of the list of sliders */
     private int mActiveStreamType = -1;
     /** All the slider controls mapped by stream type */
-    private HashMap<Integer,StreamControl> mStreamControls;
+    private HashMap<Integer, StreamControl> mStreamControls;
+
+    private boolean mRingerAndNotificationStreamsLinked;
+
+    private ContentObserver mObserver = new ContentObserver(this) {
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+            updatePanel(mShowCombinedVolumes);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, android.net.Uri uri) {
+            updateSettings();
+            updatePanel(mShowCombinedVolumes);
+        };
+    };
 
     private enum StreamResources {
         BluetoothSCOStream(AudioManager.STREAM_BLUETOOTH_SCO,
@@ -298,6 +315,7 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
             public void onDismiss(DialogInterface dialog) {
                 mActiveStreamType = -1;
                 mAudioManager.forceVolumeControlStream(mActiveStreamType);
+                mContext.getContentResolver().unregisterContentObserver(mObserver);
             }
         });
         // Change some window properties
@@ -319,10 +337,33 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
         mToneGenerators = new ToneGenerator[AudioSystem.getNumStreamTypes()];
         mVibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
 
-        mVoiceCapable = context.getResources().getBoolean(R.bool.config_voice_capable);
-        mShowCombinedVolumes = !mVoiceCapable && !useMasterVolume;
-        // If we don't want to show multiple volumes, hide the settings button and divider
-        if (!mShowCombinedVolumes) {
+        ContentResolver resolver = mContext.getContentResolver();
+        resolver.registerContentObserver(
+                Settings.AOKP.getUriFor(Settings.AOKP.ENABLE_VOLUME_OPTIONS), false, mObserver);
+        resolver.registerContentObserver(
+                Settings.AOKP.getUriFor(Settings.AOKP.VOLUME_LINK_NOTIFICATION), false, mObserver);
+
+        updateSettings();
+        updatePanel(mShowCombinedVolumes);
+    }
+
+    public void updateSettings() {
+        ContentResolver resolver = mContext.getContentResolver();
+
+        mShowCombinedVolumes = Settings.AOKP.getInt(
+                resolver,
+                Settings.AOKP.ENABLE_VOLUME_OPTIONS, 0) == 1
+                || !mContext.getResources().getBoolean(R.bool.config_voice_capable);
+
+        mRingerAndNotificationStreamsLinked = Settings.AOKP.getInt(
+                resolver,
+                Settings.AOKP.VOLUME_LINK_NOTIFICATION, 1) == 1;
+    }
+
+    public void updatePanel(boolean toggle) {
+        // If we don't want to show multiple volumes, hide the settings button
+        // and divider
+        if (!toggle) {
             mMoreButton.setVisibility(View.GONE);
             mDivider.setVisibility(View.GONE);
         } else {
@@ -456,6 +497,11 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
             final int streamType = STREAMS[i].streamType;
             if (!STREAMS[i].show || streamType == mActiveStreamType) {
                 continue;
+            }
+            if (mRingerAndNotificationStreamsLinked) {
+                if (streamType == AudioManager.STREAM_NOTIFICATION) {
+                    continue;
+                }
             }
             StreamControl sc = mStreamControls.get(streamType);
             mSliderGroup.addView(sc.group);
