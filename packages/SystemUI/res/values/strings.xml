@@ -415,4 +415,6 @@
 
     <string name="recents_kill_all_button_text">Kill all</string>
 
+    <string name="kill_app_longpress_text">Kill focused app</string>
+
 </resources>
