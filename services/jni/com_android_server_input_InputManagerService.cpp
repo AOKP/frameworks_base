@@ -178,6 +178,7 @@ public:
     void setSystemUiVisibility(int32_t visibility);
     void setPointerSpeed(int32_t speed);
     void setShowTouches(bool enabled);
+    void setKeyLayout(const char* deviceName, const char* keyLayout);
 
     /* --- InputReaderPolicyInterface implementation --- */
 
@@ -775,6 +776,12 @@ void NativeInputManager::setShowTouches(bool enabled) {
             InputReaderConfiguration::CHANGE_SHOW_TOUCHES);
 }
 
+void NativeInputManager::setKeyLayout(const char* deviceName, const char* keyLayout) {
+    mInputManager->getReader()->setKeyLayout(deviceName, keyLayout);
+    mInputManager->getReader()->requestRefreshConfiguration(
+            InputReaderConfiguration::CHANGE_MUST_REOPEN);
+}
+
 bool NativeInputManager::isScreenOn() {
     return android_server_PowerManagerService_isScreenOn();
 }
@@ -1324,6 +1331,20 @@ static void nativeMonitor(JNIEnv* env, jclass clazz, jint ptr) {
     im->getInputManager()->getDispatcher()->monitor();
 }
 
+static void nativeSetKeyLayout(JNIEnv* env, jclass clazz, jint ptr,
+       jstring deviceName, jstring keyLayout) {
+    NativeInputManager* im = reinterpret_cast<NativeInputManager*>(ptr);
+
+    const char *cDeviceName = env->GetStringUTFChars(deviceName, NULL);
+    const char *cKeyLayout = env->GetStringUTFChars(keyLayout, NULL);
+
+    im->setKeyLayout(cDeviceName, cKeyLayout);
+
+    env->ReleaseStringUTFChars(deviceName, cDeviceName);
+    env->ReleaseStringUTFChars(keyLayout, cKeyLayout);
+}
+
+
 // ----------------------------------------------------------------------------
 
 static JNINativeMethod gInputManagerMethods[] = {
@@ -1380,6 +1401,8 @@ static JNINativeMethod gInputManagerMethods[] = {
             (void*) nativeDump },
     { "nativeMonitor", "(I)V",
             (void*) nativeMonitor },
+    { "nativeSetKeyLayout", "(ILjava/lang/String;Ljava/lang/String;)V",
+            (void*) nativeSetKeyLayout },
 };
 
 #define FIND_CLASS(var, className) \
