@@ -2341,6 +2341,12 @@ public final class Settings {
         public static final String TABLET_UI = "tablet_ui";
 
         /**
+         * Show the pending notification counts as overlays on the status bar
+         * @hide	
+         */	
+        public static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
+
+        /**
          * @hide
          */
         public static final String STATUSBAR_TOGGLES_USE_BUTTONS = "statusbar_toggles_use_buttons";
