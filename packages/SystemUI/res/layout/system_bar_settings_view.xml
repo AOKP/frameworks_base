@@ -24,7 +24,7 @@
         >
 
     <!-- Airplane mode -->
-    <LinearLayout
+    <!--<LinearLayout
             android:id="@+id/airplane"
             style="@style/StatusBarPanelSettingsRow"
             >
@@ -45,11 +45,11 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
                 />
-    </LinearLayout>
+    </LinearLayout>-->
     <View style="@style/StatusBarPanelSettingsPanelSeparator" />
 
     <!-- Network -->
-    <LinearLayout
+    <!--<LinearLayout
             android:id="@+id/network"
             style="@style/StatusBarPanelSettingsRow"
             >
@@ -64,10 +64,10 @@
                 android:text="@string/status_bar_settings_wifi_button"
                 />
     </LinearLayout>
-    <View style="@style/StatusBarPanelSettingsPanelSeparator" />
+    <View style="@style/StatusBarPanelSettingsPanelSeparator" />-->
 
     <!-- Rotation lock -->
-    <LinearLayout
+    <!--<LinearLayout
             android:id="@+id/rotate"
             style="@style/StatusBarPanelSettingsRow"
             >
@@ -88,10 +88,16 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="5dp"
                 />
-    </LinearLayout>
+    </LinearLayout>-->
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/quick_toggles" />
+
     <View
-            android:id="@+id/rotate_separator"
-            style="@style/StatusBarPanelSettingsPanelSeparator" />
+        android:id="@+id/rotate_separator"
+        style="@style/StatusBarPanelSettingsPanelSeparator" />
 
     <!-- Brightness -->
     <LinearLayout style="@style/StatusBarPanelSettingsRow" >
