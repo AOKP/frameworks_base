@@ -9897,6 +9897,11 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     @Override
+    public boolean hasMenuKeyEnabled() {
+        return mPolicy.hasMenuKeyEnabled();
+    }
+
+    @Override
     public void lockNow(Bundle options) {
         mPolicy.lockNow(options);
     }
