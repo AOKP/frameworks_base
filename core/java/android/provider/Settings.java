@@ -2641,6 +2641,11 @@ public final class Settings {
                 "navigation_custom_app_icon_3",
                 "navigation_custom_app_icon_4",
         };
+        
+        /**
+         * Widgets to show, should be separated by |
+         */
+        public static final String NAVIGATION_BAR_WIDGETS = "navigation_bar_widgets";
 
         /**
          * How long to keep the notification LED on (in milliseconds)
