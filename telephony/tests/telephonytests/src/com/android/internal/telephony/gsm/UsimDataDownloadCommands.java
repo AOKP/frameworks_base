@@ -620,4 +620,7 @@ class UsimDataDownloadCommands extends BaseCommands {
     @Override
     public void unSetOnCatSendSmsResult(Handler h) {
     }
+
+    public void getVoiceRadioTechnology(Message response) {
+    }
 }
