@@ -2092,7 +2092,8 @@ public class RIL extends BaseCommands implements CommandsInterface {
             case 7:
             case 8:
             case 9:
-            case 10: state = RadioState.RADIO_ON; break;
+            case 10:
+	    case 13: state = RadioState.RADIO_ON; break;
 
             default:
                 throw new RuntimeException(
