@@ -2646,10 +2646,15 @@ public final class Settings {
         public static final String NOTIFICATION_LIGHT_COLOR = "notification_light_color";
 
         /**
-	 *
-	 * @hide
-	 */
+         * @hide
+         */
         public static final String NAVIGATION_BAR_BUTTON_ALPHA = "navigation_bar_button_alpha";
+
+        /**
+         * @hide
+         * boolean value. true will force the menu icon to show in the activity's (top-right) hand corner
+         */
+        public static final String MENU_PERMANENT_OVERRIDE = "menu_permament_override";
     }
 
     /**
