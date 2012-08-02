@@ -312,6 +312,11 @@ public class ViewConfiguration {
             }
         }
 
+        if(Settings.System.getBoolean(context.getContentResolver(), Settings.System.MENU_PERMANENT_OVERRIDE, true)) {
+            sHasPermanentMenuKey = false;
+            sHasPermanentMenuKeySet = true;
+        }
+
         mFadingMarqueeEnabled = res.getBoolean(
                 com.android.internal.R.bool.config_ui_enableFadingMarquee);
         mTouchSlop = res.getDimensionPixelSize(
