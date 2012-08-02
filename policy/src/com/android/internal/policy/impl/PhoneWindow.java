@@ -57,6 +57,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.provider.Settings;
 import android.util.AndroidRuntimeException;
 import android.util.DisplayMetrics;
 import android.util.EventLog;
@@ -3343,6 +3344,9 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
                     com.android.internal.R.styleable.Theme_windowAnimationStyle, 0);
             isCompact = a.getBoolean(
                     com.android.internal.R.styleable.Theme_panelMenuIsCompact, false);
+            final boolean userCompactOverride = Settings.System.getBoolean(context.getContentResolver(), Settings.System.MENU_COMPACT_OVERRIDE, false);
+            if(userCompactOverride)
+                isCompact = true;
             listPresenterTheme = a.getResourceId(
                     com.android.internal.R.styleable.Theme_panelMenuListTheme,
                     com.android.internal.R.style.Theme_ExpandedMenu);
