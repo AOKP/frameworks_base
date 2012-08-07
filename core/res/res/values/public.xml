@@ -935,6 +935,8 @@
   <java-symbol type="drawable" name="sym_app_on_sd_unavailable_icon" />
   <java-symbol type="drawable" name="text_edit_side_paste_window" />
   <java-symbol type="drawable" name="text_edit_paste_window" />
+  <java-symbol type="drawable" name="aokplogo" />
+  <java-symbol type="drawable" name="aokplogo_alt" />
   <java-symbol type="drawable" name="btn_check_off" />
   <java-symbol type="drawable" name="btn_code_lock_default_holo" />
   <java-symbol type="drawable" name="btn_code_lock_touched_holo" />
@@ -3669,5 +3671,10 @@
   <java-symbol type="bool" name="config_autoBrightnessButtonKeyboard" />
   <java-symbol type="string" name="config_deviceKeyHandlerLib" />
   <java-symbol type="string" name="config_deviceKeyHandlerClass" />
+  <java-symbol type="bool" name="config_smsSamsungCdmaAlternateMessageIDEncoding" />
+
+<!-- Always show battery status on lockscreen -->
+  <java-symbol type="string" name="lockscreen_always_battery" />
+  <java-symbol type="string" name="lockscreen_always_low_battery" />
 
 </resources>

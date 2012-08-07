@@ -2350,6 +2350,12 @@ public final class Settings {
         public static final String ENABLE_VOLUME_OPTIONS = "enable_volume_options";
 
         /**
+         * Whether to use the custom quick unlock screen control
+         * @hide
+         */
+        public static final String LOCKSCREEN_QUICK_UNLOCK_CONTROL = "lockscreen_quick_unlock_control";
+
+        /**
          * Setting to Link Ringtone and Notification.
          *
          * @hide
@@ -2482,6 +2488,12 @@ public final class Settings {
          * Shows the battery icon in the notification pull down
          */
         public static final String NOTIFICATION_BATTERY_DISPLAY = "notification_battery_display";
+
+        /**
+         * Setting to allow % on lockscreen always showing.
+         * @hide
+         */
+        public static final String LOCKSCREEN_BATTERY = "lockscreen_battery";
 
         /**
          * Whether to show the battery bar
@@ -2626,14 +2638,14 @@ public final class Settings {
 
         /**
          * How long to keep the notification LED on (in milliseconds)
-         * 
+         *
          * @hide
          */
         public static final String NOTIFICATION_LIGHT_ON = "notification_light_on";
 
         /**
          * How long to keep the notification LED off (in milliseconds)
-         * 
+         *
          * @hide
          */
         public static final String NOTIFICATION_LIGHT_OFF = "notification_light_off";
@@ -2644,6 +2656,12 @@ public final class Settings {
          * @hide
          */
         public static final String NOTIFICATION_LIGHT_COLOR = "notification_light_color";
+
+        /**
+	 *
+	 * @hide
+	 */
+        public static final String NAVIGATION_BAR_BUTTON_ALPHA = "navigation_bar_button_alpha";
     }
 
     /**
@@ -3091,6 +3109,13 @@ public final class Settings {
          * 0 = only allow installing from Google Play
          */
         public static final String INSTALL_NON_MARKET_APPS = "install_non_market_apps";
+
+        /**
+         * Whether to blink the LED when screen is on
+         *
+         * @hide
+         */
+        public static final String LED_SCREEN_ON = "led_screen_on";
 
         /**
          * Comma-separated list of location providers that activities may access.

@@ -133,8 +133,9 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     public void showDialog(boolean keyguardShowing, boolean isDeviceProvisioned) {
         mKeyguardShowing = keyguardShowing;
         mDeviceProvisioned = isDeviceProvisioned;
-        if (mDialog != null && mUiContext == null) {
-            mDialog.dismiss();
+        if (mDialog != null) {
+            mDialog.hide();
+            mDialog.cancel();
             mDialog = null;
             // Show delayed, so that the dismiss of the previous dialog completes
             mHandler.sendEmptyMessage(MESSAGE_SHOW);
@@ -865,7 +866,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         final String[] rebootOptions = mContext.getResources().getStringArray(R.array.reboot_options);
         final String[] rebootReasons = mContext.getResources().getStringArray(R.array.reboot_values);
 
-        AlertDialog d = new AlertDialog.Builder(mContext)
+        AlertDialog d = new AlertDialog.Builder(getUiContext())
                 .setSingleChoiceItems(rebootOptions, 0,
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -887,10 +888,16 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                     public void onClick(DialogInterface dialog, int which) {
                         mWindowManagerFuncs.reboot(rebootReasons[rebootIndex]);
                     }
-                }).create();
+                })
+                .setCancelable(false)
+                .create();
 
         d.getListView().setItemsCanFocus(true);
-        d.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG);
+        if (mKeyguardShowing) {
+            d.getWindow().setType(WindowManager.LayoutParams.TYPE_KEYGUARD_DIALOG);
+        } else {
+            d.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_DIALOG);
+        }
 
         return d;
     }
