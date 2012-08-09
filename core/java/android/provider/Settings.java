@@ -1565,6 +1565,12 @@ public final class Settings {
         public static final String VOLUME_BLUETOOTH_SCO = "volume_bluetooth_sco";
 
         /**
+         * Whether to prevent loud volume levels when headset is first plugged in.
+         * @hide
+         */
+        public static final String SAFE_HEADSET_VOLUME_RESTORE = "safe_headset_volume_restore";
+
+        /**
          * Master volume (float in the range 0.0f to 1.0f).
          * @hide
          */
@@ -2430,6 +2436,21 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_TOGGLES_NUMBER_PER_ROW = "statusbar_toggles_number_per_row";
+
+        /**
+         * @hide
+         */
+        public static final String STATUSBAR_TOGGLES_ENABLED_COLOR = "statusbar_toggles_enabled_color";
+
+        /**
+         * @hide
+         */
+        public static final String STATUSBAR_TOGGLES_DISABLED_COLOR = "statusbar_toggles_disabled_color";
+
+        /**
+         * @hide
+         */
+        public static final String STATUSBAR_TOGGLES_ALPHA = "statusbar_toggles_alpha";
 
         /**
          * @hide
