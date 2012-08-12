@@ -1181,6 +1181,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 updateOrientationListenerLp();
             }
 
+            boolean hasNavBarChanged = Settings.System.getInt(resolver,
+                    Settings.System.NAVIGATION_BAR_SHOW, 1) == 1;
+            if (mHasNavigationBar != hasNavBarChanged) {
+                mHasNavigationBar = hasNavBarChanged;
+                setInitialDisplaySize(mDisplay, mUnrestrictedScreenWidth, mUnrestrictedScreenHeight);
+            }
+
             mVolumeWakeScreen = (Settings.System.getInt(resolver,
                     Settings.System.VOLUME_WAKE_SCREEN, 0) == 1);
 
