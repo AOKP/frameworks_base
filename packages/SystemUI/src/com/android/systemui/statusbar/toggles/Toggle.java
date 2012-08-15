@@ -47,12 +47,14 @@ public abstract class Toggle implements OnCheckedChangeListener {
     protected ImageView mIcon;
     protected TextView mText;
     protected CompoundButton mToggle;
+    protected ImageView mBackground;
 
     protected boolean mSystemChange = false;
     final boolean useAltButtonLayout;
-    final int enabledColor;
-    final int disabledColor;
-    final float toggleAlpha;
+    protected int enabledColor;
+    protected int disabledColor;
+    protected float toggleAlpha;
+    protected float toggleBgAlpha;
 
     public Toggle(Context context) {
         mContext = context;
@@ -73,6 +75,10 @@ public abstract class Toggle implements OnCheckedChangeListener {
                 context.getContentResolver(),
                 Settings.System.STATUSBAR_TOGGLES_ALPHA, 0.7f);
 
+        toggleBgAlpha = Settings.System.getFloat(
+                context.getContentResolver(),
+                Settings.System.STATUSBAR_TOGGLES_BACKGROUND, 0.7f);
+
         float[] enabledHsv = new float[3];
         float[] disabledHsv = new float[3];
         Color.colorToHSV(enabledColorValue, enabledHsv);
@@ -90,6 +96,7 @@ public abstract class Toggle implements OnCheckedChangeListener {
         mIcon = (ImageView) mView.findViewById(R.id.icon);
         mToggle = (CompoundButton) mView.findViewById(R.id.toggle);
         mText = (TextView) mView.findViewById(R.id.label);
+        mBackground = (ImageView) mView.findViewById(R.id.toggle_background);
 
         mToggle.setOnCheckedChangeListener(this);
         mToggle.setOnLongClickListener(new OnLongClickListener() {
@@ -110,12 +117,15 @@ public abstract class Toggle implements OnCheckedChangeListener {
 
         Drawable bg = mContext.getResources().getDrawable(
                 toggle ? R.drawable.btn_on : R.drawable.btn_off);
+        Drawable toggleBg = mContext.getResources().getDrawable(R.drawable.toggle_background);
         if (toggle)
             bg.setColorFilter(enabledColor, PorterDuff.Mode.SRC_ATOP);
         else
             bg.setColorFilter(disabledColor, PorterDuff.Mode.SRC_ATOP);
         bg.setAlpha((int) (toggleAlpha * 255));
         mToggle.setBackgroundDrawable(bg);
+        toggleBg.setAlpha((int) (toggleBgAlpha * 255));
+        mBackground.setBackgroundDrawable(toggleBg);
     }
 
     /**
