@@ -2462,6 +2462,11 @@ public final class Settings {
         /**
          * @hide
          */
+        public static final String STATUSBAR_TOGGLES_BACKGROUND = "statusbar_toggles_background";
+
+        /**
+         * @hide
+         */
         public static final String STATUS_BAR_LAYOUT = "statusbar_layout";
 
         /**
