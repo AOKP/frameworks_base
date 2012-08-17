@@ -43,7 +43,7 @@ public class WeatherPanel extends FrameLayout {
     private String mCondition_code = "";
     private ContentObserver mContentObserver;
     private ContentResolver mContentResolver;
-    private boolean mHideLocation;
+    private boolean mShowLocation;
 
     BroadcastReceiver weatherReceiver = new BroadcastReceiver() {
         @Override
@@ -53,7 +53,7 @@ public class WeatherPanel extends FrameLayout {
     };
 
     public void updateSettings() {
-        mHideLocation = !Settings.System.getBoolean(mContentResolver,
+        mShowLocation = Settings.System.getBoolean(mContentResolver,
                 Settings.System.WEATHER_SHOW_LOCATION, true);
         updateCityVisibility();
     }
@@ -62,10 +62,10 @@ public class WeatherPanel extends FrameLayout {
         if (mCity == null)
             return;
 
-        if (mHideLocation) {
-            mCity.setVisibility(View.GONE);
-        } else {
+        if (mShowLocation) {
             mCity.setVisibility(View.VISIBLE);
+        } else {
+            mCity.setVisibility(View.GONE);
         }
     }
 
