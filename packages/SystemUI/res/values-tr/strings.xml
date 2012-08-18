@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="status_bar_date_formatter">"%2$s
+%1$s"</string>
     <string name="app_label">Sist Arayüzü</string>
     <string name="status_bar_clear_all_button">Temizle</string>
     <string name="status_bar_do_not_disturb_button">Rahatsız etmeyin</string>
@@ -14,7 +16,8 @@
     <string name="battery_low_title">Şarj cihazını bağla</string>
     <string name="battery_low_subtitle">Pil azalıyor.</string>
     <string name="battery_low_percent_format">%d%% kaldı</string>
-    <string name="invalid_charger">"USB üzerinden şarj desteklenmiyor.\nYalnızca ürünle birlikte verilen şarj cihazını kullanın."</string>
+    <string name="invalid_charger">"USB üzerinden şarj desteklenmiyor.
+Yalnızca ürünle birlikte verilen şarj cihazını kullanın."</string>
     <string name="battery_low_why">Pil kullanımı</string>
     <string name="status_bar_settings_settings_button">Ayarlar</string>
     <string name="status_bar_settings_wifi_button">Kablosuz</string>
@@ -108,7 +111,9 @@
     <string name="data_usage_disabled_dialog_4g_title">4G verileri devre dışı</string>
     <string name="data_usage_disabled_dialog_mobile_title">Mobil veriler devre dışı</string>
     <string name="data_usage_disabled_dialog_title">Veriler devre dışı</string>
-    <string name="data_usage_disabled_dialog">"Belirtilen veri kullanım limitine ulaştınız.\n\nVerileri yeniden etkinleştirirseniz, operatör sizden ücret talep edebilir."</string>
+    <string name="data_usage_disabled_dialog">"Belirtilen veri kullanım limitine ulaştınız.
+
+Verileri yeniden etkinleştirirseniz, operatör sizden ücret talep edebilir."</string>
     <string name="data_usage_disabled_dialog_enable">Veriyi yeniden etkinleştir</string>
     <string name="status_bar_settings_signal_meter_disconnected">İnternet bağlantısı yok</string>
     <string name="status_bar_settings_signal_meter_wifi_nossid">Kablosuz bağlandı</string>
