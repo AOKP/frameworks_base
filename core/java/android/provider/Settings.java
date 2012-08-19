@@ -2862,37 +2862,37 @@ public final class Settings {
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR = "lockscreen_calendar";
-        
+
         /**
          * Whether to flip the calendar indicator
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_FLIP = "lockscreen_calendar_flip";
-        
+
         /**
          * Selected calendars to get the events from
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_SOURCES = "lockscreen_calendar_sources";
-        
+
         /**
          * Time range of the pulled events
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_RANGE = "lockscreen_calendar_range";
-        
+
         /**
          * Whether to hide an event if it already started
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_HIDE_ONGOING = "lockscreen_calendar_hide_ongoing";
-        
+
         /**
          * Whether to show an event in the color of the parent calendar
          * @hide
          */
         public static final String LOCKSCREEN_CALENDAR_USE_COLORS = "lockscreen_calendar_use_colors";
-        
+
         /**
          * If flipping, interval of flips
          * @hide
@@ -2911,6 +2911,12 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_WEATHER_STYLE = "statusbar_weather_style";
+
+        /**
+         * Setting to use lockscreen alongside secure lock
+         * @hide
+         */
+        public static final String SHOW_LOCK_BEFORE_UNLOCK = "show_lock_before_unlock";
 
         /**
          * Whether to show the battery bar
