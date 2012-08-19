@@ -28,6 +28,8 @@ public class Prefs {
 
     public static final String SHOWN_COMPAT_MODE_HELP = "shown_compat_mode_help";
 
+    public static final String SHOW_TOGGLES = "show_toggles";
+
     private static final String LAST_BATTERY_LEVEL = "last_battery_level";
 
     public static SharedPreferences read(Context context) {

@@ -83,6 +83,7 @@ import com.android.systemui.statusbar.policy.LocationController;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.NotificationRowLayout;
 import com.android.systemui.statusbar.policy.Prefs;
+import com.android.systemui.statusbar.toggles.TogglesView;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -195,6 +196,8 @@ public class TabletStatusBar extends BaseStatusBar implements
 
     public Context getContext() { return mContext; }
 
+    TogglesView mQuickToggles;
+
     private Runnable mShowSearchPanel = new Runnable() {
         public void run() {
             showSearchPanel();
@@ -273,6 +276,10 @@ public class TabletStatusBar extends BaseStatusBar implements
         // the battery icon
         //mBatteryController.addIconView((ImageView)mNotificationPanel.findViewById(R.id.battery));
         //mBatteryController.addLabelView((TextView)mNotificationPanel.findViewById(R.id.battery_text));
+
+        mQuickToggles = (TogglesView) mNotificationPanel.findViewById(R.id.quick_toggles);
+        mQuickToggles.setVisibility(View.VISIBLE);
+        mQuickToggles.setBar(this);
 
         // Bt
         mBluetoothController.addIconView(
