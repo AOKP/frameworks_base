@@ -2545,6 +2545,12 @@ public final class Settings {
         public static final String LOCKSCREEN_BATTERY = "lockscreen_battery";
 
         /**
+         * Setting to use lockscreen alongside secure lock
+         * @hide
+         */
+        public static final String SHOW_LOCK_BEFORE_UNLOCK = "show_lock_before_unlock";
+
+        /**
          * Whether to show the battery bar
          *
          * @hide
