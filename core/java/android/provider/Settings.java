@@ -6750,6 +6750,13 @@ public final class Settings {
          */
         public static final String WAKEUP_WHEN_PLUGGED_UNPLUGGED = "wakeup_when_plugged_unplugged";
 
+        /**
+         * IME Switcher
+         *
+         * @hide
+         */
+        public static final String SHOW_STATUSBAR_IME_SWITCHER = "show_statusbar_ime_switcher";
+
     }
 
     /**
