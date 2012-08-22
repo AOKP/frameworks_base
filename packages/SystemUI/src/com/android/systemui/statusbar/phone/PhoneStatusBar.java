@@ -399,11 +399,6 @@ public class PhoneStatusBar extends BaseStatusBar {
                   View.STATUS_BAR_DISABLE_NOTIFICATION_TICKER
                 | (mNotificationPanelIsFullScreenWidth ? 0 : View.STATUS_BAR_DISABLE_SYSTEM_INFO));
 
-        if (!ActivityManager.isHighEndGfx(mDisplay)) {
-            mStatusBarWindow.setBackground(null);
-            mNotificationPanel.setBackground(new FastColorDrawable(context.getResources().getColor(
-                    R.color.notification_panel_solid_background)));
-        }
         if (ENABLE_INTRUDERS) {
             mIntruderAlertView = (IntruderAlertView) View.inflate(context, R.layout.intruder_alert, null);
             mIntruderAlertView.setVisibility(View.GONE);
