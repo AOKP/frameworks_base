@@ -2049,6 +2049,7 @@ public final class Settings {
 
         /**
          * Whether national data Roming should be used.
+         * @hide
          */
         public static final String MVNO_ROAMING = "mvno_roaming";
 
