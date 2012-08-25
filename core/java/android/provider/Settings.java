@@ -2650,6 +2650,12 @@ public final class Settings {
          * @hide
          */
         public static final String NOTIF_WALLPAPER_ALPHA = "notif_wallpaper_alpha";
+        
+        /**
+         * Display basic music controls in the notification shade
+         * @hide
+         */
+        public static final String STATUS_BAR_MUSIC_CONTROLS = "status_bar_music_controls";
 
 		/**
          * Whether to enable quiet hours.

@@ -404,6 +404,12 @@
     <string name="toggle_tether">Tether</string>
     <string name="toggle_nfc">NFC</string>
     <string name="status_bar_settings_toggles">Toggles</string>
+    
+    <!-- Notification music control button descriptions -->
+    <string name="music_controls_description_play">Play</string>
+    <string name="music_controls_description_pause">Pause</string>
+    <string name="music_controls_description_next">Next song</string>
+    <string name="music_controls_description_previous">Previous song</string>
 
     <!-- Label in drop down to identify brightness slider -->
     <string name="brightness_label">Brightness</string>

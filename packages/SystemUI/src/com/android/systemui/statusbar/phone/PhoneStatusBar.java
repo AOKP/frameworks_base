@@ -97,6 +97,7 @@ import com.android.systemui.statusbar.policy.DateView;
 import com.android.systemui.statusbar.policy.IntruderAlertView;
 import com.android.systemui.statusbar.policy.LocationController;
 import com.android.systemui.statusbar.policy.OnSizeChangedListener;
+import com.android.systemui.statusbar.policy.MusicControlsView;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.NotificationRowLayout;
 import com.android.systemui.statusbar.policy.WeatherPanel;
@@ -195,6 +196,10 @@ public class PhoneStatusBar extends BaseStatusBar {
     // AOKP - weatherpanel
     boolean mWeatherPanelEnabled;
     WeatherPanel mWeatherPanel;
+
+    // music controls
+    boolean mMusicControlsEnabled;
+    MusicControlsView mMusicControls;
 
     // carrier/wifi label
     private TextView mCarrierLabel;
@@ -469,7 +474,8 @@ public class PhoneStatusBar extends BaseStatusBar {
         mSettingsButton.setOnClickListener(mSettingsButtonListener);
         mRotationButton = (RotationToggle) mStatusBarWindow.findViewById(R.id.rotation_lock_button);
         mWeatherPanel = (WeatherPanel) mStatusBarWindow.findViewById(R.id.weatherpanel);
-        
+        mMusicControls = (MusicControlsView) mStatusBarWindow.findViewById(R.id.music_controls);
+
         mCarrierLabel = (TextView)mStatusBarWindow.findViewById(R.id.carrier_label);
         mCarrierLabel.setVisibility(mCarrierLabelVisible ? View.VISIBLE : View.INVISIBLE);
 
@@ -2526,6 +2532,9 @@ public class PhoneStatusBar extends BaseStatusBar {
                     Settings.System.STATUSBAR_WEATHER_STYLE), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.USE_WEATHER), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_MUSIC_CONTROLS), false, this);
+
         }
 
         @Override
@@ -2602,7 +2611,7 @@ public class PhoneStatusBar extends BaseStatusBar {
 
     public void updateSettings() {
         ContentResolver cr = mStatusBarView.getContext().getContentResolver();
-        
+
         mIsStatusBarBrightNess = Settings.System.getBoolean(cr,
                 Settings.System.STATUS_BAR_BRIGHTNESS_SLIDER, true);
         
@@ -2611,5 +2620,10 @@ public class PhoneStatusBar extends BaseStatusBar {
                 && (Settings.System.getBoolean(cr, Settings.System.USE_WEATHER, false));
         
         mWeatherPanel.setVisibility(mWeatherPanelEnabled ? View.VISIBLE : View.GONE);
+
+        mMusicControlsEnabled = Settings.System.getBoolean(cr,
+                Settings.System.STATUS_BAR_MUSIC_CONTROLS, true);
+        mMusicControls.setVisibility(mMusicControlsEnabled ? View.VISIBLE : View.GONE);
+
     }
 }

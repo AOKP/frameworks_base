@@ -88,6 +88,10 @@
                 <include
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    layout="@layout/music_controls" />
+                <include
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     layout="@layout/quick_toggles" />
                 <com.android.systemui.statusbar.policy.NotificationRowLayout
                     android:id="@+id/latestItems"
