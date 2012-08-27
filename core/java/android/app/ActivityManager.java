@@ -369,6 +369,12 @@ public class ActivityManager {
      * @hide
      */
     static public boolean isHighEndGfx(Display display) {
+        boolean override = SystemProperties.getBoolean("gfx.highend_override", false);
+        if (override) {
+            // We want to use pretty graphics regardless
+            // Useful for borderline devices such as crespo
+            return true;
+        }
         MemInfoReader reader = new MemInfoReader();
         reader.readMemInfo();
         if (reader.getTotalSize() >= (512*1024*1024)) {
