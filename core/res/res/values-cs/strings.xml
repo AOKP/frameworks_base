@@ -1296,4 +1296,8 @@
     <string name="reboot_download">Download</string>
     <string name="reboot_bootloader">Bootloader</string>
     <string name="reboot_progress">Zařízení se restartuje</string>
+    
+    <string name="lockscreen_calendar_tomorrow">Zítra</string>
+    <string name="lockscreen_always_battery">Vybíjí se, <xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
+    <string name="lockscreen_always_low_battery">Připojte dobíjecí zařízení, <xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
 </resources>
