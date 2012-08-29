@@ -2499,6 +2499,13 @@ public final class Settings {
         public static final String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
 
         /**
+         * whether to hide the kill-all-button on recent switcher
+         *
+         * @hide
+         */
+        public static final String RECENT_KILL_ALL_BUTTON = "recent_kill_all_button";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
