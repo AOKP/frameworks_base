@@ -55,6 +55,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -84,6 +85,8 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     private boolean mWaitingForWindowAnimation;
     private long mWindowAnimationStartTime;
     private boolean mCallUiHiddenBeforeNextReload;
+
+    private Button mRecentsKillAllButton;
 
     private RecentTasksLoader mRecentTasksLoader;
     private ArrayList<TaskDescription> mRecentTaskDescriptions;
@@ -456,6 +459,35 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 ((BitmapDrawable) mRecentsScrim.getBackground()).setTileModeY(TileMode.REPEAT);
             }
         }
+
+    boolean recent_kill_all_button = Settings.System.getInt(mContext.getContentResolver(),
+                      Settings.System.RECENT_KILL_ALL_BUTTON, 0) == 1;
+
+        mRecentsKillAllButton = (Button) findViewById(R.id.recents_kill_all_button);
+        if (mRecentsKillAllButton != null){
+            if (recent_kill_all_button){ //set the listener
+                mRecentsKillAllButton.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        killAllRecentApps();
+                    }
+                });
+            } else { // hide the button completely (gone)
+                mRecentsKillAllButton.setVisibility(View.GONE);
+            }
+        }
+
+        mPreloadTasksRunnable = new Runnable() {
+            public void run() {
+                // If we set our visibility to INVISIBLE here, we avoid an extra call to
+                // onLayout later when we become visible (because onLayout is always called
+                // when going from GONE)
+                if (!mShowing) {
+                    setVisibility(INVISIBLE);
+                    refreshRecentTasksList();
+                }
+            }
+        };
     }
 
     public void setMinSwipeAlpha(float minAlpha) {
@@ -809,5 +841,22 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             bottom += getBottomPaddingOffset();
         }
         mRecentsContainer.drawFadedEdges(canvas, left, right, top, bottom);
+    }
+
+    private void killAllRecentApps(){
+        final ActivityManager am = (ActivityManager)
+                mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        if(!mRecentTaskDescriptions.isEmpty()){
+            for(TaskDescription ad : mRecentTaskDescriptions){
+                am.removeTask(ad.persistentTaskId, ActivityManager.REMOVE_TASK_KILL_PROCESS);
+                // Accessibility feedback
+                setContentDescription(
+                        mContext.getString(R.string.accessibility_recents_item_dismissed, ad.getLabel()));
+                sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
+                setContentDescription(null);
+            }
+            mRecentTaskDescriptions.clear();
+        }
+        hide(false);
     }
 }

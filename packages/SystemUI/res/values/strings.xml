@@ -497,7 +497,6 @@
     <!-- QuickSettings: Brightness dialog auto brightness button [CHAR LIMIT=NONE] -->
     <string name="quick_settings_brightness_dialog_auto_brightness_label">AUTO</string>
 
-
     <!-- Glyph to be overlaid atop the battery when the level is extremely low. Do not translate. -->
     <string name="battery_meter_very_low_overlay_symbol">!</string>
 
@@ -506,5 +505,8 @@
          If the text fits on one line (~14 chars), it should start with a
          linebreak to position it correctly.  [CHAR LIMIT=45] -->
     <string name="ssl_ca_cert_warning">Network may\nbe monitored</string>
+
+    <!-- remove all apps from recents -->
+    <string name="recents_kill_all_button_text">Clear all</string>
 
 </resources>
