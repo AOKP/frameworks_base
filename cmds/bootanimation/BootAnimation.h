@@ -20,6 +20,8 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#include <media/mediaplayer.h>
+
 #include <androidfw/AssetManager.h>
 #include <utils/threads.h>
 
@@ -43,6 +45,7 @@ public:
     virtual     ~BootAnimation();
 
     sp<SurfaceComposerClient> session() const;
+    sp<MediaPlayer> mediaplay;
 
 private:
     virtual bool        threadLoop();
