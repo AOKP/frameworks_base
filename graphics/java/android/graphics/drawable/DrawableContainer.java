@@ -327,6 +327,7 @@ public class DrawableContainer extends Drawable implements Drawable.Callback {
         } else {
             mCurrDrawable = null;
             mCurIndex = -1;
+            android.util.Log.i(TAG, "Animation Finished2");
         }
 
         if (mEnterAnimationEnd != 0 || mExitAnimationEnd != 0) {
@@ -339,6 +340,7 @@ public class DrawableContainer extends Drawable implements Drawable.Callback {
                 };
             } else {
                 unscheduleSelf(mAnimationRunnable);
+                android.util.Log.i(TAG, "Animation Finished3");
             }
             // Compute first frame and schedule next animation.
             animate(true);
@@ -388,6 +390,9 @@ public class DrawableContainer extends Drawable implements Drawable.Callback {
 
         if (schedule && animating) {
             scheduleSelf(mAnimationRunnable, now + 1000/60);
+        }
+        else {
+            android.util.Log.i(TAG, "Animation Finished");
         }
     }
 

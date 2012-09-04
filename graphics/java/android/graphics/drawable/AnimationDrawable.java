@@ -82,6 +82,7 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
     private final AnimationState mAnimationState;
     private int mCurFrame = -1;
     private boolean mMutated;
+    private OnAnimationFinishedListener mOnAnimationFinishedListener;
 
     public AnimationDrawable() {
         this(null, null);
@@ -218,6 +219,11 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
 
     private void setFrame(int frame, boolean unschedule, boolean animate) {
         if (frame >= mAnimationState.getChildCount()) {
+            if (mAnimationState.mOneShot) {
+                if (mOnAnimationFinishedListener != null) {
+                    mOnAnimationFinishedListener.onAnimationFinished();
+                }
+            }
             return;
         }
         mCurFrame = frame;
@@ -360,6 +366,17 @@ public class AnimationDrawable extends DrawableContainer implements Runnable, An
         if (state != null) {
             setFrame(0, true, false);
         }
+    }
+
+    // @hide
+    public interface OnAnimationFinishedListener
+    {
+        public void onAnimationFinished();
+    }
+
+    // @hide
+    public void setOnAnimationFinishedListener(OnAnimationFinishedListener l) {
+        mOnAnimationFinishedListener = l;
     }
 }
 
