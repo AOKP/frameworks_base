@@ -56,28 +56,7 @@
         android:visibility="gone"
         android:id="@+id/spacer"
         />
-    <!--<FrameLayout
-        android:id="@+id/wimax_combo"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_marginRight="-6dp"
-        >
-        <ImageView
-            android:id="@+id/wimax_signal"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:scaleType="center"
-            />
-        <ImageView
-            android:id="@+id/wimax_inout"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center|bottom"
-            />
-    </FrameLayout>
-    -->
+
     <FrameLayout
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -87,34 +66,38 @@
             android:layout_width="6dp"
             android:visibility="invisible"
             />
-        <FrameLayout
+        <LinearLayout
             android:id="@+id/mobile_combo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             >
-            <ImageView
+            <FrameLayout
+                android:layout_height="match_parent"
+    			android:layout_width="wrap_content" >
+            	<ImageView
+               	 	android:id="@+id/mobile_type"
+               	 	android:layout_height="wrap_content"
+               	 	android:layout_width="wrap_content"
+                	android:layout_gravity="right|top"
+                />
+            	<ImageView
+                	android:id="@+id/mobile_inout"
+                	android:layout_height="wrap_content"
+                	android:layout_width="wrap_content"
+                	android:layout_gravity="right|bottom"
+                />
+            	<com.android.systemui.statusbar.policy.SignalText
+					android:id="@+id/signal_text"
+					android:layout_width="wrap_content"
+					android:layout_height="match_parent" />
+        	</FrameLayout>
+        	<ImageView
                 android:id="@+id/mobile_signal"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                />
-            <ImageView
-                android:id="@+id/mobile_type"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_gravity="left|top"
-                />
-            <ImageView
-                android:id="@+id/mobile_inout"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_gravity="right|bottom"
-                />
-            <com.android.systemui.statusbar.policy.SignalText
-		android:id="@+id/signal_text"
-		android:layout_width="wrap_content"
-		android:layout_height="match_parent"
-		android:paddingLeft="8dp" />
-        </FrameLayout>
+             />
+    	</LinearLayout>
     </FrameLayout>
     <ImageView
         android:id="@+id/airplane"
