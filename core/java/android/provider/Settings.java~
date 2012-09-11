@@ -1625,8 +1625,8 @@ public final class Settings {
         public static final String MODE_RINGER = "mode_ringer";
 
         /**
-         * User interface mode. This is used to change the UI mode forcing it to
-         * Change into tablet mode. Default is disabled. 
+         * User interface mode. This is used internally, changing this value will not
+         * Change it into tablet mode. 
          */
         public static final String MODE_TABLETUI = "mode_tabletui";
 
