@@ -2110,6 +2110,12 @@ public final class Settings {
         public static final String LOCKSCREEN_DISABLED = "lockscreen.disabled";
 
         /**
+         * Whether to enable lockscreen rotation
+         * @hide
+         */
+        public static final String LOCKSCREEN_AUTO_ROTATE = "com.android.internal.R.config_enableLockScreenRotation";
+
+        /**
          * URI for the low battery sound file.
          * @hide
          */
