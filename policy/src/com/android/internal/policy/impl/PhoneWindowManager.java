@@ -1193,103 +1193,112 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                             .getDimensionPixelSize(
                                     com.android.internal.R.dimen.navigation_bar_width));
 
-        // SystemUI (status bar) layout policy
-        int shortSizeDp = shortSize
-                * DisplayMetrics.DENSITY_DEFAULT
-                / DisplayMetrics.DENSITY_DEVICE;
+        // tabletui switch
+        int mTabletui = Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.MODE_TABLET_UI);
+        if(mTabletui== false) {
 
-        if (shortSizeDp < 600) {
-            // 0-599dp: "phone" UI with a separate status & navigation bar
-            mHasSystemNavBar = false;
-            mNavigationBarCanMove = true;
-            Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.TABLET_UI, 0);
-        } else if (shortSizeDp < 720) {
-            // 600-719dp: "phone" UI with modifications for larger screens
-            mHasSystemNavBar = false;
-            mNavigationBarCanMove = false;
-            Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.TABLET_UI, 2);
-        } else {
-            // 720dp: "tablet" UI with a single combined status & navigation bar
-            mHasSystemNavBar = true;
-            mNavigationBarCanMove = false;
-            Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.TABLET_UI, 1);
-        }
+          // SystemUI (status bar) layout policy
+          int shortSizeDp = shortSize
+                  * DisplayMetrics.DENSITY_DEFAULT
+                  / DisplayMetrics.DENSITY_DEVICE;
 
-        if (!mHasSystemNavBar) {
-            final boolean showByDefault = mContext.getResources().getBoolean(
-                    com.android.internal.R.bool.config_showNavigationBar);
-            mHasNavigationBar = Settings.System.getBoolean(mContext.getContentResolver(),
-                    Settings.System.NAVIGATION_BAR_SHOW, showByDefault);
+          if (shortSizeDp < 600) {
+              // 0-599dp: "phone" UI with a separate status & navigation bar
+              mHasSystemNavBar = false;
+              mNavigationBarCanMove = true;
+              Settings.System.putInt(mContext.getContentResolver(),
+                      Settings.System.TABLET_UI, 0);
+          } else if (shortSizeDp < 720) {
+              // 600-719dp: "phone" UI with modifications for larger screens
+              mHasSystemNavBar = false;
+              mNavigationBarCanMove = false;
+              Settings.System.putInt(mContext.getContentResolver(),
+                      Settings.System.TABLET_UI, 2);
+          } else {
+              // 720dp: "tablet" UI with a single combined status & navigation bar
+              mHasSystemNavBar = true;
+              mNavigationBarCanMove = false;
+              Settings.System.putInt(mContext.getContentResolver(),
+                      Settings.System.TABLET_UI, 1);
+          }
 
-            /*
-             * at first boot up, we need to make sure navbar gets created
-             * (or obey framework setting). 
-             * this should quickly get over-ridden by the settings observer
-             * if it was disabled by the user.
-            */
-            if (mNavBarFirstBootFlag) {
-                mNavBarFirstBootFlag = false;
-            } else {
-                mHasNavigationBar = mHasNavigationBar &&
-                        Settings.System.getBoolean(mContext.getContentResolver(),
-                                Settings.System.NAVIGATION_BAR_SHOW_NOW, mHasNavigationBar);
-            }
-        } else {
-            // Allow a system property to override this. Used by the emulator.
-            // See also hasNavigationBar().
-            String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
-            if (!"".equals(navBarOverride)) {
-                if (navBarOverride.equals("1"))
-                    mHasNavigationBar = false;
-                else if (navBarOverride.equals("0"))
-                    mHasNavigationBar = true;
-            }
-        }
+          if (!mHasSystemNavBar) {
+              final boolean showByDefault = mContext.getResources().getBoolean(
+                      com.android.internal.R.bool.config_showNavigationBar);
+              mHasNavigationBar = Settings.System.getBoolean(mContext.getContentResolver(),
+                      Settings.System.NAVIGATION_BAR_SHOW, showByDefault);
 
-        if (!mHasNavigationBar) {
-            mNavigationBarWidthForRotation[mPortraitRotation] =
-                    mNavigationBarWidthForRotation[mUpsideDownRotation] =
-                    mNavigationBarWidthForRotation[mLandscapeRotation] =
-                    mNavigationBarWidthForRotation[mSeascapeRotation] = 0;
-            mNavigationBarHeightForRotation[mPortraitRotation] =
-                    mNavigationBarHeightForRotation[mUpsideDownRotation] =
-                    mNavigationBarHeightForRotation[mLandscapeRotation] =
-                    mNavigationBarHeightForRotation[mSeascapeRotation] = 0;
-        }
+              /*
+               * at first boot up, we need to make sure navbar gets created
+               * (or obey framework setting). 
+               * this should quickly get over-ridden by the settings observer
+               * if it was disabled by the user.
+              */
+              if (mNavBarFirstBootFlag) {
+                  mNavBarFirstBootFlag = false;
+              } else {
+                  mHasNavigationBar = mHasNavigationBar &&
+                          Settings.System.getBoolean(mContext.getContentResolver(),
+                                  Settings.System.NAVIGATION_BAR_SHOW_NOW, mHasNavigationBar);
+              }
+          } else {
+              // Allow a system property to override this. Used by the emulator.
+              // See also hasNavigationBar().
+              String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
+              if (!"".equals(navBarOverride)) {
+                  if (navBarOverride.equals("1"))
+                      mHasNavigationBar = false;
+                  else if (navBarOverride.equals("0"))
+                      mHasNavigationBar = true;
+              }
+          }
 
-        if (mHasSystemNavBar) {
-            // The system bar is always at the bottom. If you are watching
-            // a video in landscape, we don't need to hide it if we can
-            // still
-            // show a 16:9 aspect ratio with it.
-            int longSizeDp = longSize
-                    * DisplayMetrics.DENSITY_DEFAULT
-                    / DisplayMetrics.DENSITY_DEVICE;
-            int barHeightDp = mNavigationBarHeightForRotation[mLandscapeRotation]
-                    * DisplayMetrics.DENSITY_DEFAULT
-                    / DisplayMetrics.DENSITY_DEVICE;
-            int aspect = ((shortSizeDp - barHeightDp) * 16) / longSizeDp;
-            // We have computed the aspect ratio with the bar height taken
-            // out to be 16:aspect. If this is less than 9, then hiding
-            // the navigation bar will provide more useful space for wide
-            // screen movies.
-            mCanHideNavigationBar = aspect < 9;
-        } else if (mHasNavigationBar) {
-            // The navigation bar is at the right in landscape; it seems
-            // always useful to hide it for showing a video.
-            mCanHideNavigationBar = true;
-        } else {
-            mCanHideNavigationBar = false;
-        }
+          if (!mHasNavigationBar) {
+              mNavigationBarWidthForRotation[mPortraitRotation] =
+                      mNavigationBarWidthForRotation[mUpsideDownRotation] =
+                      mNavigationBarWidthForRotation[mLandscapeRotation] =
+                      mNavigationBarWidthForRotation[mSeascapeRotation] = 0;
+              mNavigationBarHeightForRotation[mPortraitRotation] =
+                      mNavigationBarHeightForRotation[mUpsideDownRotation] =
+                      mNavigationBarHeightForRotation[mLandscapeRotation] =
+                      mNavigationBarHeightForRotation[mSeascapeRotation] = 0;
+          }
 
-        if ("portrait".equals(SystemProperties.get("persist.demo.hdmirotation"))) {
-            mHdmiRotation = mPortraitRotation;
-        } else {
-            mHdmiRotation = mLandscapeRotation;
-        }
+          if (mHasSystemNavBar) {
+              // The system bar is always at the bottom. If you are watching
+              // a video in landscape, we don't need to hide it if we can
+              // still
+              // show a 16:9 aspect ratio with it.
+              int longSizeDp = longSize
+                      * DisplayMetrics.DENSITY_DEFAULT
+                      / DisplayMetrics.DENSITY_DEVICE;
+              int barHeightDp = mNavigationBarHeightForRotation[mLandscapeRotation]
+                      * DisplayMetrics.DENSITY_DEFAULT
+                      / DisplayMetrics.DENSITY_DEVICE;
+              int aspect = ((shortSizeDp - barHeightDp) * 16) / longSizeDp;
+              // We have computed the aspect ratio with the bar height taken
+              // out to be 16:aspect. If this is less than 9, then hiding
+              // the navigation bar will provide more useful space for wide
+              // screen movies.
+              mCanHideNavigationBar = aspect < 9;
+          } else if (mHasNavigationBar) {
+              // The navigation bar is at the right in landscape; it seems
+              // always useful to hide it for showing a video.
+              mCanHideNavigationBar = true;
+          } else {
+              mCanHideNavigationBar = false;
+          }
+
+          if ("portrait".equals(SystemProperties.get("persist.demo.hdmirotation"))) {
+              mHdmiRotation = mPortraitRotation;
+          } else {
+              mHdmiRotation = mLandscapeRotation;
+          }
+          }
+    }
+    } else {
+        mHasSystemNavBar = true;
+        mNavigationBarCanMove = false;
     }
 
     public void updateSettings() {

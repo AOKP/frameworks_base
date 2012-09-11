@@ -6430,8 +6430,14 @@ public class WindowManagerService extends IWindowManager.Stub
         sl = reduceConfigLayout(sl, Surface.ROTATION_90, density, unrotDh, unrotDw);
         sl = reduceConfigLayout(sl, Surface.ROTATION_180, density, unrotDw, unrotDh);
         sl = reduceConfigLayout(sl, Surface.ROTATION_270, density, unrotDh, unrotDw);
-        outConfig.smallestScreenWidthDp = (int)(mSmallestDisplayWidth / density);
-        outConfig.screenLayout = sl;
+        // tabletui switch
+        int mTabletui = Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.MODE_TABLET_UI);
+          if(mTabletui== false) {
+          outConfig.smallestScreenWidthDp = (int)(mSmallestDisplayWidth / density);
+          outConfig.screenLayout = sl;
+          } else {
+          outConfig.smallestScreenWidthDp=721
+          }
     }
 
     private int reduceCompatConfigWidthSize(int curSize, int rotation, DisplayMetrics dm,
