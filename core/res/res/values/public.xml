@@ -3785,4 +3785,9 @@
   <java-symbol type="drawable" name="ic_lock_screenshot" />
   <java-symbol type="string" name="global_action_screenshot" />
 
+  <!-- Custom Vibrations -->
+  <java-symbol type="string" name="vibration_picker_title"/>
+  <java-symbol type="string" name="vibration_picker_del_title"/>
+  <java-symbol type="layout" name="vibration_picker_dialog"/>
+
 </resources>
