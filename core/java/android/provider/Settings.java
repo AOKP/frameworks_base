@@ -2655,6 +2655,10 @@ public final class Settings {
         /**
          * hide
          */
+		public static final String SYSTEMUI_SOFTKEY_IME_SWITCHER = "ime_switcher";
+        /**
+         * hide
+         */
         public static final String SYSTEMUI_SOFTKEY_KILL_PROCESS = "killcurrent";
 
         /**
