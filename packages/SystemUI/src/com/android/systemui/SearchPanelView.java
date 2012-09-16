@@ -41,6 +41,7 @@ import android.content.pm.ActivityInfo;
 import android.content.ServiceConnection;
 import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.os.Vibrator;
 import android.os.Handler;
 import android.os.IBinder;
@@ -202,6 +203,24 @@ public class SearchPanelView extends FrameLayout implements
             vibrate();
             screenOff();
             return true;
+        } else if (targetKey.equals("ime_switcher")) {
+            vibrate();
+            getContext().sendBroadcast(new Intent("android.settings.SHOW_INPUT_METHOD_PICKER"));
+            return true;
+        } else if (targetKey.equals("ring_vib")) {
+        	AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
+        	if(am != null){
+				if(am.getRingerMode() != AudioManager.RINGER_MODE_NORMAL) {
+					am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+				}else{
+					am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);					
+				    Vibrator vib = (Vibrator) getContext().getSystemService(Context.VIBRATOR_SERVICE);
+				    if(vib != null){
+					    vib.vibrate(30);
+					}
+				}
+			}
+            return true;
         } else if (targetKey.equals("killcurrent")) {
             vibrate();
             killProcess();
@@ -344,6 +363,10 @@ public class SearchPanelView extends FrameLayout implements
                 storedDraw.add(cDrawable);
             } else if (targetActivities.get(i).equals("screenshot")) {
                 storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_screenshot)));
+            } else if (targetActivities.get(i).equals("ime_switcher")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_sysbar_ime_switcher)));
+            } else if (targetActivities.get(i).equals("ring_vib")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_vib)));
             } else if (targetActivities.get(i).equals("killcurrent")) {
                 storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_killtask)));
             } else if (targetActivities.get(i).equals("power")) {
