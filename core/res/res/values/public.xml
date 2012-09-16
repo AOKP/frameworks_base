@@ -18,7 +18,7 @@
      ***************************************************************
      *************************************************************** -->
 <resources>
-
+<java-symbol type="integer" name="config_backKillTimeout" />
   <!-- We don't want to publish private symbols in android.R as part of the
        SDK.  Instead, put them here. -->
   <private-symbols package="com.android.internal" />
@@ -1448,6 +1448,7 @@
   <java-symbol type="id" name="replace_message" />
   <java-symbol type="fraction" name="config_dimBehindFadeDuration" />
   <java-symbol type="integer" name="config_backKillTimeout" />
+  <java-symbol type="integer" name="config_deviceHardwareKeys" />
   <java-symbol type="integer" name="config_carDockKeepsScreenOn" />
   <java-symbol type="integer" name="config_criticalBatteryWarningLevel" />
   <java-symbol type="integer" name="config_datause_notification_type" />
