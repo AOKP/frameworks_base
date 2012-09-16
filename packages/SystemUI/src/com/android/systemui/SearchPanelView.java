@@ -202,6 +202,10 @@ public class SearchPanelView extends FrameLayout implements
             vibrate();
             screenOff();
             return true;
+        } else if (targetKey.equals("ime_switcher")) {
+            vibrate();
+            getContext().sendBroadcast(new Intent("android.settings.SHOW_INPUT_METHOD_PICKER"));
+            return true;
         } else if (targetKey.equals("killcurrent")) {
             vibrate();
             killProcess();
@@ -344,6 +348,8 @@ public class SearchPanelView extends FrameLayout implements
                 storedDraw.add(cDrawable);
             } else if (targetActivities.get(i).equals("screenshot")) {
                 storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_screenshot)));
+            } else if (targetActivities.get(i).equals("ime_switcher")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_sysbar_ime_switcher)));
             } else if (targetActivities.get(i).equals("killcurrent")) {
                 storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_killtask)));
             } else if (targetActivities.get(i).equals("power")) {
