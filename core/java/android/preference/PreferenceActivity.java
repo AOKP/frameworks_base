@@ -671,10 +671,16 @@ public abstract class PreferenceActivity extends ListActivity implements
      * The default implementation returns true if the screen is large
      * enough.
      */
+    //public boolean onIsMultiPane() {
+        //boolean preferMultiPane = getResources().getBoolean(
+                //com.android.internal.R.bool.preferences_prefer_dual_pane);
+        //return preferMultiPane;
+    //}
     public boolean onIsMultiPane() {
-        boolean preferMultiPane = getResources().getBoolean(
-                com.android.internal.R.bool.preferences_prefer_dual_pane);
-        return preferMultiPane;
+       boolean preferMultiPane = Settings.System.getBoolean(
+                getContext().getContentResolver(), Settings.System.FORCE_DUAL_PANEL, getResources().getBoolean(
+                com.android.internal.R.bool.preferences_prefer_dual_pane));
+       return preferMultiPane;
     }
 
     /**
