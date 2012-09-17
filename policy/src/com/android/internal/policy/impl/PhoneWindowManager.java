@@ -25,6 +25,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -153,6 +154,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Constructor;
+
+import com.android.internal.os.DeviceKeyHandler;
+import dalvik.system.DexClassLoader;
 
 /**
  * WindowManagerPolicy implementation for the Android phone UI.  This
@@ -222,6 +227,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         sApplicationLaunchKeyCategories.append(
                 KeyEvent.KEYCODE_CALCULATOR, Intent.CATEGORY_APP_CALCULATOR);
     }
+
+    DeviceKeyHandler mDeviceKeyHandler;
 
     /**
      * Lock protecting internal state.  Must not call out into window
@@ -301,6 +308,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     boolean mHdmiPlugged;
     int mDockMode = Intent.EXTRA_DOCK_STATE_UNDOCKED;
     int mLidOpenRotation;
+    boolean mHasRemovableLid;
     int mCarDockRotation;
     int mDeskDockRotation;
     int mHdmiRotation;
@@ -932,6 +940,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 com.android.internal.R.integer.config_lidNavigationAccessibility);
         mLidControlsSleep = mContext.getResources().getBoolean(
                 com.android.internal.R.bool.config_lidControlsSleep);
+        mHasRemovableLid = mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_hasRemovableLid);
+
         // register for dock events
         IntentFilter filter = new IntentFilter();
         filter.addAction(UiModeManager.ACTION_ENTER_CAR_MODE);
@@ -979,6 +990,30 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             screenTurningOn(null);
         } else {
             screenTurnedOff(WindowManagerPolicy.OFF_BECAUSE_OF_USER);
+        }
+
+        String deviceKeyHandlerLib = mContext.getResources().getString(
+                com.android.internal.R.string.config_deviceKeyHandlerLib);
+
+        String deviceKeyHandlerClass = mContext.getResources().getString(
+                com.android.internal.R.string.config_deviceKeyHandlerClass);
+
+        if (!deviceKeyHandlerLib.equals("") && !deviceKeyHandlerClass.equals("")) {
+            DexClassLoader loader =  new DexClassLoader(deviceKeyHandlerLib,
+                    new ContextWrapper(mContext).getCacheDir().getAbsolutePath(),
+                    null,
+                    ClassLoader.getSystemClassLoader());
+            try {
+                Class<?> klass = loader.loadClass(deviceKeyHandlerClass);
+                Constructor<?> constructor = klass.getConstructor(Context.class);
+                mDeviceKeyHandler = (DeviceKeyHandler) constructor.newInstance(
+                        mContext);
+                Slog.d(TAG, "Device key handler loaded");
+            } catch (Exception e) {
+                Slog.d(TAG, "Could not instantiate device key handler "
+                        + deviceKeyHandlerClass + " from class "
+                        + deviceKeyHandlerLib, e);
+            }
         }
     }
 
@@ -2199,6 +2234,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             return -1;
         }
 
+        if (mDeviceKeyHandler != null) {
+            try {
+                return mDeviceKeyHandler.handleKeyEvent(event);
+            } catch (Exception e) {
+                Slog.d(TAG, "Could not dispatch event to device key handler", e);
+            }
+        }
+
         // Let the application handle the key.
         return 0;
     }
@@ -3365,13 +3408,21 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             // since audio is playing, we shouldn't have to hold a wake lock
             // during the call, but we do it as a precaution for the rare possibility
             // that the music stops right before we call this
-            // TODO: Actually handle MUTE.
-            mBroadcastWakeLock.acquire();
-            audioService.adjustStreamVolume(stream,
-                keycode == KeyEvent.KEYCODE_VOLUME_UP
-                            ? AudioManager.ADJUST_RAISE
-                            : AudioManager.ADJUST_LOWER,
-                    0);
+            if (keycode == KeyEvent.KEYCODE_VOLUME_MUTE) {
+                final AudioManager am = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+                if (am == null) {
+                    Log.w(TAG, "handleVolumeKey: couldn't get AudioManager reference");
+                } else {
+                    am.toggleMute(stream);
+                }
+            } else {
+                mBroadcastWakeLock.acquire();
+                audioService.adjustStreamVolume(stream,
+                    keycode == KeyEvent.KEYCODE_VOLUME_UP
+                                ? AudioManager.ADJUST_RAISE
+                                : AudioManager.ADJUST_LOWER,
+                        0);
+            }
         } catch (RemoteException e) {
             Log.w(TAG, "IAudioService.adjustStreamVolume() threw RemoteException " + e);
         } finally {
@@ -4127,8 +4178,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
 
             final int preferredRotation;
-            if (mLidState == LID_OPEN && mLidOpenRotation >= 0) {
-                // Ignore sensor when lid switch is open and rotation is forced.
+            if ((mLidState == LID_OPEN && mLidOpenRotation >= 0)
+                    && !(mHasRemovableLid
+                            && mDockMode == Intent.EXTRA_DOCK_STATE_UNDOCKED)) {
+                // Ignore sensor when lid switch is open and rotation is forced
+                // and a removable lid was not undocked.
                 preferredRotation = mLidOpenRotation;
             } else if (mDockMode == Intent.EXTRA_DOCK_STATE_CAR
                     && (mCarDockEnablesAccelerometer || mCarDockRotation >= 0)) {

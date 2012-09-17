@@ -257,7 +257,7 @@ public class SearchPanelView extends FrameLayout implements
         int endPosOffset;
         int middleBlanks = 0;
 
-         if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_LARGE || isScreenPortrait()) {
+         if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_LARGE || screenLayout() == Configuration.SCREENLAYOUT_SIZE_XLARGE || isScreenPortrait()) {
              startPosOffset =  1;
              endPosOffset =  (mNavRingAmount) + 1;
          } else {

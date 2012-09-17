@@ -2034,4 +2034,9 @@
   <java-symbol type="layout" name="vibration_picker_dialog"/>
 
   <java-symbol type="bool" name="config_forceDisableHardwareKeyboard" />
+
+  <!-- Tablets and docks -->
+  <java-symbol type="bool" name="config_hasRemovableLid" />
+  <java-symbol type="string" name="config_deviceKeyHandlerLib" />
+  <java-symbol type="string" name="config_deviceKeyHandlerClass" />
 </resources>

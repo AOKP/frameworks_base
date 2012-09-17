@@ -2847,6 +2847,7 @@ package android.app {
     method public void moveTaskToFront(int, int);
     method public void moveTaskToFront(int, int, android.os.Bundle);
     method public deprecated void restartPackage(java.lang.String);
+    method public void updateConfiguration(android.content.res.Configuration) throws java.lang.SecurityException;
     field public static final int MOVE_TASK_NO_USER_ACTION = 2; // 0x2
     field public static final int MOVE_TASK_WITH_HOME = 1; // 0x1
     field public static final int RECENT_IGNORE_UNAVAILABLE = 2; // 0x2
@@ -4148,6 +4149,12 @@ package android.app {
     field public static final int MODE_NIGHT_AUTO = 0; // 0x0
     field public static final int MODE_NIGHT_NO = 1; // 0x1
     field public static final int MODE_NIGHT_YES = 2; // 0x2
+  }
+
+  public class VibrationPickerDialog extends android.app.DialogFragment {
+    ctor public VibrationPickerDialog();
+    method public static android.app.VibrationPickerDialog newInstance(android.os.Handler, boolean, java.lang.String);
+    method public void stopAllVibrations();
   }
 
   public final class WallpaperInfo implements android.os.Parcelable {
@@ -7062,6 +7069,7 @@ package android.content.res {
     method public void parseBundleExtra(java.lang.String, android.util.AttributeSet, android.os.Bundle) throws org.xmlpull.v1.XmlPullParserException;
     method public void parseBundleExtras(android.content.res.XmlResourceParser, android.os.Bundle) throws java.io.IOException, org.xmlpull.v1.XmlPullParserException;
     method public void updateConfiguration(android.content.res.Configuration, android.util.DisplayMetrics);
+    method public final void updateStringCache();
   }
 
   public static class Resources.NotFoundException extends java.lang.RuntimeException {
@@ -9322,9 +9330,14 @@ package android.graphics.drawable {
     method public boolean isOneShot();
     method public boolean isRunning();
     method public void run();
+    method public void setOnAnimationFinishedListener(android.graphics.drawable.AnimationDrawable.OnAnimationFinishedListener);
     method public void setOneShot(boolean);
     method public void start();
     method public void stop();
+  }
+
+  public static abstract interface AnimationDrawable.OnAnimationFinishedListener {
+    method public abstract void onAnimationFinished();
   }
 
   public class BitmapDrawable extends android.graphics.drawable.Drawable {
@@ -12075,6 +12088,27 @@ package android.media {
     field public static final int TONE_SUP_RADIO_ACK = 19; // 0x13
     field public static final int TONE_SUP_RADIO_NOTAVAIL = 20; // 0x14
     field public static final int TONE_SUP_RINGTONE = 23; // 0x17
+  }
+
+  public class VibrationPattern {
+    ctor public VibrationPattern(java.lang.String, java.util.ArrayList<java.lang.Long>, android.content.Context);
+    ctor public VibrationPattern(java.lang.String, java.lang.String, android.content.Context);
+    ctor public VibrationPattern(android.net.Uri, android.content.Context);
+    method public static android.media.VibrationPattern getFallbackVibration(android.content.Context);
+    method public int getLength();
+    method public java.lang.String getName();
+    method public long[] getPattern();
+    method public java.lang.String getPatternString();
+    method public static java.lang.String getPhoneVibration(android.content.Context);
+    method public android.net.Uri getUri();
+    method public void play();
+    method public void setName(java.lang.String);
+    method public void setPatternFromString(java.lang.String);
+    method public void setUri(android.net.Uri);
+    method public void stop();
+    field public static final java.lang.String FALLBACK_NAME = "FALLBACK";
+    field public static final java.lang.String FALLBACK_PATTERN = "500,1000,1000,1000,1000";
+    field public static final java.lang.String URI = "content://com.aokp.romcontrol.Vibrations/vibrations";
   }
 
 }
@@ -17594,6 +17628,7 @@ package android.provider {
 
   public static abstract deprecated interface Contacts.PeopleColumns {
     field public static final deprecated java.lang.String CUSTOM_RINGTONE = "custom_ringtone";
+    field public static final deprecated java.lang.String CUSTOM_VIBRATION = "custom_vibration";
     field public static final deprecated java.lang.String DISPLAY_NAME = "display_name";
     field public static final deprecated java.lang.String LAST_TIME_CONTACTED = "last_time_contacted";
     field public static final deprecated java.lang.String NAME = "name";
@@ -17939,6 +17974,7 @@ package android.provider {
 
   protected static abstract interface ContactsContract.ContactOptionsColumns {
     field public static final java.lang.String CUSTOM_RINGTONE = "custom_ringtone";
+    field public static final java.lang.String CUSTOM_VIBRATION = "custom_vibration";
     field public static final java.lang.String LAST_TIME_CONTACTED = "last_time_contacted";
     field public static final java.lang.String SEND_TO_VOICEMAIL = "send_to_voicemail";
     field public static final java.lang.String STARRED = "starred";
@@ -18958,6 +18994,7 @@ package android.provider {
     field public static final android.net.Uri DEFAULT_ALARM_ALERT_URI;
     field public static final android.net.Uri DEFAULT_NOTIFICATION_URI;
     field public static final android.net.Uri DEFAULT_RINGTONE_URI;
+    field public static final android.net.Uri DEFAULT_VIBRATION_URI;
     field public static final deprecated java.lang.String DEVICE_PROVISIONED = "device_provisioned";
     field public static final deprecated java.lang.String DIM_SCREEN = "dim_screen";
     field public static final java.lang.String DTMF_TONE_WHEN_DIALING = "dtmf_tone";
@@ -18966,6 +19003,7 @@ package android.provider {
     field public static final java.lang.String HAPTIC_FEEDBACK_ENABLED = "haptic_feedback_enabled";
     field public static final deprecated java.lang.String HTTP_PROXY = "http_proxy";
     field public static final deprecated java.lang.String INSTALL_NON_MARKET_APPS = "install_non_market_apps";
+    field public static final java.lang.String LED_BRIGHTNESS = "led_brightness";
     field public static final deprecated java.lang.String LOCATION_PROVIDERS_ALLOWED = "location_providers_allowed";
     field public static final deprecated java.lang.String LOCK_PATTERN_ENABLED = "lock_pattern_autolock";
     field public static final deprecated java.lang.String LOCK_PATTERN_TACTILE_FEEDBACK_ENABLED = "lock_pattern_tactile_feedback_enabled";
@@ -18974,12 +19012,15 @@ package android.provider {
     field public static final deprecated java.lang.String MODE_RINGER = "mode_ringer";
     field public static final java.lang.String MODE_RINGER_STREAMS_AFFECTED = "mode_ringer_streams_affected";
     field public static final java.lang.String MUTE_STREAMS_AFFECTED = "mute_streams_affected";
+    field public static final java.lang.String NAVIGATION_BAR_WIDGETS = "navigation_bar_widgets";
     field public static final deprecated java.lang.String NETWORK_PREFERENCE = "network_preference";
     field public static final java.lang.String NEXT_ALARM_FORMATTED = "next_alarm_formatted";
+    field public static final java.lang.String NOTIFICATION_CONVERT_SOUND_TO_VIBRATION = "convert_sound_to_vibration";
     field public static final java.lang.String NOTIFICATION_SOUND = "notification_sound";
     field public static final deprecated java.lang.String PARENTAL_CONTROL_ENABLED = "parental_control_enabled";
     field public static final deprecated java.lang.String PARENTAL_CONTROL_LAST_UPDATE = "parental_control_last_update";
     field public static final deprecated java.lang.String PARENTAL_CONTROL_REDIRECT_URL = "parental_control_redirect_url";
+    field public static final java.lang.String PHONE_VIBRATION = "phone_vibration";
     field public static final deprecated java.lang.String RADIO_BLUETOOTH = "bluetooth";
     field public static final deprecated java.lang.String RADIO_CELL = "cell";
     field public static final deprecated java.lang.String RADIO_NFC = "nfc";
@@ -18994,9 +19035,9 @@ package android.provider {
     field public static final java.lang.String SETUP_WIZARD_HAS_RUN = "setup_wizard_has_run";
     field public static final java.lang.String SHOW_GTALK_SERVICE_STATUS = "SHOW_GTALK_SERVICE_STATUS";
     field public static final deprecated java.lang.String SHOW_PROCESSES = "show_processes";
-    field public static final java.lang.String SHOW_STATUSBAR_IME_SWITCHER = "show_statusbar_ime_switcher";
     field public static final deprecated java.lang.String SHOW_WEB_SUGGESTIONS = "show_web_suggestions";
     field public static final java.lang.String SOUND_EFFECTS_ENABLED = "sound_effects_enabled";
+    field public static final java.lang.String STATUSBAR_BATTERY_ICON = "statusbar_battery_icon";
     field public static final deprecated java.lang.String STAY_ON_WHILE_PLUGGED_IN = "stay_on_while_plugged_in";
     field public static final java.lang.String SYS_PROP_SETTING_VERSION = "sys.settings_system_version";
     field public static final java.lang.String TEXT_AUTO_CAPS = "auto_caps";
@@ -24060,6 +24101,9 @@ package android.view {
     field public static final int KEYCODE_BACKSLASH = 73; // 0x49
     field public static final int KEYCODE_BOOKMARK = 174; // 0xae
     field public static final int KEYCODE_BREAK = 121; // 0x79
+    field public static final int KEYCODE_BRIGHTNESS_AUTO = 225; // 0xe1
+    field public static final int KEYCODE_BRIGHTNESS_DOWN = 223; // 0xdf
+    field public static final int KEYCODE_BRIGHTNESS_UP = 224; // 0xe0
     field public static final int KEYCODE_BUTTON_1 = 188; // 0xbc
     field public static final int KEYCODE_BUTTON_10 = 197; // 0xc5
     field public static final int KEYCODE_BUTTON_11 = 198; // 0xc6
@@ -24219,6 +24263,7 @@ package android.view {
     field public static final int KEYCODE_RIGHT_BRACKET = 72; // 0x48
     field public static final int KEYCODE_RO = 217; // 0xd9
     field public static final int KEYCODE_S = 47; // 0x2f
+    field public static final int KEYCODE_SCREENSHOT = 226; // 0xe2
     field public static final int KEYCODE_SCROLL_LOCK = 116; // 0x74
     field public static final int KEYCODE_SEARCH = 84; // 0x54
     field public static final int KEYCODE_SEMICOLON = 74; // 0x4a
@@ -24237,6 +24282,9 @@ package android.view {
     field public static final int KEYCODE_SYSRQ = 120; // 0x78
     field public static final int KEYCODE_T = 48; // 0x30
     field public static final int KEYCODE_TAB = 61; // 0x3d
+    field public static final int KEYCODE_TOGGLE_BT = 221; // 0xdd
+    field public static final int KEYCODE_TOGGLE_TOUCHPAD = 222; // 0xde
+    field public static final int KEYCODE_TOGGLE_WIFI = 220; // 0xdc
     field public static final int KEYCODE_TV = 170; // 0xaa
     field public static final int KEYCODE_TV_INPUT = 178; // 0xb2
     field public static final int KEYCODE_TV_POWER = 177; // 0xb1
