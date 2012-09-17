@@ -43,9 +43,11 @@ import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.content.ContentResolver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.provider.Settings;
 import android.widget.TextView;
 
 import com.android.internal.util.XmlUtils;
@@ -199,6 +201,7 @@ public abstract class PreferenceActivity extends ListActivity implements
     // --- Common state
 
     private Button mNextButton;
+    Context mContext;
 
     /**
      * The starting request code given out to preference framework.
@@ -671,10 +674,16 @@ public abstract class PreferenceActivity extends ListActivity implements
      * The default implementation returns true if the screen is large
      * enough.
      */
+    //public boolean onIsMultiPane() {
+        //boolean preferMultiPane = getResources().getBoolean(
+                //com.android.internal.R.bool.preferences_prefer_dual_pane);
+        //return preferMultiPane;
+    //}
     public boolean onIsMultiPane() {
-        boolean preferMultiPane = getResources().getBoolean(
-                com.android.internal.R.bool.preferences_prefer_dual_pane);
-        return preferMultiPane;
+       boolean preferMultiPane = Settings.System.getBoolean(
+                mContext.getContentResolver(), Settings.System.FORCE_DUAL_PANEL, getResources().getBoolean(
+                com.android.internal.R.bool.preferences_prefer_dual_pane));
+       return preferMultiPane;
     }
 
     /**
