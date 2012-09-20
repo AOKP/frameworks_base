@@ -401,7 +401,7 @@ public class SearchPanelView extends FrameLayout implements
             if (targetActivities.get(i) == null || targetActivities.get(i).equals("") || targetActivities.get(i).equals("none")) {
                 storedDraw.add(cDrawable);
             } else if (targetActivities.get(i).equals("screenshot")) {
-                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_screenshot)));
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_screenshot)));
             } else if (targetActivities.get(i).equals("ime_switcher")) {
                 storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_ime_switcher)));
             } else if (targetActivities.get(i).equals("ring_vib")) {
@@ -411,11 +411,11 @@ public class SearchPanelView extends FrameLayout implements
             } else if (targetActivities.get(i).equals("ring_vib_silent")) {
                 storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_ring_vib_silent)));
             } else if (targetActivities.get(i).equals("killcurrent")) {
-                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_killtask)));
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_killtask)));
             } else if (targetActivities.get(i).equals("power")) {
-                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_power)));
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_power)));
             } else if (targetActivities.get(i).equals("screenoff")) {
-                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_navbar_power)));
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_power)));
             } else if (targetActivities.get(i).equals("assist")) {
                 storedDraw.add(new TargetDrawable(mResources, com.android.internal.R.drawable.ic_action_assist_generic));
             } else if (targetActivities.get(i).startsWith("app:")) {
