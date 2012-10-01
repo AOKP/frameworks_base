@@ -3786,7 +3786,9 @@
 
   <!-- Power Menu -->
   <java-symbol type="drawable" name="ic_lock_screenshot" />
+  <java-symbol type="drawable" name="ic_lock_statusbar" />
   <java-symbol type="string" name="global_action_screenshot" />
+  <java-symbol type="string" name="global_action_statusbar_status" />
 
   <!-- Lockscreen Music Layout -->
   <java-symbol type="id" name="album_aokp" />

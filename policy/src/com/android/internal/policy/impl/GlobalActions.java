@@ -302,6 +302,23 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                     }
                 });
 
+        // next: statusbar toggle
+        mItems.add(
+                new SinglePressAction(R.drawable.ic_lock_statusbar, R.string.global_action_statusbar_status) {
+                public void onPress() {
+                    Settings.System.putInt(mContext.getContentResolver(), Settings.System.STATUSBAR_STATE, Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUSBAR_STATE, 0) == 1 ? 0 : 1);
+                }
+
+                public boolean showDuringKeyguard() {
+                    return true;
+                }
+
+                public boolean showBeforeProvisioning() {
+                    return true;
+                }
+            });
+        }
+
         // next: airplane mode
         if (mEnableAirplaneToggle) {
             Slog.e(TAG, "Adding AirplaneToggle");

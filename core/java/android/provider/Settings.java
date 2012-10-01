@@ -2592,6 +2592,11 @@ public final class Settings {
          */
         public static final String POWER_DIALOG_SHOW_SCREENSHOT = "power_dialog_show_screenshot";
 
+        /**
+         * @hide
+         */
+        public static final String POWER_DIALOG_SHOW_EXPANDED_DESKTOP_ENABLED = "power_dialog_show_expanded_desktop_enabled";
+
          /**
          * @hide
          */
@@ -3036,6 +3041,12 @@ public final class Settings {
          * @hide
          */
         public static final String SHOW_STATUSBAR_IME_SWITCHER = "show_statusbar_ime_switcher";
+
+        /**
+         * Statusbar State
+         * @hide
+         */
+        public static final String STATUSBAR_STATE = "statusbar_state";
 
 
         /**
