@@ -66,6 +66,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.internal.widget.multiwaveview.GlowPadView;
@@ -106,9 +107,16 @@ public class SearchPanelView extends FrameLayout implements
     private TargetObserver mTargetObserver;
     private ContentResolver mContentResolver;
     private List<String> targetList;
+    private int startPosOffset;
 
     private int mNavRingAmount;
     private boolean mTabletui;
+    private boolean mLefty;
+
+    //need to make an intent list and an intent counter
+    String[] intent;
+    ArrayList<String> intentList = new ArrayList<String>();
+    String mEmpty = "assist";
 
     public SearchPanelView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -125,6 +133,9 @@ public class SearchPanelView extends FrameLayout implements
 
         mTabletui = Settings.System.getBoolean(mContext.getContentResolver(),
                         Settings.System.MODE_TABLET_UI, false);
+
+        mLefty = (Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.NAVIGATION_BAR_LEFTY_MODE, false));
 
         mNavRingAmount = Settings.System.getInt(mContext.getContentResolver(),
                          Settings.System.SYSTEMUI_NAVRING_AMOUNT, 1);
@@ -160,13 +171,13 @@ public class SearchPanelView extends FrameLayout implements
         String targetKey;
         Intent intent = SearchManager.getAssistIntent(mContext);
 
-        int targetListOffset;
+    /*    int targetListOffset;
         if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_LARGE
                 || screenLayout() == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
-            targetListOffset = 0;
+            targetListOffset = startPosOffset * -1;
         } else {
             if (isScreenPortrait() == true || mTabletui) {
-                targetListOffset = 0;
+                targetListOffset = startPosOffset * -1;
             } else {
                 targetListOffset = -2;
             }
@@ -174,6 +185,13 @@ public class SearchPanelView extends FrameLayout implements
 
         if (target <= targetList.size()) {
             targetKey = Settings.System.getString(mContext.getContentResolver(), targetList.get(target + targetListOffset));
+        } else {
+            return false;
+        } */
+
+
+        if (target < intentList.size()) {
+              targetKey = intentList.get(target);
         } else {
             return false;
         }
@@ -186,15 +204,21 @@ public class SearchPanelView extends FrameLayout implements
             vibrate();
             screenOff();
             return true;
-        } else if (targetKey.equals("ime_switcher")) {
+        }
+
+        if (targetKey.equals("ime_switcher")) {
             vibrate();
             getContext().sendBroadcast(new Intent("android.settings.SHOW_INPUT_METHOD_PICKER"));
             return true;
-        } else if (targetKey.equals("assist")) {
+        }
+
+        if (targetKey.equals("assist")) {
             vibrate();
             startAssistActivity();
             return true;
-        } else if (targetKey.equals("ring_vib")) {
+        }
+
+        if (targetKey.equals("ring_vib")) {
         	AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         	if(am != null){
 				if(am.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE) {
@@ -212,7 +236,9 @@ public class SearchPanelView extends FrameLayout implements
 				}
 			}
             return true;
-        } else if (targetKey.equals("ring_silent")) {
+        }
+
+        if (targetKey.equals("ring_silent")) {
         	AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         	if(am != null){
 				if(am.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
@@ -226,7 +252,9 @@ public class SearchPanelView extends FrameLayout implements
 				}
 			}
             return true;
-        } else if (targetKey.equals("ring_vib_silent")) {
+        }
+
+        if (targetKey.equals("ring_vib_silent")) {
         	AudioManager am = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
         	if(am != null){
 				if(am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
@@ -246,19 +274,28 @@ public class SearchPanelView extends FrameLayout implements
 				}
 			}
             return true;
-        } else if (targetKey.equals("killcurrent")) {
+        }
+    
+
+        if (targetKey.equals("killcurrent")) {
             vibrate();
             killProcess();
             return true;
-        } else if (targetKey.equals("screenshot")) {
+        }
+
+        if (targetKey.equals("screenshot")) {
             vibrate();
             takeScreenshot();
             return true;
-        } else if (targetKey.equals("power")) {
+        }
+
+        if (targetKey.equals("power")) {
             vibrate();
             powerMenu();
             return true;
-        } else {
+        }
+
+
             /* Try to launch the activity from history, if available.*/
             ActivityManager activityManager = (ActivityManager) mContext
                     .getSystemService(Context.ACTIVITY_SERVICE);
@@ -282,7 +319,6 @@ public class SearchPanelView extends FrameLayout implements
             mContext.startActivity(intent);
             return true;
     }
-    }
 
     class GlowPadTriggerListener implements GlowPadView.OnTriggerListener {
         boolean mWaitingForLaunch;
@@ -291,6 +327,11 @@ public class SearchPanelView extends FrameLayout implements
         }
 
         public void onReleased(View v, int handle) {
+        }
+
+        public void onTargetChange(View v,int target) {
+           // this will notify of Target changes inside the GlowPad
+           // before an actual trigger event happens (for long press catches, etc)
         }
 
         public void onGrabbedStateChange(View v, int handle) {
@@ -350,46 +391,128 @@ public class SearchPanelView extends FrameLayout implements
         // Custom Targets
         ArrayList<TargetDrawable> storedDraw = new ArrayList<TargetDrawable>();
 
-        int startPosOffset;
         int endPosOffset;
+        int middleBlanks = 0;
 
-        if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_XLARGE) {
-            startPosOffset = 0;
-            endPosOffset = 11;
-        } else if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_LARGE) {
-            if (mTabletui) {
-                if (mNavRingAmount == 4 || mNavRingAmount == 2) {
-                    startPosOffset = 0;
-                    endPosOffset = 8;
+       // lets try this for all devices in TabletUI
+        if (mTabletui) {
+            // either lefty or...
+            if (mLefty) {
+                if (mNavRingAmount == 5) {
+                    startPosOffset =  4;
+                    endPosOffset =  7;
+                } else if (mNavRingAmount == 4) {
+                    startPosOffset =  3;
+                    endPosOffset =  4;
+                } else if (mNavRingAmount == 3) {
+                    startPosOffset =  2;
+                    endPosOffset =  1;
+                } else if (mNavRingAmount == 2) {
+                    startPosOffset =  4;
+                    endPosOffset =  3;
                 } else {
-                    startPosOffset = 0;
-                    endPosOffset = 11;
+                    startPosOffset =  3;
+                    endPosOffset =  0;
                 }
+            // righty...
             } else {
-                if (mNavRingAmount == 4 || mNavRingAmount == 2) {
-                    startPosOffset = 0;
-                    endPosOffset = 1;
+                if (mNavRingAmount == 5) {
+                    startPosOffset =  0;
+                    endPosOffset =  11;
+                } else if (mNavRingAmount == 4) {
+                    startPosOffset =  0;
+                    endPosOffset =  7;
+                } else if (mNavRingAmount == 3) {
+                    startPosOffset =  0;
+                    endPosOffset =  3;
+                } else if (mNavRingAmount == 2) {
+                    startPosOffset =  1;
+                    endPosOffset =  6;
                 } else {
-                    startPosOffset = 0;
-                    endPosOffset = 3;
+                    startPosOffset =  1;
+                    endPosOffset =  2;
                 }
             }
-        } else {
-            if (isScreenPortrait() == true || mTabletui) {
-                if (mNavRingAmount == 4 || mNavRingAmount == 2) {
-                startPosOffset = 0;
-                endPosOffset = 1;
+            // this is for nexus 7 type devices not in TabletUI since the navbar stays at bottom, only need one config
+         } else if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+                if (mNavRingAmount == 5) {
+                    startPosOffset =  0;
+                    endPosOffset =  3;
+                } else if (mNavRingAmount == 4) {
+                    startPosOffset =  0;
+                    endPosOffset =  1;
+                } else if (mNavRingAmount == 3) {
+                    startPosOffset =  1;
+                    endPosOffset =  4;
+                } else if (mNavRingAmount == 2) {
+                    startPosOffset =  1;
+                    endPosOffset =  1;
                 } else {
-                startPosOffset = 0;
-                endPosOffset = 3;
+                    startPosOffset =  2;
+                    endPosOffset =  1;
+                }
+            // ok phones is where this gets complicated we basically have three possible cases.
+         } else {
+         // first case is portrait both left and righty use the same portrait config
+            if (isScreenPortrait() == true) {
+                if (mNavRingAmount == 5) {
+                    startPosOffset =  0;
+                    endPosOffset =  3;
+                } else if (mNavRingAmount == 4) {
+                    startPosOffset =  0;
+                    endPosOffset =  1;
+                } else if (mNavRingAmount == 3) {
+                    startPosOffset =  1;
+                    endPosOffset =  2;
+                } else if (mNavRingAmount == 2) {
+                    startPosOffset =  1;
+                    endPosOffset =  0;
+                } else {
+                    startPosOffset =  2;
+                    endPosOffset =  1;
                 }
             } else {
-                if (mNavRingAmount == 4 || mNavRingAmount == 2) {
-                startPosOffset = 2;
-                endPosOffset = 0;
+            // next is landscape for lefty navbar is on left
+                if (mLefty) {
+                    if (mNavRingAmount == 5) {
+                        startPosOffset =  0;
+                        endPosOffset =  0;
+                        middleBlanks = 2;
+                    } else if (mNavRingAmount == 4) {
+                        startPosOffset =  1;
+                        endPosOffset =  0;
+                        middleBlanks = 3;
+                    } else if (mNavRingAmount == 3) {
+                        startPosOffset =  0;
+                        endPosOffset =  0;
+                        middleBlanks = 2;
+                    } else if (mNavRingAmount == 2) {
+                        startPosOffset =  1;
+                        endPosOffset =  0;
+                        middleBlanks = 5;
+                    } else {
+                        startPosOffset =  0;
+                        endPosOffset =  3;
+                        middleBlanks = 0;
+                    }
                 } else {
-                startPosOffset = 2;
-                endPosOffset = 1;
+                //lastly the standard landscape with navbar on right
+                    if (mNavRingAmount == 5) {
+                        startPosOffset =  2;
+                        endPosOffset =  1;
+                    } else if (mNavRingAmount == 4) {
+                        startPosOffset =  3;
+                        endPosOffset =  1;
+                    } else if (mNavRingAmount == 3) {
+                        startPosOffset =  3;
+                        endPosOffset =  0;
+                    } else if (mNavRingAmount == 2) {
+                        startPosOffset =  4;
+                        endPosOffset =  0;
+                    } else {
+                        startPosOffset =  6;
+                        endPosOffset =  1;
+                    }
                 }
             }
         }
@@ -404,6 +527,9 @@ public class SearchPanelView extends FrameLayout implements
                                                                mContext.getContentResolver(), targetList.get(3)),
                                                       Settings.System.getString(
                                                                mContext.getContentResolver(), targetList.get(4)));
+        
+        intentList.clear();
+        
 
         // Place Holder Targets
         TargetDrawable cDrawable = new TargetDrawable(mResources, mResources.getDrawable(com.android.internal.R.drawable.ic_lockscreen_camera));
@@ -412,10 +538,35 @@ public class SearchPanelView extends FrameLayout implements
         // Add Initial Place Holder Targets
         for (int i = 0; i < startPosOffset; i++) {
             storedDraw.add(cDrawable);
+            intentList.add(mEmpty);
         }
 
+         int intRunNum;
+         int intRunFinish = 0;
+
+         if (mLefty && !mTabletui && isScreenPortrait() == false) {
+                if (mNavRingAmount == 5) {
+                    intRunNum = 3;
+                    intRunFinish = 2;
+                } else if (mNavRingAmount == 4) {
+                    intRunNum = 2;
+                    intRunFinish = 2;
+                } else if (mNavRingAmount == 3) {
+                    intRunNum = 2;
+                    intRunFinish = 1;
+                } else if (mNavRingAmount == 2) {
+                    intRunNum = 1;
+                    intRunFinish = 1;
+                } else {
+                    intRunNum = targetActivities.size();
+                }
+         } else {
+             intRunNum = targetActivities.size();
+         }
+
         // Add User Targets
-        for (int i = 0; i < targetActivities.size(); i++)
+        for (int i = 0; i < intRunNum; i++) {
+            intentList.add(targetActivities.get(i));
             if (targetActivities.get(i) == null || targetActivities.get(i).equals("") || targetActivities.get(i).equals("none")) {
                 storedDraw.add(cDrawable);
             } else if (targetActivities.get(i).equals("screenshot")) {
@@ -460,10 +611,68 @@ public class SearchPanelView extends FrameLayout implements
             } catch (Exception e) {
             }
         }
+    }
+
+        // Add middle Place Holder Targets
+        for (int j = 0; j < middleBlanks; j++) {
+            storedDraw.add(cDrawable);
+            intentList.add(mEmpty);
+        }
+
+        // Add Rest of User Targets for leftys
+        for (int j = 0; j < intRunFinish; j++) {
+            int i = j + intRunNum;
+            intentList.add(targetActivities.get(i));
+            if (targetActivities.get(i) == null || targetActivities.get(i).equals("") || targetActivities.get(i).equals("none")) {
+                storedDraw.add(cDrawable);
+            } else if (targetActivities.get(i).equals("screenshot")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_screenshot)));
+            } else if (targetActivities.get(i).equals("ime_switcher")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_ime_switcher)));
+            } else if (targetActivities.get(i).equals("ring_vib")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_vib)));
+            } else if (targetActivities.get(i).equals("ring_silent")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_silent)));
+            } else if (targetActivities.get(i).equals("ring_vib_silent")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_ring_vib_silent)));
+            } else if (targetActivities.get(i).equals("killcurrent")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_killtask)));
+            } else if (targetActivities.get(i).equals("power")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_power)));
+            } else if (targetActivities.get(i).equals("screenoff")) {
+                storedDraw.add(new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_power)));
+            } else if (targetActivities.get(i).equals("assist")) {
+                storedDraw.add(new TargetDrawable(mResources, com.android.internal.R.drawable.ic_action_assist_generic));
+            } else {
+                try {
+                    Intent in = Intent.parseUri(targetActivities.get(i), 0);
+                    ActivityInfo aInfo = in.resolveActivityInfo(mPackageManager, PackageManager.GET_ACTIVITIES);
+
+                    Drawable activityIcon = aInfo.loadIcon(mPackageManager);
+                    Drawable iconBg = mResources.getDrawable(R.drawable.ic_navbar_blank);
+                    Drawable iconBgActivated = mResources.getDrawable(R.drawable.ic_navbar_blank_activated);
+
+                    int margin = (int)(iconBg.getIntrinsicHeight() / 3);
+
+                    LayerDrawable icon = new LayerDrawable (new Drawable[] {iconBg, activityIcon});
+                    icon.setLayerInset(1, margin, margin, margin, margin);
+                    LayerDrawable iconActivated = new LayerDrawable (new Drawable[] {iconBgActivated, activityIcon});
+                    iconActivated.setLayerInset(1, margin, margin, margin, margin);
+                    StateListDrawable selector = new StateListDrawable();
+                    selector.addState(new int[] {android.R.attr.state_enabled, -android.R.attr.state_active, -android.R.attr.state_focused}, icon);
+                    selector.addState(new int[] {android.R.attr.state_enabled, android.R.attr.state_active, -android.R.attr.state_focused}, iconActivated);
+                    selector.addState(new int[] {android.R.attr.state_enabled, -android.R.attr.state_active, android.R.attr.state_focused}, iconActivated);
+
+                    storedDraw.add(new TargetDrawable(mResources, selector));
+            } catch (Exception e) {
+            }
+        }
+    }
 
         // Add End Place Holder Targets
         for (int i = 0; i < endPosOffset; i++) {
             storedDraw.add(cDrawable);
+            intentList.add(mEmpty);
         }
 
         mGlowPadView.setTargetResources(storedDraw);
