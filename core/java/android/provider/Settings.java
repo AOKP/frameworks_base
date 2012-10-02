@@ -2660,6 +2660,12 @@ public final class Settings {
          * @hide
          */
         public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
+        
+        /**
+         * Display NavBar on left side of screen (Boolean)
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_LEFTY_MODE = "navigation_bar_lefty_mode";
 
         /**
          *

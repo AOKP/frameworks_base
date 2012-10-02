@@ -126,6 +126,9 @@ public class NavigationBarView extends LinearLayout {
 
     int mNumberOfButtons = 3;
     
+    // Will determine if NavBar goes to the left side in Landscape Mode
+    private boolean mLeftyMode;
+    
     /* 0 = Phone UI
      * 1 = Tablet UI
      * 2 = Phablet UI
@@ -300,8 +303,9 @@ public class NavigationBarView extends LinearLayout {
                         mLongpressActions[j],
                         mPortraitIcons[j]);
                 v.setTag((landscape ? "key_land_" : "key_") + j);
-                addButton(navButtonLayout, v, landscape);
-                addLightsOutButton(lightsOut, v, landscape, false);
+                addButton(navButtonLayout, v, landscape && !mLeftyMode);
+                // if we are in LeftyMode, then we want to add to end, like Portrait
+                addLightsOutButton(lightsOut, v, landscape && !mLeftyMode, false);
                 
                 if (v.getId() == R.id.back){
                 	mBackIcon = mBackLandIcon = v.getDrawable();
@@ -330,8 +334,8 @@ public class NavigationBarView extends LinearLayout {
                 }
                 if (currentSetting != SHOW_DONT) {
                     View rightMenuKey = generateKey(landscape, KEY_MENU_RIGHT);
-                    addButton(navButtonLayout, rightMenuKey, landscape);
-                    addLightsOutButton(lightsOut, rightMenuKey, landscape, true);
+                    addButton(navButtonLayout, rightMenuKey, landscape && !mLeftyMode);
+                    addLightsOutButton(lightsOut, rightMenuKey, landscape && !mLeftyMode, true);
                 }
             }
         }
@@ -355,7 +359,7 @@ public class NavigationBarView extends LinearLayout {
     }
 
     private void addButton(ViewGroup root, View addMe, boolean landscape) {
-        if (landscape)
+        if (landscape) 
             root.addView(addMe, 0);
         else
             root.addView(addMe);
@@ -873,6 +877,8 @@ public class NavigationBarView extends LinearLayout {
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS_QTY), false,
                     this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_LEFTY_MODE), false, this);
 
             for (int j = 0; j < 7; j++) { // watch all 5 settings for changes.
                 resolver.registerContentObserver(
@@ -908,6 +914,8 @@ public class NavigationBarView extends LinearLayout {
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
         mTablet_UI = Settings.System.getInt(resolver,
                 Settings.System.TABLET_UI,0);
+        mLeftyMode = Settings.System.getBoolean(resolver,
+                Settings.System.NAVIGATION_BAR_LEFTY_MODE, false);
         mNumberOfButtons = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_BUTTONS_QTY, 0);
         if (mNumberOfButtons == 0) {
