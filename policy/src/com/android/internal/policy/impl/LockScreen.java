@@ -512,6 +512,11 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
 
         }
 
+        public void onTargetChange(View v,int target) {
+            // this will notify of Target changes inside the GlowPad
+            // before an actual trigger event happens (for long press catches, etc)
+         }
+
         public void onTrigger(View v, int target) {
             if (mStoredTargets == null) {
                 final int resId = mGlowPadView.getResourceIdForTarget(target);
