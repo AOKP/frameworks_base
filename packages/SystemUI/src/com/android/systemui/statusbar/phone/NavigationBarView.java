@@ -126,6 +126,9 @@ public class NavigationBarView extends LinearLayout {
 
     int mNumberOfButtons = 3;
     
+    // Will determine if NavBar goes to the left side in Landscape Mode
+    private boolean mLeftyMode;
+    
     /* 0 = Phone UI
      * 1 = Tablet UI
      * 2 = Phablet UI
@@ -345,7 +348,7 @@ public class NavigationBarView extends LinearLayout {
         addMe.setScaleType(ImageView.ScaleType.CENTER);
         addMe.setVisibility(empty ? View.INVISIBLE : View.VISIBLE);
 
-        if (landscape)
+        if (landscape && !mLeftyMode)
             root.addView(addMe, 0);
         else
             root.addView(addMe);
@@ -353,7 +356,7 @@ public class NavigationBarView extends LinearLayout {
     }
 
     private void addButton(ViewGroup root, View addMe, boolean landscape) {
-        if (landscape)
+        if (landscape && !mLeftyMode) // lefty mode still adds to End
             root.addView(addMe, 0);
         else
             root.addView(addMe);
@@ -871,6 +874,8 @@ public class NavigationBarView extends LinearLayout {
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS_QTY), false,
                     this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_LEFTY_MODE), false, this);
 
             for (int j = 0; j < 7; j++) { // watch all 5 settings for changes.
                 resolver.registerContentObserver(
@@ -906,6 +911,8 @@ public class NavigationBarView extends LinearLayout {
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
         mTablet_UI = Settings.System.getInt(resolver,
                 Settings.System.TABLET_UI,0);
+        mLeftyMode = Settings.System.getBoolean(resolver,
+                Settings.System.NAVIGATION_BAR_LEFTY_MODE, false);
         mNumberOfButtons = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_BUTTONS_QTY, 0);
         if (mNumberOfButtons == 0) {

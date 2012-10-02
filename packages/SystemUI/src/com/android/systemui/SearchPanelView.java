@@ -66,6 +66,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.internal.widget.multiwaveview.GlowPadView;
@@ -334,6 +335,19 @@ public class SearchPanelView extends FrameLayout implements
         mStatusBarTouchProxy = (StatusBarTouchProxy) findViewById(R.id.status_bar_touch_proxy);
         // TODO: fetch views
         mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
+        //this is a big ugly hack to swap the GlowPad to the left side on lefty mode.
+        // we **REALLY** need to re-do the way that pad is positioned!
+        if (Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.NAVIGATION_BAR_LEFTY_MODE, false) && mTabletui) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mGlowPadView.getLayoutParams();
+            if (isScreenPortrait()) {
+                lp.setMargins(0, 0, -725,0);
+            } else {
+                lp.setMargins(0, 0, -900,0);
+            }
+            mGlowPadView.setLayoutParams(lp);
+            mGlowPadView.requestLayout();
+        }
         mGlowPadView.setOnTriggerListener(mGlowPadViewListener);
 
         setDrawables();
