@@ -160,6 +160,9 @@ public class TabletStatusBar extends BaseStatusBar implements
     private boolean mAltBackButtonEnabledForIme;
 
     NavigationBarView mNavBarView;
+    
+    // Will determine if NavBar goes to the left side in Landscape Mode
+    private boolean mLeftyMode;
 
     ViewGroup mFeedbackIconArea; // notification icons, IME icon, compat icon
     InputMethodButton mInputMethodSwitchButton;
@@ -488,8 +491,12 @@ public class TabletStatusBar extends BaseStatusBar implements
         
         loadDimens();
 
-        final TabletStatusBarView sb = (TabletStatusBarView)View.inflate(
-                context, R.layout.system_bar, null);
+        TabletStatusBarView sb;
+        if (mLeftyMode) {
+            sb = (TabletStatusBarView)View.inflate( context, R.layout.system_bar_lefty, null);
+        } else {
+            sb = (TabletStatusBarView)View.inflate(context, R.layout.system_bar, null);
+        }
         mStatusBarView = sb;
 
         sb.setHandler(mHandler);
@@ -1688,6 +1695,8 @@ public class TabletStatusBar extends BaseStatusBar implements
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS_QTY), false,
                     this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_LEFTY_MODE), false, this);
         }
 
         @Override
@@ -1702,6 +1711,9 @@ public class TabletStatusBar extends BaseStatusBar implements
                 Settings.System.NAVIGATION_BAR_BUTTONS_QTY, 3);
         
         mLandscape = (mContext.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE);
+        
+        mLeftyMode = Settings.System.getBoolean(resolver,
+                Settings.System.NAVIGATION_BAR_LEFTY_MODE, false);
 
         UpdateWeights(mLandscape);
     }
