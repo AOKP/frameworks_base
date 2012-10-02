@@ -655,7 +655,16 @@ public class PhoneStatusBar extends BaseStatusBar {
         if (ActivityManager.isHighEndGfx(mDisplay)) {
             lp.flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
         }
-        lp.gravity = Gravity.BOTTOM | Gravity.LEFT;
+        // Is this lefty mode? && Not Phablet Mode
+        boolean lefty = Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.NAVIGATION_BAR_LEFTY_MODE, false);
+        boolean phablet = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.MODE_TABLET_UI, 0) == 2;
+        if (lefty && !phablet) {
+            lp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        } else {
+            lp.gravity = Gravity.BOTTOM | Gravity.LEFT;
+        }
         lp.setTitle("SearchPanel");
         // TODO: Define custom animation for Search panel
         lp.windowAnimations = com.android.internal.R.style.Animation_RecentApplications;
