@@ -66,6 +66,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.internal.widget.multiwaveview.GlowPadView;
@@ -359,8 +360,8 @@ public class SearchPanelView extends FrameLayout implements
         } else if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_LARGE) {
             if (mTabletui) {
                 if (mNavRingAmount == 4 || mNavRingAmount == 2) {
-                    startPosOffset = 0;
-                    endPosOffset = 8;
+                    startPosOffset =  0;
+                    endPosOffset =  8;
                 } else {
                     startPosOffset = 0;
                     endPosOffset = 11;
