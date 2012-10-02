@@ -22,6 +22,7 @@ import com.android.systemui.statusbar.DelegateViewHelper;
 
 import android.content.Context;
 import android.os.Handler;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.View;
