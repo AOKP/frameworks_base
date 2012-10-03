@@ -18,13 +18,15 @@
 package android.content.res;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.Point;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.LocaleUtil;
-import android.view.View;
-import android.util.Log;
 import android.os.SystemProperties;
 import android.text.TextUtils;
+import android.util.ExtendedPropertiesUtils;
+import android.util.LocaleUtil;
+import android.util.Log;
+import android.view.View;
 
 import java.util.Locale;
 
@@ -38,7 +40,7 @@ import java.util.Locale;
  * with {@link android.app.Activity#getResources}:</p>
  * <pre>Configuration config = getResources().getConfiguration();</pre>
  */
-public final class Configuration implements Parcelable, Comparable<Configuration> {
+public final class Configuration extends ExtendedPropertiesUtils implements Parcelable, Comparable<Configuration> {
     /**
      * Current user preference for the scaling factor for fonts, relative
      * to the base density scaling.
@@ -443,6 +445,22 @@ public final class Configuration implements Parcelable, Comparable<Configuration
      */
     public int seq;
     
+    public boolean active;
+    public void paranoidHook() {        
+        if (active) {            
+            if (getLayout() != 0) {
+                Point size = new Point();
+                mDisplay.getSize(size);
+                float factor = (float)Math.max(size.x, size.y) / (float)Math.min(size.x, size.y);
+                screenWidthDp = getLayout();
+                screenHeightDp = (int)(screenWidthDp * factor);
+                smallestScreenWidthDp = getLayout();           
+                if (getLarge()) {
+                    screenLayout |= SCREENLAYOUT_SIZE_XLARGE;
+                }
+            }
+        }
+    }
     /**
      * Construct an invalid Configuration.  You must call {@link #setToDefaults}
      * for this object to be valid.  {@more}
@@ -486,6 +504,7 @@ public final class Configuration implements Parcelable, Comparable<Configuration
         if (o.customTheme != null) {
             customTheme = (CustomTheme) o.customTheme.clone();
         }
+        paranoidHook();
     }
     
     public String toString() {

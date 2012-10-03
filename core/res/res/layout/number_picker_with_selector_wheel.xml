@@ -22,7 +22,7 @@
     <view class="android.widget.NumberPicker$CustomEditText"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/numberpicker_input"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:singleLine="true"

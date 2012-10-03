@@ -76,7 +76,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/time"
         android:layout_marginTop="10dip">
@@ -102,7 +102,7 @@
     <com.android.internal.policy.impl.WeatherText
         android:id="@+id/weather"
         android:layout_gravity="right"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dip"
         android:gravity="right"
@@ -113,7 +113,7 @@
 
     <ViewFlipper
         android:id="@+id/calendar"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inAnimation="@anim/calendar_fadein"
         android:outAnimation="@anim/calendar_fadeout"
@@ -123,7 +123,7 @@
 
     <TextView
         android:id="@+id/status1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dip"
         android:textSize="16sp"
