@@ -68,10 +68,7 @@ public class TabletStatusBarView extends FrameLayout {
         // Find the view we wish to grab events from in order to detect search gesture.
         // Depending on the device, this will be one of the id's listed below.
         // If we don't find one, we'll use the view provided in the constructor above (this view).
-        View view = findViewById(R.id.navigationArea);
-        if (view == null) {
-            view = findViewById(R.id.nav_buttons);
-        }
+        View view = findViewById(R.id.nav_buttons);
         mDelegateHelper.setSourceView(view);
         mDelegateHelper.setInitialTouchRegion(view);
     }
