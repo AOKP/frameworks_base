@@ -41,7 +41,7 @@
 
         <!-- Carrier info -->
         <TextView android:id="@+id/carrier"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dip"
             android:gravity="center"
@@ -132,7 +132,7 @@
     <include
         android:id="@+id/keyPad"
         layout="@android:layout/twelve_key_entry"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/topDisplayGroup"
         android:layout_marginTop="10dip"

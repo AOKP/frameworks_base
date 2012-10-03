@@ -773,7 +773,7 @@ public class WallpaperManager {
             return null;
         }
 
-        bm.setDensity(DisplayMetrics.DENSITY_DEVICE);
+        bm.setDensity(DisplayMetrics.getDeviceDensity());
 
         if (width <= 0 || height <= 0
                 || (bm.getWidth() == width && bm.getHeight() == height)) {
@@ -783,7 +783,7 @@ public class WallpaperManager {
         // This is the final bitmap we want to return.
         try {
             Bitmap newbm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            newbm.setDensity(DisplayMetrics.DENSITY_DEVICE);
+            newbm.setDensity(DisplayMetrics.getDeviceDensity());
 
             Canvas c = new Canvas(newbm);
             Rect targetRect = new Rect();

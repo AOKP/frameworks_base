@@ -90,12 +90,14 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserId;
 import android.os.SystemVibrator;
+import android.os.SystemProperties;
 import android.os.storage.StorageManager;
 import android.telephony.TelephonyManager;
 import android.content.ClipboardManager;
 import android.util.AndroidRuntimeException;
-import android.util.Log;
+import android.util.*;
 import android.view.ContextThemeWrapper;
+import android.view.WindowManager;
 import android.view.WindowManagerImpl;
 import android.view.accessibility.AccessibilityManager;
 import android.view.inputmethod.InputMethodManager;
@@ -1575,6 +1577,61 @@ class ContextImpl extends Context {
         mOuterContext = this;
     }
 
+    static void init(ActivityThread thread) {
+        if (ExtendedPropertiesUtils.mMainThread == null) {
+            try {
+                if (ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "hybrid_mode").equals("1")) {
+                    ExtendedPropertiesUtils.mIsHybridModeEnabled = true;
+                }
+                ExtendedPropertiesUtils.mMainThread = thread;
+                ExtendedPropertiesUtils.refreshProperties();
+                ContextImpl context = createSystemContext(thread);
+                if (context == null) {
+                    throw new NullPointerException();
+                }
+                LoadedApk info = new LoadedApk(thread, "android", context, null,
+                    CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO);
+                if (info == null) {
+                    throw new NullPointerException();
+                }
+                context.init(info, null, thread);
+                ExtendedPropertiesUtils.mContext = context;
+                WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+                ExtendedPropertiesUtils.mDisplay = wm.getDefaultDisplay();
+                if (ExtendedPropertiesUtils.mDisplay == null) {
+                    throw new NullPointerException();
+                }
+                ExtendedPropertiesUtils.mPackageManager = 
+                    ExtendedPropertiesUtils.mContext.getPackageManager();
+                if (ExtendedPropertiesUtils.mPackageManager == null) {
+                    throw new NullPointerException();
+                }
+                ExtendedPropertiesUtils.mPackageList = 
+                    ExtendedPropertiesUtils.mPackageManager.getInstalledPackages(0);
+                ExtendedPropertiesUtils.mGlobalHook.pid = android.os.Process.myPid();
+                ExtendedPropertiesUtils.mIsTablet = Integer.parseInt(ExtendedPropertiesUtils.getProperty
+                    ("com.android.systemui.layout")) >= 720;
+                ExtendedPropertiesUtils.mRomLcdDensity = SystemProperties.getInt("qemu.sf.lcd_density",
+                    SystemProperties.getInt("ro.sf.lcd_density", DisplayMetrics.DENSITY_DEFAULT));
+                ExtendedPropertiesUtils.mGlobalHook.info = 
+                    ExtendedPropertiesUtils.getAppInfoFromPID(ExtendedPropertiesUtils.mGlobalHook.pid);
+                if (ExtendedPropertiesUtils.mGlobalHook.info != null) {
+                    ExtendedPropertiesUtils.mGlobalHook.name = 
+                        ExtendedPropertiesUtils.mGlobalHook.info.packageName;
+                    ExtendedPropertiesUtils.mGlobalHook.path = 
+                        ExtendedPropertiesUtils.mGlobalHook.info.sourceDir.substring(0,
+                        ExtendedPropertiesUtils.mGlobalHook.info.sourceDir.lastIndexOf("/"));
+                    ExtendedPropertiesUtils.setAppConfiguration(ExtendedPropertiesUtils.mGlobalHook);
+                } else {
+                    ExtendedPropertiesUtils.mGlobalHook.name = "android";
+                    ExtendedPropertiesUtils.mGlobalHook.path = "";
+                    ExtendedPropertiesUtils.setAppConfiguration(ExtendedPropertiesUtils.mGlobalHook);
+                }
+            } catch (Exception e) { 
+                ExtendedPropertiesUtils.mMainThread = null;
+            }
+        }        
+    }
     final void init(LoadedApk packageInfo,
             IBinder activityToken, ActivityThread mainThread) {
         init(packageInfo, activityToken, mainThread, null, null);
@@ -1583,6 +1640,7 @@ class ContextImpl extends Context {
     final void init(LoadedApk packageInfo,
                 IBinder activityToken, ActivityThread mainThread,
                 Resources container, String basePackageName) {
+        init(mainThread);
         mPackageInfo = packageInfo;
         mBasePackageName = basePackageName != null ? basePackageName : packageInfo.mPackageName;
         mResources = mPackageInfo.getResources(mainThread);
@@ -1604,6 +1662,7 @@ class ContextImpl extends Context {
     }
 
     final void init(Resources resources, ActivityThread mainThread) {
+        init(mainThread);
         mPackageInfo = null;
         mBasePackageName = null;
         mResources = resources;
