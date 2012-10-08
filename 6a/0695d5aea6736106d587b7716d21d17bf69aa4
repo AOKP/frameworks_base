@@ -1,0 +1,9 @@
+Change-Id: I6a0695d5aea6736106d587b7716d21d17bf69aa4
+Code-Review+2: Steve Spear <stephen.k.spear@gmail.com>
+Verified+1: Steve Spear <stephen.k.spear@gmail.com>
+Code-Review+1: Brandon McAnsh <bmc08gt.teamb00sted@gmail.com>
+Submitted-by: Steve Spear <stephen.k.spear@gmail.com>
+Submitted-at: Mon, 08 Oct 2012 23:47:36 +0100
+Reviewed-on: http://gerrit.sudoservers.com/3921
+Project: AOKP/frameworks_base
+Branch: refs/heads/jb
