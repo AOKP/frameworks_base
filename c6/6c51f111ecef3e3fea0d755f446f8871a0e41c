@@ -1,0 +1,10 @@
+Change-Id: Iccfe8a3970a99821b73c3a6fe40d6bb4c34ceca8
+Code-Review+1: Pierpaolo Pernici (pier) <pierpaolo@gmail.com>
+Verified+1: Pierpaolo Pernici (pier) <pierpaolo@gmail.com>
+Code-Review+2: xoomdev <xoomdevnet@gmail.com>
+Verified+1: xoomdev <xoomdevnet@gmail.com>
+Submitted-by: xoomdev <xoomdevnet@gmail.com>
+Submitted-at: Mon, 08 Oct 2012 15:32:05 +0100
+Reviewed-on: http://gerrit.sudoservers.com/3746
+Project: AOKP/frameworks_base
+Branch: refs/heads/jb
