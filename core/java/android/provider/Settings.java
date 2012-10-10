@@ -1625,16 +1625,10 @@ public final class Settings {
         public static final String MODE_RINGER = "mode_ringer";
 
         /**
-         * User interface mode. This is used to change the UI mode forcing it to
-         * Change into tablet mode. Default is disabled. 
+         * If checked hide extra system bar stuff
+         * ie compatmode button and extra ime switcher.
          */
-        public static final String MODE_TABLET_UI = "mode_tabletui";
-
-        /**
-         * User interface mode. This is used to change from singlepane mode forcing it to
-         * Change into multipane mode. Default is disabled. 
-         */
-        public static final String FORCE_DUAL_PANEL = "force_dualpanel";
+        public static final String HIDE_EXTRAS_SYSTEM_BAR = "hide_extras_system_bar";
 
 
         /**

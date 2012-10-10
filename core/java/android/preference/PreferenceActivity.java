@@ -21,7 +21,6 @@ import android.app.FragmentBreadCrumbs;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.app.ListActivity;
-import android.content.ContentResolver; 
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -32,7 +31,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -680,16 +678,10 @@ public abstract class PreferenceActivity extends ListActivity implements
      * The default implementation returns true if the screen is large
      * enough.
      */
-    //public boolean onIsMultiPane() {
-        //boolean preferMultiPane = getResources().getBoolean(
-                //com.android.internal.R.bool.preferences_prefer_dual_pane);
-        //return preferMultiPane;
-    //}
     public boolean onIsMultiPane() {
-       boolean preferMultiPane = Settings.System.getBoolean(
-                getContentResolver(), Settings.System.FORCE_DUAL_PANEL, getResources().getBoolean(
-                com.android.internal.R.bool.preferences_prefer_dual_pane));
-       return preferMultiPane;
+        boolean preferMultiPane = getResources().getBoolean(
+                com.android.internal.R.bool.preferences_prefer_dual_pane);
+        return preferMultiPane;
     }
 
     /**
