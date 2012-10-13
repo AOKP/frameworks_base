@@ -32,6 +32,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
@@ -50,10 +51,12 @@ import android.util.TypedValue;
 import android.view.animation.AccelerateInterpolator;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Surface;
 import android.view.Window;
@@ -165,9 +168,13 @@ public class NavigationBarView extends LinearLayout {
     public FrameLayout mPopupView;
     public WindowManager mWindowManager;
     int originalHeight = 0;
+    TextView mWidgetLabel;
     ViewPager mWidgetPager;
     WidgetPagerAdapter mAdapter;
     int widgetIds[];
+    float mFirstMoveY;
+    int mCurrentWidgetPage = 0;
+    boolean mMoving = false;
     boolean showing = false;
     
     private class H extends Handler {
@@ -1034,13 +1041,14 @@ public class NavigationBarView extends LinearLayout {
         mPopupView = new FrameLayout(mContext);
         View widgetView = View.inflate(mContext, R.layout.navigation_bar_expanded, null);
         mPopupView.addView(widgetView);
+        mWidgetLabel = (TextView) mPopupView.findViewById(R.id.widgetlabel);
         mWidgetPager = (ViewPager) widgetView.findViewById(R.id.pager);
         mWidgetPager.setAdapter(mAdapter = new WidgetPagerAdapter(mContext, widgetIds));
         mWidgetPager.setOnPageChangeListener(mNewPageListener);
 
         int dp = mAdapter.getHeight(mWidgetPager.getCurrentItem());
         float px = dp * getResources().getDisplayMetrics().density;
-        mWidgetPager.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) px));
+        mWidgetPager.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,(int) px));
 
         mPopupView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -1048,6 +1056,53 @@ public class NavigationBarView extends LinearLayout {
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
                     toggleWidgetView();
+                    return true;
+                }
+                return false;
+            }
+        });
+        
+        final Runnable SetMoving = new Runnable () {
+            public void run() {
+                mMoving = true;
+                Log.d(TAG,"LongPress!");
+                performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
+            }
+        };
+        
+        mWidgetLabel.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    Log.d(TAG,"mDown:" +event.getDownTime());
+                    mHandler.postDelayed(SetMoving, ViewConfiguration.getLongPressTimeout());
+                    mFirstMoveY = event.getY();
+                    return true;
+                }
+                if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    if (mMoving) {
+                        float diff = event.getY() - mFirstMoveY;
+                        int oldheight = mWidgetPager.getHeight();
+                        int newheight = oldheight + (int) - diff; // this is pixels
+                        Log.d(TAG,"Diff:" +diff + " Old:" + oldheight + " New:"+ newheight);
+                        if ((Math.abs(diff) > 100) && mMoving) { // slow down the move/updates
+                            mWidgetPager.setLayoutParams(
+                                    new LayoutParams(LayoutParams.MATCH_PARENT, newheight));
+                            newheight = (int) (newheight / getResources().getDisplayMetrics().density);
+                            mAdapter.setSavedHeight(mCurrentWidgetPage, newheight);
+                            //mFirstMoveY = event.getY(); // reset the diff
+                        }
+                        return true;
+                    } else { // we are moving without waiting for longpress
+                        if (Math.abs(mFirstMoveY - event.getY()) > 20) {
+                            // allow a little slop in the movement before cancelling longpress
+                            mHandler.removeCallbacks(SetMoving);
+                        }
+                    }
+                }
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    mMoving = false;
                     return true;
                 }
                 return false;
@@ -1061,11 +1116,11 @@ public class NavigationBarView extends LinearLayout {
         @Override
         public void onPageSelected(int page) {
             int dp = mAdapter.getHeight(page);
+            mCurrentWidgetPage = page;
             float px = dp * getResources().getDisplayMetrics().density;
             mWidgetPager.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) px));
-            TextView tv = (TextView) mPopupView.findViewById(R.id.widgetlabel);
-            if (tv != null) {
-                tv.setText(mAdapter.getLabel(page));
+            if (mWidgetLabel != null) {
+                mWidgetLabel.setText(mAdapter.getLabel(page));
             }
         }
 
@@ -1104,11 +1159,20 @@ public class NavigationBarView extends LinearLayout {
                         intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1);
                 if (appWidgetId != -1) {
                     mAdapter.mAppWidgetHost.deleteAppWidgetId(appWidgetId);
+                    SharedPreferences prefs = mContext.getSharedPreferences("widget_adapter",
+                            Context.MODE_WORLD_WRITEABLE);
+                    prefs.edit().remove("widget_id_" + appWidgetId);
                 }
             } else if (ACTION_TOGGLE_WIDGETS.equals(action)) {
                 toggleWidgetView();
             } else if (ACTION_DELETE_WIDGETS.equals(action)) {
-                mAdapter.mAppWidgetHost.deleteAllHosts();
+                SharedPreferences prefs = mContext.getSharedPreferences("widget_adapter",
+                        Context.MODE_WORLD_WRITEABLE);
+                for (int i = 0; i < widgetIds.length; i++) {
+                    prefs.edit().remove("widget_id_" + widgetIds[i]);
+                    mAdapter.mAppWidgetHost.deleteAppWidgetId(widgetIds[i]);
+                }
+                    
             }
         }
     }
