@@ -135,8 +135,7 @@ public class BatteryControllerNotification extends LinearLayout {
                 Settings.System.STATUSBAR_BATTERY_ICON, 0);
         int icon;
         if (mBatteryStyle == STYLE_ICON_CIRCLE) {
-            icon = plugged ? R.drawable.stat_sys_battery_charge_circle
-                    : R.drawable.stat_sys_battery_circle;
+            icon = 0;
         } else {
             icon = plugged ? R.drawable.stat_sys_battery_charge
                     : R.drawable.stat_sys_battery;
