@@ -6986,6 +6986,12 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_MINIMIZE_LOCKSCREEN_CHALLENGE = "lockscreen_minimize_lockscreen_challenge";
 
+        /**
+         * whether to hide the Ram Usage Bar on recent switcher
+         *
+         *@hide
+         */
+        public static final String RAM_USAGE_BAR = "ram_usage_bar";
     }
 
     /**
