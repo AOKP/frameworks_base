@@ -16,15 +16,6 @@
 
 package com.android.internal.policy.impl;
 
-import com.android.internal.R;
-import com.android.internal.policy.impl.KeyguardUpdateMonitor.InfoCallbackImpl;
-import com.android.internal.policy.impl.KeyguardUpdateMonitor.SimStateCallback;
-import com.android.internal.telephony.IccCard.State;
-import com.android.internal.widget.DigitalClock;
-import com.android.internal.widget.LockPatternUtils;
-import com.android.internal.widget.SlidingTab;
-import com.android.internal.widget.WaveView;
-import com.android.internal.widget.multiwaveview.GlowPadView;
 import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
 import android.app.SearchManager;
@@ -74,6 +65,7 @@ import com.android.internal.R;
 import com.android.internal.policy.impl.KeyguardUpdateMonitor.InfoCallbackImpl;
 import com.android.internal.policy.impl.KeyguardUpdateMonitor.SimStateCallback;
 import com.android.internal.telephony.IccCard.State;
+import com.android.internal.widget.DigitalClock;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.SlidingTab;
 import com.android.internal.widget.WaveView;
@@ -98,9 +90,10 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
     private static final String ENABLE_MENU_KEY_FILE = "/data/local/enable_menu_key";
     private static final int WAIT_FOR_ANIMATION_TIMEOUT = 0;
     private static final int STAY_ON_WHILE_GRABBED_TIMEOUT = 30000;
-    private static final String ASSIST_ICON_METADATA_NAME =
-            "com.android.systemui.action_assist_icon";
-
+    private static final String ASSIST_ICON_METADATA_NAME = "com.android.systemui.action_assist_icon";
+    private static final String RING_VIB_SILENT_CMP = "com.android.systemui.RingVibSilentToggle";
+    private static final String RING_VIB_CMP = "com.android.systemui.RingVibToggle";
+    private static final String RING_SILENT_CMP = "com.android.systemui.RingSilentToggle";
 
     private static final int COLOR_WHITE = 0xFFFFFFFF;
     public static final int LAYOUT_TRI = 2;
@@ -143,8 +136,8 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
             boolean silent = AudioManager.RINGER_MODE_NORMAL != state;
             if (silent != mSilentMode) {
                 mSilentMode = silent;
-                mUnlockWidgetMethods.updateResources();
             }
+            mUnlockWidgetMethods.updateResources();
         }
 
         @Override
@@ -456,25 +449,47 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
                                         }
                                     }
                                 }
-                                if (front == null || back == null) {
-                                    ActivityInfo aInfo = in.resolveActivityInfo(packMan, PackageManager.GET_ACTIVITIES);
-                                    if (aInfo != null) {
-                                        front = aInfo.loadIcon(packMan);
+                                if(in.getComponent().getClassName().equals(RING_VIB_SILENT_CMP)){
+                                    if(mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                                        storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_lockscreen_vib)));
+                                    }else if(mAudioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+                                        storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_lockscreen_silent)));
+                                    }else{
+                                        storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_lockscreen_soundon)));
+                                    }
+                                }else if(in.getComponent().getClassName().equals(RING_VIB_CMP)){
+                                    if(mAudioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE) {
+                                        storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_lockscreen_vib)));
+                                    }else{
+                                        storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_lockscreen_soundon)));
+                                    }
+                                }else if(in.getComponent().getClassName().equals(RING_SILENT_CMP)){
+                                    if(mAudioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+                                        storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_lockscreen_silent)));
+                                    }else{
+                                        storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_lockscreen_soundon)));
+                                    }
+                                }else{
+                                    if (front == null || back == null) {
+                                        ActivityInfo aInfo = in.resolveActivityInfo(packMan, PackageManager.GET_ACTIVITIES);
+                                        if (aInfo != null) {
+                                            front = aInfo.loadIcon(packMan);
+                                        } else {
+                                            front = res.getDrawable(android.R.drawable.sym_def_app_icon);
+                                        }
+                                    }
+                                    TargetDrawable nDrawable = new TargetDrawable(res, getLayeredDrawable(back,front, tmpInset, frontBlank));
+                                    boolean isCamera = in.getComponent().getClassName().equals("com.android.camera.CameraLauncher");
+                                    if (isCamera) {
+                                        nDrawable.setEnabled(!mCameraDisabled);
                                     } else {
-                                        front = res.getDrawable(android.R.drawable.sym_def_app_icon);
+                                        boolean isSearch = in.getComponent().getClassName().equals("SearchActivity");
+                                        if (isSearch) {
+                                            nDrawable.setEnabled(!mSearchDisabled);
+                                        }
                                     }
+                                    storedDraw.add(nDrawable);
                                 }
-                                TargetDrawable nDrawable = new TargetDrawable(res, getLayeredDrawable(back,front, tmpInset, frontBlank));
-                                boolean isCamera = in.getComponent().getClassName().equals("com.android.camera.CameraLauncher");
-                                if (isCamera) {
-                                    nDrawable.setEnabled(!mCameraDisabled);
-                                } else {
-                                    boolean isSearch = in.getComponent().getClassName().equals("SearchActivity");
-                                    if (isSearch) {
-                                        nDrawable.setEnabled(!mSearchDisabled);
-                                    }
-                                }
-                                storedDraw.add(nDrawable);
                             } catch (Exception e) {
                                 storedDraw.add(new TargetDrawable(res, 0));
                             }
@@ -535,10 +550,34 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
                     if (target < mStoredTargets.length && mStoredTargets[target] != null) {
                         try {
                             Intent tIntent = Intent.parseUri(mStoredTargets[target], 0);
-                            tIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            mContext.startActivity(tIntent);
-                            mCallback.goToUnlockScreen();
-                            return;
+                            if(RING_VIB_SILENT_CMP.equals(tIntent.getComponent().getClassName())){
+                                if(mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                                    mAudioManager.setRingerMode(mHasVibrator ? AudioManager.RINGER_MODE_VIBRATE : AudioManager.RINGER_MODE_SILENT);
+                                }else if(mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                                    mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                                }else{
+                                    mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                                }
+                                mCallback.pokeWakelock();
+                            }else if(RING_SILENT_CMP.equals(tIntent.getComponent().getClassName()) || (!mHasVibrator && RING_VIB_CMP.equals(tIntent.getComponent().getClassName()))){
+                                if(mAudioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+                                    mAudioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+                                }else{
+                                    mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                                }
+                                mCallback.pokeWakelock();
+                            }else if(RING_VIB_CMP.equals(tIntent.getComponent().getClassName())){
+                                if(mAudioManager.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE) {
+                                    mAudioManager.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
+                                }else{
+                                    mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+                                }
+                                mCallback.pokeWakelock();
+                            }else{
+                                tIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                mContext.startActivity(tIntent);
+                                mCallback.goToUnlockScreen();
+                            }
                         } catch (URISyntaxException e) {
                         } catch (ActivityNotFoundException e) {
                         }
@@ -688,7 +727,7 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
 
         final LayoutInflater inflater = LayoutInflater.from(context);
         if (DBG) Log.v(TAG, "Creation orientation = " + mCreationOrientation);
-        
+
         boolean landscape = mCreationOrientation == Configuration.ORIENTATION_LANDSCAPE;
 
         switch (mLockscreenTargets) {
@@ -713,7 +752,7 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
                             true);
                 break;
             }
-                
+
         mStatusViewManager = new KeyguardStatusViewManager(this, mUpdateMonitor, mLockPatternUtils,
                 mCallback, false);
 
