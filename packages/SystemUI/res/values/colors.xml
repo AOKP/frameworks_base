@@ -34,4 +34,9 @@
     <drawable name="system_bar_background">#ff000000</drawable>
     <!-- the darkening filter applied to notifications -->
     <drawable name="notification_icon_area_smoke">#aa000000</drawable>
+
+    <!-- Sense 4.0 recent apps view -->
+    <drawable name="status_bar_recents_background_solid_sense4">#00000000</drawable>
+    <drawable name="status_bar_recents_app_thumbnail_background_sense4">#00000000</drawable>
+
 </resources>

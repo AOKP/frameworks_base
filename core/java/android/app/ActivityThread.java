@@ -70,6 +70,8 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.os.Trace;
 import android.os.UserId;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.util.AndroidRuntimeException;
 import android.util.DisplayMetrics;
 import android.util.EventLog;
@@ -2833,17 +2835,41 @@ public final class ActivityThread {
 
     private Bitmap createThumbnailBitmap(ActivityClientRecord r) {
         Bitmap thumbnail = mAvailThumbnailBitmap;
+
+        Context context = getSystemContext();
+        boolean useSenseView = false;
+        try {
+            useSenseView = (Settings.System.getInt(context.getContentResolver(),
+                    Settings.System.SENSE4_RECENT_APPS) == 1)
+                    && !(Settings.System.getInt(context.getContentResolver(),
+                    Settings.System.DISABLE_TOOLBOX) == 1);
+        } catch (SettingNotFoundException e) {
+            //This will never occur.
+        }
+
         try {
             if (thumbnail == null) {
                 int w = mThumbnailWidth;
                 int h;
                 if (w < 0) {
                     Resources res = r.activity.getResources();
-                    mThumbnailHeight = h =
-                        res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
+                    //TODO: Are these values necessary to change? In ActivityStack, setting them to the sense4
+                    //      values had no negative effect on stock recent apps appearance, and allowed us to
+                    //      use the right scaling for the sense4 appearance.
+                    if (useSenseView) {
+                        mThumbnailHeight = h =
+                                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height_sense4);
 
-                    mThumbnailWidth = w =
-                        res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
+                            mThumbnailWidth = w =
+                                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width_sense4);
+                    } else {
+                        mThumbnailHeight = h =
+                                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
+
+                            mThumbnailWidth = w =
+                                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
+                    }
+
                 } else {
                     h = mThumbnailHeight;
                 }
