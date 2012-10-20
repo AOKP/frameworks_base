@@ -30,6 +30,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Process;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.util.Log;
 
 import com.android.systemui.R;
@@ -63,6 +65,16 @@ public class RecentTasksLoader {
     public RecentTasksLoader(Context context) {
         mContext = context;
 
+        boolean useSenseView = false;
+        try {
+            useSenseView = (Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.SENSE4_RECENT_APPS) == 1)
+                    && !(Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.DISABLE_TOOLBOX) == 1);
+        } catch (SettingNotFoundException e) {
+            //This will never occur.
+        }
+
         final Resources res = context.getResources();
 
         // get the icon size we want -- on tablets, we use bigger icons
@@ -81,12 +93,23 @@ public class RecentTasksLoader {
         mDefaultIconBackground = Bitmap.createBitmap(iconSize, iconSize, Bitmap.Config.ARGB_8888);
 
         // Render the default thumbnail background
-        int thumbnailWidth =
-                (int) res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
-        int thumbnailHeight =
-                (int) res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
-        int color = res.getColor(R.drawable.status_bar_recents_app_thumbnail_background);
-
+        int thumbnailWidth;
+        int thumbnailHeight;
+        int color;
+        if (useSenseView) {
+            thumbnailWidth = (int) res.getDimensionPixelSize(com.android
+                    .internal.R.dimen.thumbnail_width_sense4);
+            thumbnailHeight = (int) res.getDimensionPixelSize(com.android
+                    .internal.R.dimen.thumbnail_height_sense4);
+            color = res.getColor(R.drawable
+                    .status_bar_recents_app_thumbnail_background_sense4);
+        } else {
+            thumbnailWidth =
+                    (int) res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
+            thumbnailHeight =
+                    (int) res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
+            color = res.getColor(R.drawable.status_bar_recents_app_thumbnail_background);
+        }
         mDefaultThumbnailBackground =
                 Bitmap.createBitmap(thumbnailWidth, thumbnailHeight, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(mDefaultThumbnailBackground);

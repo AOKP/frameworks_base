@@ -27,7 +27,13 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
@@ -36,6 +42,7 @@ import android.net.Uri;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
@@ -108,6 +115,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     private int mRecentItemLayoutId;
     private boolean mFirstScreenful = true;
     private boolean mHighEndGfx;
+    private boolean mUseSenseView;
 
     int mLastNumBackgroundProcesses = -1;
     int mLastNumForegroundProcesses = -1;
@@ -255,6 +263,15 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     public RecentsPanelView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mContext = context;
+
+        try {
+            mUseSenseView = (Settings.System.getInt(mContext
+                    .getContentResolver(), Settings.System.SENSE4_RECENT_APPS) == 1)
+                    && !(Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.DISABLE_TOOLBOX) == 1);
+        } catch (SettingNotFoundException e) {
+            //This will never occur.
+        }
         updateValuesFromResources();
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RecentsPanelView,
@@ -485,8 +502,13 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
     public void updateValuesFromResources() {
         final Resources res = mContext.getResources();
-        mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width));
-        mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy);
+        if (mUseSenseView) {
+            mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy_sense4);
+            mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width_sense4));
+        } else {
+            mFitThumbnailToXY = res.getBoolean(R.bool.config_recents_thumbnail_image_fits_to_xy);
+            mThumbnailWidth = Math.round(res.getDimension(R.dimen.status_bar_recents_thumbnail_width));
+        }
     }
 
     @Override
@@ -578,7 +600,37 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             // Should remove the default image in the frame
             // that this now covers, to improve scrolling speed.
             // That can't be done until the anim is complete though.
-            h.thumbnailViewImage.setImageBitmap(thumbnail);
+
+            if (!mUseSenseView) {
+                h.thumbnailViewImage.setImageBitmap(thumbnail);
+            } else {
+                final int reflectionGap = 4;
+                int width = thumbnail.getWidth();
+                int height = thumbnail.getHeight();
+
+                Matrix matrix = new Matrix();
+                matrix.preScale(1, -1);
+
+                Bitmap reflectionImage = Bitmap.createBitmap(thumbnail, 0, height * 2 / 3, width, height/3, matrix, false);
+                Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height/3), Config.ARGB_8888);
+
+                Canvas canvas = new Canvas(bitmapWithReflection);
+                canvas.drawBitmap(thumbnail, 0, 0, null);
+                Paint defaultPaint = new Paint();
+                canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
+                canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
+
+                Paint paint = new Paint();
+                LinearGradient shader = new LinearGradient(0, thumbnail.getHeight(), 0,
+                        bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff,
+                        TileMode.CLAMP);
+                paint.setShader(shader);
+                paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN));
+                canvas.drawRect(0, height, width,
+                        bitmapWithReflection.getHeight() + reflectionGap, paint);
+
+                h.thumbnailViewImage.setImageBitmap(bitmapWithReflection);
+            }
 
             // scale the image to fill the full width of the ImageView. do this only if
             // we haven't set a bitmap before, or if the bitmap size has changed
@@ -586,7 +638,11 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 h.thumbnailViewImageBitmap.getWidth() != thumbnail.getWidth() ||
                 h.thumbnailViewImageBitmap.getHeight() != thumbnail.getHeight()) {
                 if (mFitThumbnailToXY) {
-                    h.thumbnailViewImage.setScaleType(ScaleType.FIT_XY);
+                    if (!mUseSenseView) {
+                        h.thumbnailViewImage.setScaleType(ScaleType.FIT_XY);
+                    } else {
+                        h.thumbnailViewImage.setRotationY(25.0f);
+                    }
                 } else {
                     Matrix scaleMatrix = new Matrix();
                     float scale = mThumbnailWidth / (float) thumbnail.getWidth();

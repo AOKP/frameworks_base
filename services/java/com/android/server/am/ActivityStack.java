@@ -59,6 +59,8 @@ import android.os.ServiceManager;
 import android.os.SystemClock;
 import android.os.SystemProperties;
 import android.os.UserId;
+import android.provider.Settings;
+import android.provider.Settings.SettingNotFoundException;
 import android.util.EventLog;
 import android.util.Log;
 import android.util.Slog;
@@ -928,11 +930,14 @@ final class ActivityStack {
         Resources res = mService.mContext.getResources();
         int w = mThumbnailWidth;
         int h = mThumbnailHeight;
+
         if (w < 0) {
+            //Modified these values so sense4 and stock recent apps worked
+            //Seems to scale fine either way.
             mThumbnailWidth = w =
-                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
+                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width_sense4);
             mThumbnailHeight = h =
-                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
+                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height_sense4);
         }
 
         if (w > 0) {

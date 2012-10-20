@@ -2278,6 +2278,13 @@ public final class Settings {
         public static final String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
 
         /**
+         * Toggle to render the recent apps view resembling sense 4.0
+         * @hide
+         */
+        public static final String SENSE4_RECENT_APPS = "sense4_recent_apps";
+
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
