@@ -182,4 +182,9 @@
     <string name="status_bar_settings_toggles">Přepínače</string>
 
     <string name="toggle_widgets">Zobrazit/skrýt widgety</string>
+    <string name="toggle_ring_vib">Přepnout hlasitý/vibrace</string>
+    <string name="toggle_ring_silent">Přepnout hlasitý/tichý</string>
+    <string name="toggle_ring_vib_silent">Přepnout hlasitý/vibrace/tichý</string>
+    <string name="go_to_homescreen">Přejít na domovskou obrazovku</string>
+    <string name="lockscreen_unlock">Zamčená obrazovka - odemknout</string>
 </resources>
