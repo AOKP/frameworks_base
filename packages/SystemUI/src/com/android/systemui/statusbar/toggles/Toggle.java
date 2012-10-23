@@ -16,12 +16,16 @@
 
 package com.android.systemui.statusbar.toggles;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -57,8 +61,21 @@ public abstract class Toggle implements OnCheckedChangeListener {
     protected float toggleAlpha;
     protected float toggleBgAlpha;
 
+    // haptic feedback for toggle press
+    protected int hapticEnabled;
+    protected int hapticTogglesEnabled;
+    protected Vibrator vib;
+
     public Toggle(Context context) {
         mContext = context;
+
+        vib = (Vibrator) mContext.getSystemService(mContext.VIBRATOR_SERVICE);
+
+        hapticEnabled = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.HAPTIC_FEEDBACK_ENABLED, 0);
+
+        hapticTogglesEnabled = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.HAPTIC_FEEDBACK_TOGGLES_ENABLED, 0);
 
         useAltButtonLayout = Settings.System.getInt(
                 context.getContentResolver(),
@@ -114,6 +131,9 @@ public abstract class Toggle implements OnCheckedChangeListener {
                     return false;
             }
         });
+
+        SettingsObserver settingsObserver = new SettingsObserver(new Handler());
+        settingsObserver.observe();
     }
 
     public void updateDrawable(boolean toggle) {
@@ -172,6 +192,9 @@ public abstract class Toggle implements OnCheckedChangeListener {
     @Override
     public final void onCheckedChanged(CompoundButton buttonView,
             boolean isChecked) {
+        if(hapticEnabled == 1 && hapticTogglesEnabled == 1) {
+            vib.vibrate(50);
+        }
         if (mSystemChange)
             return;
         onCheckChanged(isChecked);
@@ -203,5 +226,36 @@ public abstract class Toggle implements OnCheckedChangeListener {
     }
 
     protected void onStatusbarExpanded() {
+    }
+
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HAPTIC_FEEDBACK_ENABLED), false, this);
+
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.HAPTIC_FEEDBACK_TOGGLES_ENABLED), false, this);
+
+            updateSettings();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
+    }
+
+    protected void updateSettings() {
+        ContentResolver resolver = mContext.getContentResolver();
+
+        hapticEnabled = Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.HAPTIC_FEEDBACK_ENABLED, 0);
+
+        hapticTogglesEnabled = Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.HAPTIC_FEEDBACK_TOGGLES_ENABLED, 0);
     }
 }

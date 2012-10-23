@@ -300,11 +300,13 @@ public abstract class BaseStatusBar extends SystemUI implements
             } catch (NameNotFoundException ex) {
                 Slog.e(TAG, "Failed looking up ApplicationInfo for " + sbn.pkg, ex);
             }
-            if (version > 0 && version < Build.VERSION_CODES.GINGERBREAD) {
-                content.setBackgroundResource(R.drawable.notification_row_legacy_bg);
-            } else {
+            // This block would cause SystemUI to FC if I added a ContentResolver
+            // to Toggle.java. I do not want to remove it.
+            //if (version > 0 && version < Build.VERSION_CODES.GINGERBREAD) {
+            //    content.setBackgroundResource(R.drawable.notification_row_legacy_bg);
+            //} else {
                 content.setBackgroundResource(com.android.internal.R.drawable.notification_bg);
-            }
+            //}
         }
     }
 
