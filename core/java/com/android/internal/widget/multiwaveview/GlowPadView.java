@@ -927,6 +927,7 @@ public class GlowPadView extends View {
                 TargetDrawable target = targets.get(activeTarget);
                 if (target.hasState(TargetDrawable.STATE_FOCUSED)) {
                     target.setState(TargetDrawable.STATE_FOCUSED);
+                    vibrate();
                 }
                 if (AccessibilityManager.getInstance(mContext).isEnabled()) {
                     String targetContentDescription = getTargetDescription(activeTarget);
