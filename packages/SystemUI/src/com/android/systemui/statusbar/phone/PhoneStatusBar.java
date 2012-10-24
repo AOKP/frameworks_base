@@ -16,6 +16,7 @@
 
 package com.android.systemui.statusbar.phone;
 
+import android.app.ActivityManagerNative;
 import android.animation.Animator;
 import android.animation.Animator.AnimatorListener;
 import android.view.animation.Animation.AnimationListener;
@@ -31,9 +32,13 @@ import android.app.PendingIntent;
 import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
+import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.content.res.Configuration;
 import android.content.res.CustomTheme;
 import android.content.res.Resources;
@@ -53,6 +58,7 @@ import android.os.Message;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
+import android.provider.AlarmClock;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -191,6 +197,8 @@ public class PhoneStatusBar extends BaseStatusBar {
     // top bar
     View mClearButton;
     View mSettingsButton;
+    View clock;
+    View cclock;
     RotationToggle mRotationButton;
     BatteryControllerNotification mBatteryNotification;
 
@@ -463,6 +471,14 @@ public class PhoneStatusBar extends BaseStatusBar {
         mBatteryNotification = (BatteryControllerNotification)mStatusBarWindow.findViewById(R.id.battery_notification);
         mBrightnessPercent = (TextView)mStatusBarWindow.findViewById(R.id.brightness_percent);
         mDateView = (DateView)mStatusBarWindow.findViewById(R.id.date);
+        clock = mStatusBarView.findViewById(R.id.clock);
+        mDateView.setOnClickListener(mDateViewListener);
+        mDateView.setOnLongClickListener(mDateViewLongClickListener);
+        clock.setOnClickListener(clockListener);
+        clock.setOnLongClickListener(clockLongClickListener);
+        cclock = mStatusBarView.findViewById(R.id.center_clock);
+        cclock.setOnClickListener(cclockListener);
+        cclock.setOnLongClickListener(cclockLongClickListener);
         mSettingsButton = mStatusBarWindow.findViewById(R.id.settings_button);
         mSettingsButton.setOnClickListener(mSettingsButtonListener);
         mSettingsButton.setOnLongClickListener(mSettingsLongClickListener);
@@ -1119,8 +1135,6 @@ public class PhoneStatusBar extends BaseStatusBar {
 
     public void showClock(boolean show) {
         if (mStatusBarView == null) return;
-        View clock = mStatusBarView.findViewById(R.id.clock);
-        View cclock = mStatusBarView.findViewById(R.id.center_clock);
         boolean rightClock = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUSBAR_CLOCK_STYLE, 1) == 1);
         boolean centerClock = (Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUSBAR_CLOCK_STYLE, 1) == 2);
         if (rightClock && clock != null) {
@@ -1862,7 +1876,6 @@ public class PhoneStatusBar extends BaseStatusBar {
             final View systemIcons = mStatusBarView.findViewById(R.id.statusIcons);
             final View signal = mStatusBarView.findViewById(R.id.signal_cluster);
             final View battery = mStatusBarView.findViewById(R.id.battery);
-            final View clock = mStatusBarView.findViewById(R.id.clock);
 
             mLightsOutAnimation = new AnimatorSet();
             mLightsOutAnimation.playTogether(
@@ -2328,6 +2341,100 @@ public class PhoneStatusBar extends BaseStatusBar {
                     }
                 }).start();
             }
+        }
+    };
+
+    private View.OnClickListener clockListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            try {
+                ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
+            } catch (RemoteException e) {
+            }
+	        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            animateCollapse();
+        }
+    };
+
+    private View.OnLongClickListener clockLongClickListener = new View.OnLongClickListener() {
+
+        @Override
+        public boolean onLongClick(View v) {
+            try {
+                ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
+            } catch (RemoteException e) {
+            }
+	        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            animateCollapse();
+            return true;
+        }
+    };
+
+    private View.OnClickListener cclockListener = new View.OnClickListener() {
+        public void onClick(View v) {
+            try {
+                ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
+            } catch (RemoteException e) {
+            }
+	        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            animateCollapse();
+        }
+    };
+
+    private View.OnLongClickListener cclockLongClickListener = new View.OnLongClickListener() {
+
+        @Override
+        public boolean onLongClick(View v) {
+            try {
+                ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
+            } catch (RemoteException e) {
+            }
+	        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            animateCollapse();
+            return true;
+        }
+    };
+
+    private View.OnClickListener mDateViewListener = new View.OnClickListener() {
+        public void onClick(View v) {
+        // A date-time specified in milliseconds since the epoch.
+        long startMillis = System.currentTimeMillis();
+            try {
+                ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
+            } catch (RemoteException e) {
+            }
+            Uri.Builder builder = CalendarContract.CONTENT_URI.buildUpon();
+            builder.appendPath("time");
+            ContentUris.appendId(builder, startMillis);
+            Intent intent = new Intent(Intent.ACTION_VIEW)
+               .setData(builder.build());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            animateCollapse();
+        }
+    };
+
+    private View.OnLongClickListener mDateViewLongClickListener = new View.OnLongClickListener() {
+
+        @Override
+        public boolean onLongClick(View v) {
+            try {
+                ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
+            } catch (RemoteException e) {
+            }
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                  .setData(Events.CONTENT_URI);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+            animateCollapse();
+            return true;
         }
     };
 
