@@ -17,6 +17,7 @@
 package com.android.internal.policy.impl;
 
 import com.android.internal.R;
+import com.android.internal.app.ThemeUtils;
 import com.android.internal.policy.impl.KeyguardUpdateMonitor.InfoCallbackImpl;
 import com.android.internal.policy.impl.KeyguardUpdateMonitor.SimStateCallback;
 import com.android.internal.telephony.IccCard.State;
@@ -128,6 +129,7 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
     private boolean mSearchDisabled;
     // Is there a vibrator
     private final boolean mHasVibrator;
+    private boolean mUseLSTheme;
 
     private DigitalClock mDigitalClock;
 
@@ -705,6 +707,9 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
         mUpdateMonitor = updateMonitor;
         mCallback = callback;
         mLockscreenTargets = Settings.System.getInt(mContext.getContentResolver(), Settings.System.LOCKSCREEN_TARGET_AMOUNT, LAYOUT_TRI);
+        mUseLSTheme = Settings.System.getBoolean(
+                context.getContentResolver(),
+                Settings.System.USE_LOCKSCREEN_THEMES, false);
         mSettingsObserver = new SettingsObserver(new Handler());
         mSettingsObserver.observe();
 
@@ -717,7 +722,7 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
                     + " res orient=" + context.getResources().getConfiguration().orientation);
         }
 
-        final LayoutInflater inflater = LayoutInflater.from(context);
+        final LayoutInflater inflater = LayoutInflater.from(mUseLSTheme ? ThemeUtils.createUiContext(context) : context);
         if (DBG) Log.v(TAG, "Creation orientation = " + mCreationOrientation);
 
         boolean landscape = mCreationOrientation == Configuration.ORIENTATION_LANDSCAPE;
