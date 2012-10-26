@@ -32,6 +32,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -42,6 +43,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 
+import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.R;
 
 import java.util.ArrayList;
@@ -134,6 +136,8 @@ public class GlowPadView extends View {
     private float mWaveCenterY;
     private int mMaxTargetHeight;
     private int mMaxTargetWidth;
+    private boolean mVibrateOnFocus;
+    private LockPatternUtils mLockPatternUtils;
 
     private float mOuterRadius = 0.0f;
     private float mSnapMargin = 0.0f;
@@ -289,6 +293,9 @@ public class GlowPadView extends View {
         a.recycle();
 
         setVibrateEnabled(mVibrationDuration > 0);
+
+        mLockPatternUtils = new LockPatternUtils(context);
+        mVibrateOnFocus = mLockPatternUtils.isTactileFeedbackEnabled();
 
         assignDefaultsIfNeeded();
 
@@ -927,6 +934,10 @@ public class GlowPadView extends View {
                 TargetDrawable target = targets.get(activeTarget);
                 if (target.hasState(TargetDrawable.STATE_FOCUSED)) {
                     target.setState(TargetDrawable.STATE_FOCUSED);
+                    Log.d(TAG, "Focusing target, vibonfocus = " + mVibrateOnFocus);
+                    if (mVibrateOnFocus) {
+                        vibrate();
+                    }
                 }
                 if (AccessibilityManager.getInstance(mContext).isEnabled()) {
                     String targetContentDescription = getTargetDescription(activeTarget);
