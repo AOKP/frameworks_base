@@ -184,6 +184,9 @@
     <!-- Size of right margin on Unsecure unlock LockScreen -->
     <dimen name="keyguard_lockscreen_status_line_font_right_margin">42dip</dimen>
 
+    <!-- Size of right margin on Unsecure alt LockScreen -->
+    <dimen name="keyguard_lockscreen_status_line_font_right_margin_alt">126dip</dimen>
+
     <!-- Size of top margin on Clock font to edge on unlock LockScreen -->
     <dimen name="keyguard_lockscreen_status_line_clockfont_top_margin">20dip</dimen>
 
