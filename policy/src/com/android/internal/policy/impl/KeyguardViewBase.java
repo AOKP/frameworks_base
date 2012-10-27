@@ -60,7 +60,8 @@ public abstract class KeyguardViewBase extends FrameLayout {
     Drawable mBackgroundDrawable = new Drawable() {
         @Override
         public void draw(Canvas canvas) {
-            canvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
+            canvas.drawColor(BACKGROUND_COLOR,
+                    PorterDuff.Mode.SRC);
         }
 
         @Override
