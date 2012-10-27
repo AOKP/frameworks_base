@@ -167,7 +167,7 @@ public class UnicornSack extends Activity {
             private void pickUnicorn() {
                 int unicornId = pickInt(UNICORNS);
                 if (randfrange(0,1) <= LUCKY) {
-                    unicornId = R.drawable.jandycane;
+                    unicornId = R.drawable.sugarcane;
                 }
                 BitmapDrawable unicorn = (BitmapDrawable) getContext().getResources().getDrawable(unicornId);
                 Bitmap unicornBits = unicorn.getBitmap();
@@ -188,7 +188,7 @@ public class UnicornSack extends Activity {
                 /* G */ M[5]  = (float)((color & 0x0000FF00) >> 8)  / 0xFF;
                 /* B */ M[10] = (float)((color & 0x000000FF))       / 0xFF;
                 pt.setColorFilter(new ColorMatrixColorFilter(M));
-                setLayerType(View.LAYER_TYPE_HARDWARE, (unicornId == R.drawable.jandycane) ? null : pt);
+                setLayerType(View.LAYER_TYPE_HARDWARE, (unicornId == R.drawable.sugarcane) ? null : pt);
             }
 
             public void reset() {
