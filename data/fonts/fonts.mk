@@ -47,4 +47,6 @@ PRODUCT_PACKAGES := \
     Clockopia.ttf \
     AndroidClock.ttf \
     AndroidClock_Highlight.ttf \
+    AndroidClockMono-Bold.ttf \
+    AndroidClockMono-Light.ttf \
     AndroidClock_Solid.ttf \
