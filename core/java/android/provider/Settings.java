@@ -2987,6 +2987,12 @@ public final class Settings {
         public static final String LOCKSCREEN_STOCK_MUSIC_LAYOUT = "lockscreen_stock_music_layout";
 
         /**
+         * Whether to show the alt lockscreen layout
+         * @hide
+         */
+        public static final String USE_ALT_LOCKSCREEN = "use_alt_lockscreen";
+
+        /**
          * How to show weather on the statusbar
          *
          * @hide
