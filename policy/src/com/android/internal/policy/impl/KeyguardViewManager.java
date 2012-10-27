@@ -78,7 +78,6 @@ public class KeyguardViewManager implements KeyguardWindowController {
         mViewManager = viewManager;
         mCallback = callback;
         mKeyguardViewProperties = keyguardViewProperties;
-
         mUpdateMonitor = updateMonitor;
     }
 
@@ -124,11 +123,11 @@ public class KeyguardViewManager implements KeyguardWindowController {
                     /*| WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                     | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR*/ ;
             if (!mNeedsInput) {
-                flags |= WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+                    flags |= WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
             }
             if (ActivityManager.isHighEndGfx(((WindowManager)mContext.getSystemService(
                     Context.WINDOW_SERVICE)).getDefaultDisplay())) {
-                flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+                    flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
             }
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                     stretch, stretch, WindowManager.LayoutParams.TYPE_KEYGUARD,
