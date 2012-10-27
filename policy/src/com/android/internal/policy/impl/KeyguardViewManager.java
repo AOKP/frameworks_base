@@ -61,6 +61,7 @@ public class KeyguardViewManager implements KeyguardWindowController {
     private KeyguardViewBase mKeyguardView;
 
     private boolean mScreenOn = false;
+    private boolean mAltLock;
 
     public interface ShowListener {
         void onShown(IBinder windowToken);
@@ -78,7 +79,9 @@ public class KeyguardViewManager implements KeyguardWindowController {
         mViewManager = viewManager;
         mCallback = callback;
         mKeyguardViewProperties = keyguardViewProperties;
-
+        mAltLock =  Settings.System.getBoolean(		
+                context.getContentResolver(),		
+                Settings.System.USE_ALT_LOCKSCREEN, false);
         mUpdateMonitor = updateMonitor;
     }
 
@@ -123,16 +126,26 @@ public class KeyguardViewManager implements KeyguardWindowController {
                     | WindowManager.LayoutParams.FLAG_SLIPPERY
                     /*| WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
                     | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR*/ ;
+            int altFlags = WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN
+                    | WindowManager.LayoutParams.FLAG_SLIPPERY;
             if (!mNeedsInput) {
-                flags |= WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+                if (!mAltLock) {
+                    flags |= WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+                } else {
+                    altFlags |= WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+                }
             }
             if (ActivityManager.isHighEndGfx(((WindowManager)mContext.getSystemService(
                     Context.WINDOW_SERVICE)).getDefaultDisplay())) {
-                flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+                if (!mAltLock) {
+                    flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+                } else {
+                    altFlags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+                }
             }
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                     stretch, stretch, WindowManager.LayoutParams.TYPE_KEYGUARD,
-                    flags, PixelFormat.TRANSLUCENT);
+                    (mAltLock ? altFlags : flags), PixelFormat.TRANSLUCENT);
             lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
             lp.windowAnimations = com.android.internal.R.style.Animation_LockScreen;
             if (ActivityManager.isHighEndGfx(((WindowManager)mContext.getSystemService(

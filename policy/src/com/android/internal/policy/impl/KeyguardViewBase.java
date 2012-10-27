@@ -27,6 +27,7 @@ import android.media.AudioManager;
 import android.media.IAudioService;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 import android.view.View;
@@ -48,6 +49,7 @@ import android.util.Slog;
 public abstract class KeyguardViewBase extends FrameLayout {
 
     private static final int BACKGROUND_COLOR = 0x70000000;
+    private static final int BACKGROUND_COLOR_ALT = 0x00000000;
     private KeyguardViewCallback mCallback;
     private AudioManager mAudioManager;
     private TelephonyManager mTelephonyManager = null;
@@ -60,7 +62,7 @@ public abstract class KeyguardViewBase extends FrameLayout {
     Drawable mBackgroundDrawable = new Drawable() {
         @Override
         public void draw(Canvas canvas) {
-            canvas.drawColor(BACKGROUND_COLOR, PorterDuff.Mode.SRC);
+            canvas.drawColor((Settings.System.getBoolean(getContext().getContentResolver(), Settings.System.USE_ALT_LOCKSCREEN, false)) ? BACKGROUND_COLOR : BACKGROUND_COLOR_ALT, PorterDuff.Mode.SRC);
         }
 
         @Override
