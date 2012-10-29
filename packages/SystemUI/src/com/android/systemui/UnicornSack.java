@@ -119,6 +119,23 @@ public class UnicornSack extends Activity {
           R.drawable.redunicorn,
         };
 
+        static int UNIPORNS[] = {
+          R.drawable.bird,
+          R.drawable.cashew,
+          R.drawable.khas,
+          R.drawable.kwes,
+          R.drawable.marcl,
+          R.drawable.nein,
+          R.drawable.nitro,
+          R.drawable.rebootz,
+          R.drawable.roman,
+          R.drawable.sethy,
+          R.drawable.steve,
+          R.drawable.whiteh,
+          R.drawable.xoomd,
+          R.drawable.zaph,
+        };
+
         static int COLORS[] = {
             0xFF00CC00,
             0xFFCC0000,
@@ -167,8 +184,9 @@ public class UnicornSack extends Activity {
             private void pickUnicorn() {
                 int unicornId = pickInt(UNICORNS);
                 if (randfrange(0,1) <= LUCKY) {
-                    unicornId = R.drawable.jandycane;
+                this (int unipornId = pickInt(UNIPORNS);
                 }
+
                 BitmapDrawable unicorn = (BitmapDrawable) getContext().getResources().getDrawable(unicornId);
                 Bitmap unicornBits = unicorn.getBitmap();
                 h=unicornBits.getHeight();
@@ -188,7 +206,23 @@ public class UnicornSack extends Activity {
                 /* G */ M[5]  = (float)((color & 0x0000FF00) >> 8)  / 0xFF;
                 /* B */ M[10] = (float)((color & 0x000000FF))       / 0xFF;
                 pt.setColorFilter(new ColorMatrixColorFilter(M));
-                setLayerType(View.LAYER_TYPE_HARDWARE, (unicornId == R.drawable.jandycane) ? null : pt);
+                switch (unicornId) {
+                CASE R.drawable.bird :
+                CASE R.drawable.cashew :
+                CASE R.dawable.khas :
+                CASE R.drawable.kwes :
+                CASE R.drawable.marcl :
+                CASE R.dawable.nein :
+                CASE R.drawable.nitro :
+                CASE R.drawable.rebootz :
+                CASE R.dawable.roman :
+                CASE R.drawable.sethy :
+                CASE R.drawable.steve :
+                CASE R.dawable.whiteh :
+                CASE R.dawable.xoomd :
+                CASE R.drawable.zaph : setLayerType(View.LAYER_TYPE_HARDWARE,  null);
+		       break;
+                default: setLayerType(View.LAYER_TYPE_HARDWARE,  pt);
             }
 
             public void reset() {
