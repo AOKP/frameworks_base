@@ -1290,4 +1290,19 @@
     <string name="default_audio_route_category_name" msgid="3722811174003886946">"System"</string>
     <string name="bluetooth_a2dp_audio_route_name" msgid="8575624030406771015">"Bluetooth-lyd"</string>
     <string name="media_route_chooser_grouping_done" msgid="7966438307723317169">"Udfør"</string>
+        <!-- When the lock screen is showing and the phone plugged in, and the battery
+         is not fully charged, show the current charge %.  -->
+    <string name="lockscreen_plugged_in">Oplader, <xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
+    <!-- When the lock screen is showing, the phone is plugged in and the battery is fully
+         charged, say that it is charged. -->
+    <string name="lockscreen_charged">Opladet.</string>
+    <!-- A short representation of charging information, e.g "34%" -->
+    <string name="lockscreen_battery_short"><xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
+
+    <!-- When the lock screen is showing and the battery is low, warn user to plug
+         in the phone soon. -->
+    <string name="lockscreen_low_battery">Tilslut din lader.</string>
+    <!-- Showing the Battery % while not plugged in. -->
+    <string name="lockscreen_always_battery">Aflader, <xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
+    <string name="lockscreen_always_low_battery">Tilslut din lader, <xliff:g id="number">%d</xliff:g><xliff:g id="percent">%%</xliff:g></string>
 </resources>
