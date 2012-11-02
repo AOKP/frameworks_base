@@ -21,7 +21,7 @@
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dip"
         android:gravity="right"
@@ -76,7 +76,7 @@
 
     <LinearLayout
         android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/time"
         android:layout_marginTop="10dip">
@@ -101,11 +101,9 @@
 
     <com.android.internal.policy.impl.WeatherText
         android:id="@+id/weather"
-        android:layout_gravity="right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dip"
-        android:gravity="right"
         android:singleLine="true"
         android:ellipsize="end"
         android:textSize="16sp"
@@ -118,7 +116,6 @@
         android:inAnimation="@anim/calendar_fadein"
         android:outAnimation="@anim/calendar_fadeout"
         android:layout_marginTop="10dip"
-        android:layout_gravity="right"
         android:drawablePadding="4dip" />
 
     <TextView
@@ -143,7 +140,5 @@
         android:textColor="@color/lockscreen_owner_info"
         />
 
-    <include
-        layout="@layout/weatherpanel"
-        android:layout_gravity="right" />
+        <include layout="@layout/weatherpanel" />
 </LinearLayout>

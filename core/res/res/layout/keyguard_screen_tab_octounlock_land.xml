@@ -45,6 +45,7 @@
             android:id="@+id/screen_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/keyguard_lockscreen_status_line_font_right_margin"
             layout="@layout/keyguard_screen_info" />
 
     <Space android:layout_gravity="fill" />
@@ -75,7 +76,7 @@
         />
 
     <!-- Column 1 -->
-    <Space android:layout_width="40dip" android:layout_rowSpan="4" />
+    <Space android:layout_width="22dip" android:layout_rowSpan="4" />
 
     <!-- Column 2 -->
     <com.android.internal.widget.multiwaveview.GlowPadView

@@ -69,10 +69,12 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Slog;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.LinearLayout;
 
 import java.io.File;
@@ -133,6 +135,8 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
     // Is there a vibrator
     private final boolean mHasVibrator;
     private boolean mCirclesLock;
+    private LinearLayout mScreenInfo;
+    private LinearLayout mKeyguardScreenStatus;
 
     private DigitalClock mDigitalClock;
     private DigitalClockAlt mDigitalClockAlt;
@@ -821,12 +825,57 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
         mHasVibrator = vibrator == null ? false : vibrator.hasVibrator();
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mSilentMode = isSilentMode();
+        mScreenInfo = (LinearLayout) findViewById(R.id.screen_info);
+        mKeyguardScreenStatus = (LinearLayout) findViewById(R.id.keyguard_screen_status);
         mUnlockWidget = findViewById(R.id.unlock_widget);
         mUnlockWidgetMethods = createUnlockMethods(mUnlockWidget);
         updateSettings();
 
         if (DBG) Log.v(TAG, "*** LockScreen accel is "
                 + (mUnlockWidget.isHardwareAccelerated() ? "on":"off"));
+    }
+
+    private void updateClockAlign() {
+        final int clockAlign = Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.LOCKSCREEN_CLOCK_ALIGN, 2);
+        int margin = (int) Math.round(getContext().getResources().getDimension(
+                R.dimen.keyguard_lockscreen_status_line_font_right_margin));
+
+        int leftMargin = 0, rightMargin = 0;
+        int gravity = Gravity.RIGHT;
+
+        switch (clockAlign) {
+        case 0:
+            gravity = Gravity.LEFT;
+            leftMargin = margin;
+            break;
+        case 1:
+            gravity = Gravity.CENTER;
+            break;
+        case 2:
+            rightMargin = margin;
+            break;
+        }
+
+        if (mScreenInfo != null) {
+            mScreenInfo.setGravity(gravity);
+            setSpecificMargins(mScreenInfo, leftMargin, -1, rightMargin, -1);
+        }
+
+        if (mKeyguardScreenStatus != null) {
+            mKeyguardScreenStatus.setGravity(gravity);
+            setSpecificMargins(mKeyguardScreenStatus, leftMargin, -1, rightMargin, -1);
+        }
+    }
+
+    private void setSpecificMargins(View view, int left, int top, int right,
+            int bottom) {
+        MarginLayoutParams params = (MarginLayoutParams) view.getLayoutParams();
+        if (left != -1) params.leftMargin = left;
+        if (top != -1) params.topMargin = top;
+        if (right != -1) params.rightMargin = right;
+        if (bottom != -1) params.bottomMargin = bottom;
+        view.setLayoutParams(params);
     }
 
     private UnlockWidgetCommonMethods createUnlockMethods(View unlockWidget) {
@@ -954,6 +1003,7 @@ class LockScreen extends LinearLayout implements KeyguardScreen {
         postDelayed(mOnResumePing, ON_RESUME_PING_DELAY);
         // update the settings when we resume
         if (DEBUG) Log.d(TAG, "We are resuming and want to update settings");
+        updateClockAlign();
         updateSettings();
     }
 
