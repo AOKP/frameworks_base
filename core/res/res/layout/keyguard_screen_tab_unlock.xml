@@ -43,7 +43,6 @@
             android:id="@+id/screen_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin"
             layout="@layout/keyguard_screen_info" />
 
         <Space android:layout_gravity="fill" />
