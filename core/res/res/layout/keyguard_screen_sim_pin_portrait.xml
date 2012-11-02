@@ -16,7 +16,15 @@
 ** limitations under the License.
 */
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.android.internal.policy.impl.LockscreenWallpaper
+        android:id="@+id/lockscreen_wallpaper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -27,6 +35,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <include
+            android:id="@+id/screen_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/keyguard_lockscreen_status_line_font_right_margin"
+            layout="@layout/keyguard_screen_info" />
 
         <!-- header text ('Enter Pin Code') -->
         <TextView android:id="@+id/headerText"
@@ -117,4 +132,5 @@
         />
     </LinearLayout>
 
-</LinearLayout>
+   </LinearLayout>
+</RelativeLayout>
