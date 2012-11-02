@@ -1264,6 +1264,7 @@
   <java-symbol type="id" name="button7" />
   <java-symbol type="id" name="carrier" />
   <java-symbol type="id" name="date" />
+  <java-symbol type="id" name="date_line" />
   <java-symbol type="id" name="eight" />
   <java-symbol type="id" name="emergencyCallButton" />
   <java-symbol type="id" name="faceLockAreaView" />
@@ -3774,6 +3775,9 @@
  <!-- AOKP lockscreen -->
   <java-symbol type="id" name="screen_info" />
 
+<!-- From KeyguardStatusViewManager -->
+  <java-symbol type="dimen" name="keyguard_lockscreen_status_line_font_right_margin" />
+
  <!-- Calendar -->
   <java-symbol type="id" name="calendar" />
   <java-symbol type="id" name="event_title" />
@@ -3840,4 +3844,5 @@
   <java-symbol type="id" name="time_alt" />
   <java-symbol type="id" name="timeDisplayHours" />
   <java-symbol type="id" name="timeDisplayMinutes" />
+  <java-symbol type="id" name="misc_screen_info" />
 </resources>
