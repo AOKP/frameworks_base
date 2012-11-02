@@ -2922,6 +2922,12 @@ public final class Settings {
         public static final String NOTIFICATION_BATTERY_DISPLAY = "notification_battery_display";
 
         /**
+         * Where to align the clock on the lockscreen
+         * @hide
+         */
+        public static final String LOCKSCREEN_CLOCK_ALIGN = "lockscreen_clock_align";
+
+        /**
          * custom lockscreen text color
          * @hide
          */

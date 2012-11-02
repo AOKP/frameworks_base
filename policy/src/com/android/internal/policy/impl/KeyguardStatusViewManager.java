@@ -34,6 +34,7 @@ import libcore.util.MutableInt;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
@@ -45,8 +46,12 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.provider.Settings;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -99,6 +104,7 @@ class KeyguardStatusViewManager implements OnClickListener {
     private TextView mStatus1View;
     private TextView mOwnerInfoView;
     private TextView mAlarmStatusView;
+    private LinearLayout mDateLineView;
     private TransportControlView mTransportView;
     private WeatherPanel mWeatherPanelView;
     private WeatherText mWeatherTextView;
@@ -216,6 +222,7 @@ class KeyguardStatusViewManager implements OnClickListener {
         mStatus1View = (TextView) findViewById(R.id.status1);
         mAlarmStatusView = (TextView) findViewById(R.id.alarm_status);
         mOwnerInfoView = (TextView) findViewById(R.id.propertyOf);
+        mDateLineView = (LinearLayout) findViewById(R.id.date_line);
         mTransportView = (TransportControlView) findViewById(R.id.transport);
         mEmergencyCallButton = (Button) findViewById(R.id.emergencyCallButton);
         mEmergencyCallButtonEnabledInScreen = emergencyButtonEnabledInScreen;
@@ -371,6 +378,7 @@ class KeyguardStatusViewManager implements OnClickListener {
         // First update the clock, if present.
         if (mDigitalClock != null) {
             mDigitalClock.updateTime();
+            updateClockAlign();
         }
 
         mUpdateMonitor.registerInfoCallback(mInfoCallback);
@@ -473,6 +481,70 @@ class KeyguardStatusViewManager implements OnClickListener {
                 mWeatherTextView.setVisibility(View.GONE);
             }
         }
+    }
+
+    private void updateClockAlign() {
+        final Configuration config = getContext().getResources().getConfiguration();
+        // No alignment on landscape.
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return;
+        }
+
+        final int clockAlign = Settings.System.getInt(getContext().getContentResolver(),
+                Settings.System.LOCKSCREEN_CLOCK_ALIGN, 2);
+        int margin = (int) Math.round(getContext().getResources().getDimension(
+                R.dimen.keyguard_lockscreen_status_line_font_right_margin));
+
+        // Adjust for each layout
+        if (config.screenWidthDp >= 600) { // sw600dp
+            margin = 0;
+        }
+
+        int leftMargin = 0, rightMargin = 0;
+        int gravity = Gravity.RIGHT;
+
+        switch (clockAlign) {
+        case 0:
+            gravity = Gravity.LEFT;
+            leftMargin = margin;
+            break;
+        case 1:
+            gravity = Gravity.CENTER;
+            break;
+        case 2:
+            rightMargin = margin;
+            break;
+        }
+
+        mDigitalClock.setGravity(gravity);
+        setSpecificMargins(mDigitalClock, leftMargin, -1, rightMargin, -1);
+
+        if (mDateLineView != null) {
+            mDateLineView.setGravity(gravity);
+            setSpecificMargins(mDateLineView, leftMargin, -1, rightMargin, -1);
+        }
+        if (mStatus1View != null) {
+            mStatus1View.setGravity(gravity);
+            setSpecificMargins(mStatus1View, leftMargin, -1, rightMargin, -1);
+        }
+        if (mWeatherPanelView != null) {
+            mWeatherPanelView.setGravity(gravity);
+            setSpecificMargins(mWeatherPanelView, leftMargin, -1, rightMargin, -1);
+        }
+        if (mCalendarView != null) {
+            mCalendarView.setGravity(gravity);
+            setSpecificMargins(mCalendarView, leftMargin, -1, rightMargin, -1);
+        }
+    }
+
+    private void setSpecificMargins(View view, int left, int top, int right,
+            int bottom) {
+        MarginLayoutParams params = (MarginLayoutParams) view.getLayoutParams();
+        if (left != -1) params.leftMargin = left;
+        if (top != -1) params.topMargin = top;
+        if (right != -1) params.rightMargin = right;
+        if (bottom != -1) params.bottomMargin = bottom;
+        view.setLayoutParams(params);
     }
 
     private void updateCalendar() {
