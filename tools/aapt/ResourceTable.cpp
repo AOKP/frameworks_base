@@ -2529,6 +2529,7 @@ ResourceTable::validateLocalizations(void)
          nameIter++) {
         const set<String8>& configSet = nameIter->second;   // naming convenience
 
+#ifdef SHOW_DEFAULT_TRANSLATION_WARNINGS
         // Look for strings with no default localization
         if (configSet.count(defaultLocale) == 0) {
             fprintf(stdout, "aapt: warning: string '%s' has no default translation in %s; found:",
@@ -2541,6 +2542,7 @@ ResourceTable::validateLocalizations(void)
             fprintf(stdout, "\n");
             // !!! TODO: throw an error here in some circumstances
         }
+#endif
 
         // Check that all requested localizations are present for this string
         if (mBundle->getConfigurations() != NULL && mBundle->getRequireLocalization()) {
@@ -2568,12 +2570,14 @@ ResourceTable::validateLocalizations(void)
                         String8 region(config.string(), 2);
                         if (configSet.find(region) == configSet.end()) {
                             if (configSet.count(defaultLocale) == 0) {
+#ifdef SHOW_LOCALIZATION_WARNINGS
                                 fprintf(stdout, "aapt: warning: "
                                         "**** string '%s' has no default or required localization "
                                         "for '%s' in %s\n",
                                         String8(nameIter->first).string(),
                                         config.string(),
                                         mBundle->getResourceSourceDirs()[0]);
+#endif
                             }
                         }
                     }
