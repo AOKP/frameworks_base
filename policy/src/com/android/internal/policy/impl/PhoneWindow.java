@@ -26,25 +26,30 @@ import static android.view.WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN;
 import static android.view.WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER;
 import static android.view.WindowManager.LayoutParams.FLAG_SPLIT_TOUCH;
 
-import com.android.internal.view.RootViewSurfaceTaker;
-import com.android.internal.view.StandaloneActionMode;
-import com.android.internal.view.menu.ContextMenuBuilder;
-import com.android.internal.view.menu.IconMenuPresenter;
-import com.android.internal.view.menu.ListMenuPresenter;
-import com.android.internal.view.menu.MenuBuilder;
-import com.android.internal.view.menu.MenuDialogHelper;
-import com.android.internal.view.menu.MenuPresenter;
-import com.android.internal.view.menu.MenuView;
-import com.android.internal.widget.ActionBarContainer;
-import com.android.internal.widget.ActionBarContextView;
-import com.android.internal.widget.ActionBarView;
+import java.lang.ref.WeakReference;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
+import android.app.ActivityManager.RunningAppProcessInfo;
+import android.app.ActivityManagerNative;
+import android.app.IActivityManager;
 import android.app.KeyguardManager;
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.ResolveInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
@@ -53,10 +58,15 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.Process;
 import android.os.RemoteException;
 import android.os.ServiceManager;
+import android.provider.Settings;
 import android.util.AndroidRuntimeException;
 import android.util.DisplayMetrics;
 import android.util.EventLog;
@@ -65,6 +75,8 @@ import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.ContextThemeWrapper;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Gravity;
 import android.view.IRotationWatcher;
 import android.view.IWindowManager;
@@ -92,9 +104,23 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
+import com.android.internal.statusbar.IStatusBarService;
+import com.android.internal.view.RootViewSurfaceTaker;
+import com.android.internal.view.StandaloneActionMode;
+import com.android.internal.view.menu.ContextMenuBuilder;
+import com.android.internal.view.menu.IconMenuPresenter;
+import com.android.internal.view.menu.ListMenuPresenter;
+import com.android.internal.view.menu.MenuBuilder;
+import com.android.internal.view.menu.MenuDialogHelper;
+import com.android.internal.view.menu.MenuPresenter;
+import com.android.internal.view.menu.MenuView;
+import com.android.internal.widget.ActionBarContainer;
+import com.android.internal.widget.ActionBarContextView;
+import com.android.internal.widget.ActionBarView;
+
+import com.android.internal.R;
 
 /**
  * Android-specific Window.
@@ -180,7 +206,10 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
     private int mTitleColor = 0;
 
     private boolean mAlwaysReadCloseOnTouchAttr = false;
-    
+
+    private boolean mEnableGestures;
+
+    private Context mContext;
     private ContextMenuBuilder mContextMenu;
     private MenuDialogHelper mContextMenuHelper;
     private boolean mClosingActionMenu;
@@ -189,6 +218,33 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 
     private AudioManager mAudioManager;
     private KeyguardManager mKeyguardManager;
+
+    private Handler mConfigHandler;
+
+    private final class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System
+                    .getUriFor(Settings.System.ENABLE_STYLUS_GESTURES), false,
+                    this);
+            updateSettings();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
+
+        void updateSettings() {
+            mEnableGestures = Settings.System.getBoolean(
+                    mContext.getContentResolver(),
+                    Settings.System.ENABLE_STYLUS_GESTURES, false);
+        }
+    }
 
     private int mUiOptions = 0;
 
@@ -201,7 +257,11 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 
     public PhoneWindow(Context context) {
         super(context);
+        mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
+        mConfigHandler = new Handler();
+        SettingsObserver settingsObserver = new SettingsObserver(mConfigHandler);
+        settingsObserver.observe();
     }
 
     @Override
@@ -1867,11 +1927,377 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
             return false;
         }
 
+        private final StylusGestureFilter mStylusFilter = new StylusGestureFilter();
+
+        private class StylusGestureFilter extends SimpleOnGestureListener {
+
+            private final static int SWIPE_UP = 1;
+            private final static int SWIPE_DOWN = 2;
+            private final static int SWIPE_LEFT = 3;
+            private final static int SWIPE_RIGHT = 4;
+            private final static int PRESS_LONG = 5;
+            private final static int TAP_DOUBLE = 6;
+            private final static int SWIPE_MIN_DISTANCE = 50;
+            private final static int SWIPE_MIN_VELOCITY = 100;
+            final static String ACTION_HOME = "**home**";
+            final static String ACTION_BACK = "**back**";
+            final static String ACTION_SEARCH = "**search**";
+            final static String ACTION_SCREENSHOT = "**screenshot**";
+            final static String ACTION_MENU = "**menu**";
+            final static String ACTION_NOTIFICATIONS = "**notifications**";
+            final static String ACTION_RECENTS = "**recents**";
+            final static String ACTION_IME = "**ime**";
+            final static String ACTION_KILL = "**kill**";
+            final static String ACTION_NULL = "**null**";
+         // final static String ACTION_WIDGETS = "**widgets**";
+            private GestureDetector mDetector;
+            private final static String TAG = "StylusGestureFilter";
+
+            public StylusGestureFilter() {
+                mDetector = new GestureDetector(this);
+            }
+
+            public boolean onTouchEvent(MotionEvent event) {
+                return mDetector.onTouchEvent(event);
+            }
+
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2,
+                    float velocityX, float velocityY) {
+
+                final float xDistance = Math.abs(e1.getX() - e2.getX());
+                final float yDistance = Math.abs(e1.getY() - e2.getY());
+
+                velocityX = Math.abs(velocityX);
+                velocityY = Math.abs(velocityY);
+                boolean result = false;
+
+                if (velocityX > SWIPE_MIN_VELOCITY
+                        && xDistance > SWIPE_MIN_DISTANCE
+                        && xDistance > yDistance) {
+                    if (e1.getX() > e2.getX()) { // right to left
+                        // Swipe Left
+                        launchStylusAction(SWIPE_LEFT);
+                    } else {
+                        // Swipe Right
+                        launchStylusAction(SWIPE_RIGHT);
+                    }
+                    result = true;
+                } else if (velocityY > SWIPE_MIN_VELOCITY
+                        && yDistance > SWIPE_MIN_DISTANCE
+                        && yDistance > xDistance) {
+                    if (e1.getY() > e2.getY()) { // bottom to up
+                        // Swipe Up
+                        launchStylusAction(SWIPE_UP);
+                    } else {
+                        // Swipe Down
+                        launchStylusAction(SWIPE_DOWN);
+                    }
+                    result = true;
+                }
+                return result;
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent arg0) {
+                launchStylusAction(TAP_DOUBLE);
+                return true;
+            }
+
+            public void onLongPress(MotionEvent e) {
+                launchStylusAction(PRESS_LONG);
+            }
+
+        }
+
+        private void launchStylusAction(int gestureAction) {
+            final ContentResolver resolver = mContext.getContentResolver();
+            boolean flag = false;
+            //flag=true when action is performed on systemui
+            if ("com.android.systemui".equalsIgnoreCase(mContext
+                    .getPackageName())) {
+                flag = true;
+            }
+
+            String packageName = null;
+            switch (gestureAction) {
+            case StylusGestureFilter.SWIPE_LEFT:
+                packageName = Settings.System.getString(resolver,
+                        Settings.System.GESTURES_LEFT_SWIPE);
+                break;
+            case StylusGestureFilter.SWIPE_RIGHT:
+                packageName = Settings.System.getString(resolver,
+                        Settings.System.GESTURES_RIGHT_SWIPE);
+                break;
+            case StylusGestureFilter.SWIPE_UP:
+                packageName = Settings.System.getString(resolver,
+                        Settings.System.GESTURES_UP_SWIPE);
+                break;
+            case StylusGestureFilter.SWIPE_DOWN:
+                packageName = Settings.System.getString(resolver,
+                        Settings.System.GESTURES_DOWN_SWIPE);
+                break;
+            case StylusGestureFilter.TAP_DOUBLE:
+                packageName = Settings.System.getString(resolver,
+                        Settings.System.GESTURES_DOUBLE_TAP);
+                break;
+            case StylusGestureFilter.PRESS_LONG:
+                packageName = Settings.System.getString(resolver,
+                        Settings.System.GESTURES_LONG_PRESS);
+                break;
+            }
+
+
+
+
+            if (packageName.equals(StylusGestureFilter.ACTION_NULL)) {
+                // who would set a button with no ClickAction?
+                // Stranger things have happened.
+                return;
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_RECENTS)) {
+                IStatusBarService mStatusBarService = IStatusBarService.Stub
+                        .asInterface(ServiceManager.getService("statusbar"));
+                try {
+                    mStatusBarService.toggleRecentApps();
+                } catch (RemoteException e) {
+                }
+                return;
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_BACK)) {
+                backAction();
+                return;
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_MENU)) {
+                // Menu action on notificationbar / systemui will be converted
+                // to back action
+                if (flag) {
+                    backAction();
+                }
+                menuAction();
+                return;
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_HOME)) {
+                Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+                homeIntent.addCategory(Intent.CATEGORY_HOME);
+                homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(homeIntent);
+                return;
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_SEARCH)) {
+                // Search action on notificationbar / systemui will be converted
+                // to back action
+                if (flag) {
+                    backAction();
+                }
+                launchDefaultSearch();
+                return;
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_NOTIFICATIONS)) {
+
+                IStatusBarService mStatusBarService = IStatusBarService.Stub
+                        .asInterface(ServiceManager.getService("statusbar"));
+                try {
+                    mStatusBarService.toggleNotificationShade();
+                } catch (RemoteException e) {
+                }
+                return;
+
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_IME)) {
+
+                getContext().sendBroadcast(new Intent("android.settings.SHOW_INPUT_METHOD_PICKER"));
+                return;
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_SCREENSHOT)) {
+                takeScreenshot();
+                return;
+
+            } else if (packageName.equals(StylusGestureFilter.ACTION_KILL)) {
+                mHandler.postDelayed(mBackLongPress, 0);
+                return;
+
+            } else {  // we must have a custom uri
+                 try {
+                     Intent intent = Intent.parseUri(packageName, 0);
+                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                     getContext().startActivity(intent);
+                 } catch (URISyntaxException e) {
+                     Log.e(TAG, "URISyntaxException: [" + packageName + "]");
+                 } catch (ActivityNotFoundException e){
+                     Log.e(TAG, "ActivityNotFound: [" + packageName + "]");
+                 }
+            }
+            return;
+        }
+
+
+
+
+        private void menuAction() {
+            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,
+                    KeyEvent.KEYCODE_MENU));
+            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,
+                    KeyEvent.KEYCODE_MENU));
+
+        }
+
+        private void backAction() {
+            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN,
+                    KeyEvent.KEYCODE_BACK));
+            dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,
+                    KeyEvent.KEYCODE_BACK));
+        }
+
+        private Handler mHandler = new Handler() {
+            public void handleMessage(Message msg) {
+            }
+        };
+
+    Runnable mBackLongPress = new Runnable() {
+        public void run() {
+            try {
+                final Intent intent = new Intent(Intent.ACTION_MAIN);
+                String defaultHomePackage = "com.android.launcher";
+                intent.addCategory(Intent.CATEGORY_HOME);
+                final ResolveInfo res = mContext.getPackageManager().resolveActivity(intent, 0);
+                if (res.activityInfo != null && !res.activityInfo.packageName.equals("android")) {
+                    defaultHomePackage = res.activityInfo.packageName;
+                }
+                boolean targetKilled = false;
+                IActivityManager am = ActivityManagerNative.getDefault();
+                List<RunningAppProcessInfo> apps = am.getRunningAppProcesses();
+                for (RunningAppProcessInfo appInfo : apps) {
+                    int uid = appInfo.uid;
+                    // Make sure it's a foreground user application (not system,
+                    // root, phone, etc.)
+                    if (uid >= Process.FIRST_APPLICATION_UID && uid <= Process.LAST_APPLICATION_UID
+                            && appInfo.importance == RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                        if (appInfo.pkgList != null && (appInfo.pkgList.length > 0)) {
+                            for (String pkg : appInfo.pkgList) {
+                                if (!pkg.equals("com.android.systemui")
+                                        && !pkg.equals(defaultHomePackage)) {
+                                    am.forceStopPackage(pkg);
+                                    targetKilled = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            Process.killProcess(appInfo.pid);
+                            targetKilled = true;
+                        }
+                    }
+                    if (targetKilled) {
+                        Toast.makeText(mContext, R.string.app_killed_message, Toast.LENGTH_SHORT)
+                                .show();
+                        break;
+                    }
+                }
+            } catch (RemoteException remoteException) {
+                // Do nothing; just let it go.
+            }
+        }
+    };
+
+        /**
+         * functions needed for taking screenhots. This leverages the built in
+         * ICS screenshot functionality
+         */
+
+        final Object mScreenshotLock = new Object();
+        ServiceConnection mScreenshotConnection = null;
+
+        final Runnable mScreenshotTimeout = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (mScreenshotLock) {
+                    if (mScreenshotConnection != null) {
+                        mContext.unbindService(mScreenshotConnection);
+                        mScreenshotConnection = null;
+                    }
+                }
+            }
+        };
+
+        private void takeScreenshot() {
+            synchronized (mScreenshotLock) {
+                if (mScreenshotConnection != null) {
+                    return;
+                }
+                ComponentName cn = new ComponentName("com.android.systemui",
+                        "com.android.systemui.screenshot.TakeScreenshotService");
+                Intent intent = new Intent();
+                intent.setComponent(cn);
+                ServiceConnection conn = new ServiceConnection() {
+                    @Override
+                    public void onServiceConnected(ComponentName name,
+                            IBinder service) {
+                        synchronized (mScreenshotLock) {
+                            if (mScreenshotConnection != this) {
+                                return;
+                            }
+                            Messenger messenger = new Messenger(service);
+                            Message msg = Message.obtain(null, 1);
+                            final ServiceConnection myConn = this;
+                            Handler h = new Handler(mHandler.getLooper()) {
+                                @Override
+                                public void handleMessage(Message msg) {
+                                    synchronized (mScreenshotLock) {
+                                        if (mScreenshotConnection == myConn) {
+                                            mContext.unbindService(mScreenshotConnection);
+                                            mScreenshotConnection = null;
+                                            mHandler.removeCallbacks(mScreenshotTimeout);
+                                        }
+                                    }
+                                }
+                            };
+                            msg.replyTo = new Messenger(h);
+                            msg.arg1 = msg.arg2 = 0;
+
+                            /*
+                             * remove for the time being if (mStatusBar != null
+                             * && mStatusBar.isVisibleLw()) msg.arg1 = 1; if
+                             * (mNavigationBar != null &&
+                             * mNavigationBar.isVisibleLw()) msg.arg2 = 1;
+                             * wait for the dialog box to close */
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ie) {
+                            }
+
+                            /* take the screenshot */
+
+                            try {
+                                messenger.send(msg);
+                            } catch (RemoteException e) {
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onServiceDisconnected(ComponentName name) {
+                    }
+                };
+                if (mContext
+                        .bindService(intent, conn, Context.BIND_AUTO_CREATE)) {
+                    mScreenshotConnection = conn;
+                    mHandler.postDelayed(mScreenshotTimeout, 10000);
+                }
+            }
+        }
+
         @Override
         public boolean dispatchTouchEvent(MotionEvent ev) {
+            // Stylus events with side button pressed are filtered and other
+            // events are processed normally.
+            if (mEnableGestures
+                    && MotionEvent.BUTTON_SECONDARY == ev.getButtonState()) {
+                mStylusFilter.onTouchEvent(ev);
+                return false;
+            }
             final Callback cb = getCallback();
-            return cb != null && !isDestroyed() && mFeatureId < 0 ? cb.dispatchTouchEvent(ev)
-                    : super.dispatchTouchEvent(ev);
+            return cb != null && !isDestroyed() && mFeatureId < 0 ? cb
+                    .dispatchTouchEvent(ev) : super.dispatchTouchEvent(ev);
         }
 
         @Override
