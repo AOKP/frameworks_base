@@ -3441,7 +3441,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     };
 
     // Assume this is called from the Handler thread.
-    private void takeScreenshot() {
+    protected void takeScreenshot() {
         synchronized (mScreenshotLock) {
             if (mScreenshotConnection != null) {
                 return;
