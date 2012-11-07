@@ -185,7 +185,32 @@
 <!--            <category android:name="android.intent.category.LAUNCHER" />-->
             </intent-filter>
         </activity>
-
+        <activity
+            android:name="com.android.systemui.Screenshot"
+            android:label="@string/toggle_screenshot"
+            android:icon="@drawable/ic_navbar_screenshot"
+            android:theme="@android:style/Theme.Holo.Panel"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="com.android.systemui.INTENT_SCREENSHOT" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.android.systemui.SHORTCUT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.android.systemui.KillApp"
+            android:label="@string/toggle_killapp"
+            android:icon="@drawable/ic_navbar_killtask"
+            android:theme="@android:style/Theme.Holo.Panel"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop" >
+            <intent-filter>
+                <action android:name="com.android.systemui.INTENT_SCREENSHOT" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="com.android.systemui.SHORTCUT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.android.systemui.NavbarToggle"
             android:label="@string/toggle_navbar"

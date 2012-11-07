@@ -68,6 +68,10 @@ public class CreateShortcut extends LauncherActivity {
         return R.drawable.ic_lockscreen_soundon;
     } else if (c.equals ("GoToHomeScreen")) {
         return R.drawable.ic_lockscreen_home;
+    } else if (c.equals ("KillApp")) {
+        return R.drawable.ic_navbar_killtask;
+    } else if (c.equals ("Screenshot")) {
+        return R.drawable.ic_navbar_screenshot;
     } else {
       return R.drawable.ic_sysbar_null;
     }
