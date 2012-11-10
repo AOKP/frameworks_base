@@ -2950,6 +2950,8 @@ public class PhoneStatusBar extends BaseStatusBar {
                     Settings.System.WEATHER_PANEL_SHORTCLICK), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.WEATHER_PANEL_LONGCLICK), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_SHOW_NOW), false, this);
         }
 
         @Override
@@ -3062,6 +3064,15 @@ public class PhoneStatusBar extends BaseStatusBar {
                 && (Settings.System.getBoolean(cr, Settings.System.USE_WEATHER, false));
 
         mWeatherPanel.setVisibility(mWeatherPanelEnabled ? View.VISIBLE : View.GONE);
+        boolean showByDefault = mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_showNavigationBar);
+        showByDefault = showByDefault || Settings.System.getBoolean(cr,
+                        Settings.System.NAVIGATION_BAR_SHOW, showByDefault);
+        boolean showNavBarNow = Settings.System.getBoolean(cr,
+                Settings.System.NAVIGATION_BAR_SHOW_NOW, showByDefault);
+        if (mNavigationBarView != null) {
+            mNavigationBarView.setVisibility(showNavBarNow? View.VISIBLE : View.GONE);
+        }
 
     }
 }
