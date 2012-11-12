@@ -187,7 +187,7 @@
         </activity>
 
         <activity
-            android:name="com.android.systemui.NavbarToggle"
+            android:name="com.android.systemui.aokp.NavbarToggle"
             android:label="@string/toggle_navbar"
             android:icon="@drawable/toggle_navbar"
             android:theme="@android:style/Theme.Holo.Panel"
@@ -200,7 +200,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.systemui.WidgetToggle"
+            android:name="com.android.systemui.aokp.WidgetToggle"
             android:label="@string/toggle_widgets"
             android:icon="@drawable/ic_sysbar_widget" >
             <intent-filter>
@@ -210,7 +210,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.systemui.RingVibToggle"
+            android:name="com.android.systemui.aokp.RingVibToggle"
             android:label="@string/toggle_ring_vib"
             android:icon="@drawable/ic_lockscreen_vib"
             android:theme="@android:style/Theme.Holo.Panel"
@@ -223,7 +223,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.systemui.RingSilentToggle"
+            android:name="com.android.systemui.aokp.RingSilentToggle"
             android:label="@string/toggle_ring_silent"
             android:icon="@drawable/ic_lockscreen_silent"
             android:theme="@android:style/Theme.Holo.Panel"
@@ -236,7 +236,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.systemui.RingVibSilentToggle"
+            android:name="com.android.systemui.aokp.RingVibSilentToggle"
             android:label="@string/toggle_ring_vib_silent"
             android:icon="@drawable/ic_lockscreen_soundon"
             android:theme="@android:style/Theme.Holo.Panel"
@@ -249,20 +249,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.systemui.GoToHomescreen"
-            android:label="@string/go_to_homescreen"
-            android:icon="@drawable/ic_lockscreen_home"
-            android:theme="@android:style/Theme.Holo.Panel"
-            android:excludeFromRecents="true"
-            android:launchMode="singleTop" >
-            <intent-filter>
-                <action android:name="com.android.systemui.INTENT_GO_TO_HOMESCREEN" />
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="com.android.systemui.SHORTCUT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.android.systemui.LockscreenUnlock"
+            android:name="com.android.systemui.aokp.LockscreenUnlock"
             android:label="@string/lockscreen_unlock"
             android:icon="@drawable/ic_lockscreen_unlock"
             android:theme="@android:style/Theme.Holo.Panel"

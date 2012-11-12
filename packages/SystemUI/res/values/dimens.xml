@@ -107,8 +107,21 @@
     <!-- The width of the view containing non-menu status bar icons -->
     <dimen name="navigation_key_width">80dip</dimen>
 
+    <!-- The height of the view containing non-menu status bar icons
+            (NavBar in Landscape Mode) -->
+    <dimen name="navigation_key_height">80dip</dimen>
+
     <!-- The width of the view containing the menu status bar icon -->
     <dimen name="navigation_menu_key_width">40dip</dimen>
+
+    <!-- The padding to use between the NavBar keys -->
+    <dimen name="navigation_key_padding_side">1dip</dimen>
+
+    <!-- The padding to use above the NavBar keys -->
+    <dimen name="navigation_key_padding_top">2dip</dimen>
+
+    <!-- The padding to use below the NavBar keys -->
+    <dimen name="navigation_key_padding_bottom">2dip</dimen>
 
     <!-- Default distance beyond which snaps to the matching target -->
     <dimen name="navbar_search_snap_margin">40dip</dimen>

@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package com.android.systemui.statusbar.phone;
+package com.android.systemui.statusbar;
 
 import java.io.File;
-import java.net.URISyntaxException;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.BroadcastReceiver;
-import android.animation.ObjectAnimator;
 import android.app.StatusBarManager;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.content.SharedPreferences;
 import android.database.ContentObserver;
-import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -40,41 +32,27 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.ServiceManager;
 import android.provider.Settings;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.Slog;
-import android.util.TypedValue;
 import android.view.animation.AccelerateInterpolator;
 import android.view.Display;
-import android.view.Gravity;
-import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.VelocityTracker;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Surface;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManagerImpl;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-import java.lang.StringBuilder;
 
 import com.android.internal.statusbar.IStatusBarService;
+import com.android.systemui.aokp.AokpTarget;
 import com.android.systemui.R;
-import com.android.systemui.WidgetSelectActivity;
-import com.android.systemui.statusbar.WidgetPagerAdapter;
-import com.android.systemui.statusbar.BaseStatusBar;
-import com.android.systemui.statusbar.DelegateViewHelper;
 import com.android.systemui.statusbar.policy.KeyButtonView;
 import com.android.systemui.statusbar.policy.ExtensibleKeyButtonView;
 
@@ -104,23 +82,12 @@ public class NavigationBarView extends LinearLayout {
     
     public DelegateViewHelper mDelegateHelper;
 
+    private AokpTarget mAokpTarget;
+    private LayoutInflater mLayoutInflater;
+
     // workaround for LayoutTransitions leaving the nav buttons in a weird state (bug 5549288)
     final static boolean WORKAROUND_INVALID_LAYOUT = true;
     final static int MSG_CHECK_INVALID_LAYOUT = 8686;
-
-    // Navbar Custom Targets defines.
-    final static String ACTION_HOME = "**home**";
-    final static String ACTION_BACK = "**back**";
-    final static String ACTION_SEARCH = "**search**";
-    final static String ACTION_SCREENSHOT = "**screenshot**";
-    final static String ACTION_MENU = "**menu**";
-    final static String ACTION_POWER = "**power**";
-    final static String ACTION_NOTIFICATIONS = "**notifications**";
-    final static String ACTION_RECENTS = "**recents**";
-    final static String ACTION_IME = "**ime**";
-    final static String ACTION_KILL = "**kill**";
-    final static String ACTION_WIDGET = "**widgets**";
-    final static String ACTION_NULL = "**null**";
 
     int mNumberOfButtons = 3;
 
@@ -139,12 +106,23 @@ public class NavigationBarView extends LinearLayout {
 
     public final static int StockButtonsQty = 3;
     public final static String[] StockClickActions = {
-            "**back**", "**home**", "**recents**", "**null**", "**null**", "**null**", "**null**"
-    };
+            AokpTarget.ACTION_BACK,
+            AokpTarget.ACTION_HOME,
+            AokpTarget.ACTION_RECENTS,
+            AokpTarget.ACTION_NULL,
+            AokpTarget.ACTION_NULL,
+            AokpTarget.ACTION_NULL,
+            AokpTarget.ACTION_NULL };
 
     public final static String[] StockLongpress = {
-            "**null**", "**null**", "**null**", "**null**", "**null**", "**null**", "**null**"
-    };
+        AokpTarget.ACTION_NULL,
+        AokpTarget.ACTION_NULL,
+        AokpTarget.ACTION_NULL,
+        AokpTarget.ACTION_NULL,
+        AokpTarget.ACTION_NULL,
+        AokpTarget.ACTION_NULL,
+        AokpTarget.ACTION_NULL };
+
     FrameLayout rot0;
     FrameLayout rot90;
     
@@ -165,20 +143,6 @@ public class NavigationBarView extends LinearLayout {
     private int currentVisibility;
     private int currentSetting;
     private boolean mHasBigMenuButton = false;
-
-    // Widgets
-    public FrameLayout mPopupView;
-    public WindowManager mWindowManager;
-    int originalHeight = 0;
-    TextView mWidgetLabel;
-    ViewPager mWidgetPager;
-    WidgetPagerAdapter mAdapter;
-    int widgetIds[];
-    float mFirstMoveY;
-    int mCurrentWidgetPage = 0;
-    long mDowntime;
-    boolean mMoving = false;
-    boolean showing = false;
     
     private class H extends Handler {
         public void handleMessage(Message m) {
@@ -267,6 +231,9 @@ public class NavigationBarView extends LinearLayout {
         mBackLandIcon = res.getDrawable(R.drawable.ic_sysbar_back_land);
         mBackAltIcon = res.getDrawable(R.drawable.ic_sysbar_back_ime);
         mBackAltLandIcon = res.getDrawable(R.drawable.ic_sysbar_back_ime);
+
+        mAokpTarget = new AokpTarget(context);
+        mLayoutInflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
     }
 
     private void makeBar() {
@@ -276,6 +243,7 @@ public class NavigationBarView extends LinearLayout {
         ((LinearLayout) rot90.findViewById(R.id.nav_buttons)).removeAllViews();
         ((LinearLayout) rot90.findViewById(R.id.lights_out)).removeAllViews();
 
+        String iconUri = "";
         for (int i = 0; i <= 1; i++) {
             boolean landscape = (i == 1);
 
@@ -290,13 +258,25 @@ public class NavigationBarView extends LinearLayout {
             // Add the Main Nav Buttons
             mHasBigMenuButton = false;
             for (int j = 0; j < mNumberOfButtons; j++) {
-                ExtensibleKeyButtonView v = generateKey(landscape, mClickActions[j],
-                        mLongpressActions[j],
-                        mPortraitIcons[j]);
+                RelativeLayout button = (RelativeLayout) mLayoutInflater.inflate(
+                        landscape ? R.layout.key_button_view_land : R.layout.key_button_view,null);
+                ExtensibleKeyButtonView v = (ExtensibleKeyButtonView) button.findViewById(R.id.keybutton);
+                v.setActions(mClickActions[j],mLongpressActions[j]);
                 v.setTag((landscape ? "key_land_" : "key_") + j);
-                addButton(navButtonLayout, v, landscape && !mLeftyMode);
+                v.setAokpTarget(mAokpTarget);
+                iconUri = mPortraitIcons[j];
+                if (iconUri != null && iconUri.length() > 0) {
+                    // custom icon from the URI here
+                    File f = new File(Uri.parse(iconUri).getPath());
+                    if (f.exists()) {
+                        v.setImageDrawable(new BitmapDrawable(getResources(), f.getAbsolutePath()));
+                    }
+                } else {
+                    v.setImageDrawable(mAokpTarget.getIconImage(mClickActions[j]));
+                }
+                addButton(navButtonLayout, button, landscape && !mLeftyMode);
                 // if we are in LeftyMode, then we want to add to end, like Portrait
-                addLightsOutButton(lightsOut, v, landscape && !mLeftyMode, false);
+                addLightsOutButton(lightsOut, button, landscape && !mLeftyMode, false);
                 
                 if (v.getId() == R.id.back){
                 	mBackIcon = mBackLandIcon = v.getDrawable();
@@ -405,81 +385,7 @@ public class NavigationBarView extends LinearLayout {
 
         return null;
     }
-    
-    private ExtensibleKeyButtonView generateKey(boolean landscape, String clickAction,
-            String longpress,
-            String iconUri) {
 
-        final int iconSize = 80;
-        ExtensibleKeyButtonView v = new ExtensibleKeyButtonView(mContext, null, clickAction,
-                longpress);
-        Log.i("key.ext", "generated ex key: " + clickAction);
-        v.setLayoutParams(getLayoutParams(landscape, iconSize));
-
-        boolean drawableSet = false;
-
-        if (iconUri != null) {
-            if (iconUri.length() > 0) {
-                // custom icon from the URI here
-                File f = new File(Uri.parse(iconUri).getPath());
-                if (f.exists()) {
-                    v.setImageDrawable(new BitmapDrawable(getResources(), f.getAbsolutePath()));
-                    drawableSet = true;
-                }
-            }
-            if (!drawableSet && clickAction != null && !clickAction.startsWith("**")) {
-                // here it's not a system action (**action**), so it must be an
-                // app intent
-                try {
-                    Drawable d = mContext.getPackageManager().getActivityIcon(
-                            Intent.parseUri(clickAction, 0));
-                    final int[] appIconPadding = getAppIconPadding();
-                    if (landscape)
-                        v.setPaddingRelative(appIconPadding[1], appIconPadding[0],
-                                appIconPadding[3], appIconPadding[2]);
-                    else
-                        v.setPaddingRelative(appIconPadding[0], appIconPadding[1],
-                                appIconPadding[2], appIconPadding[3]);
-                    v.setImageDrawable(d);
-                    drawableSet = true;
-                } catch (NameNotFoundException e) {
-                    e.printStackTrace();
-                    drawableSet = false;
-                } catch (URISyntaxException e) {
-                    e.printStackTrace();
-                    drawableSet = false;
-                }
-            }
-        }
-
-        if (!drawableSet) {
-            v.setImageDrawable(getNavbarIconImage(landscape, clickAction));
-        }
-
-        v.setGlowBackground(landscape ? R.drawable.ic_sysbar_highlight_land
-                : R.drawable.ic_sysbar_highlight);
-        return v;
-    }
-    
-    private int[] getAppIconPadding() {
-        int[] padding = new int[4];
-        // left
-        padding[0] = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources()
-                .getDisplayMetrics());
-        // top
-        padding[1] = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                .getDisplayMetrics());
-        // right
-        padding[2] = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources()
-                .getDisplayMetrics());
-        // bottom
-        padding[3] = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5,
-                getResources()
-                        .getDisplayMetrics());
-        return padding;
-    }
-
-    
     private LayoutParams getLayoutParams(boolean landscape, float dp) {
         float px = dp * getResources().getDisplayMetrics().density;
         return landscape ?
@@ -937,41 +843,6 @@ public class NavigationBarView extends LinearLayout {
         makeBar();
 
     }
-
-    private Drawable getNavbarIconImage(boolean landscape, String uri) {
-
-        if (uri == null)
-            return getResources().getDrawable(R.drawable.ic_sysbar_null);
-
-        if (uri.startsWith("**")) {
-            if (uri.equals(ACTION_HOME)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_home);
-            } else if (uri.equals(ACTION_BACK)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_back);
-            } else if (uri.equals(ACTION_RECENTS)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_recent);
-            } else if (uri.equals(ACTION_SEARCH)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_search);
-            } else if (uri.equals(ACTION_SCREENSHOT)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_screenshot);
-            } else if (uri.equals(ACTION_MENU)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_menu_big);
-            } else if (uri.equals(ACTION_IME)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_ime_switcher);
-            } else if (uri.equals(ACTION_KILL)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_killtask);
-            } else if (uri.equals(ACTION_POWER)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_power);
-            } else if (uri.equals(ACTION_NOTIFICATIONS)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_notifications);
-            } else if (uri.equals(ACTION_WIDGET)) {
-                return getResources().getDrawable(R.drawable.ic_sysbar_widget);
-            }
-        }
-
-        return getResources().getDrawable(R.drawable.ic_sysbar_null);
-    }
-
 
     private void postCheckForInvalidLayout(final String how) {
         mHandler.obtainMessage(MSG_CHECK_INVALID_LAYOUT, 0, 0, how).sendToTarget();
