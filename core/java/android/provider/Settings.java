@@ -2682,6 +2682,66 @@ public final class Settings {
          /**
          * @hide
          */
+        public static final String SOFT_KEY_HOME_LONG_PRESS = "soft_key_home_long_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_HOME_DOUBLE_PRESS = "soft_key_home_double_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_HOME_SHORT_PRESS = "soft_key_home_short_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_MENU_LONG_PRESS = "soft_key_menu_long_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_MENU_SHORT_PRESS = "soft_key_menu_short_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_BACK_LONG_PRESS = "soft_key_back_long_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_BACK_SHORT_PRESS = "soft_key_back_short_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_SEARCH_LONG_PRESS = "soft_key_search_long_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_SEARCH_SHORT_PRESS = "soft_key_search_short_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_APPSWITCH_LONG_PRESS = "soft_key_appswitch_long_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_APPSWITCH_SHORT_PRESS = "soft_key_appswitch_short_press";
+
+         /**
+         * @hide
+         */
+        public static final String SOFT_KEY_ENABLE = "soft_key_enable";
+
+         /**
+         * @hide
+         */
         public static final String SYSTEMUI_NAVRING_1 = "systemui_navring_1";
 
         /**
