@@ -628,8 +628,8 @@ class BatteryService extends Binder {
                 }
             } else if (status == BatteryManager.BATTERY_STATUS_CHARGING
                     || status == BatteryManager.BATTERY_STATUS_FULL) {
-                if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 90) {
-                    // Solid green when full or charging and nearly full
+                if (status == BatteryManager.BATTERY_STATUS_FULL || level >= 100) {
+                    // Solid green when battery is full
                     mBatteryLight.setColor(mBatteryFullARGB);
                 } else {
                     // Solid orange when charging and halfway full
