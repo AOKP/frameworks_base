@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.android.systemui;
+package com.android.systemui.aokp;
 
 import android.os.Bundle;
 import android.app.Activity;
