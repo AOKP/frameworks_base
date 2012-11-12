@@ -411,12 +411,11 @@
     <string name="toggle_nfc">NFC</string>
     <string name="status_bar_settings_toggles">Toggles</string>
 
-    <string name="toggle_navbar">Toggle NavBar</string>
-    <string name="toggle_widgets">Toggle Widgets</string>
-    <string name="toggle_ring_vib">Toggle Ring/Vib</string>
-    <string name="toggle_ring_silent">Toggle Ring/Silent</string>
-    <string name="toggle_ring_vib_silent">Toggle Ring/Vib/Silent</string>
-    <string name="go_to_homescreen">Go To Homescreen</string>
+    <string name="toggle_navbar">NavBar - Toggle</string>
+    <string name="toggle_widgets">Widgets - Toggle</string>
+    <string name="toggle_ring_vib">Ring/Vib - Toggle</string>
+    <string name="toggle_ring_silent">Ring/Silent - Togle</string>
+    <string name="toggle_ring_vib_silent">Ring/Vib/Silent - Toggle</string>
     <string name="lockscreen_unlock">Lockscreen - Unlock</string>
 
     <!-- Label in drop down to identify brightness slider -->
@@ -460,4 +459,7 @@
     <string name="running_processes_item_description_p_p"><xliff:g id="numprocess">%1$d</xliff:g>
         processes and <xliff:g id="numservices">%2$d</xliff:g> services</string>
 
+    <!-- Shortcut picker -->
+    <string name="select_custom_app_title">Select custom application</string>
+    <string name="group_applications">Applications</string>
 </resources>
