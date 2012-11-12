@@ -14,18 +14,22 @@
  * limitations under the License.
  */
 
-package com.android.systemui;
+package com.android.systemui.aokp;
 
 import android.app.Activity;
+import android.content.Context;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.provider.Settings;
 
 /*
- * Toggle the NavBar
+ * Toggle Ring/Vibrate/Silent
  */
 
-public class NavbarToggle extends Activity  {
-  public NavbarToggle() {
+public class RingSilentToggle extends Activity  {
+  public RingSilentToggle() {
     super();
   }
 
@@ -38,10 +42,19 @@ public class NavbarToggle extends Activity  {
   @Override
   public void onResume() {
     super.onResume();
-    final boolean NavOn = Settings.System.getInt(getContentResolver(),
-      Settings.System.NAVIGATION_BAR_SHOW_NOW, 1) == 1;
-    Settings.System.putInt(getContentResolver(),
-      Settings.System.NAVIGATION_BAR_SHOW_NOW,(!NavOn) ? 1 : 0);
-    this.finish();
+
+    AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+    if(am != null){
+      if(am.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+        am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
+      }else{
+        am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
+        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, (int)(ToneGenerator.MAX_VOLUME * 0.85));
+        if(tg != null){
+          tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+        }
+      }
+    }
+    finish();
   }
 }

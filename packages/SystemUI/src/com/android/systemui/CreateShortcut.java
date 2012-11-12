@@ -66,7 +66,7 @@ public class CreateShortcut extends LauncherActivity {
         return R.drawable.ic_lockscreen_silent;
     } else if (c.equals ("RingVibSilentToggle")) {
         return R.drawable.ic_lockscreen_soundon;
-    } else if (c.equals ("GoToHomeScreen")) {
+    } else if (c.equals ("LockscreenUnlock")) {
         return R.drawable.ic_lockscreen_home;
     } else {
       return R.drawable.ic_sysbar_null;
