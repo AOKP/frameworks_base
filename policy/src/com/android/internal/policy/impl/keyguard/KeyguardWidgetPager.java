@@ -779,6 +779,9 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
             mZoomInOutAnim.setInterpolator(new DecelerateInterpolator(1.5f));
             mZoomInOutAnim.start();
         }
+        if (currentPage instanceof KeyguardWidgetFrame) {
+            ((KeyguardWidgetFrame)currentPage).onBouncerShowing(false);
+        }
     }
 
     // Zoom out after the bouncer is initiated
@@ -803,6 +806,9 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
             mZoomInOutAnim.setDuration(mBouncerZoomInOutDuration);
             mZoomInOutAnim.setInterpolator(new DecelerateInterpolator(1.5f));
             mZoomInOutAnim.start();
+        }
+        if (currentPage instanceof KeyguardWidgetFrame) {
+            ((KeyguardWidgetFrame)currentPage).onBouncerShowing(true);
         }
     }
 
