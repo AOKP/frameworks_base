@@ -86,6 +86,8 @@ public class KeyguardViewManager {
     private WindowManager.LayoutParams mWindowLayoutParams;
     private boolean mNeedsInput = false;
 
+    public static boolean USE_UPPER_CASE = true;
+
     private ViewManagerHost mKeyguardHost;
     private KeyguardHostView mKeyguardView;
 
