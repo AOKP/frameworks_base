@@ -129,6 +129,7 @@ public class HeadsUpNotificationView extends FrameLayout implements SwipeHelper.
         int minHeight = getResources().getDimensionPixelSize(R.dimen.notification_row_min_height);
         int maxHeight = getResources().getDimensionPixelSize(R.dimen.notification_row_max_height);
         mExpandHelper = new ExpandHelper(mContext, this, minHeight, maxHeight);
+        mExpandHelper.onAttachToWindow();
 
         mContentHolder = (ViewGroup) findViewById(R.id.content_holder);
         mContentSlider = (ViewGroup) findViewById(R.id.content_slider);
@@ -137,6 +138,12 @@ public class HeadsUpNotificationView extends FrameLayout implements SwipeHelper.
             // whoops, we're on already!
             setNotification(mHeadsUp);
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mExpandHelper.onDetachedFromWindow();
     }
 
     @Override
