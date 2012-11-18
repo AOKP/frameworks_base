@@ -40,6 +40,10 @@
     <!-- Whether or not we show the number in the bar. -->
     <bool name="config_statusBarShowNumber">false</bool>
 
+    <!-- Component to be used as the system bar service.  Must implement the IStatusBar
+     interface.  This name is in the ComponentName flattened format (package/class)  -->
+    <string name="config_systemBarComponent" translatable="false">com.android.systemui.statusbar.tablet.TabletStatusBar</string>
+
     <!-- How many icons may be shown at once in the system bar. Includes any
          slots that may be reused for things like IME control. -->
     <integer name="config_maxNotificationIcons">5</integer>
