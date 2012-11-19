@@ -7209,6 +7209,12 @@ public final class Settings {
         /** Screenshot Menu Options */
         public static final String SCREENSHOT_MODE_OPTIONS = "screenshot_mode_options";
 
+        /**
+         * Sets the alpha of notification wallpaper
+         * @hide
+         */
+        public static final String NOTIF_WALLPAPER_ALPHA = "notif_wallpaper_alpha";
+
     }
 
     /**
@@ -7426,4 +7432,3 @@ public final class Settings {
         return "android-" + Long.toHexString(androidId);
     }
 }
-
