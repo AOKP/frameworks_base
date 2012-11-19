@@ -7236,6 +7236,11 @@ public final class Settings {
          */
         public static final String BATTERY_CHARGING_LED_ENABLED = "battery_charging_led_enabled";
 
+        /**
+         * Sets the alpha of notification wallpaper
+         * @hide
+         */
+        public static final String NOTIF_WALLPAPER_ALPHA = "notif_wallpaper_alpha";
     }
 
     /**
@@ -7453,4 +7458,3 @@ public final class Settings {
         return "android-" + Long.toHexString(androidId);
     }
 }
-
