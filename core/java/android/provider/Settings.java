@@ -6323,6 +6323,7 @@ public final class Settings {
      * functions for accessing individual settings entries.
      */
     public static final class AOKP extends NameValueTable {
+
         public static final String SYS_PROP_SETTING_VERSION = "sys.settings_system_version";
 
         /**
@@ -6695,6 +6696,11 @@ public final class Settings {
             return putStringForUser(cr, name, value ? "1" : "0", userHandle);
         }
 
+        /**
+         * Whether to enable swiping your finger across the statusbar to change the brightness.
+         * Boolean value. Defaults to true.
+         */
+        public static final String STATUSBAR_ENABLE_BRIGHTNESS_SLIDER = "statusbar_enable_brightness_slider";
     }
 
     /**
