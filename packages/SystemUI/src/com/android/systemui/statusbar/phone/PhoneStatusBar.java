@@ -2934,4 +2934,27 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
         }
     }
 
+    public boolean skipToSettingsPanel() {
+        if (mPile == null || mNotificationData == null) return false;
+
+        int N = mNotificationData.size();
+        int thisUsersNotifications = 0;
+        for (int i=0; i<N; i++) {
+            Entry ent = mNotificationData.get(N-i-1);
+            if(ent != null
+                    && ent.notification != null
+                    && notificationIsForCurrentUser(ent.notification)) {
+                // ignore adb icon and Tasker
+                if (ent.notification.getId() == com.android.internal.R.drawable.stat_sys_adb
+                        || ent.notification.getPackageName() == "net.dinglisch.android.taskerm") {
+                    continue;
+                }
+                thisUsersNotifications++;
+            }
+        }
+        if(thisUsersNotifications == 0)
+            return true;
+
+        return false;
+    }
 }
