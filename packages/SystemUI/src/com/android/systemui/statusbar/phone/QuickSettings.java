@@ -1122,6 +1122,7 @@ class QuickSettings {
                         boolean gpsEnabled = Settings.Secure.isLocationProviderEnabled(
                                 mContext.getContentResolver(), LocationManager.GPS_PROVIDER);
                         TextView tv = (TextView) view.findViewById(R.id.location_textview);
+                        tv.setCompoundDrawablesWithIntrinsicBounds(0, state.iconId, 0, 0);
                         String newString = state.label;
                         if ((newString == null) || (newString.equals(""))) {
                             tv.setText(gpsEnabled ? strGPSon : strGPSoff);
