@@ -1,0 +1,8 @@
+Change-Id: I44b86df4077efaf2c0f3638f4fd07c72962a2718
+Code-Review+2: Gergely Szell (sethyx) <sethyx@gmail.com>
+Verified+1: Gergely Szell (sethyx) <sethyx@gmail.com>
+Submitted-by: Gergely Szell (sethyx) <sethyx@gmail.com>
+Submitted-at: Wed, 28 Nov 2012 12:04:52 +0000
+Reviewed-on: http://gerrit.sudoservers.com/4408
+Project: AOKP/frameworks_base
+Branch: refs/heads/jb-mr1
