@@ -66,7 +66,7 @@ public class RunningState {
     final ActivityManager mAm;
     final PackageManager mPm;
 
-    OnRefreshUiListener mRefreshUiListener;
+    public OnRefreshUiListener mRefreshUiListener;
 
     final InterestingConfigChanges mInterestingConfigChanges = new InterestingConfigChanges();
 
@@ -119,7 +119,7 @@ public class RunningState {
     
     // Lock for protecting the state that will be shared between the
     // background update thread and the UI thread.
-    final Object mLock = new Object();
+    public final Object mLock = new Object();
     
     boolean mResumed;
     boolean mHaveData;
@@ -129,12 +129,12 @@ public class RunningState {
     ArrayList<MergedItem> mMergedItems = new ArrayList<MergedItem>();
     ArrayList<MergedItem> mBackgroundItems = new ArrayList<MergedItem>();
     
-    int mNumBackgroundProcesses;
-    long mBackgroundProcessMemory;
-    int mNumForegroundProcesses;
-    long mForegroundProcessMemory;
-    int mNumServiceProcesses;
-    long mServiceProcessMemory;
+    public int mNumBackgroundProcesses;
+    public long mBackgroundProcessMemory;
+    public int mNumForegroundProcesses;
+    public long mForegroundProcessMemory;
+    public int mNumServiceProcesses;
+    public long mServiceProcessMemory;
 
     // ----- BACKGROUND MONITORING THREAD -----
 
@@ -203,7 +203,7 @@ public class RunningState {
 
     // ----- DATA STRUCTURES -----
 
-    static interface OnRefreshUiListener {
+    public static interface OnRefreshUiListener {
         public static final int REFRESH_TIME = 0;
         public static final int REFRESH_DATA = 1;
         public static final int REFRESH_STRUCTURE = 2;
@@ -557,7 +557,7 @@ public class RunningState {
         return label;
     }
     
-    static RunningState getInstance(Context context) {
+    public static RunningState getInstance(Context context) {
         synchronized (sGlobalLock) {
             if (sInstance == null) {
                 sInstance = new RunningState(context);
@@ -566,7 +566,7 @@ public class RunningState {
         }
     }
 
-    private RunningState(Context context) {
+    public RunningState(Context context) {
         mApplicationContext = context.getApplicationContext();
         mAm = (ActivityManager)mApplicationContext.getSystemService(Context.ACTIVITY_SERVICE);
         mPm = mApplicationContext.getPackageManager();
@@ -576,7 +576,7 @@ public class RunningState {
         mBackgroundHandler = new BackgroundHandler(mBackgroundThread.getLooper());
     }
 
-    void resume(OnRefreshUiListener listener) {
+    public void resume(OnRefreshUiListener listener) {
         synchronized (mLock) {
             mResumed = true;
             mRefreshUiListener = listener;
@@ -617,7 +617,7 @@ public class RunningState {
         }
     }
 
-    void pause() {
+    public void pause() {
         synchronized (mLock) {
             mResumed = false;
             mRefreshUiListener = null;
