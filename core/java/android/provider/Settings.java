@@ -2613,11 +2613,25 @@ public final class Settings {
                 "notification_clock_2",
         };
 
-       /**
-        * Whether the UI is in tablet UI
-        * @hide
-        */
-        public static final String TABLET_UI = "tablet_ui";
+        /**
+         * Current UI Mode
+         * 
+         *  0 = Phone UI
+         *  1 = Tablet UI
+         *  2 = Phablet UI
+         *  @hide
+         */
+        public static final String CURRENT_UI_MODE = "current_ui_mode";
+
+        /**
+         * User selected UI Mode
+         * 
+         *  0 = Phone UI
+         *  1 = Tablet UI
+         *  2 = Phablet UI
+         *  @hide
+         */
+        public static final String USER_UI_MODE = "user_ui_mode";
 
         /**
          * @hide
@@ -2692,6 +2706,11 @@ public final class Settings {
             "navigation_custom_app_icon_5",
             "navigation_custom_app_icon_6",
         };
+
+        /**
+         * Widgets to show, should be separated by |
+         */
+        public static final String NAVIGATION_BAR_WIDGETS = "navigation_bar_widgets";
 
         /**
          * @hide
