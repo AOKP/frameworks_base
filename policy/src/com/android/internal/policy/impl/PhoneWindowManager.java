@@ -1044,13 +1044,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mHasSystemNavBar = false;
             mNavigationBarCanMove = true;
             Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.TABLET_UI, 0);
+                    Settings.System.CURRENT_UI_MODE, 0);
         } else if (shortSizeDp < 720) {
             // 600+dp: "phone" UI with modifications for larger screens
             mHasSystemNavBar = false;
             mNavigationBarCanMove = false;
             Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.TABLET_UI, 2);
+                    Settings.System.CURRENT_UI_MODE, 2);
         }
 
         if (mHasSystemNavBar) {
