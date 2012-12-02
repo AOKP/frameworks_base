@@ -2620,6 +2620,12 @@ public final class Settings {
         public static final String TABLET_UI = "tablet_ui";
 
         /**
+         * Show the NavBar dialog in Power menu
+         * @hide
+         */
+        public static final String POWER_DIALOG_SHOW_NAVBAR_HIDE = "power_dialog_show_navbar_hide";
+
+        /**
          * @hide
          */
         public static final String NAVIGATION_BAR_SHOW = "navigation_bar_show";
