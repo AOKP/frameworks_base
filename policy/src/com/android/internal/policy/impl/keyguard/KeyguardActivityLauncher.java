@@ -121,11 +121,11 @@ public abstract class KeyguardActivityLauncher {
         pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         pickIntent.putExtra(AppWidgetManager.EXTRA_CUSTOM_SORT, false);
         pickIntent.putExtra(AppWidgetManager.EXTRA_CATEGORY_FILTER,
-                AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD);
+                AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN);
 
         Bundle options = new Bundle();
         options.putInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY,
-                AppWidgetProviderInfo.WIDGET_CATEGORY_KEYGUARD);
+                AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN);
         pickIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS, options);
         pickIntent.addFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK
