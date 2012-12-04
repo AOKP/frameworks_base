@@ -1836,4 +1836,10 @@
   <java-symbol type="id" name="navbarback" />
   <java-symbol type="id" name="navbarmenu" />
 
+  <!-- Power Menu -->
+  <java-symbol type="drawable" name="ic_lock_screenshot" />
+  <java-symbol type="string" name="global_action_screenshot" />
+  <java-symbol type="drawable" name="ic_lock_torch" />
+  <java-symbol type="string" name="global_action_torch" />
+
 </resources>
