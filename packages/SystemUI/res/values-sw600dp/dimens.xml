@@ -18,6 +18,10 @@
 <resources>
     <!-- The width of the notification panel window: 446 + 16 + 16 (padding in the bg drawable) -->
     <dimen name="notification_panel_width">478dp</dimen>
+    <!-- The minimum height of the notification panel window -->
+    <dimen name="notification_panel_min_height">770dp</dimen>
+    <!-- Bottom margin (from display edge) for status bar panels -->
+    <dimen name="panel_float">56dp</dimen>
 
     <!-- Layout parameters for the notification panel -->
     <dimen name="notification_panel_margin_bottom">192dp</dimen>
