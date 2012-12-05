@@ -13,14 +13,28 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<TextView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/TextAppearance.QuickSettings.TileView"
-	android:id="@+id/bug_textview"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:gravity="center"
-    android:drawableTop="@*android:drawable/stat_sys_adb"
-    android:text="@*android:string/bugreport_title"
-    />
+    android:orientation="vertical">
+    <AnalogClock
+        android:id="@+id/analog_clock"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:dial="@drawable/ic_qs_clock_circle_light"
+        android:hand_hour="@drawable/ic_qs_clock_hour_light"
+        android:hand_minute="@drawable/ic_qs_clock_minute_light"
+        />
+    <com.android.systemui.statusbar.policy.DateView
+        android:id="@+id/clock_textview"
+        android:textAppearance="@style/TextAppearance.QuickSettings.TileView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        />
+</LinearLayout>
