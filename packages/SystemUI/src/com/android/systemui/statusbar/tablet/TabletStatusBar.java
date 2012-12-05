@@ -24,6 +24,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -55,7 +56,6 @@ import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -68,8 +68,11 @@ import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.DoNotDisturb;
 import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.NotificationData.Entry;
+import com.android.systemui.statusbar.NavigationBarView;
 import com.android.systemui.statusbar.SignalClusterView;
 import com.android.systemui.statusbar.StatusBarIconView;
+
+import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.BluetoothController;
 import com.android.systemui.statusbar.policy.CompatModeButton;
 import com.android.systemui.statusbar.policy.LocationController;
@@ -117,8 +120,6 @@ public class TabletStatusBar extends BaseStatusBar implements
     int mNaturalBarHeight = -1;
     int mIconSize = -1;
     int mIconHPadding = -1;
-    int mNavIconWidth = -1;
-    int mMenuNavIconWidth = -1;
     private int mMaxNotificationIcons = 5;
 
     TabletStatusBarView mStatusBarView;
@@ -130,11 +131,9 @@ public class TabletStatusBar extends BaseStatusBar implements
     boolean mNotificationDNDMode;
     NotificationData.Entry mNotificationDNDDummyEntry;
 
-    ImageView mBackButton;
-    View mHomeButton;
-    View mMenuButton;
-    View mRecentButton;
     private boolean mAltBackButtonEnabledForIme;
+
+    NavigationBarView mNavBarView;
 
     ViewGroup mFeedbackIconArea; // notification icons, IME icon, compat icon
     InputMethodButton mInputMethodSwitchButton;
@@ -151,9 +150,11 @@ public class TabletStatusBar extends BaseStatusBar implements
     int mNotificationPeekTapDuration;
     int mNotificationFlingVelocity;
 
+
     BluetoothController mBluetoothController;
     LocationController mLocationController;
     NetworkController mNetworkController;
+    BatteryController mBatteryController;
     DoNotDisturb mDoNotDisturb;
 
     ViewGroup mBarContents;
@@ -180,34 +181,7 @@ public class TabletStatusBar extends BaseStatusBar implements
 
     private int mNavigationIconHints = 0;
 
-    private int mShowSearchHoldoff = 0;
-
     public Context getContext() { return mContext; }
-
-    private Runnable mShowSearchPanel = new Runnable() {
-        public void run() {
-            showSearchPanel();
-        }
-    };
-
-    private View.OnTouchListener mHomeSearchActionListener = new View.OnTouchListener() {
-        public boolean onTouch(View v, MotionEvent event) {
-            switch(event.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    if (!shouldDisableNavbarGestures() && !inKeyguardRestrictedInputMode()) {
-                        mHandler.removeCallbacks(mShowSearchPanel);
-                        mHandler.postDelayed(mShowSearchPanel, mShowSearchHoldoff);
-                    }
-                break;
-
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    mHandler.removeCallbacks(mShowSearchPanel);
-                break;
-            }
-            return false;
-        }
-    };
 
     @Override
     protected void createAndAddWindows() {
@@ -243,7 +217,7 @@ public class TabletStatusBar extends BaseStatusBar implements
     CustomTheme mCurrentTheme;
     private boolean mRecreating = false;
 
-
+    
     protected void addPanelWindows() {
         final Context context = mContext;
         final Resources res = mContext.getResources();
@@ -305,7 +279,6 @@ public class TabletStatusBar extends BaseStatusBar implements
 
         // Search Panel
         mStatusBarView.setBar(this);
-        mHomeButton.setOnTouchListener(mHomeSearchActionListener);
         updateSearchPanel();
 
         // Input methods Panel
@@ -354,8 +327,6 @@ public class TabletStatusBar extends BaseStatusBar implements
 
         mWindowManager.addView(mCompatModePanel, lp);
 
-        mRecentButton.setOnTouchListener(mRecentsPreloadOnTouchListener);
-
         mPile = (NotificationRowLayout)mNotificationPanel.findViewById(R.id.content);
         mPile.removeAllViews();
         mPile.setLongPressListener(getNotificationLongClicker());
@@ -398,9 +369,8 @@ public class TabletStatusBar extends BaseStatusBar implements
         }
         loadDimens();
         mNotificationPanelParams.height = getNotificationPanelHeight();
-        mWindowManager.updateViewLayout(mNotificationPanel, mNotificationPanelParams);
-        mShowSearchHoldoff = mContext.getResources().getInteger(
-                R.integer.config_show_search_delay);
+        mWindowManager.updateViewLayout(mNotificationPanel,
+                mNotificationPanelParams);
         updateSearchPanel();
     }
 
@@ -414,29 +384,8 @@ public class TabletStatusBar extends BaseStatusBar implements
             com.android.internal.R.dimen.system_bar_icon_size);
         int newIconHPadding = res.getDimensionPixelSize(
             R.dimen.status_bar_icon_padding);
-        int newNavIconWidth = res.getDimensionPixelSize(R.dimen.navigation_key_width);
-        int newMenuNavIconWidth = res.getDimensionPixelSize(R.dimen.navigation_menu_key_width);
-
-        if (mNavigationArea != null && newNavIconWidth != mNavIconWidth) {
-            mNavIconWidth = newNavIconWidth;
-
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                     mNavIconWidth, ViewGroup.LayoutParams.MATCH_PARENT);
-            mBackButton.setLayoutParams(lp);
-            mHomeButton.setLayoutParams(lp);
-            mRecentButton.setLayoutParams(lp);
-        }
-
-        if (mNavigationArea != null && newMenuNavIconWidth != mMenuNavIconWidth) {
-            mMenuNavIconWidth = newMenuNavIconWidth;
-
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                     mMenuNavIconWidth, ViewGroup.LayoutParams.MATCH_PARENT);
-            mMenuButton.setLayoutParams(lp);
-        }
 
         if (newIconHPadding != mIconHPadding || newIconSize != mIconSize) {
-//            Slog.d(TAG, "size=" + newIconSize + " padding=" + newIconHPadding);
             mIconHPadding = newIconHPadding;
             mIconSize = newIconSize;
             reloadAllNotificationIcons(); // reload the tray
@@ -471,15 +420,6 @@ public class TabletStatusBar extends BaseStatusBar implements
 
         sb.setHandler(mHandler);
 
-        try {
-            // Sanity-check that someone hasn't set up the config wrong and asked for a navigation
-            // bar on a tablet that has only the system bar
-            if (mWindowManagerService.hasNavigationBar()) {
-                Slog.e(TAG, "Tablet device cannot show navigation bar and system bar");
-            }
-        } catch (RemoteException ex) {
-        }
-
         mBarContents = (ViewGroup) sb.findViewById(R.id.bar_contents);
 
         // the whole right-hand side of the bar
@@ -509,18 +449,17 @@ public class TabletStatusBar extends BaseStatusBar implements
         mBluetoothController = new BluetoothController(mContext);
         mBluetoothController.addIconView((ImageView)sb.findViewById(R.id.bluetooth));
 
+        mBatteryController = new BatteryController(mContext);
+
         mNetworkController = new NetworkController(mContext);
         final SignalClusterView signalCluster =
                 (SignalClusterView)sb.findViewById(R.id.signal_cluster);
         mNetworkController.addSignalCluster(signalCluster);
 
-        // The navigation buttons
-        mBackButton = (ImageView)sb.findViewById(R.id.back);
         mNavigationArea = (ViewGroup) sb.findViewById(R.id.navigationArea);
-        mHomeButton = mNavigationArea.findViewById(R.id.home);
-        mMenuButton = mNavigationArea.findViewById(R.id.menu);
-        mRecentButton = mNavigationArea.findViewById(R.id.recent_apps);
-        mRecentButton.setOnClickListener(mOnClickListener);
+        mNavBarView = (NavigationBarView) sb.findViewById(R.id.navigationBar);
+        mNavBarView.setDisabledFlags(mDisabled);
+        mNavBarView.setBar(this);
 
         LayoutTransition lt = new LayoutTransition();
         lt.setDuration(250);
@@ -582,7 +521,6 @@ public class TabletStatusBar extends BaseStatusBar implements
         final int LIGHTS_GOING_OUT_SHADOW_DELAY    = 0;
 
         final int LIGHTS_COMING_UP_SYSBAR_DURATION = 200;
-//        final int LIGHTS_COMING_UP_SYSBAR_DELAY    = 50;
         final int LIGHTS_COMING_UP_SHADOW_DURATION = 0;
 
         LayoutTransition xition = new LayoutTransition();
@@ -594,7 +532,7 @@ public class TabletStatusBar extends BaseStatusBar implements
                ObjectAnimator.ofFloat(null, "alpha", 1f, 0f));
         xition.setDuration(LayoutTransition.DISAPPEARING, LIGHTS_GOING_OUT_SYSBAR_DURATION);
         xition.setStartDelay(LayoutTransition.DISAPPEARING, 0);
-        ((ViewGroup)sb.findViewById(R.id.bar_contents_holder)).setLayoutTransition(xition);
+        ((ViewGroup)sb.findViewById(R.id.bar_contents)).setLayoutTransition(xition);
 
         xition = new LayoutTransition();
         xition.setAnimator(LayoutTransition.APPEARING,
@@ -677,7 +615,7 @@ public class TabletStatusBar extends BaseStatusBar implements
     protected void updateSearchPanel() {
         super.updateSearchPanel();
         mSearchPanelView.setStatusBarView(mStatusBarView);
-        mStatusBarView.setDelegateView(mSearchPanelView);
+        mNavBarView.setDelegateView(mSearchPanelView);
     }
 
     @Override
@@ -771,11 +709,6 @@ public class TabletStatusBar extends BaseStatusBar implements
                             }
 
                             entry.icon.setBackgroundColor(0x20FFFFFF);
-
-//                          mNotificationPeekRow.setLayoutTransition(
-//                              peekIndex < mNotificationPeekIndex
-//                                  ? mNotificationPeekScrubLeft
-//                                  : mNotificationPeekScrubRight);
 
                             mNotificationPeekRow.removeAllViews();
                             mNotificationPeekRow.addView(copy.row);
@@ -962,19 +895,12 @@ public class TabletStatusBar extends BaseStatusBar implements
                 // close recents if it's visible
                 mHandler.removeMessages(MSG_CLOSE_RECENTS_PANEL);
                 mHandler.sendEmptyMessage(MSG_CLOSE_RECENTS_PANEL);
-            }
+           }
         }
     }
 
     private void setNavigationVisibility(int visibility) {
-        boolean disableHome = ((visibility & StatusBarManager.DISABLE_HOME) != 0);
-        boolean disableRecent = ((visibility & StatusBarManager.DISABLE_RECENT) != 0);
-        boolean disableBack = ((visibility & StatusBarManager.DISABLE_BACK) != 0);
-
-        mBackButton.setVisibility(disableBack ? View.INVISIBLE : View.VISIBLE);
-        mHomeButton.setVisibility(disableHome ? View.INVISIBLE : View.VISIBLE);
-        mRecentButton.setVisibility(disableRecent ? View.INVISIBLE : View.VISIBLE);
-
+        mNavBarView.setDisabledFlags(visibility);
         mInputMethodSwitchButton.setScreenLocked(
                 (visibility & StatusBarManager.DISABLE_SYSTEM_INFO) != 0);
     }
@@ -1047,7 +973,7 @@ public class TabletStatusBar extends BaseStatusBar implements
 
     @Override
     public void animateExpandSettingsPanel() {
-        // TODO: Implement when TabletStatusBar begins to be used.
+        mNotificationPanel.animateExpandSettingsPanel();
     }
 
     @Override // CommandQueue
@@ -1060,19 +986,8 @@ public class TabletStatusBar extends BaseStatusBar implements
                 500).show();
         }
 
+        mNavBarView.setNavigationIconHints(hints);
         mNavigationIconHints = hints;
-
-        mBackButton.setAlpha(
-            (0 != (hints & StatusBarManager.NAVIGATION_HINT_BACK_NOP)) ? 0.5f : 1.0f);
-        mHomeButton.setAlpha(
-            (0 != (hints & StatusBarManager.NAVIGATION_HINT_HOME_NOP)) ? 0.5f : 1.0f);
-        mRecentButton.setAlpha(
-            (0 != (hints & StatusBarManager.NAVIGATION_HINT_RECENT_NOP)) ? 0.5f : 1.0f);
-
-        mBackButton.setImageResource(
-            (0 != (hints & StatusBarManager.NAVIGATION_HINT_BACK_ALT))
-                ? R.drawable.ic_sysbar_back_ime
-                : R.drawable.ic_sysbar_back);
     }
 
     private void notifyUiVisibilityChanged() {
@@ -1105,7 +1020,7 @@ public class TabletStatusBar extends BaseStatusBar implements
     public void setLightsOn(boolean on) {
         // Policy note: if the frontmost activity needs the menu key, we assume it is a legacy app
         // that can't handle lights-out mode.
-        if (mMenuButton.getVisibility() == View.VISIBLE) {
+        if (mNavBarView.getMenuVisibility()) {
             on = true;
         }
 
@@ -1121,7 +1036,7 @@ public class TabletStatusBar extends BaseStatusBar implements
         if (DEBUG) {
             Slog.d(TAG, (showMenu?"showing":"hiding") + " the MENU button");
         }
-        mMenuButton.setVisibility(showMenu ? View.VISIBLE : View.GONE);
+        mNavBarView.setMenuVisibility(showMenu);
 
         // See above re: lights-out policy for legacy apps.
         if (showMenu) setLightsOn(true);
@@ -1179,7 +1094,7 @@ public class TabletStatusBar extends BaseStatusBar implements
         }
     }
 
-    public void setImeWindowStatus(IBinder token, int vis, int backDisposition) {
+   public void setImeWindowStatus(IBinder token, int vis, int backDisposition) {
         mInputMethodSwitchButton.setImeWindowStatus(token,
                 (vis & InputMethodService.IME_ACTIVE) != 0);
         updateNotificationIcons();
@@ -1187,7 +1102,7 @@ public class TabletStatusBar extends BaseStatusBar implements
 
         boolean altBack = (backDisposition == InputMethodService.BACK_DISPOSITION_WILL_DISMISS)
             || ((vis & InputMethodService.IME_VISIBLE) != 0);
-        mAltBackButtonEnabledForIme = altBack;
+        mAltBackButtonEnabledForIme = altBack; 
 
         mCommandQueue.setNavigationIconHints(
                 altBack ? (mNavigationIconHints | StatusBarManager.NAVIGATION_HINT_BACK_ALT)
@@ -1237,22 +1152,13 @@ public class TabletStatusBar extends BaseStatusBar implements
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            if (v == mRecentButton) {
-                onClickRecentButton();
-            } else if (v == mInputMethodSwitchButton) {
+            if (v == mInputMethodSwitchButton) {
                 onClickInputMethodSwitchButton();
             } else if (v == mCompatModeButton) {
                 onClickCompatModeButton();
             }
         }
     };
-
-    public void onClickRecentButton() {
-        if (DEBUG) Slog.d(TAG, "clicked recent apps; disabled=" + mDisabled);
-        if ((mDisabled & StatusBarManager.DISABLE_EXPAND) == 0) {
-            toggleRecentApps();
-        }
-    }
 
     public void onClickInputMethodSwitchButton() {
         if (DEBUG) Slog.d(TAG, "clicked input methods panel; disabled=" + mDisabled);
@@ -1292,12 +1198,6 @@ public class TabletStatusBar extends BaseStatusBar implements
         }
 
         public boolean onTouch(View v, MotionEvent event) {
-//            Slog.d(TAG, String.format("touch: (%.1f, %.1f) initial: (%.1f, %.1f)",
-//                        event.getX(),
-//                        event.getY(),
-//                        mInitialTouchX,
-//                        mInitialTouchY));
-
             if ((mDisabled & StatusBarManager.DISABLE_EXPAND) != 0) {
                 return true;
             }
@@ -1398,7 +1298,7 @@ public class TabletStatusBar extends BaseStatusBar implements
 
                 mNotificationDNDDummyEntry = new NotificationData.Entry(
                         null, new StatusBarNotification("", 0, "", 0, 0, Notification.PRIORITY_MAX,
-                                dndNotification, android.os.Process.myUserHandle()), iconView);
+                               dndNotification, android.os.Process.myUserHandle()), iconView);
 
                 mIconLayout.addView(iconView, params);
             }
@@ -1423,7 +1323,7 @@ public class TabletStatusBar extends BaseStatusBar implements
         // need to see all those new emails, did you?
         int maxNotificationIconsCount = mMaxNotificationIcons;
         if (mInputMethodSwitchButton.getVisibility() != View.GONE) maxNotificationIconsCount --;
-        if (mCompatModeButton.getVisibility()        != View.GONE) maxNotificationIconsCount --;
+        if (mCompatModeButton.getVisibility()        != View.GONE) maxNotificationIconsCount --; 
 
         final boolean provisioned = isDeviceProvisioned();
         // If the device hasn't been through Setup, we only show system notifications
