@@ -120,6 +120,7 @@ public class SearchPanelView extends FrameLayout implements
     private int startPosOffset;
 
     private int mNavRingAmount;
+    private boolean mTabletui;
     private boolean mLefty;
     private boolean mLongPress;
     private boolean mSearchPanelLock;
@@ -257,7 +258,19 @@ public class SearchPanelView extends FrameLayout implements
         int endPosOffset;
         int middleBlanks = 0;
 
-         if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_LARGE || isScreenPortrait()) {
+     // lets try this for all devices in TabletUI
+        if (mTabletui) {
+
+            if (mLefty) { // either lefty or... (Ring is actually on right side of screen
+                startPosOffset =  (mNavRingAmount) + 1;
+                endPosOffset =  (mNavRingAmount *2) + 1;
+            } else { // righty... (Ring actually on left side of tablet)
+                    startPosOffset =  1;
+                    endPosOffset = (mNavRingAmount * 3) + 1;
+                    // this creates a 'quadrant' where NavRingQtry is 1/4 of the total (plus a spacer on either side)
+            }
+         // this is for nexus 7 type devices not in TabletUI since the navbar stays at bottom, or phones in Portrait
+         } else if (screenLayout() == Configuration.SCREENLAYOUT_SIZE_LARGE || isScreenPortrait()) {
              startPosOffset =  1;
              endPosOffset =  (mNavRingAmount) + 1;
          } else {
@@ -582,5 +595,8 @@ public class SearchPanelView extends FrameLayout implements
 
         mNavRingAmount = Settings.System.getInt(mContext.getContentResolver(),
                          Settings.System.SYSTEMUI_NAVRING_AMOUNT, 1);
+        // Not using getBoolean here, because CURRENT_UI_MODE can be 0,1 or 2
+        mTabletui = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.CURRENT_UI_MODE, 0) == 1;
     }
 }
