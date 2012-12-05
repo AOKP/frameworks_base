@@ -274,6 +274,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     int mUserNavBarHeight;
     int mUserNavBarHeightLand;
     int mUserNavBarWidth;
+    int mUserUIMode; //User selected UI Mode (Phablet/Tablet, etc)
+    int mStockUIMode; // UI Mode as dictated by screen size.
 
     WindowState mKeyguard = null;
     KeyguardViewMediator mKeyguardMediator;
@@ -576,6 +578,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.System.NAVIGATION_BAR_HEIGHT_LANDSCAPE), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_WIDTH), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.USER_UI_MODE), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     "fancy_rotation_anim"), false, this,
                     UserHandle.USER_ALL);
@@ -1058,19 +1062,33 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT / density;
 
         if (shortSizeDp < 600) {
-            // 0-599dp: "phone" UI with a separate status & navigation bar
-            mHasSystemNavBar = false;
-            mNavigationBarCanMove = true;
-            Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.CURRENT_UI_MODE, 0);
+            mStockUIMode = 0; // Phone Mode
         } else if (shortSizeDp < 720) {
-            // 600+dp: "phone" UI with modifications for larger screens
-            mHasSystemNavBar = false;
-            mNavigationBarCanMove = false;
-            Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.CURRENT_UI_MODE, 2);
+            mStockUIMode = 2; // Phablet Mode
+        } else {
+            mStockUIMode = 1; // Tablet Mode (Combined SystemBar)
         }
-
+        mUserUIMode = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.USER_UI_MODE,mStockUIMode);
+        switch (mUserUIMode) {
+            case 0 :
+                // 0-599dp: "phone" UI with a separate status & navigation bar
+                mHasSystemNavBar = false;
+                mNavigationBarCanMove = true;
+                break;
+            case 1 :
+                // 720dp: "tablet" UI with a single combined status & navigation bar
+                mHasSystemNavBar = true;
+                mNavigationBarCanMove = false;
+                break;
+            case 2 :
+                // 600+dp: "phone" UI with modifications for larger screens
+                mHasSystemNavBar = false;
+                mNavigationBarCanMove = false;
+                break;
+        }
+        Settings.System.putInt(mContext.getContentResolver(),
+                Settings.System.CURRENT_UI_MODE, mUserUIMode);
         if (!mHasSystemNavBar) {
              final boolean showByDefault = mContext.getResources().getBoolean(
                      com.android.internal.R.bool.config_showNavigationBar);
@@ -1146,10 +1164,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     public void updateSettings() {
-        DisplayMetrics metrics = new DisplayMetrics();
-        WindowManager wm = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);
-        wm.getDefaultDisplay().getMetrics(metrics);
-        int density = metrics.densityDpi;
         ContentResolver resolver = mContext.getContentResolver();
         boolean updateRotation = false;
         synchronized (mLock) {
@@ -1227,14 +1241,25 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mUserNavBarHeight = NavHeight;
             mUserNavBarHeightLand = NavHeightLand;
             mUserNavBarWidth = NavWidth;
-            if(mDisplay != null)
-                setInitialDisplaySize(mDisplay, mUnrestrictedScreenWidth, mUnrestrictedScreenHeight, density);
+            resetScreenHelper();
         }
         if (mHasNavigationBar != showNavBarNow) {
             mHasNavigationBar = showNavBarNow;
-            if(mDisplay != null)
-                setInitialDisplaySize(mDisplay, mUnrestrictedScreenWidth, mUnrestrictedScreenHeight, density);
+            resetScreenHelper();
         }
+        if (mUserUIMode != Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.USER_UI_MODE,mStockUIMode)) {
+            resetScreenHelper();
+        }
+    }
+
+    private void resetScreenHelper() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        int density = metrics.densityDpi;
+        if(mDisplay != null)
+            setInitialDisplaySize(mDisplay, mUnrestrictedScreenWidth, mUnrestrictedScreenHeight, density);
     }
 
     private void enablePointerLocation() {
