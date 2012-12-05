@@ -2850,6 +2850,20 @@ public final class Settings {
         public static final String QUICK_TOGGLE_FAV_CONTACT = "quick_toggle_fav_contact";
 
         /**
+        * holo dark/light theme description in quick settings
+        *
+        *@hide
+        */
+        public static final String QUICK_THEME_STYLE = "quick_theme_style";
+
+        /**
+         * text color for quick settings
+         *
+         * @hide
+         */
+        public static final String QUICK_TEXT_COLOR = "quick_text_color";
+
+        /**
          * @hide
          */
         public static final String MUTE_ANNOYING_NOTIFICATIONS_THRESHOLD = "mute_annoying_notifications_threshold";
