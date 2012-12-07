@@ -209,11 +209,12 @@ static void agps_status_callback(AGpsStatus* agps_status)
                         agps_status->type,
                         agps_status->status,
                         byteArray,
+                        byteArray,
                         ssid_string,
                         password_string);
 
     checkAndClearExceptionFromCallback(env, __FUNCTION__);
-    
+
     if (byteArray != NULL) {
         env->DeleteLocalRef(byteArray);
     }
