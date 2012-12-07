@@ -427,12 +427,21 @@ public class Environment {
      * <p>See {@link #getExternalStorageDirectory()} for more information.
      */
     public static String getExternalStorageState() {
+        return getExternalStorageState(getExternalStorageDirectory().toString());
+    }
+
+    /**
+     *  Gets the current state of the specified "external" storage device.
+     *  @hide
+     */
+    public static String getExternalStorageState(String path) {
         try {
             IMountService mountService = IMountService.Stub.asInterface(ServiceManager
                     .getService("mount"));
-            return mountService.getVolumeState(getExternalStorageDirectory()
-                    .toString());
-        } catch (Exception rex) {
+            final StorageVolume primary = getPrimaryVolume();
+            return mountService.getVolumeState(path);
+        } catch (RemoteException rex) {
+            Log.w(TAG, "Failed to read external storage state; assuming REMOVED: " + rex);
             return Environment.MEDIA_REMOVED;
         }
     }
