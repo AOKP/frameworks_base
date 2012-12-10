@@ -383,6 +383,16 @@ public class StatusBarManagerService extends IStatusBarService.Stub
     }
 
     @Override
+    public void showSearchPanel() {
+        if (mBar != null) {
+            try {
+                mBar.showSearchPanel();
+            } catch (RemoteException ex) {}
+        }
+    }
+
+
+    @Override
     public void preloadRecentApps() {
         if (mBar != null) {
             try {

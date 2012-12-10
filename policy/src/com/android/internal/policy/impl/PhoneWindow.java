@@ -41,13 +41,17 @@ import com.android.internal.widget.ActionBarView;
 
 import android.app.KeyguardManager;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -65,6 +69,7 @@ import android.util.SparseArray;
 import android.util.TypedValue;
 import android.view.ActionMode;
 import android.view.ContextThemeWrapper;
+import android.view.Display;
 import android.view.Gravity;
 import android.view.IRotationWatcher;
 import android.view.IWindowManager;
@@ -95,6 +100,8 @@ import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+
+import com.android.internal.statusbar.IStatusBarService;
 
 /**
  * Android-specific Window.
@@ -180,7 +187,9 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
     private int mTitleColor = 0;
 
     private boolean mAlwaysReadCloseOnTouchAttr = false;
-    
+
+    private Context mContext;
+
     private ContextMenuBuilder mContextMenu;
     private MenuDialogHelper mContextMenuHelper;
     private boolean mClosingActionMenu;
@@ -189,6 +198,17 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 
     private AudioManager mAudioManager;
     private KeyguardManager mKeyguardManager;
+
+    private IStatusBarService mStatusBarService;
+
+    private int mTriggerThreshhold = 40;
+    private int mTriggerWindow = 20;
+
+    private float[] mDownPoint = new float[2];
+    private int screenHeight;
+    private int screenWidth;
+    private boolean mSwapXY = false;
+    private boolean mSearchSwipeStarted;
 
     private int mUiOptions = 0;
 
@@ -215,8 +235,12 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 
     public PhoneWindow(Context context) {
         super(context);
+        mContext = context;
         mLayoutInflater = LayoutInflater.from(context);
+        mStatusBarService = IStatusBarService.Stub
+                        .asInterface(ServiceManager.getService("statusbar"));
     }
+
 
     @Override
     public final void setContainer(Window container) {
@@ -1971,9 +1995,55 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
                     || y > (getHeight() + 5);
         }
 
+        public boolean isScreenLarge() {
+            final int screenSize = Resources.getSystem().getConfiguration().screenLayout &
+                       Configuration.SCREENLAYOUT_SIZE_MASK;
+            boolean isScreenLarge = screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE ||
+                       screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
+            return isScreenLarge;
+            }
+
         @Override
         public boolean onInterceptTouchEvent(MotionEvent event) {
+
+            Display display = getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            display.getSize(size);
+            screenHeight = size.y;
+            screenWidth = size.x;
+
             int action = event.getAction();
+            boolean mIsLandscape = Resources.getSystem().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
+
+            mSwapXY = mIsLandscape && isScreenLarge();
+
+            if (action == MotionEvent.ACTION_DOWN) {
+                mDownPoint[0] = event.getX();
+                mDownPoint[1] = event.getY();
+                if (mSwapXY) {
+                    mSearchSwipeStarted = mDownPoint[0] < mTriggerWindow;
+                } else {
+                    mSearchSwipeStarted = mDownPoint[1] > screenHeight - mTriggerWindow;
+                }
+            }
+
+            if (action == MotionEvent.ACTION_MOVE && mSearchSwipeStarted) {
+                final int historySize = event.getHistorySize();
+                for (int k = 0; k < historySize + 1; k++) {
+                    float x = k < historySize ? event.getHistoricalX(k) : event.getX();
+                    float y = k < historySize ? event.getHistoricalY(k) : event.getY();
+                    float distance = 0f;
+                    distance = mSwapXY ? (mDownPoint[0] - x) : (mDownPoint[1] - y);
+                        if (distance > mTriggerThreshhold) {
+                            try {
+                                mStatusBarService.showSearchPanel();
+                            } catch (RemoteException e) {
+                            }
+                            return true;
+                        }
+                 }
+            }
+
             if (mFeatureId >= 0) {
                 if (action == MotionEvent.ACTION_DOWN) {
                     int x = (int)event.getX();

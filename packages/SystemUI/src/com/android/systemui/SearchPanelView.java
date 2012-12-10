@@ -209,6 +209,7 @@ public class SearchPanelView extends FrameLayout implements
             final int resId = mGlowPadView.getResourceIdForTarget(target);
             mTarget = target;
             if (!mLongPress) {
+               mBar.hideSearchPanel();
                mAokpTarget.launchAction(intentList.get(target));
                mHandler.removeCallbacks(SetLongPress);
             }
@@ -337,6 +338,16 @@ public class SearchPanelView extends FrameLayout implements
             return new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_ime_switcher));
         if (action.equals("**ring_vib**"))
             return new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_vib));
+        if (action.equals("**home**"))
+            return new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_home));
+        if (action.equals("**back**"))
+            return new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_back));
+        if (action.equals("**search**"))
+            return new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_search));
+        if (action.equals("**menu**"))
+            return new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_menu));
+        if (action.equals("**recents**"))
+            return new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_recents));
         if (action.equals("**ring_silent**"))
             return new TargetDrawable(mResources, mResources.getDrawable(R.drawable.ic_action_silent));
         if (action.equals("**ring_vib_silent**"))

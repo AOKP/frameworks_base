@@ -57,6 +57,7 @@ public class CommandQueue extends IStatusBar.Stub {
     private static final int MSG_CANCEL_PRELOAD_RECENT_APPS = 15 << MSG_SHIFT;
     private static final int MSG_SET_NAVIGATION_ICON_HINTS  = 16 << MSG_SHIFT;
     private static final int MSG_TOGGLE_NOTIFICATION_SHADE = 17 << MSG_SHIFT;
+    private static final int MSG_SHOW_SEARCH_PANEL         = 18 << MSG_SHIFT;
 
     public static final int FLAG_EXCLUDE_NONE = 0;
     public static final int FLAG_EXCLUDE_SEARCH_PANEL = 1 << 0;
@@ -220,6 +221,13 @@ public class CommandQueue extends IStatusBar.Stub {
         }
     }
 
+    public void showSearchPanel() {
+        synchronized (mList) {
+            mHandler.removeMessages(MSG_SHOW_SEARCH_PANEL);
+            mHandler.obtainMessage(MSG_SHOW_SEARCH_PANEL, 0, 0, null).sendToTarget();
+        }
+    }
+
     public void preloadRecentApps() {
         synchronized (mList) {
             mHandler.removeMessages(MSG_PRELOAD_RECENT_APPS);
@@ -314,6 +322,9 @@ public class CommandQueue extends IStatusBar.Stub {
                     break;
                 case MSG_TOGGLE_RECENT_APPS:
                     mCallbacks.toggleRecentApps();
+                    break;
+                case MSG_SHOW_SEARCH_PANEL:
+                    mCallbacks.showSearchPanel();
                     break;
                 case MSG_PRELOAD_RECENT_APPS:
                     mCallbacks.preloadRecentApps();
