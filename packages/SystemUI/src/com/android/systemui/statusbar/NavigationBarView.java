@@ -81,6 +81,7 @@ public class NavigationBarView extends LinearLayout {
     int mNavigationIconHints = 0;
 
     private Drawable mBackIcon, mBackLandIcon, mBackAltIcon, mBackAltLandIcon;
+    private boolean mMenuArrowKeys;
     
     public DelegateViewHelper mDelegateHelper;
 
@@ -485,6 +486,30 @@ public class NavigationBarView extends LinearLayout {
         	getRecentsButton().setAlpha(
         			(0 != (hints & StatusBarManager.NAVIGATION_HINT_RECENT_NOP)) ? 0.5f : 1.0f);
         }
+
+        if (mMenuArrowKeys) {
+            if (0 != (mNavigationIconHints & StatusBarManager.NAVIGATION_HINT_BACK_ALT)) {
+
+                ((KeyButtonView) getLeftMenuButton()).setCode(KeyEvent.KEYCODE_DPAD_LEFT);
+                ((KeyButtonView) getLeftMenuButton()).setSupportsLongPress(true);
+                getLeftMenuButton().setVisibility(View.VISIBLE);
+                ((ImageView) getLeftMenuButton()).setImageResource(R.drawable.ic_sysbar_ime_left);
+
+                ((KeyButtonView) getRightMenuButton()).setCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+                ((KeyButtonView) getRightMenuButton()).setSupportsLongPress(true);
+                getRightMenuButton().setVisibility(View.VISIBLE);
+
+            } else {
+
+                ((KeyButtonView) getLeftMenuButton()).setCode(KeyEvent.KEYCODE_MENU);
+                ((KeyButtonView) getLeftMenuButton()).setSupportsLongPress(false);
+
+                ((KeyButtonView) getRightMenuButton()).setCode(KeyEvent.KEYCODE_MENU);
+                ((KeyButtonView) getRightMenuButton()).setSupportsLongPress(false);
+                setMenuVisibility(mShowMenu, true /* force */);
+
+            }
+        }
         setDisabledFlags(mDisabledFlags, true);
     }
 
@@ -849,6 +874,8 @@ public class NavigationBarView extends LinearLayout {
 
         mMenuVisbility = Settings.System.getInt(resolver,
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
+        mMenuArrowKeys = Settings.System.getBoolean(resolver,
+                Settings.System.MENU_ARROW_KEYS, true);
         mCurrentUIMode = Settings.System.getInt(resolver,
                 Settings.System.CURRENT_UI_MODE,0);
         mLeftyMode = Settings.System.getBoolean(resolver,

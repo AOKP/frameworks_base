@@ -76,6 +76,10 @@ public class KeyButtonView extends ImageView {
                     // do long click on primary 'key'
                     sendEvent(KeyEvent.ACTION_DOWN, KeyEvent.FLAG_LONG_PRESS);
                     sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
+                    if (mCode == KeyEvent.KEYCODE_DPAD_LEFT || mCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                        removeCallbacks(mCheckLongPress);
+                        postDelayed(mCheckLongPress, ViewConfiguration.getKeyRepeatDelay());
+                    }
                 }
             }
         }
@@ -266,6 +270,9 @@ public class KeyButtonView extends ImageView {
                 mDownTime = SystemClock.uptimeMillis();
                 setPressed(true);
                 if (mCode != 0) {
+                    if(mCode == KeyEvent.KEYCODE_DPAD_LEFT || mCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                        mSupportsLongpress = true;
+                    }
                     sendEvent(KeyEvent.ACTION_DOWN, 0, mDownTime);
                 } else {
                     // Provide the same haptic feedback that the system offers for virtual keys.

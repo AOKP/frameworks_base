@@ -3166,6 +3166,12 @@ public final class Settings {
          */
         public static final String NOTIFICATION_CONVERT_SOUND_TO_VIBRATION = "convert_sound_to_vibration";
 
+        /**
+         * boolean value. toggles using arrow key locations on nav bar
+         * as left and right dpad keys
+         * @hide
+         */
+        public static final String MENU_ARROW_KEYS = "menu_arrow_keys";
 
     }
 
