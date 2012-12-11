@@ -52,6 +52,9 @@ public class SignalClusterView
     private boolean mIsAirplaneMode = false;
     private int mAirplaneIconId = 0;
     private String mWifiDescription, mMobileDescription, mMobileTypeDescription;
+    private static final int STYLE_HIDE = 0;
+    private static final int STYLE_SHOW = 1;
+    private static final int STYLE_SHOW_DBM = 2;
 
     private boolean showingSignalText = false;
     private boolean showingWiFiText = false;
@@ -255,8 +258,8 @@ public class SignalClusterView
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
 
-        showingSignalText = Settings.System.getInt(resolver,
-                Settings.System.STATUSBAR_SIGNAL_TEXT, 0) != 0;
+        showingSignalText = (Settings.System.getInt(resolver,
+                Settings.System.STATUSBAR_SIGNAL_TEXT,STYLE_HIDE) > 0);
         showingWiFiText = Settings.System.getInt(resolver,
                 Settings.System.STATUSBAR_WIFI_SIGNAL_TEXT, 0) != 0;
         apply();
