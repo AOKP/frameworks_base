@@ -81,6 +81,7 @@ public class NavigationBarView extends LinearLayout {
     int mNavigationIconHints = 0;
 
     private Drawable mBackIcon, mBackLandIcon, mBackAltIcon, mBackAltLandIcon;
+    private boolean mMenuArrowKeys;
     
     public DelegateViewHelper mDelegateHelper;
 
@@ -485,6 +486,31 @@ public class NavigationBarView extends LinearLayout {
         	getRecentsButton().setAlpha(
         			(0 != (hints & StatusBarManager.NAVIGATION_HINT_RECENT_NOP)) ? 0.5f : 1.0f);
         }
+
+        if (mMenuArrowKeys) {
+            final KeyButtonView leftMenu = ((KeyButtonView) getLeftMenuButton());
+            final KeyButtonView rightMenu = ((KeyButtonView) getRightMenuButton());
+
+            if (0 != (mNavigationIconHints & StatusBarManager.NAVIGATION_HINT_BACK_ALT)) {
+                leftMenu.setCode(KeyEvent.KEYCODE_DPAD_LEFT);
+                leftMenu.setSupportsLongPress(true);
+                leftMenu.setVisibility(View.VISIBLE);
+                leftMenu.setImageResource(R.drawable.ic_sysbar_ime_left);
+
+                rightMenu.setCode(KeyEvent.KEYCODE_DPAD_RIGHT);
+                rightMenu.setSupportsLongPress(true);
+                rightMenu.setVisibility(View.VISIBLE);
+                rightMenu.setImageResource(R.drawable.ic_sysbar_ime_right);
+            } else {
+                leftMenu.setCode(KeyEvent.KEYCODE_MENU);
+                leftMenu.setSupportsLongPress(false);
+
+                rightMenu.setCode(KeyEvent.KEYCODE_MENU);
+                rightMenu.setSupportsLongPress(false);
+
+                setMenuVisibility(mShowMenu, true /* force */);
+            }
+        }
         setDisabledFlags(mDisabledFlags, true);
     }
 
@@ -816,6 +842,8 @@ public class NavigationBarView extends LinearLayout {
                     this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_LEFTY_MODE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVIGATION_BAR_MENU_ARROW_KEYS), false, this);
 
             for (int j = 0; j < 7; j++) { // watch all 7 settings for changes.
                 resolver.registerContentObserver(
@@ -849,6 +877,8 @@ public class NavigationBarView extends LinearLayout {
 
         mMenuVisbility = Settings.System.getInt(resolver,
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
+        mMenuArrowKeys = Settings.System.getBoolean(resolver,
+                Settings.System.NAVIGATION_BAR_MENU_ARROW_KEYS, true);
         mCurrentUIMode = Settings.System.getInt(resolver,
                 Settings.System.CURRENT_UI_MODE,0);
         mLeftyMode = Settings.System.getBoolean(resolver,
