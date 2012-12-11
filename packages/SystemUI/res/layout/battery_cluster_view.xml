@@ -31,20 +31,14 @@
 			style="@style/Battery_Offset"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:shadowColor="#FF000000"
-			android:shadowDx="0"
-			android:shadowDy="0"
-			android:shadowRadius="2.5"
+			android:text="@string/battery_test"
 			android:visibility="gone" />
-	     <TextView
+	  <TextView
 			android:id="@+id/battery_text_center"
 			style="@style/Battery_Center"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:shadowColor="#FF000000"
-			android:shadowDx="0"
-			android:shadowDy="0"
-			android:shadowRadius="2.5"
+      android:text="@string/battery_test"
 			android:visibility="gone" />
 
 		<TextView
@@ -52,7 +46,33 @@
 			android:textAppearance="@style/TextAppearance.StatusBar.BatteryTextOnly"
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
+      android:text="@string/battery_test"
 			android:singleLine="true"
 			android:visibility="gone" />
+
+    <TextView
+      android:id="@+id/battery_text_only_low"
+      android:textAppearance="@style/TextAppearance.StatusBar.BatteryTextOnly_Low"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:text="@string/battery_test"
+      android:singleLine="true"
+      android:visibility="gone" />
+    <TextView
+      android:id="@+id/battery_text_only_plugged"
+      android:textAppearance="@style/TextAppearance.StatusBar.BatteryTextOnly_Plugged"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:text="@string/battery_test"
+      android:singleLine="true"
+      android:visibility="gone" />
+    <com.android.systemui.statusbar.policy.CircleBattery
+      android:id="@+id/circle_battery"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textAppearance="@style/TextAppearance.StatusBar.BatteryTextOnly"
+      android:singleLine="true"
+      android:gravity="bottom"
+      android:paddingLeft="4dip" />
 	</FrameLayout>
 </com.android.systemui.statusbar.policy.SbBatteryController>
