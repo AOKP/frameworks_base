@@ -33,6 +33,8 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 
+import java.lang.NullPointerException;
+
 /**
  * A toast is a view containing a quick little message for the user.  The toast class
  * helps you create and show those.
@@ -374,8 +376,13 @@ public class Toast {
                 // remove the old view if necessary
                 handleHide();
                 mView = mNextView;
-                mWM = (WindowManager)mView.getContext().getApplicationContext()
-                        .getSystemService(Context.WINDOW_SERVICE);
+                try {
+                    mWM = (WindowManager)mView.getContext().getApplicationContext()
+                            .getSystemService(Context.WINDOW_SERVICE);
+                } catch (NullPointerException ex) {
+                    // getApplicationContext is probably null because this toast was fired from a service, but we still need to do something, so we'll just use whatever context we have, thanks.
+                    mWM = (WindowManager)mView.getContext().getSystemService(Context.WINDOW_SERVICE);
+                }
                 // We can resolve the Gravity here by using the Locale for getting
                 // the layout direction
                 final Configuration config = mView.getContext().getResources().getConfiguration();
