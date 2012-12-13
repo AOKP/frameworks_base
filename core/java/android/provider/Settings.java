@@ -1927,6 +1927,15 @@ public final class Settings {
         public static final Uri DEFAULT_NOTIFICATION_URI = getUriFor(NOTIFICATION_SOUND);
 
         /**
+         * Holder for notification shade sms quick reply buttons
+         * String parsed into array delimited by '|'
+         * ie { true|true|false }
+         *
+         * @hide
+         */
+        public static final String QUICK_REPLY_BUTTONS = "quick_reply_buttons";
+
+        /**
          * Persistent store for the system-wide default alarm alert.
          *
          * @see #RINGTONE
