@@ -102,5 +102,9 @@
 
     <!-- Enable the "flip settings" panel -->
     <bool name="config_hasFlipSettingsPanel">true</bool>
+
+    <!-- empty string to disable, or like: /sys/kernel/fast_charge
+         it is disabled by default so devices need to add an overlay to enable-->
+    <string name="config_fastChargePath" translatable="false"></string>
 </resources>
 
