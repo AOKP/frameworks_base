@@ -30,6 +30,7 @@ import com.android.systemui.statusbar.policy.BluetoothController;
 import com.android.systemui.statusbar.policy.BrightnessController;
 import com.android.systemui.statusbar.policy.LocationController;
 import com.android.systemui.statusbar.policy.NetworkController;
+import com.android.systemui.statusbar.policy.Prefs;
 import com.android.systemui.statusbar.policy.ToggleSlider;
 
 import android.app.ActivityManagerNative;
@@ -163,9 +164,6 @@ class QuickSettings {
 
     private static final String DEFAULT_TOGGLES = "default";
 
-    public static final String FAST_CHARGE_DIR = "/sys/kernel/fast_charge";
-    public static final String FAST_CHARGE_FILE = "force_fast_charge";
-
     private int mWifiApState = WifiManager.WIFI_AP_STATE_DISABLED;
 
     private int mDataState = -1;
@@ -212,6 +210,7 @@ class QuickSettings {
     private long tacoSwagger = 0;
     private boolean tacoToggle = false;
     private int mTileTextSize = 12;
+    private String mFastChargePath;
 
     private HashMap<String, Integer> toggleMap;
 
@@ -278,6 +277,7 @@ class QuickSettings {
                 r.getInteger(R.integer.quick_settings_brightness_dialog_long_timeout);
         mBrightnessDialogShortTimeout =
                 r.getInteger(R.integer.quick_settings_brightness_dialog_short_timeout);
+        mFastChargePath = r.getString(R.string.config_fastChargePath);
 
         IntentFilter filter = new IntentFilter();
         filter.addAction(DisplayManager.ACTION_WIFI_DISPLAY_STATUS_CHANGED);
@@ -851,14 +851,25 @@ class QuickSettings {
                 });
                 break;
             case FCHARGE_TILE:
+                if((mFastChargePath == null || mFastChargePath.isEmpty()) ||
+                        !new File(mFastChargePath).exists()) {
+                    // config not set or config set and kernel doesn't support it?
+                    break;
+                }
                 quick = (QuickSettingsTileView)
                         inflater.inflate(R.layout.quick_settings_tile, parent, false);
                 quick.setContent(R.layout.quick_settings_tile_fcharge, inflater);
                 quick.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        updateFastCharge(isFastChargeOn() ? false : true);
-                        mModel.refreshFChargeTile();
+                        AsyncTask.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                final boolean newState = !Prefs.getLastFastChargeState(mContext);
+                                setFastCharge(newState);
+                                mModel.updateFastChargeTile(newState);
+                            }
+                        });
                     }
                 });
                 quick.setOnLongClickListener(new View.OnLongClickListener() {
@@ -877,6 +888,7 @@ class QuickSettings {
                         tv.setTextSize(1, mTileTextSize);
                     }
                 });
+                mHandler.post(restoreFChargeState);
                 break;
             case WIFI_TETHER_TILE:
                 quick = (QuickSettingsTileView)
@@ -1605,29 +1617,33 @@ class QuickSettings {
         }
     };
 
-    public boolean isFastChargeOn() {
-        try {
-            File fastcharge = new File(FAST_CHARGE_DIR, FAST_CHARGE_FILE);
-            FileReader reader = new FileReader(fastcharge);
-            BufferedReader breader = new BufferedReader(reader);
-            return (breader.readLine().equals("1"));
-        } catch (IOException e) {
-            Log.e("FChargeToggle", "Couldn't read fast_charge file");
-            return false;
-        }
-    }
 
-    public void updateFastCharge(boolean on) {
+
+    protected void setFastCharge(boolean on) {
+        if(mFastChargePath == null || mFastChargePath.isEmpty()) {
+            // who you gonna call?
+            Prefs.setLastFastChargeState(mContext, false);
+            return;
+        }
+        Prefs.setLastFastChargeState(mContext, on);
+        BufferedWriter bwriter = null;
+        FileWriter fwriter = null;
         try {
-            File fastcharge = new File(FAST_CHARGE_DIR, FAST_CHARGE_FILE);
-            FileWriter fwriter = new FileWriter(fastcharge);
-            BufferedWriter bwriter = new BufferedWriter(fwriter);
+            File fastcharge = new File(mFastChargePath);
+            fwriter = new FileWriter(fastcharge);
+            bwriter = new BufferedWriter(fwriter);
             bwriter.write(on ? "1" : "0");
-            bwriter.close();
         } catch (IOException e) {
             Log.e("FChargeToggle", "Couldn't write fast_charge file");
+        } finally {
+            if(bwriter != null) {
+                try {
+                    bwriter.close();
+                } catch (IOException e) {
+                    // :okay:
+                }
+            }
         }
-
     }
 
     private void changeWifiState(final boolean desiredState) {
@@ -1671,6 +1687,12 @@ class QuickSettings {
             mModel.refreshWifiTetherTile();
             mModel.refreshUSBTetherTile();
             mModel.refreshTorchTile();
+        }
+    };
+
+    final Runnable restoreFChargeState = new Runnable() {
+        public void run() {
+            setFastCharge(Prefs.getLastFastChargeState(mContext));
         }
     };
 
