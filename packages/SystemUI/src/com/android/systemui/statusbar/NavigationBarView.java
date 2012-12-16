@@ -272,6 +272,7 @@ public class NavigationBarView extends LinearLayout {
                     File f = new File(Uri.parse(iconUri).getPath());
                     if (f.exists()) {
                         v.setImageDrawable(new BitmapDrawable(getResources(), f.getAbsolutePath()));
+                        v.mglo
                     }
                 } else {
                         v.setImageDrawable(mAokpTarget.getIconImage(mClickActions[j]));
@@ -384,7 +385,7 @@ public class NavigationBarView extends LinearLayout {
 
         return null;
     }
-    
+
     private ExtensibleKeyButtonView generateKey(boolean landscape, String clickAction,
             String longpress,
             String iconUri) {
@@ -393,8 +394,9 @@ public class NavigationBarView extends LinearLayout {
         ExtensibleKeyButtonView v = new ExtensibleKeyButtonView(mContext, null, clickAction,
                 longpress);
         v.setLayoutParams(getLayoutParams(landscape, iconSize));
+        boolean tint = iconUri == null || iconUri.isEmpty();
         v.setGlowBackground(landscape ? R.drawable.ic_sysbar_highlight_land
-                : R.drawable.ic_sysbar_highlight);
+                : R.drawable.ic_sysbar_highlight, tint);
         return v;
     }
 

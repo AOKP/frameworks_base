@@ -125,26 +125,34 @@ public class KeyButtonView extends ImageView {
     public int getCode() {
         return mCode;
     }
-
-    public void setGlowBackground(int id) {
+    
+    public void setGlowBackground(int id, boolean shouldTint) {
         mGlowBG = getResources().getDrawable(id);
         if (mGlowBG != null) {
             setDrawingAlpha(BUTTON_QUIESCENT_ALPHA);
             mGlowWidth = mGlowBG.getIntrinsicWidth();
             mGlowHeight = mGlowBG.getIntrinsicHeight();
-            int defaultColor = mContext.getResources().getColor(
-                    com.android.internal.R.color.white);
-            ContentResolver resolver = mContext.getContentResolver();
-            mGlowBGColor = Settings.System.getInt(resolver,
-                    Settings.System.NAVIGATION_BAR_GLOW_TINT, defaultColor);
-
-            if (mGlowBGColor == Integer.MIN_VALUE) {
-                mGlowBGColor = defaultColor;
+            if(shouldTint) {
+                int defaultColor = mContext.getResources().getColor(
+                        com.android.internal.R.color.white);
+                ContentResolver resolver = mContext.getContentResolver();
+                mGlowBGColor = Settings.System.getInt(resolver,
+                        Settings.System.NAVIGATION_BAR_GLOW_TINT, defaultColor);
+    
+                if (mGlowBGColor == Integer.MIN_VALUE) {
+                    mGlowBGColor = defaultColor;
+                }
+                mGlowBG.setColorFilter(null);
+                mGlowBG.setColorFilter(mGlowBGColor, PorterDuff.Mode.SRC_ATOP);
+            } else {
+                mGlowBG.setColorFilter(null);
             }
-            mGlowBG.setColorFilter(null);
-            mGlowBG.setColorFilter(mGlowBGColor, PorterDuff.Mode.SRC_ATOP);
 
         }
+    }
+
+    public void setGlowBackground(int id) {
+        setGlowBackground(id, true);
     }
 
     @Override
