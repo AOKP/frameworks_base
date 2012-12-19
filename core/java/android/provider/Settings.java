@@ -2353,6 +2353,15 @@ public final class Settings {
          * 4 - Icon Circle
          * 5 - Hide
          */
+
+        /**
+         * Control the display of the action overflow button within app UI.
+         * 0 = use system default
+         * 1 = force on
+         * @hide
+         */
+        public static final String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
+
         public static final String STATUSBAR_BATTERY_ICON = "statusbar_battery_icon";
         /**
          * AM/PM Style for clock options
