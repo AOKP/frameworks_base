@@ -229,7 +229,6 @@ public class ViewConfiguration {
 
     private boolean sHasPermanentMenuKey;
     private boolean sHasPermanentMenuKeySet;
-
     private Context mContext;
 
     static final SparseArray<ViewConfiguration> sConfigurations =
