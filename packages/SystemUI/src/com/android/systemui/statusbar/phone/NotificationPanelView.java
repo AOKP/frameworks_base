@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.MotionEvent;
@@ -29,6 +30,8 @@ import com.android.systemui.R;
 import com.android.systemui.statusbar.GestureRecorder;
 
 public class NotificationPanelView extends PanelView {
+
+    private static final float STATUS_BAR_SETTINGS_FLIP_PERCENTAGE = 0.3f;
 
     Drawable mHandleBar;
     float mHandleBarHeight;
@@ -97,10 +100,13 @@ public class NotificationPanelView extends PanelView {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     mOkToFlip = getExpandedHeight() == 0;
-                    if(mStatusBar.skipToSettingsPanel()) {
+                    if ((event.getX(0) > getWidth() * (1.0f - STATUS_BAR_SETTINGS_FLIP_PERCENTAGE)
+                        && Settings.System.getBoolean(getContext().getContentResolver(), Settings.System.FAST_TOGGLE, false))
+                        || (mStatusBar.skipToSettingsPanel()) && !Settings.System.getBoolean(getContext().getContentResolver(), Settings.System.FAST_TOGGLE, false)) {
                         shouldFlip = true;
                     }
                     break;
+
                 case MotionEvent.ACTION_POINTER_DOWN:
                     if (mOkToFlip) {
                         float miny = event.getY(0);

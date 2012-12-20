@@ -2850,6 +2850,13 @@ public final class Settings {
         public static final String QUICK_TOGGLE_FAV_CONTACT = "quick_toggle_fav_contact";
 
         /**
+         * enable and disable fast toggle in settings
+         *
+         * @hide
+         */
+        public static final String FAST_TOGGLE = "fast_toggle";
+
+        /**
          * @hide
          */
         public static final String MUTE_ANNOYING_NOTIFICATIONS_THRESHOLD = "mute_annoying_notifications_threshold";
