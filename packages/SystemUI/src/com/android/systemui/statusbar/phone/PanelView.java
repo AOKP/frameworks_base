@@ -298,7 +298,9 @@ public class PanelView extends FrameLayout {
                             if (mExpandedHeight == 0) {
                                 mJustPeeked = true;
                                 runPeekAnimation();
-                                mHandler.postDelayed(mSetShouldReact, 400);
+                                if(mBrightnessSliderEnabled) {
+                                    mHandler.postDelayed(mSetShouldReact, 400);
+                                }
                             }
                             break;
 
@@ -309,10 +311,12 @@ public class PanelView extends FrameLayout {
                                     mPeekAnimator.cancel();
                                 }
                                 mJustPeeked = false;
-                                mHandler.removeCallbacks(mSetShouldReact);
-                                mShouldReactToBrightnessSlider = false;
+                                if(mBrightnessSliderEnabled) {
+                                    mHandler.removeCallbacks(mSetShouldReact);
+                                    mShouldReactToBrightnessSlider = false;
+                                }
                             }
-                            if(mTracking && mShouldReactToBrightnessSlider) {
+                            if(mBrightnessSliderEnabled && mTracking && mShouldReactToBrightnessSlider) {
                                 if(mPropFactor == null) setPropFactor();
                                 mBrightnessValue = checkMinMax(Math.round(event.getRawX() * mPropFactor));
                                 changeBrightness();
@@ -620,7 +624,28 @@ public class PanelView extends FrameLayout {
                 Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL) == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC;
     }
 
+	class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System
+                    .getUriFor(Settings.System.STATUSBAR_BRIGHTNESS_SLIDER),
+                    false, this);
+            updateSettings();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
+    }
+
 	private void updateSettings() {
-		// TODO mBrightnessSliderEnabled = what?
+	    ContentResolver cr = mContext.getContentResolver();
+	    mBrightnessSliderEnabled = Settings.System.getBoolean(cr,
+	            Settings.System.STATUSBAR_BRIGHTNESS_SLIDER, true);
 	}
 }
