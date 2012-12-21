@@ -85,8 +85,9 @@ public class NavigationBarView extends LinearLayout {
 
     private Drawable mBackIcon, mBackLandIcon, mBackAltIcon, mBackAltLandIcon;
     private boolean mMenuArrowKeys;
-    
+
     public DelegateViewHelper mDelegateHelper;
+    private Context mContext;
 
     private AokpTarget mAokpTarget;
 
@@ -237,6 +238,7 @@ public class NavigationBarView extends LinearLayout {
 
     public NavigationBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        mContext = context;
 
         mHidden = false;
 
@@ -256,6 +258,15 @@ public class NavigationBarView extends LinearLayout {
         mBackAltIcon = res.getDrawable(R.drawable.ic_sysbar_back_ime);
         mBackAltLandIcon = res.getDrawable(R.drawable.ic_sysbar_back_ime);
         mAokpTarget = new AokpTarget(context);
+
+        mContext.getContentResolver().registerContentObserver(
+                Settings.System.getUriFor(Settings.System.SYSTEMUI_NAVBAR_COLOR), false,
+                new ContentObserver(new Handler()) {
+                    @Override
+                    public void onChange(boolean selfChange) {
+                        updateColor();
+                    }
+                });
     }
 
     private void makeBar() {
@@ -771,6 +782,7 @@ public class NavigationBarView extends LinearLayout {
              group.setMotionEventSplittingEnabled(false);
          }
          mCurrentView = mRotatedViews[Surface.ROTATION_0];
+         updateColor();
 
          // this takes care of making the buttons
          SettingsObserver settingsObserver = new SettingsObserver(new Handler());
@@ -1078,5 +1090,16 @@ public class NavigationBarView extends LinearLayout {
         public int getOpacity() {
             return PixelFormat.TRANSLUCENT;
         }
+    }
+
+    private void updateColor() {
+        int color = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.SYSTEMUI_NAVBAR_COLOR,
+                Settings.System.SYSTEMUI_NAVBAR_COLOR_DEF);
+        if (color == -1)
+            color = Settings.System.SYSTEMUI_NAVBAR_COLOR_DEF;
+        // we don't want alpha here
+        color = Color.rgb(Color.red(color), Color.green(color), Color.blue(color));
+        this.setBackgroundColor(color);
     }
 }
