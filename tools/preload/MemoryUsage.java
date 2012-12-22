@@ -252,20 +252,28 @@ class MemoryUsage implements Serializable {
                     errorCount += 1;
                     return NOT_AVAILABLE;
                 }
-
-                in.close();
-                err.close();
-                process.destroy();                
-
                 return new MemoryUsage(line);
             } catch (IOException e) {
                 System.err.println("Error getting stats for "
                         + className + ".");                
                 e.printStackTrace();
                 return NOT_AVAILABLE;
+            } finally {
+                if (in != null)
+                    try {
+                        in.close();
+                    } catch (IOException ioe) {
+                        return NOT_AVAILABLE;
+                    }
+                if (err != null)
+                    try {
+                        err.close();
+                    } catch (IOException ioe) {
+                        return NOT_AVAILABLE;
+                    }
+                process.destroy();
             }
         }
-
     }
 
     /**
