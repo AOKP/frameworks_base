@@ -2562,8 +2562,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     mStableBottom = mStableFullscreenBottom = mTmpNavigationFrame.top;
                     if (navVisible) {
                         mNavigationBar.showLw(true);
-                        mDockBottom = mTmpNavigationFrame.top;
-                        mRestrictedScreenHeight = mDockBottom - mDockTop;
+//                        mDockBottom = mTmpNavigationFrame.bottom;
+                        mRestrictedScreenHeight = mTmpNavigationFrame.top - mDockTop;
                     } else {
                         // We currently want to hide the navigation UI.
                         mNavigationBar.hideLw(true);
@@ -2572,7 +2572,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         // If the nav bar is currently requested to be visible,
                         // and not in the process of animating on or off, then
                         // we can tell the app that it is covered by it.
-                        mSystemBottom = mTmpNavigationFrame.top;
+//                        mSystemBottom = mTmpNavigationFrame.bottom;
+                        mRestrictedScreenHeight = mTmpNavigationFrame.top - mDockTop;
                     }
                 } else {
                     // Landscape screen; nav bar goes to the right.
@@ -2786,10 +2787,16 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             pf.left = df.left = cf.left = vf.left = mDockLeft;
             pf.top = df.top = cf.top = vf.top = mDockTop;
             pf.right = df.right = cf.right = vf.right = mDockRight;
-            pf.bottom = df.bottom = cf.bottom = vf.bottom = mDockBottom;
+            pf.bottom = df.bottom = cf.bottom = vf.bottom = 
+                    mHasNavigationBar ? mTmpNavigationFrame.top : mDockBottom;
             // IM dock windows always go to the bottom of the screen.
             attrs.gravity = Gravity.BOTTOM;
             mDockLayer = win.getSurfaceLayer();
+        } else if (attrs.type == TYPE_WALLPAPER) {
+            pf.left = df.left = cf.left = vf.left = mDockLeft;
+            pf.top = df.top = cf.top = vf.top = mUnrestrictedScreenTop;
+            pf.right = df.right = cf.right = vf.right = mDockRight;
+            pf.bottom = df.bottom = cf.bottom = vf.bottom = mUnrestrictedScreenTop + mUnrestrictedScreenHeight;
         } else {
             if ((fl & (FLAG_LAYOUT_IN_SCREEN | FLAG_FULLSCREEN | FLAG_LAYOUT_INSET_DECOR))
                     == (FLAG_LAYOUT_IN_SCREEN | FLAG_LAYOUT_INSET_DECOR)
@@ -2989,13 +2996,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         df.left = cf.left = mContentLeft;
                         df.top = cf.top = mContentTop;
                         df.right = cf.right = mContentRight;
-                        df.bottom = cf.bottom = mContentBottom;
+                        df.bottom = cf.bottom = mRestrictedScreenTop+mRestrictedScreenHeight;
                     }
                     if (adjust != SOFT_INPUT_ADJUST_NOTHING) {
                         vf.left = mCurLeft;
                         vf.top = mCurTop;
                         vf.right = mCurRight;
-                        vf.bottom = mCurBottom;
+                        vf.bottom = mRestrictedScreenTop+mRestrictedScreenHeight;
                     } else {
                         vf.set(cf);
                     }
