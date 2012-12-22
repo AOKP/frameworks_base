@@ -26,6 +26,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.ContentObserver;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -101,6 +102,8 @@ public class NavigationBarView extends LinearLayout {
      * 2 = Phablet UI
      */
     int mCurrentUIMode = 0;
+
+    private float mNavigationBarAlpha;
 
     public String[] mClickActions = new String[7];
     public String[] mLongpressActions = new String[7];
@@ -332,6 +335,7 @@ public class NavigationBarView extends LinearLayout {
                  }
             }
         }
+        setBackgroundAlpha(mNavigationBarAlpha);
     }
 
     private void addLightsOutButton(LinearLayout root, View v, boolean landscape, boolean empty) {
@@ -924,7 +928,9 @@ public class NavigationBarView extends LinearLayout {
 
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
-          
+
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_ALPHA), false, this);
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.MENU_LOCATION), false,
                     this);
@@ -963,12 +969,25 @@ public class NavigationBarView extends LinearLayout {
         }
     }
 
+    /*
+     * 0 < alpha < 1
+     */
+    private void setBackgroundAlpha(float alpha) {
+        int bgColor = mContext.getResources().getColor(R.drawable.nav_bar_bg);
+        int a = (int) (mNavigationBarAlpha * 255);
+        int r = Color.red(bgColor);
+        int g = Color.green(bgColor);
+        int b = Color.blue(bgColor);
+        setBackgroundColor(Color.argb(a, r, g, b));
+    }
+
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
-        
+
         mMenuLocation = Settings.System.getInt(resolver,
                 Settings.System.MENU_LOCATION, SHOW_RIGHT_MENU);
-
+        mNavigationBarAlpha = Settings.System.getFloat(resolver,
+                Settings.System.NAVIGATION_BAR_ALPHA, Color.alpha(mContext.getResources().getColor(R.drawable.nav_bar_bg)) * 255);
         mMenuVisbility = Settings.System.getInt(resolver,
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
         mMenuArrowKeys = Settings.System.getBoolean(resolver,
