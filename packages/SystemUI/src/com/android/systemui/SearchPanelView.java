@@ -141,7 +141,6 @@ public class SearchPanelView extends FrameLayout implements
         mWm = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
         mPackageManager = mContext.getPackageManager();
         mResources = mContext.getResources();
-
         mContentResolver = mContext.getContentResolver();
 
         mAokpTarget = new AokpTarget(context);
