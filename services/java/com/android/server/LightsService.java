@@ -142,13 +142,19 @@ public class LightsService {
         private static final String FLASHLIGHT_FILE = "/sys/class/leds/spotlight/brightness";
 
         public boolean getFlashlightEnabled() {
+            FileInputStream fis = null;
             try {
-                FileInputStream fis = new FileInputStream(FLASHLIGHT_FILE);
+                fis = new FileInputStream(FLASHLIGHT_FILE);
                 int result = fis.read();
-                fis.close();
                 return (result != '0');
             } catch (Exception e) {
                 return false;
+            } finally {
+                if (fis != null)
+                    try {
+                        fis.close();
+                    } catch (IOException ignored) {
+                    }
             }
         }
 
@@ -159,15 +165,21 @@ public class LightsService {
                     != PackageManager.PERMISSION_GRANTED) {
                 throw new SecurityException("Requires FLASHLIGHT or HARDWARE_TEST permission");
             }
+            FileOutputStream fos = null;
             try {
-                FileOutputStream fos = new FileOutputStream(FLASHLIGHT_FILE);
+                fos = new FileOutputStream(FLASHLIGHT_FILE);
                 byte[] bytes = new byte[2];
                 bytes[0] = (byte)(on ? '1' : '0');
                 bytes[1] = '\n';
                 fos.write(bytes);
-                fos.close();
             } catch (Exception e) {
                 // fail silently
+            } finally {
+                if (fos != null)
+                    try {
+                        fos.close();
+                    } catch (IOException ignored) {
+                    }
             }
         }
     };
