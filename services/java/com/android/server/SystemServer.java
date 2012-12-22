@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2006 The Android Open Source Project
- * This code has been modified.  Portions copyright (C) 2010, T-Mobile USA, Inc.
+ * Copyright (c) 2012, 2013. The Linux Foundation. All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import android.content.pm.IPackageManager;
 import android.content.res.Configuration;
 import android.media.AudioService;
 import android.net.wifi.p2p.WifiP2pService;
+import android.os.IBinder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -73,6 +74,9 @@ import dalvik.system.Zygote;
 import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import dalvik.system.PathClassLoader;
+import java.lang.reflect.Constructor;
 
 class ServerThread extends Thread {
     private static final String TAG = "SystemServer";
@@ -136,6 +140,7 @@ class ServerThread extends Thread {
         NetworkStatsService networkStats = null;
         NetworkPolicyManagerService networkPolicy = null;
         ConnectivityService connectivity = null;
+        Object cneObj = null;
         WifiP2pService wifiP2p = null;
         WifiService wifi = null;
         NsdService serviceDiscovery= null;
@@ -503,6 +508,29 @@ class ServerThread extends Thread {
                 wifiP2p.connectivityServiceReady();
             } catch (Throwable e) {
                 reportWtf("starting Connectivity Service", e);
+            }
+
+            try {
+                int value = SystemProperties.getInt("persist.cne.feature", 0);
+                if(value > 0) {
+                    try {
+                        PathClassLoader cneClassLoader =
+                            new PathClassLoader("/system/framework/com.quicinc.cne.jar",
+                                                ClassLoader.getSystemClassLoader());
+                        Class cneClass = cneClassLoader.loadClass("com.quicinc.cne.CNE");
+                        Constructor cneConstructor = cneClass.getConstructor
+                            (new Class[] {Context.class, ConnectivityService.class});
+                        cneObj = cneConstructor.newInstance(context, connectivity);
+                    } catch (Exception e) {
+                        cneObj = null;
+                        reportWtf("Creating Connectivity Engine Service", e);
+                    }
+                    if (cneObj != null && (cneObj instanceof IBinder)) {
+                        ServiceManager.addService("cneservice", (IBinder)cneObj);
+                    }
+                }
+            } catch (Throwable e) {
+                reportWtf("starting Connectivity Engine Service", e);
             }
 
             try {
