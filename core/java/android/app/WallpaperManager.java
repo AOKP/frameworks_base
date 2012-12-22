@@ -25,11 +25,13 @@ import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.display.DisplayManager;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,6 +43,8 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
+import android.view.IWindowManager;
 import android.view.ViewRootImpl;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
@@ -682,11 +686,16 @@ public class WallpaperManager {
      * @param minimumHeight Desired minimum height
      */
     public void suggestDesiredDimensions(int minimumWidth, int minimumHeight) {
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point screen = new Point();
+        display.getSize(screen);
         try {
             if (sGlobals.mService == null) {
                 Log.w(TAG, "WallpaperService not running");
             } else {
-                sGlobals.mService.setDimensionHints(minimumWidth, minimumHeight);
+                sGlobals.mService.setDimensionHints(screen.x, screen.y);
+//                sGlobals.mService.setDimensionHints(minimumWidth, minimumHeight);
             }
         } catch (RemoteException e) {
             // Ignore
