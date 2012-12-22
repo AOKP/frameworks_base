@@ -26,6 +26,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.ContentObserver;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -101,6 +102,9 @@ public class NavigationBarView extends LinearLayout {
      * 2 = Phablet UI
      */
     int mCurrentUIMode = 0;
+
+    private float mNavigationBarAlpha;
+    public static final float KEYGUARD_ALPHA = 0.44f;
 
     public String[] mClickActions = new String[7];
     public String[] mLongpressActions = new String[7];
@@ -332,6 +336,7 @@ public class NavigationBarView extends LinearLayout {
                  }
             }
         }
+        setBackgroundAlpha(mNavigationBarAlpha);
     }
 
     private void addLightsOutButton(LinearLayout root, View v, boolean landscape, boolean empty) {
@@ -539,6 +544,7 @@ public class NavigationBarView extends LinearLayout {
         final boolean disableBack = ((disabledFlags & View.STATUS_BAR_DISABLE_BACK) != 0)
               && ((mNavigationIconHints & StatusBarManager.NAVIGATION_HINT_BACK_ALT) == 0);
         final boolean disableSearch = ((disabledFlags & View.STATUS_BAR_DISABLE_SEARCH) != 0);
+        final boolean keygaurdProbablyEnabled = (disableHome && !disableSearch);
 
         if (mCurrentUIMode != 1 && SLIPPERY_WHEN_DISABLED) { // Tabletmode doesn't deal with slippery
             setSlippery(disableHome && disableRecent && disableBack && disableSearch);
@@ -566,8 +572,9 @@ public class NavigationBarView extends LinearLayout {
 
             }
         }
-        getSearchLight().setVisibility((disableHome && !disableSearch) ? View.VISIBLE : View.GONE);
+        getSearchLight().setVisibility(keygaurdProbablyEnabled ? View.VISIBLE : View.GONE);
         updateMenuArrowKeys();
+        setBackgroundAlpha(keygaurdProbablyEnabled && mNavigationBarAlpha < KEYGUARD_ALPHA ? KEYGUARD_ALPHA : mNavigationBarAlpha);
     }
 
     public void setSlippery(boolean newSlippery) {
@@ -924,7 +931,9 @@ public class NavigationBarView extends LinearLayout {
 
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
-          
+
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_ALPHA), false, this);
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.MENU_LOCATION), false,
                     this);
@@ -963,12 +972,26 @@ public class NavigationBarView extends LinearLayout {
         }
     }
 
+    /*
+     * 0 < alpha < 1
+     */
+    private void setBackgroundAlpha(float alpha) {
+        int bgColor = mContext.getResources().getColor(R.drawable.nav_bar_bg);
+        int a = (int) (alpha * 255);
+        int r = Color.red(bgColor);
+        int g = Color.green(bgColor);
+        int b = Color.blue(bgColor);
+        setBackgroundColor(Color.argb(a, r, g, b));
+        invalidate();
+    }
+
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
-        
+
         mMenuLocation = Settings.System.getInt(resolver,
                 Settings.System.MENU_LOCATION, SHOW_RIGHT_MENU);
-
+        mNavigationBarAlpha = Settings.System.getFloat(resolver,
+                Settings.System.NAVIGATION_BAR_ALPHA, Color.alpha(mContext.getResources().getColor(R.drawable.nav_bar_bg)) * 255);
         mMenuVisbility = Settings.System.getInt(resolver,
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
         mMenuArrowKeys = Settings.System.getBoolean(resolver,
