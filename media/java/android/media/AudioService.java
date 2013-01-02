@@ -505,9 +505,7 @@ public class AudioService extends IAudioService.Stub {
                 null,
                 0);
 
-        mSafeMediaVolumeState = new Integer(Settings.Global.getInt(mContentResolver,
-                                                        Settings.Global.AUDIO_SAFE_VOLUME_STATE,
-                                                        SAFE_MEDIA_VOLUME_NOT_CONFIGURED));
+        mSafeMediaVolumeState = new Integer(SAFE_MEDIA_VOLUME_NOT_CONFIGURED);
         // The default safe volume index read here will be replaced by the actual value when
         // the mcc is read by onConfigureSafeVolume()
         mSafeMediaVolumeIndex = mContext.getResources().getInteger(
@@ -724,6 +722,7 @@ public class AudioService extends IAudioService.Stub {
 
             updateRingerModeAffectedStreams();
             readDockAudioSettings(cr);
+            updateManualSafeMediaVolume();
         }
 
         mMuteAffectedStreams = System.getIntForUser(cr,
@@ -3737,6 +3736,8 @@ public class AudioService extends IAudioService.Stub {
                 Settings.System.MODE_RINGER_STREAMS_AFFECTED), false, this);
             mContentResolver.registerContentObserver(Settings.Global.getUriFor(
                 Settings.Global.DOCK_AUDIO_MEDIA_ENABLED), false, this);
+            mContentResolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.MANUAL_SAFE_MEDIA_VOLUME), false, this);
         }
 
         @Override
@@ -3755,6 +3756,7 @@ public class AudioService extends IAudioService.Stub {
                     setRingerModeInt(getRingerMode(), false);
                 }
                 readDockAudioSettings(mContentResolver);
+                updateManualSafeMediaVolume();
             }
         }
     }
@@ -4573,6 +4575,8 @@ public class AudioService extends IAudioService.Stub {
     // mSafeMediaVolumeDevices lists the devices for which safe media volume is enforced,
     private final int mSafeMediaVolumeDevices = AudioSystem.DEVICE_OUT_WIRED_HEADSET |
                                                 AudioSystem.DEVICE_OUT_WIRED_HEADPHONE;
+    // mManualSafeMediaVolume overrides the built-in safe media volume
+    boolean mManualSafeMediaVolume;
     // mMusicActiveMs is the cumulative time of music activity since safe volume was disabled.
     // When this time reaches UNSAFE_VOLUME_MUSIC_ACTIVE_MS_MAX, the safe media volume is re-enabled
     // automatically. mMusicActiveMs is rounded to a multiple of MUSIC_ACTIVE_POLL_PERIOD_MS.
@@ -4604,6 +4608,9 @@ public class AudioService extends IAudioService.Stub {
     }
 
     private void enforceSafeMediaVolume() {
+        // return if safe volume has been manually turned off
+        if (!mManualSafeMediaVolume) return;
+
         VolumeStreamState streamState = mStreamStates[AudioSystem.STREAM_MUSIC];
         int devices = mSafeMediaVolumeDevices;
         int i = 0;
@@ -4633,7 +4640,7 @@ public class AudioService extends IAudioService.Stub {
             if ((mSafeMediaVolumeState == SAFE_MEDIA_VOLUME_ACTIVE) &&
                     (mStreamVolumeAlias[streamType] == AudioSystem.STREAM_MUSIC) &&
                     ((device & mSafeMediaVolumeDevices) != 0) &&
-                    (index > mSafeMediaVolumeIndex)) {
+                    (index > mSafeMediaVolumeIndex) && mManualSafeMediaVolume) {
                 return false;
             }
             return true;
@@ -4705,5 +4712,11 @@ public class AudioService extends IAudioService.Stub {
         if (status != 0) {
             Log.w(TAG, "AudioFlinger informed of device's low RAM attribute; status " + status);
         }
+    }
+
+    protected void updateManualSafeMediaVolume() {
+        mManualSafeMediaVolume = Settings.AOKP.getBoolean(mContext.getContentResolver(),
+                Settings.AOKP.MANUAL_SAFE_MEDIA_VOLUME, true);
+        setSafeMediaVolumeEnabled(mManualSafeMediaVolume);
     }
 }
