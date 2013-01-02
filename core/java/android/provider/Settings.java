@@ -2829,6 +2829,12 @@ public final class Settings {
         public static final String LOCKSCREEN_CUSTOM_TEXT_COLOR = "lockscreen_custom_text_color";
 
         /**
+         * Weather to minimize lockscreen challenge on screen turned on
+         * @hide
+         */
+        public static final String LOCKSCREEN_MINIMIZE_LOCKSCREEN_CHALLENGE = "lockscreen_minimize_lockscreen_challenge";
+
+        /**
          * enabled and order of quick toggles
          * 
          * @hide
