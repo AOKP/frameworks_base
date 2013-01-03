@@ -101,6 +101,8 @@ public class NavigationBarView extends LinearLayout {
      */
     int mCurrentUIMode = 0;
 
+    int mNavigationBarColor = Integer.MIN_VALUE;
+
     private float mNavigationBarAlpha;
     public static final float KEYGUARD_ALPHA = 0.44f;
 
@@ -339,6 +341,7 @@ public class NavigationBarView extends LinearLayout {
             setBackground(new BackgroundAlphaColorDrawable(((ColorDrawable) bg).getColor()));
         }
         setBackgroundAlpha(mNavigationBarAlpha);
+        setBackgroundColor(mNavigationBarColor);
     }
 
     private void addLightsOutButton(LinearLayout root, View v, boolean landscape, boolean empty) {
@@ -767,6 +770,7 @@ public class NavigationBarView extends LinearLayout {
              group.setMotionEventSplittingEnabled(false);
          }
          mCurrentView = mRotatedViews[Surface.ROTATION_0];
+        setBackgroundColor(mNavigationBarColor);
 
          // this takes care of making the buttons
          SettingsObserver settingsObserver = new SettingsObserver(new Handler());
@@ -933,6 +937,8 @@ public class NavigationBarView extends LinearLayout {
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_ALPHA), false, this);
             resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_COLOR), false, this);
+            resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.MENU_LOCATION), false,
                     this);
             resolver.registerContentObserver(
@@ -981,13 +987,33 @@ public class NavigationBarView extends LinearLayout {
         bg.setAlpha(a);
     }
 
+    /*
+     * This is sloppy sloppy sloppy but iteration 99999 later and I got further and further from what I wanted.
+     * I think it needs mixing into the void above but I need to call the refresh in other places so I'm at a loss
+
+    public void setBackgroundColor(int color) {
+        Drawable bg = getBackground();
+        this.setBackgroundColor(color);
+    }
+     */
+
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
+
+        int defaultColor = getResources().getColor(
+                com.android.internal.R.color.black);
 
         mMenuLocation = Settings.System.getInt(resolver,
                 Settings.System.MENU_LOCATION, SHOW_RIGHT_MENU);
         mNavigationBarAlpha = Settings.System.getFloat(resolver,
                 Settings.System.NAVIGATION_BAR_ALPHA, new Float(mContext.getResources().getInteger(R.integer.navigation_bar_transparency) / 255));
+        mNavigationBarColor = Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_COLOR, defaultColor);
+        if (mNavigationBarColor == Integer.MIN_VALUE) {
+            mNavigationBarColor = defaultColor;
+        }
+        setBackgroundColor(mNavigationBarColor);
+
         mMenuVisbility = Settings.System.getInt(resolver,
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
         mMenuArrowKeys = Settings.System.getBoolean(resolver,
