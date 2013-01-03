@@ -201,5 +201,6 @@
             file="/system/framework/android.test.runner.jar" />
     <library name="javax.obex"
             file="/system/framework/javax.obex.jar"/>
-
+    <library name="javax.btobex"
+            file="/system/framework/javax.btobex.jar"/>
 </permissions>

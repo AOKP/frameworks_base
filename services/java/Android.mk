@@ -9,6 +9,12 @@ LOCAL_SRC_FILES := \
 	    com/android/server/EventLogTags.logtags \
 	    com/android/server/am/EventLogTags.logtags
 
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+    LOCAL_SRC_FILES := $(filter-out \
+                        com/android/server/BluetoothManagerService.java \
+                        ,$(LOCAL_SRC_FILES))
+endif
+
 LOCAL_MODULE:= services
 
 LOCAL_JAVA_LIBRARIES := android.policy telephony-common

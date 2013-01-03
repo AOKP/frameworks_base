@@ -656,6 +656,10 @@
          speech -->
     <bool name="config_bluetooth_wide_band_speech">true</bool>
 
+     <!-- Boolean indicating if current platform supports quick switch-on/off of
+         Bluetooth Module -->
+    <bool name="config_bluetooth_adapter_quick_switch">true</bool>
+
     <!-- Boolean indicating if current platform need do one-time bluetooth address
          re-validation -->
     <bool name="config_bluetooth_address_validation">false</bool>

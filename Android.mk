@@ -26,6 +26,17 @@ LOCAL_PATH := $(call my-dir)
 # TODO: find a more appropriate way to do this.
 framework_res_source_path := APPS/framework-res_intermediates/src
 
+# Include the bluetoothmsm for bluez frameworks
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+FRAMEWORKS_BASE_SUBDIRS += \
+	$(addsuffix /java, \
+	    bluetoothmsm \
+	)
+
+FRAMEWORKS_BASE_JAVA_SRC_DIRS += \
+	$(addprefix frameworks/base/, bluetoothmsm/java)
+endif
+
 # the library
 # ============================================================
 include $(CLEAR_VARS)
@@ -46,6 +57,22 @@ LOCAL_SRC_FILES += \
 LOCAL_SRC_FILES := $(filter-out \
 			org/mobilecontrol/% \
 			,$(LOCAL_SRC_FILES))
+BLUETOOTH_SRC := \
+	core/java/android/bluetooth \
+
+BLUETOOTH_MSM_SRC := \
+	bluetoothmsm/java/android/bluetooth \
+	bluetoothmsm/java/android/server\
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_SRC)) \
+			,$(LOCAL_SRC_FILES))
+else
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_MSM_SRC)) \
+			,$(LOCAL_SRC_FILES))
+endif
 
 ## READ ME: ########################################################
 ##
@@ -87,19 +114,6 @@ LOCAL_SRC_FILES += \
 	core/java/android/app/backup/IFullBackupRestoreObserver.aidl \
 	core/java/android/app/backup/IRestoreObserver.aidl \
 	core/java/android/app/backup/IRestoreSession.aidl \
-	core/java/android/bluetooth/IBluetooth.aidl \
-	core/java/android/bluetooth/IBluetoothA2dp.aidl \
-	core/java/android/bluetooth/IBluetoothCallback.aidl \
-	core/java/android/bluetooth/IBluetoothHeadset.aidl \
-	core/java/android/bluetooth/IBluetoothHeadsetPhone.aidl \
-	core/java/android/bluetooth/IBluetoothHealth.aidl \
-	core/java/android/bluetooth/IBluetoothHealthCallback.aidl \
-	core/java/android/bluetooth/IBluetoothInputDevice.aidl \
-	core/java/android/bluetooth/IBluetoothPan.aidl \
-	core/java/android/bluetooth/IBluetoothManager.aidl \
-	core/java/android/bluetooth/IBluetoothManagerCallback.aidl \
-	core/java/android/bluetooth/IBluetoothPbap.aidl \
-	core/java/android/bluetooth/IBluetoothStateChangeCallback.aidl \
 	core/java/android/content/IClipboard.aidl \
 	core/java/android/content/IContentService.aidl \
 	core/java/android/content/IIntentReceiver.aidl \
@@ -227,6 +241,41 @@ LOCAL_SRC_FILES += \
 	voip/java/android/net/sip/ISipService.aidl
 #
 
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+LOCAL_SRC_FILES += \
+	bluetoothmsm/java/android/bluetooth/IBluetooth.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothA2dp.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothCallback.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothGattCallback.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothGattProfile.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothGattService.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothHeadset.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothHeadsetPhone.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothHealthCallback.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothLEFindMeServices.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothLEProximityServices.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothManager.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothPbap.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothPreferredDeviceListCallback.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothStateChangeCallback.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothThermometerCallBack.aidl \
+	bluetoothmsm/java/android/bluetooth/IBluetoothThermometerServices.aidl
+else
+LOCAL_SRC_FILES += \
+	core/java/android/bluetooth/IBluetooth.aidl \
+	core/java/android/bluetooth/IBluetoothA2dp.aidl \
+	core/java/android/bluetooth/IBluetoothCallback.aidl \
+	core/java/android/bluetooth/IBluetoothHeadset.aidl \
+	core/java/android/bluetooth/IBluetoothHeadsetPhone.aidl \
+	core/java/android/bluetooth/IBluetoothHealth.aidl \
+	core/java/android/bluetooth/IBluetoothHealthCallback.aidl \
+	core/java/android/bluetooth/IBluetoothInputDevice.aidl \
+	core/java/android/bluetooth/IBluetoothManager.aidl \
+	core/java/android/bluetooth/IBluetoothManagerCallback.aidl \
+	core/java/android/bluetooth/IBluetoothPan.aidl \
+	core/java/android/bluetooth/IBluetoothPbap.aidl \
+	core/java/android/bluetooth/IBluetoothStateChangeCallback.aidl
+endif
 
 # FRAMEWORKS_BASE_JAVA_SRC_DIRS comes from build/core/pathmap.mk
 LOCAL_AIDL_INCLUDES += $(FRAMEWORKS_BASE_JAVA_SRC_DIRS)
@@ -272,8 +321,6 @@ aidl_files := \
 	frameworks/base/core/java/android/accounts/IAccountAuthenticatorResponse.aidl \
 	frameworks/base/core/java/android/app/Notification.aidl \
 	frameworks/base/core/java/android/app/PendingIntent.aidl \
-	frameworks/base/core/java/android/bluetooth/BluetoothDevice.aidl \
-	frameworks/base/core/java/android/bluetooth/BluetoothHealthAppConfiguration.aidl \
 	frameworks/base/core/java/android/content/ComponentName.aidl \
 	frameworks/base/core/java/android/content/Intent.aidl \
 	frameworks/base/core/java/android/content/IntentSender.aidl \
@@ -317,6 +364,17 @@ aidl_files := \
 	frameworks/base/telephony/java/android/telephony/ServiceState.aidl \
 	frameworks/base/telephony/java/com/android/internal/telephony/IPhoneSubInfo.aidl \
 	frameworks/base/telephony/java/com/android/internal/telephony/ITelephony.aidl \
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+aidl_files += \
+	frameworks/base/bluetoothmsm/java/android/bluetooth/BluetoothDevice.aidl \
+	frameworks/base/bluetoothmsm/java/android/bluetooth/BluetoothGattAppConfiguration.aidl \
+	frameworks/base/bluetoothmsm/java/android/bluetooth/BluetoothHealthAppConfiguration.aidl
+else
+aidl_files += \
+	frameworks/base/core/java/android/bluetooth/BluetoothDevice.aidl \
+	frameworks/base/core/java/android/bluetooth/BluetoothHealthAppConfiguration.aidl
+endif
 
 gen := $(TARGET_OUT_COMMON_INTERMEDIATES)/framework.aidl
 $(gen): PRIVATE_SRC_FILES := $(aidl_files)
@@ -554,6 +612,16 @@ framework_docs_LOCAL_DROIDDOC_OPTIONS += \
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:=$(framework_docs_LOCAL_API_CHECK_SRC_FILES)
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_SRC)) \
+			,$(LOCAL_SRC_FILES))
+else
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_MSM_SRC)) \
+			,$(LOCAL_SRC_FILES))
+endif
 LOCAL_INTERMEDIATE_SOURCES:=$(framework_docs_LOCAL_INTERMEDIATE_SOURCES)
 LOCAL_JAVA_LIBRARIES:=$(framework_docs_LOCAL_JAVA_LIBRARIES)
 LOCAL_MODULE_CLASS:=$(framework_docs_LOCAL_MODULE_CLASS)
@@ -585,6 +653,16 @@ $(call dist-for-goals,sdk,$(INTERNAL_PLATFORM_API_FILE))
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:=$(framework_docs_LOCAL_SRC_FILES)
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_SRC)) \
+			,$(LOCAL_SRC_FILES))
+else
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_MSM_SRC)) \
+			,$(LOCAL_SRC_FILES))
+endif
 LOCAL_INTERMEDIATE_SOURCES:=$(framework_docs_LOCAL_INTERMEDIATE_SOURCES)
 LOCAL_JAVA_LIBRARIES:=$(framework_docs_LOCAL_JAVA_LIBRARIES)
 LOCAL_MODULE_CLASS:=$(framework_docs_LOCAL_MODULE_CLASS)
@@ -614,6 +692,16 @@ droidcore: doc-comment-check-docs
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:=$(framework_docs_LOCAL_SRC_FILES)
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_SRC)) \
+			,$(LOCAL_SRC_FILES))
+else
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_MSM_SRC)) \
+			,$(LOCAL_SRC_FILES))
+endif
 LOCAL_INTERMEDIATE_SOURCES:=$(framework_docs_LOCAL_INTERMEDIATE_SOURCES)
 LOCAL_JAVA_LIBRARIES:=$(framework_docs_LOCAL_JAVA_LIBRARIES)
 LOCAL_MODULE_CLASS:=$(framework_docs_LOCAL_MODULE_CLASS)
@@ -652,6 +740,16 @@ $(full_target): $(framework_built)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:=$(framework_docs_LOCAL_SRC_FILES)
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_SRC)) \
+			,$(LOCAL_SRC_FILES))
+else
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_MSM_SRC)) \
+			,$(LOCAL_SRC_FILES))
+endif
 LOCAL_INTERMEDIATE_SOURCES:=$(framework_docs_LOCAL_INTERMEDIATE_SOURCES)
 LOCAL_STATIC_JAVA_LIBRARIES:=$(framework_docs_LOCAL_STATIC_JAVA_LIBRARIES)
 LOCAL_JAVA_LIBRARIES:=$(framework_docs_LOCAL_JAVA_LIBRARIES)
@@ -681,6 +779,16 @@ $(full_target): framework-res-package-target
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES:=$(framework_docs_LOCAL_SRC_FILES)
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_SRC)) \
+			,$(LOCAL_SRC_FILES))
+else
+    LOCAL_SRC_FILES := $(filter-out \
+			$(call find-other-java-files, $(BLUETOOTH_MSM_SRC)) \
+			,$(LOCAL_SRC_FILES))
+endif
 LOCAL_INTERMEDIATE_SOURCES:=$(framework_docs_LOCAL_INTERMEDIATE_SOURCES)
 LOCAL_JAVA_LIBRARIES:=$(framework_docs_LOCAL_JAVA_LIBRARIES) framework
 LOCAL_MODULE_CLASS:=$(framework_docs_LOCAL_MODULE_CLASS)

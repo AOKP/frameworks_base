@@ -152,6 +152,18 @@ LOCAL_SRC_FILES:= \
 	android_content_res_Configuration.cpp \
     android_animation_PropertyValuesHolder.cpp
 
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ), true)
+LOCAL_SRC_FILES += \
+	bluetoothmsm/android_bluetooth_HeadsetBase.cpp \
+	bluetoothmsm/android_bluetooth_common.cpp \
+	bluetoothmsm/android_bluetooth_BluetoothAudioGateway.cpp \
+	bluetoothmsm/android_bluetooth_BluetoothSocket.cpp \
+	bluetoothmsm/android_bluetooth_c.c \
+	bluetoothmsm/android_server_BluetoothService.cpp \
+	bluetoothmsm/android_server_BluetoothEventLoop.cpp \
+	bluetoothmsm/android_server_BluetoothA2dpService.cpp
+endif #BOARD_HAVE_BLUETOOTH_BLUEZ
+
 LOCAL_C_INCLUDES += \
 	$(JNI_H_INCLUDE) \
 	$(LOCAL_PATH)/android/graphics \
@@ -213,6 +225,14 @@ LOCAL_SHARED_LIBRARIES := \
 	libusbhost \
 	libharfbuzz \
 	libz
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
+    LOCAL_C_INCLUDES += \
+          external/dbus \
+          system/bluetooth/bluez-clean-headers
+    LOCAL_CFLAGS += -DHAVE_BLUETOOTH -DHAVE_BLUEZ_JNI
+    LOCAL_SHARED_LIBRARIES += libbluedroid libdbus
+endif #BOARD_HAVE_BLUETOOTH_BLUEZ
 
 ifeq ($(HAVE_SELINUX),true)
 LOCAL_C_INCLUDES += external/libselinux/include
