@@ -31,6 +31,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -79,7 +80,7 @@ public class NavigationBarView extends LinearLayout {
     boolean mHidden, mLowProfile, mShowMenu;
     int mDisabledFlags = 0;
     int mNavigationIconHints = 0;
-
+    Drawable bgc;
     private Drawable mBackIcon, mBackLandIcon, mBackAltIcon, mBackAltLandIcon;
     private boolean mMenuArrowKeys;
     
@@ -101,6 +102,8 @@ public class NavigationBarView extends LinearLayout {
      * 2 = Phablet UI
      */
     int mCurrentUIMode = 0;
+
+    int mNavigationBarColor = Integer.MIN_VALUE;
 
     private float mNavigationBarAlpha;
     public static final float KEYGUARD_ALPHA = 0.44f;
@@ -341,6 +344,12 @@ public class NavigationBarView extends LinearLayout {
             setBackground(new BackgroundAlphaColorDrawable(((ColorDrawable) bg).getColor()));
         }
         setBackgroundAlpha(mNavigationBarAlpha);
+
+        Drawable bgc = mContext.getResources().getDrawable(R.drawable.nav_bar_bg);
+        if(bgc instanceof ColorDrawable) {
+            setBackground(new BackgroundAlphaColorDrawable(((ColorDrawable) bg).getColor()));
+        }
+        setNavColor(mNavigationBarColor);
     }
 
     private void addLightsOutButton(LinearLayout root, View v, boolean landscape, boolean empty) {
@@ -787,6 +796,7 @@ public class NavigationBarView extends LinearLayout {
              group.setMotionEventSplittingEnabled(false);
          }
          mCurrentView = mRotatedViews[Surface.ROTATION_0];
+         setNavColor(mNavigationBarColor);
 
          // this takes care of making the buttons
          SettingsObserver settingsObserver = new SettingsObserver(new Handler());
@@ -953,6 +963,8 @@ public class NavigationBarView extends LinearLayout {
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_ALPHA), false, this);
             resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_COLOR), false, this);
+            resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.MENU_LOCATION), false,
                     this);
             resolver.registerContentObserver(
@@ -1001,6 +1013,20 @@ public class NavigationBarView extends LinearLayout {
         bg.setAlpha(a);
     }
 
+    private void setNavColor(int id) {
+        Drawable bgc = getBackground();
+        if (bgc != null) {
+            ContentResolver resolver = mContext.getContentResolver();
+            mNavigationBarColor = Settings.System.getInt(resolver,
+                    Settings.System.NAVIGATION_BAR_COLOR, 1);
+
+            bgc.setColorFilter(null);
+            if (mNavigationBarColor != 1) {
+                bgc.setColorFilter(mNavigationBarColor, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+    }
+
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
 
@@ -1008,6 +1034,17 @@ public class NavigationBarView extends LinearLayout {
                 Settings.System.MENU_LOCATION, SHOW_RIGHT_MENU);
         mNavigationBarAlpha = Settings.System.getFloat(resolver,
                 Settings.System.NAVIGATION_BAR_ALPHA, new Float(mContext.getResources().getInteger(R.integer.navigation_bar_transparency) / 255));
+
+        if (bgc != null) {
+            mNavigationBarColor = Settings.System.getInt(resolver,
+                    Settings.System.NAVIGATION_BAR_COLOR, 1);
+
+            bgc.setColorFilter(null);
+            if (mNavigationBarColor != 1) {
+                bgc.setColorFilter(mNavigationBarColor, PorterDuff.Mode.SRC_ATOP);
+            }
+        }
+
         mMenuVisbility = Settings.System.getInt(resolver,
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
         mMenuArrowKeys = Settings.System.getBoolean(resolver,
