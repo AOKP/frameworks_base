@@ -149,6 +149,11 @@ public class KeyButtonView extends ImageView {
     }
 
     @Override
+    public Drawable getDrawable() {
+        return mGlowBG;
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         if (mGlowBG != null) {
             canvas.save();
