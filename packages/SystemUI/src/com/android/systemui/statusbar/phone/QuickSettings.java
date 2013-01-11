@@ -94,6 +94,7 @@ import com.android.systemui.aokp.AokpTarget;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -1230,19 +1231,26 @@ class QuickSettings {
             case SWAGGER_TILE:
                 quick = (QuickSettingsTileView)
                         inflater.inflate(R.layout.quick_settings_tile, parent, false);
-                quick.setContent(R.layout.quick_settings_tile_swagger, inflater);
-                TextView tv = (TextView) quick.findViewById(R.id.swagger_textview);
-                tv.setTextSize(1, mTileTextSize);
+                quick.setContent(R.layout.quick_settings_tile_swaggersun, inflater);
+                Calendar day = Calendar.getInstance();
+                if (day.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                quick.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mBar.collapseAllPanels(true);
+                        Toast.makeText(mContext, R.string.quick_settings_swaggersuntoast,
+                            Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
                 quick.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
                         switch (event.getAction()) {
                             case MotionEvent.ACTION_DOWN:
-                                if (tacoToggle) {
+                                if (tacoToggle) { 
                                     TextView tv = (TextView) v.findViewById(R.id.swagger_textview);
-                                    tv.setText(R.string.quick_settings_swagger);
-                                    tv.setTextSize(1, mTileTextSize);
-                                    tv.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_swagger, 0, 0);
+                                    tv.setContent(Rlayout.quick_settings_tile_swagger,inflater);
                                     tacoSwagger = event.getEventTime();
                                     tacoToggle = false;
                                 } else {
@@ -1253,13 +1261,22 @@ class QuickSettings {
                                 if ((event.getEventTime() - tacoSwagger) > 2500) {
                                     TextView tv = (TextView) v.findViewById(R.id.swagger_textview);
                                     tv.setText(R.string.quick_settings_fbgt);
-                                    tv.setTextSize(1, mTileTextSize);
                                     tv.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_fbgt_on, 0, 0);
                                     tacoToggle = true;
                                 }
                                 break;
                         }
                         return true;
+                    }
+                });
+                }
+                mModel.addSwaggerTile(quick, new QuickSettingsModel.RefreshCallback() {
+                    @Override
+                    public void refreshView(QuickSettingsTileView view, State state) {
+                        TextView tv = (TextView) view.findViewById(R.id.swagger_textview);
+                        tv.setCompoundDrawablesWithIntrinsicBounds(0, state.iconId, 0, 0);
+                        tv.setText(state.label);
+                        tv.setTextSize(1, mTileTextSize);
                     }
                 });
                 break;

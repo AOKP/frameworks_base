@@ -65,6 +65,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 class QuickSettingsModel implements BluetoothStateChangeCallback,
@@ -283,6 +284,10 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     private RefreshCallback mSyncCallback;
     private State mSyncState = new State();
 
+    private QuickSettingsTileView mSwaggerTile;
+    private RefreshCallback mSwaggerCallback;
+    private State mSwaggerState = new State();
+
     private QuickSettingsTileView mTorchTile;
     private RefreshCallback mTorchCallback;
     private State mTorchState = new State();
@@ -370,6 +375,8 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
                 refreshNFCTile();
             if (toggle.equals(QuickSettings.SYNC_TOGGLE))
                 refreshSyncTile();
+            if (toggle.equals(QuickSettings.SWAGGER_TOGGLE))
+                refreshSwaggerTile();
             if (toggle.equals(QuickSettings.TORCH_TOGGLE))
                 refreshTorchTile();
             if (toggle.equals(QuickSettings.WIFI_TETHER_TOGGLE))
@@ -985,6 +992,33 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     void refreshSyncTile() {
         if (mSyncTile != null) {
             onSyncChanged();
+        }
+    }
+
+    // Swagger
+    void addSwaggerTile(QuickSettingsTileView view, RefreshCallback cb) {
+        mSwaggerTile = view;
+        mSwaggerCallback = cb;
+        onSwaggerChanged();
+    }
+
+    void onSwaggerChanged() {
+        Resources r = mContext.getResources();
+        Calendar day = Calendar.getInstance();
+        if (day.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+        mSwaggerState.label = r.getString(R.string.quick_settings_swaggersun);
+        mSwaggerState.iconId = R.drawable.ic_qs_swaggersun;
+        mSwaggerCallback.refreshView(mSwaggerTile, mSwaggerState);
+        } else {
+        mSwaggerState.label = r.getString(R.string.quick_settings_swagger);
+        mSwaggerState.iconId = R.drawable.ic_qs_swagger;
+        mSwaggerCallback.refreshView(mSwaggerTile, mSwaggerState);
+        }
+    }
+
+    void refreshSwaggerTile() {
+        if (mSwaggerTile != null) {
+            onSwaggerChanged();
         }
     }
 
