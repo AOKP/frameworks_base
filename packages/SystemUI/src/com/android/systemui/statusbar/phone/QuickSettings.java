@@ -94,6 +94,7 @@ import com.android.systemui.aokp.AokpTarget;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -1230,9 +1231,28 @@ class QuickSettings {
             case SWAGGER_TILE:
                 quick = (QuickSettingsTileView)
                         inflater.inflate(R.layout.quick_settings_tile, parent, false);
+                Calendar day = Calendar.getInstance();
+                if (day.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                quick.setContent(R.layout.quick_settings_tile_swaggersun, inflater);
+                TextView tv = (TextView) quick.findViewById(R.id.swagger_textviewsun);
+                tv.setTextSize(1, mTileTextSize);
+                } else {
                 quick.setContent(R.layout.quick_settings_tile_swagger, inflater);
                 TextView tv = (TextView) quick.findViewById(R.id.swagger_textview);
                 tv.setTextSize(1, mTileTextSize);
+                }
+                if (day.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                quick.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView tv = (TextView) v.findViewById(R.id.swagger_textviewsun);
+                        tv.setText(R.string.quick_settings_swaggersun);
+                        tv.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_swaggersun, 0, 0);
+                        Toast.makeText(mContext, R.string.quick_settings_swaggersuntoast,
+                            Toast.LENGTH_LONG).show();
+                        }
+                    });
+                } else {
                 quick.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
@@ -1262,6 +1282,7 @@ class QuickSettings {
                         return true;
                     }
                 });
+                }
                 break;
             case FAV_CONTACT_TILE:
                 quick = (QuickSettingsTileView)
