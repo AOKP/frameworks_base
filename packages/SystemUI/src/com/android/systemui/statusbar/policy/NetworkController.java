@@ -582,11 +582,14 @@ public class NetworkController extends BroadcastReceiver {
     }
 
     private final void updateDataNetType() {
+        boolean isConnected = (mInetCondition == 1);
         if (mIsWimaxEnabled && mWimaxConnected) {
             // wimax is a special 4g network not handled by telephony
             mDataIconList = TelephonyIcons.DATA_4G[mInetCondition];
-            mDataTypeIconId = R.drawable.stat_sys_data_connected_4g;
-            mQSDataTypeIconId = R.drawable.ic_qs_signal_4g;
+            mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_4g
+                    : R.drawable.stat_sys_data_connected_4g);
+            mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_4g
+                    : R.drawable.ic_qs_signal_4g);
             mContentDescriptionDataType = mContext.getString(
                     R.string.accessibility_data_connection_4g);
         } else {
@@ -605,8 +608,10 @@ public class NetworkController extends BroadcastReceiver {
                 case TelephonyManager.NETWORK_TYPE_EDGE:
                     if (!mShowAtLeastThreeGees) {
                         mDataIconList = TelephonyIcons.DATA_E[mInetCondition];
-                        mDataTypeIconId = R.drawable.stat_sys_data_connected_e;
-                        mQSDataTypeIconId = R.drawable.ic_qs_signal_e;
+                        mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_e
+                                : R.drawable.stat_sys_data_connected_e);
+                        mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_e
+                                : R.drawable.ic_qs_signal_e);
                         mContentDescriptionDataType = mContext.getString(
                                 R.string.accessibility_data_connection_edge);
                         break;
@@ -615,8 +620,10 @@ public class NetworkController extends BroadcastReceiver {
                     }
                 case TelephonyManager.NETWORK_TYPE_UMTS:
                     mDataIconList = TelephonyIcons.DATA_3G[mInetCondition];
-                    mDataTypeIconId = R.drawable.stat_sys_data_connected_3g;
-                    mQSDataTypeIconId = R.drawable.ic_qs_signal_3g;
+                    mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_3g
+                            : R.drawable.stat_sys_data_connected_3g);
+                    mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_3g
+                            : R.drawable.ic_qs_signal_3g);
                     mContentDescriptionDataType = mContext.getString(
                             R.string.accessibility_data_connection_3g);
                     break;
@@ -625,21 +632,28 @@ public class NetworkController extends BroadcastReceiver {
                 case TelephonyManager.NETWORK_TYPE_HSPA:
                     if (mHspaDataDistinguishable) {
                         mDataIconList = TelephonyIcons.DATA_H[mInetCondition];
-                        mDataTypeIconId = R.drawable.stat_sys_data_connected_h;
-                        mQSDataTypeIconId = R.drawable.ic_qs_signal_h;
+                        mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_h
+                                : R.drawable.stat_sys_data_connected_h);
+                        mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_h
+                                : R.drawable.ic_qs_signal_h);
                         mContentDescriptionDataType = mContext.getString(
                                 R.string.accessibility_data_connection_3_5g);
                     } else {
                         mDataIconList = TelephonyIcons.DATA_3G[mInetCondition];
-                        mDataTypeIconId = R.drawable.stat_sys_data_connected_3g;
-                        mQSDataTypeIconId = R.drawable.ic_qs_signal_3g;
+                        mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_3g
+                                : R.drawable.stat_sys_data_connected_3g);
+                        mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_3g
+                                : R.drawable.ic_qs_signal_3g);
                         mContentDescriptionDataType = mContext.getString(
                                 R.string.accessibility_data_connection_3g);
                     }
                     break;
                 case TelephonyManager.NETWORK_TYPE_HSPAP:
                     mDataIconList = TelephonyIcons.DATA_HP[mInetCondition];
-                    mDataTypeIconId = R.drawable.stat_sys_data_connected_hp;
+                    mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_hp
+                            : R.drawable.stat_sys_data_connected_hp);
+                    mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_hp
+                            : R.drawable.ic_qs_signal_hp);
                     mContentDescriptionDataType = mContext.getString(
                             R.string.accessibility_data_connection_HP);
                     break;
@@ -647,8 +661,10 @@ public class NetworkController extends BroadcastReceiver {
                     if (!mShowAtLeastThreeGees) {
                         // display 1xRTT for IS95A/B
                         mDataIconList = TelephonyIcons.DATA_1X[mInetCondition];
-                        mDataTypeIconId = R.drawable.stat_sys_data_connected_1x;
-                        mQSDataTypeIconId = R.drawable.ic_qs_signal_1x;
+                        mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_1x
+                                : R.drawable.stat_sys_data_connected_1x);
+                        mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_1x
+                                : R.drawable.ic_qs_signal_1x);
                         mContentDescriptionDataType = mContext.getString(
                                 R.string.accessibility_data_connection_cdma);
                         break;
@@ -658,8 +674,10 @@ public class NetworkController extends BroadcastReceiver {
                 case TelephonyManager.NETWORK_TYPE_1xRTT:
                     if (!mShowAtLeastThreeGees) {
                         mDataIconList = TelephonyIcons.DATA_1X[mInetCondition];
-                        mDataTypeIconId = R.drawable.stat_sys_data_connected_1x;
-                        mQSDataTypeIconId = R.drawable.ic_qs_signal_1x;
+                        mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_1x
+                                : R.drawable.stat_sys_data_connected_1x);
+                        mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_1x
+                                : R.drawable.ic_qs_signal_1x);
                         mContentDescriptionDataType = mContext.getString(
                                 R.string.accessibility_data_connection_cdma);
                         break;
@@ -671,29 +689,37 @@ public class NetworkController extends BroadcastReceiver {
                 case TelephonyManager.NETWORK_TYPE_EVDO_B:
                 case TelephonyManager.NETWORK_TYPE_EHRPD:
                     mDataIconList = TelephonyIcons.DATA_3G[mInetCondition];
-                    mDataTypeIconId = R.drawable.stat_sys_data_connected_3g;
-                    mQSDataTypeIconId = R.drawable.ic_qs_signal_3g;
+                    mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_3g
+                            : R.drawable.stat_sys_data_connected_3g);
+                    mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_3g
+                            : R.drawable.ic_qs_signal_3g);
                     mContentDescriptionDataType = mContext.getString(
                             R.string.accessibility_data_connection_3g);
                     break;
                 case TelephonyManager.NETWORK_TYPE_LTE:
                     mDataIconList = TelephonyIcons.DATA_4G[mInetCondition];
-                    mDataTypeIconId = R.drawable.stat_sys_data_connected_4g;
-                    mQSDataTypeIconId = R.drawable.ic_qs_signal_4g;
+                    mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_4g
+                            : R.drawable.stat_sys_data_connected_4g);
+                    mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_4g
+                            : R.drawable.ic_qs_signal_4g);
                     mContentDescriptionDataType = mContext.getString(
                             R.string.accessibility_data_connection_4g);
                     break;
                 default:
                     if (!mShowAtLeastThreeGees) {
                         mDataIconList = TelephonyIcons.DATA_G[mInetCondition];
-                        mDataTypeIconId = R.drawable.stat_sys_data_connected_g;
-                        mQSDataTypeIconId = R.drawable.ic_qs_signal_g;
+                        mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_g
+                                : R.drawable.stat_sys_data_connected_g);
+                        mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_g
+                                : R.drawable.ic_qs_signal_g);
                         mContentDescriptionDataType = mContext.getString(
                                 R.string.accessibility_data_connection_gprs);
                     } else {
                         mDataIconList = TelephonyIcons.DATA_3G[mInetCondition];
-                        mDataTypeIconId = R.drawable.stat_sys_data_connected_3g;
-                        mQSDataTypeIconId = R.drawable.ic_qs_signal_3g;
+                        mDataTypeIconId = (isConnected ? R.drawable.stat_sys_data_fully_connected_3g
+                                : R.drawable.stat_sys_data_connected_3g);
+                        mQSDataTypeIconId = (isConnected ? R.drawable.ic_qs_signal_full_3g
+                                : R.drawable.ic_qs_signal_3g);
                         mContentDescriptionDataType = mContext.getString(
                                 R.string.accessibility_data_connection_3g);
                     }
