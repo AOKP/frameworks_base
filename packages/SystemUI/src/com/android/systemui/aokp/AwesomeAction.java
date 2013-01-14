@@ -62,7 +62,7 @@ import com.android.systemui.R;
  * Helper classes for managing AOKP custom actions
  */
 
-public class AokpTarget {
+public class AwesomeAction {
 
     final String TAG = "AOKPTarget";
 
@@ -89,7 +89,6 @@ public class AokpTarget {
 	public final static String ACTION_SEARCH = "**search**";
     public final static String ACTION_NULL = "**null**";
 
-    private boolean mRecentButtonLock = false;
     private int mInjectKeyCode;
     private Context mContext;
     private Handler mHandler;
@@ -97,35 +96,31 @@ public class AokpTarget {
     final Object mScreenshotLock = new Object();
     ServiceConnection mScreenshotConnection = null;
 
-    public AokpTarget (Context context){
+    public AwesomeAction (Context context){
         mContext = context;
         mHandler = new Handler();
     }
+    
+    private static AwesomeAction sInstance = null;
+    public static AwesomeAction getInstance(Context c) {
+        if(sInstance == null) {
+            sInstance = new AwesomeAction(c);
+        }
+        return sInstance;
+    }
 
     public boolean launchAction (String action){
-
-        if (action.equals(ACTION_RECENTS)) {
-            if (!mRecentButtonLock) {
-                try {
-                    IStatusBarService.Stub.asInterface(
-                            ServiceManager.getService(Context.STATUS_BAR_SERVICE))
-                            .toggleRecentApps();
-                } catch (RemoteException e) {
-                    // nuu
-                }
-                mRecentButtonLock = true;
-                // 250ms animation duration + 150ms start delay of animation + 1 for good luck
-                mHandler.postDelayed(mUnlockRecents, 401);
-            }
-            return true;
-        }
-        try {
-            ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
-        } catch (RemoteException e) {
-        }
-
         if (action == null || action.equals(ACTION_NULL)) {
             return false;
+        } else if (action.equals(ACTION_RECENTS)) {
+            try {
+                IStatusBarService.Stub.asInterface(
+                        ServiceManager.getService(Context.STATUS_BAR_SERVICE))
+                        .toggleRecentApps();
+            } catch (RemoteException e) {
+                // nuu
+            }
+            return true;
         } else if (action.equals(ACTION_HOME)) {
             injectKeyDelayed(KeyEvent.KEYCODE_HOME);
             return true;
@@ -410,13 +405,6 @@ public class AokpTarget {
                     am.forceStopPackage(packageName);
                     Toast.makeText(mContext, R.string.app_killed_message, Toast.LENGTH_SHORT).show();
             }
-        }
-    };
-
-    final Runnable mUnlockRecents = new Runnable() {
-        @Override
-        public void run() {
-            mRecentButtonLock = false;
         }
     };
 
