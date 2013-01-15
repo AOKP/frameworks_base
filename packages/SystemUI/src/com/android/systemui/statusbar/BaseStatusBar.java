@@ -31,6 +31,7 @@ import com.android.systemui.recent.TaskDescription;
 import com.android.systemui.statusbar.policy.NotificationRowLayout;
 import com.android.systemui.statusbar.tablet.StatusBarPanel;
 import com.android.systemui.statusbar.WidgetView;
+import com.android.systemui.statusbar.PopupNavView;
 
 import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
@@ -100,6 +101,7 @@ public abstract class BaseStatusBar extends SystemUI implements
     protected static final int MSG_HIDE_INTRUDER = 1027;
 
     private WidgetView mWidgetView;
+    private PopupNavView mPopupNavView;
 
     protected static final boolean ENABLE_INTRUDERS = false;
 
@@ -226,6 +228,8 @@ public abstract class BaseStatusBar extends SystemUI implements
         createAndAddWindows();
         // create WidgetView
         mWidgetView = new WidgetView(mContext,null);
+        mPopupNavView = new PopupNavView(mContext,null);
+
         disable(switches[0]);
         setSystemUiVisibility(switches[1], 0xffffffff);
         topAppWindowChanged(switches[2] != 0);
