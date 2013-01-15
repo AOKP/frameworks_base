@@ -197,7 +197,7 @@ public class ServiceWatcher implements ServiceConnection {
                     isMultiuser = rInfo.serviceInfo.metaData.getBoolean(EXTRA_SERVICE_IS_MULTIUSER);
                 }
 
-                if (version > mVersion) {
+                if (version > mVersion && version > bestVersion) {
                     bestVersion = version;
                     bestPackage = packageName;
                     bestIsMultiuser = isMultiuser;
