@@ -21,6 +21,7 @@ import com.android.internal.statusbar.StatusBarNotification;
 import com.android.systemui.statusbar.BaseStatusBar;
 
 import android.os.IBinder;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
@@ -88,6 +89,13 @@ public class TvStatusBar extends BaseStatusBar {
     public void toggleNotificationShade() {
     }
 
+    @Override
+    protected void onBarTouchEvent(MotionEvent ev) {
+    }
+
+    @Override
+    protected void showBar(){
+    }
 
     @Override
     public void toggleRecentApps() {

@@ -698,6 +698,14 @@ public class TabletStatusBar extends BaseStatusBar implements
         mWindowManager.updateViewLayout(mStatusBarView, lp);
     }
 
+    @Override
+    protected void onBarTouchEvent(MotionEvent ev) {
+    }
+
+    @Override
+    protected void showBar(){
+    }
+
     public int getStatusBarHeight() {
         return mStatusBarView != null ? mStatusBarView.getHeight()
                 : mContext.getResources().getDimensionPixelSize(
