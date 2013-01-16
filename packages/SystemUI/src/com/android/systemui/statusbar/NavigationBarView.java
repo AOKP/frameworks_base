@@ -85,6 +85,7 @@ public class NavigationBarView extends LinearLayout {
     private boolean mMenuArrowKeys;
     
     public DelegateViewHelper mDelegateHelper;
+    private BaseStatusBar mBar;
 
     // workaround for LayoutTransitions leaving the nav buttons in a weird state (bug 5549288)
     final static boolean WORKAROUND_INVALID_LAYOUT = true;
@@ -184,12 +185,16 @@ public class NavigationBarView extends LinearLayout {
 
     public void setBar(BaseStatusBar phoneStatusBar) {
         mDelegateHelper.setBar(phoneStatusBar);
+        mBar = phoneStatusBar;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (mDelegateHelper != null) {
             mDelegateHelper.onInterceptTouchEvent(event);
+        }
+        if (mBar != null) {
+            mBar.onBarTouchEvent(event);
         }
         return true;
     }
@@ -606,8 +611,13 @@ public class NavigationBarView extends LinearLayout {
             } else {
                 return;
             }
-            WindowManager wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
-            wm.updateViewLayout(this, lp);
+            try  {
+                WindowManager wm = (WindowManager)getContext().getSystemService(Context.WINDOW_SERVICE);
+                wm.updateViewLayout(this, lp);
+            } catch (IllegalArgumentException e) {
+                // Let it go.  This should only happen when NavBar is on 'AutoHide' so the NavBar exists, but
+                // isn't attached to the window at this time.
+            }
         }
     }
 

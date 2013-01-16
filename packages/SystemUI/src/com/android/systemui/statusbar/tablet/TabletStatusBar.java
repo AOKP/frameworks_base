@@ -177,7 +177,6 @@ public class TabletStatusBar extends BaseStatusBar implements
     int mNotificationPeekTapDuration;
     int mNotificationFlingVelocity;
 
-
     BluetoothController mBluetoothController;
     LocationController mLocationController;
     NetworkController mNetworkController;
@@ -253,7 +252,7 @@ public class TabletStatusBar extends BaseStatusBar implements
     CustomTheme mCurrentTheme;
     private boolean mRecreating = false;
 
-    
+
     protected void addPanelWindows() {
         final Context context = mContext;
         final Resources res = mContext.getResources();
@@ -722,6 +721,14 @@ public class TabletStatusBar extends BaseStatusBar implements
             (android.view.WindowManager.LayoutParams) mStatusBarView.getLayoutParams();
         lp.flags |= WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
         mWindowManager.updateViewLayout(mStatusBarView, lp);
+    }
+
+    @Override
+    protected void onBarTouchEvent(MotionEvent ev) {
+    }
+
+    @Override
+    protected void showBar(){
     }
 
     private int mShowSearchHoldoff = 0;
