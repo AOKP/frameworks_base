@@ -1,0 +1,175 @@
+package com.android.systemui.statusbar;
+
+import com.android.systemui.R;
+
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.res.Resources;
+import android.database.ContentObserver;
+import android.graphics.PixelFormat;
+import android.graphics.Point;
+import android.os.Handler;
+import android.provider.Settings;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.HapticFeedbackConstants;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+
+public class GestureCatcherView extends LinearLayout{
+
+    private Context mContext;
+    private Resources res;
+    private ImageView mDragButton;
+    long mDowntime;
+    int mTimeOut;
+    private float mButtonWeight;
+    private int mGestureHeight;
+    private boolean mDragButtonVisible;
+
+    private int mTriggerThreshhold = 20;
+    private float[] mDownPoint = new float[2];
+    private boolean mSwapXY = false;
+    private boolean mNavBarSwipeStarted = false;
+    private int mScreenWidth, mScreenHeight;
+
+    private BaseStatusBar mBar;
+
+    final static String TAG = "PopUpNav";
+
+    public GestureCatcherView(Context context, AttributeSet attrs, BaseStatusBar sb) {
+        super(context, attrs);
+
+        Log.d(TAG,"NavPopupView Constructor");
+        mContext = context;
+        mBar = sb;
+        mDragButton = new ImageView(mContext);
+        res = mContext.getResources();
+        mGestureHeight = res.getDimensionPixelSize(R.dimen.drag_handle_height);
+        updateLayout();
+        Point size = new Point();
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getSize(size);
+        mScreenHeight = size.x;
+        mScreenWidth = size.y;
+
+        SettingsObserver settingsObserver = new SettingsObserver(new Handler());
+        settingsObserver.observe();
+        updateSettings();
+
+        mDragButton.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int action = event.getAction();
+                Log.d(TAG,"got Gesture Action:");
+                switch (action) {
+                case  MotionEvent.ACTION_DOWN :
+                    if (!mNavBarSwipeStarted) {
+                        mDownPoint[0] = event.getX();
+                        mDownPoint[1] = event.getY();
+                        mNavBarSwipeStarted = true;
+                    }
+                    break;
+                case MotionEvent.ACTION_CANCEL : 
+                    mNavBarSwipeStarted = false;
+                    break;
+                case MotionEvent.ACTION_MOVE :
+                    if (mNavBarSwipeStarted) {
+                        final int historySize = event.getHistorySize();
+                        for (int k = 0; k < historySize + 1; k++) {
+                            float x = k < historySize ? event.getHistoricalX(k) : event.getX();
+                            float y = k < historySize ? event.getHistoricalY(k) : event.getY();
+                            float distance = 0f;
+                            distance = mSwapXY ? (mDownPoint[0] - x) : (mDownPoint[1] - y);
+                            if (distance > mTriggerThreshhold) {
+                                mNavBarSwipeStarted = false;
+                                mBar.showBar(false);
+                            }
+                        }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                    break;
+                }
+                return false;
+            }
+        });
+
+        mDragButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                mBar.showBar(true);
+                return true;
+                }
+            });
+    }
+
+    public void setSwapXY(boolean swap) {
+        mSwapXY = swap;
+        updateLayout();
+    }
+
+    public WindowManager.LayoutParams getGesturePanelLayoutParams() {
+        WindowManager.LayoutParams lp  = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT);
+        lp.gravity = (mSwapXY ? Gravity.CENTER_VERTICAL | Gravity.RIGHT : Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        lp.setTitle("GesturePanel");
+        return lp;
+    }
+
+    private void updateLayout () {
+        LinearLayout.LayoutParams dragParams;
+        float dragSize = 0;
+        removeAllViews();
+        if (mSwapXY) { // Landscape Mode
+            dragSize = ((mScreenHeight) * (mButtonWeight/100f)) / getResources().getDisplayMetrics().density;
+            mDragButton.setImageDrawable(mContext.getResources().getDrawable(R.drawable.navbar_drag_button_land));
+            dragParams = new LinearLayout.LayoutParams(mGestureHeight,(int) dragSize);
+            setOrientation(VERTICAL);
+        } else {
+            dragSize = ((mScreenWidth) * (mButtonWeight/100f)) / getResources().getDisplayMetrics().density;
+            mDragButton.setImageDrawable(mContext.getResources().getDrawable(R.drawable.navbar_drag_button));
+            dragParams = new LinearLayout.LayoutParams((int) dragSize, mGestureHeight);
+            setOrientation(HORIZONTAL);
+        }
+        mDragButton.setScaleType(ImageView.ScaleType.FIT_XY);
+        mDragButton.setImageAlpha(mDragButtonVisible ? 255 : 0);
+        addView(mDragButton,dragParams);
+        invalidate();
+    }
+
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DRAG_HANDLE_WEIGHT), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DRAG_HANDLE_VISIBLE), false, this);
+        }
+         @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
+    }
+   protected void updateSettings() {
+        ContentResolver cr = mContext.getContentResolver();
+        mDragButtonVisible = Settings.System.getBoolean(cr, Settings.System.DRAG_HANDLE_VISIBLE, true);
+
+        mButtonWeight = Settings.System.getInt(cr, Settings.System.DRAG_HANDLE_WEIGHT, 0);
+        updateLayout();
+    }
+}
