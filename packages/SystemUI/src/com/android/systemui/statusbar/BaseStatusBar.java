@@ -986,6 +986,7 @@ public abstract class BaseStatusBar extends SystemUI implements
         }
     }
 
+    protected abstract void showBar(); // To be used to tell StatusBar to inflate NavBar/SystemBar
     protected abstract void haltTicker();
     protected abstract void setAreThereNotifications();
     protected abstract void updateNotificationIcons();

@@ -265,6 +265,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     int mStatusBarHeight;
     WindowState mNavigationBar = null;
     boolean mHasNavigationBar = false;
+    boolean mNavBarAutoHide = false;
     private boolean mNavBarFirstBootFlag = true;
     boolean mCanHideNavigationBar = false;
     boolean mNavigationBarCanMove = false; // can the navigation bar ever move to the side?
@@ -570,6 +571,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.System.NAVIGATION_BAR_SHOW), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_SHOW_NOW), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAV_HIDE_ENABLE), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_HEIGHT), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -1217,6 +1220,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                         Settings.System.NAVIGATION_BAR_SHOW, showByDefault);
         boolean showNavBarNow = Settings.System.getBoolean(resolver,
                 Settings.System.NAVIGATION_BAR_SHOW_NOW, showByDefault);
+        mNavBarAutoHide = Settings.System.getBoolean(resolver, Settings.System.NAV_HIDE_ENABLE, false);
+        if (mNavBarAutoHide) // if we are autohiding, then let's force the NavBar to 'Hide' status
+            showNavBarNow = false;
         int NavHeight = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_HEIGHT, 0);
         int NavHeightLand = Settings.System.getInt(resolver,
