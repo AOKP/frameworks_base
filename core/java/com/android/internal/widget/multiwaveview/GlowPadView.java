@@ -79,6 +79,18 @@ public class GlowPadView extends View {
     public final static String ICON_FILE = "icon_file";
 
     /**
+     * Number of customizable lockscreen targets for tablets
+     * @hide
+     */
+    public final static int MAX_TABLET_TARGETS = 7;
+
+    /**
+     * Number of customizable lockscreen targets for phones
+     * @hide
+     */
+    public final static int MAX_PHONE_TARGETS = 4;
+
+    /**
      *
      * @hide
      */

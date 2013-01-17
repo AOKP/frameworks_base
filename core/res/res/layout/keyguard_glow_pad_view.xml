@@ -29,8 +29,8 @@
     android:gravity="@integer/kg_selector_gravity"
     android:contentDescription="@string/keyguard_accessibility_slide_area"
 
-    prvandroid:targetDrawables="@array/lockscreen_targets_unlock_only"
-    prvandroid:targetDescriptions="@array/lockscreen_target_descriptions_unlock_only"
+    prvandroid:targetDrawables="@array/lockscreen_targets_with_camera"
+    prvandroid:targetDescriptions="@array/lockscreen_target_descriptions_with_camera"
     prvandroid:directionDescriptions="@*android:array/lockscreen_direction_descriptions"
     prvandroid:handleDrawable="@*android:drawable/ic_lockscreen_handle"
     prvandroid:outerRingDrawable="@*android:drawable/ic_lockscreen_outerring"

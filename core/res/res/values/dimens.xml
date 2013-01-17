@@ -340,4 +340,6 @@
     security mode. -->
     <dimen name="kg_small_widget_height">160dp</dimen>
 
+    <!-- Lockscreen target insets -->
+    <item type="dimen" name="lockscreen_target_inset">35dp</item>
 </resources>

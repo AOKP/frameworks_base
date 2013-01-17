@@ -2034,4 +2034,13 @@
   <java-symbol type="layout" name="vibration_picker_dialog"/>
 
   <java-symbol type="bool" name="config_forceDisableHardwareKeyboard" />
+
+  <!-- lockscreen targets -->
+  <java-symbol type="drawable" name="ic_lockscreen_lock_pressed" />
+  <java-symbol type="drawable" name="ic_lockscreen_target_activated" />
+  <java-symbol type="drawable" name="ic_lockscreen_unlock_activated" />
+  <java-symbol type="drawable" name="ic_lockscreen_unlock_normal" />
+  <java-symbol type="dimen" name="lockscreen_target_inset" />
+  <java-symbol type="drawable" name="ic_lockscreen_empty" />
+
 </resources>
