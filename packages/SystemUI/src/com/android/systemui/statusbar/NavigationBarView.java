@@ -83,6 +83,7 @@ public class NavigationBarView extends LinearLayout {
     int mNavigationIconHints = 0;
     private Drawable mBackIcon, mBackLandIcon, mBackAltIcon, mBackAltLandIcon;
     private boolean mMenuArrowKeys;
+    private boolean mColorAllIcons;
     
     public DelegateViewHelper mDelegateHelper;
 
@@ -290,11 +291,17 @@ public class NavigationBarView extends LinearLayout {
                     if (f.exists()) {
                         v.setImageDrawable(new BitmapDrawable(getResources(), f.getAbsolutePath()));
                     }
+                    if (mColorAllIcons) {
+                    //allow tinting on user's preference
+                        v.setTint(mClickActions[j].getAbsolutePath());
+                } else {
                     v.setTint(false);
+                }
                 } else {
                     v.setImageDrawable(AwesomeAction.getInstance(mContext).getIconImage(mClickActions[j]));
                     v.setTint(mClickActions[j].startsWith("**"));
                 }
+
                 addButton(navButtonLayout, v, landscape && !mLeftyMode);
                 // if we are in LeftyMode, then we want to add to end, like Portrait
                 addLightsOutButton(lightsOut, v, landscape && !mLeftyMode, false);
@@ -1031,6 +1038,8 @@ public class NavigationBarView extends LinearLayout {
                         R.integer.navigation_bar_transparency) / 255));
         mNavigationBarColor = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_COLOR, -1);
+        mColorAllIcons = Settings.System.getBoolean(resolver,
+                Settings.System.NAVIGATION_BAR_ALLCOLOR, false);
         mMenuVisbility = Settings.System.getInt(resolver,
                 Settings.System.MENU_VISIBILITY, VISIBILITY_SYSTEM);
         mMenuArrowKeys = Settings.System.getBoolean(resolver,
