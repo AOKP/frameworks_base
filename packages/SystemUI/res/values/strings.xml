@@ -515,6 +515,7 @@
     <!-- QuickSettings: Brightness dialog auto brightness button [CHAR LIMIT=NONE] -->
     <string name="quick_settings_brightness_dialog_auto_brightness_label">AUTO</string>
     <string name="quick_settings_swagger">Swagger</string>
+    <string name="quick_settings_swaggersun">Swagger Sunday</string>
     <string name="quick_settings_fbgt">FBGT</string>
 
     <!-- Title of help text shown when the notification panel is pulled down for the very first time. [CHAR LIMIT=NONE] -->
@@ -578,6 +579,7 @@
     <string name="quick_settings_navbar_hide_on_label">NavBar Hide On</string>
     <string name="quick_settings_navbar_hide_off_label">NavBAr Hide Off</string>
     <string name="quick_settings_sound_on">Sound on</string>
+    <string name="quick_settings_swaggersuntoast">#SwaggerSunday</string>
 
     <!--  RamBar -->
     <string name="memory">RAM</string>
