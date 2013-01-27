@@ -55,13 +55,14 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.R;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 /*
  * Helper classes for managing AOKP custom actions
  */
 public class AwesomeAction {
 
-    public final static String TAG = "AOKPTarget";
+    public final static String TAG = "AwesomeAction";
 
     public final static String ACTION_HOME = "**home**";
     public final static String ACTION_BACK = "**back**";
@@ -84,6 +85,7 @@ public class AwesomeAction {
     public final static String ACTION_VOICEASSIST = "**voiceassist**";
     public final static String ACTION_TORCH = "**torch**";
     public final static String ACTION_SEARCH = "**search**";
+    public final static String ACTION_LAST_APP = "**lastapp**";
     public final static String ACTION_NULL = "**null**";
 
     private int mInjectKeyCode;
@@ -251,6 +253,9 @@ public class AwesomeAction {
                 // Let's hope we don't catch one!
             }
             return true;
+        } else if (action.equals(ACTION_LAST_APP)) {
+            toggleLastApp();
+            return true;
         }
         // we must have a custom uri
         try {
@@ -289,6 +294,8 @@ public class AwesomeAction {
             return mContext.getResources().getDrawable(R.drawable.ic_sysbar_search);
         if (uri.equals(ACTION_NOTIFICATIONS))
             return mContext.getResources().getDrawable(R.drawable.ic_sysbar_notifications);
+        if (uri.equals(ACTION_LAST_APP))
+            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_lastapp);
         try {
             return mContext.getPackageManager().getActivityIcon(Intent.parseUri(uri, 0));
         } catch (NameNotFoundException e) {
@@ -320,6 +327,8 @@ public class AwesomeAction {
             return mContext.getResources().getString(R.string.action_search);
         if (uri.equals(ACTION_NOTIFICATIONS))
             return mContext.getResources().getString(R.string.action_notifications);
+        if (uri.equals(ACTION_LAST_APP))
+            return mContext.getResources().getString(R.string.action_lastapp);
         if (uri.equals(ACTION_NULL))
             return mContext.getResources().getString(R.string.action_none);
         try {
@@ -487,6 +496,36 @@ public class AwesomeAction {
                 H.postDelayed(mScreenshotTimeout, 10000);
             }
         }
+    }
+
+    private void toggleLastApp() {
+        final int lastAppId;
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+        final ActivityManager am = (ActivityManager) mContext
+                .getSystemService(Activity.ACTIVITY_SERVICE);
+        String defaultHomePackage = "com.android.launcher";
+        intent.addCategory(Intent.CATEGORY_HOME);
+        final ResolveInfo res = mContext.getPackageManager().resolveActivity(intent, 0);
+        if (res.activityInfo != null && !res.activityInfo.packageName.equals("android")) {
+            defaultHomePackage = res.activityInfo.packageName;
+        }
+        List <ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(3);
+        String packageName = tasks.get(0).topActivity.getPackageName();
+        boolean userAtHome = defaultHomePackage.equals(packageName);
+        if (tasks.size() < 2) {
+            return;
+        }
+        if (userAtHome || tasks.size() < 3) { // user at home - start 1 (2nd item in list)
+            lastAppId = tasks.get(1).id;
+        } else { // user is not at home
+            packageName = tasks.get(1).topActivity.getPackageName();
+            if (defaultHomePackage.equals(packageName)) { // Launcher is 2nd in list - skip to 3
+                lastAppId = tasks.get(2).id;
+            } else {
+                lastAppId = tasks.get(1).id;
+            }
+        }
+        am.moveTaskToFront(lastAppId,0);
     }
 
     private Handler H = new Handler() {
