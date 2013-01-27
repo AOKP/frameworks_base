@@ -1198,8 +1198,13 @@ class QuickSettings {
                         TextView tv = (TextView) v.findViewById(R.id.location_textview);
                         tv.setText(gpsEnabled ? R.string.quick_settings_gps_off_label
                                 : R.string.quick_settings_gps_on_label);
-                        tv.setCompoundDrawablesWithIntrinsicBounds(0, gpsEnabled ?
-                                R.drawable.ic_qs_gps_off : R.drawable.ic_qs_gps_on, 0, 0);
+                        if (state.iconId == null) {
+                            tv.setCompoundDrawablesWithIntrinsicBounds(0, gpsEnabled ?
+                                    R.drawable.ic_qs_gps_on : R.drawable.ic_qs_gps_off, 0, 0);
+                        }
+                        else {
+                            tv.setCompoundDrawablesWithIntrinsicBounds(0, state.iconId, 0, 0);
+                        }
                         tv.setTextSize(1, mTileTextSize);
                     }
                 });
@@ -1219,8 +1224,7 @@ class QuickSettings {
                         tv.setText(gpsEnabled
                                 ? R.string.quick_settings_gps_on_label
                                 : R.string.quick_settings_gps_off_label);
-                        tv.setCompoundDrawablesWithIntrinsicBounds(0, gpsEnabled ?
-                                R.drawable.ic_qs_gps_on : R.drawable.ic_qs_gps_off, 0, 0);
+                        tv.setCompoundDrawablesWithIntrinsicBounds(0, state.iconId, 0, 0);
                         tv.setTextSize(1, mTileTextSize);
                     }
                 });
