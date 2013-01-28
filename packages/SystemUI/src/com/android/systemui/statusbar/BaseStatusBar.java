@@ -25,6 +25,7 @@ import com.android.internal.widget.SizeAdaptiveLayout;
 import com.android.systemui.R;
 import com.android.systemui.SearchPanelView;
 import com.android.systemui.SystemUI;
+import com.android.systemui.TransparencyManager;
 import com.android.systemui.recent.RecentTasksLoader;
 import com.android.systemui.recent.RecentsActivity;
 import com.android.systemui.recent.TaskDescription;
@@ -142,6 +143,8 @@ public abstract class BaseStatusBar extends SystemUI implements
     protected WindowManager mWindowManager;
     protected IWindowManager mWindowManagerService;
     protected Display mDisplay;
+
+    public TransparencyManager mTransparencyManager;
 
     private boolean mDeviceProvisioned = false;
 
@@ -285,6 +288,9 @@ public abstract class BaseStatusBar extends SystemUI implements
                     userSwitched(mCurrentUserId);
                 }
             }}, filter);
+
+        mTransparencyManager = new TransparencyManager(mContext);
+        mTransparencyManager.setStatusbar(/*this*/);
     }
 
     public void userSwitched(int newUserId) {
