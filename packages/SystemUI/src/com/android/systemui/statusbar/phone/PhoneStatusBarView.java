@@ -95,7 +95,7 @@ public class PhoneStatusBarView extends PanelBar {
         ViewGroup.LayoutParams lp = getLayoutParams();
         lp.height = barHeight;
         //ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, barHeight);
-        //setLayoutParams(lp);
+        setLayoutParams(lp);
         
     }
 
