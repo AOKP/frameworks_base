@@ -2662,11 +2662,22 @@ public final class Settings {
          */
         public static final String NAVIGATION_BAR_SHOW_NOW = "navigation_bar_show_now";
 
-	/**
+        /**
+         * Statusbar State
+         * @hide
+         */
+        public static final String EXPANDED_DESKTOP_STATE = "expanded_desktop_state";
+
+    	/**
          * Show the NavBar dialog in Power menu
          * @hide
          */
         public static final String POWER_DIALOG_SHOW_NAVBAR_HIDE = "power_dialog_show_navbar_hide";
+
+        /**
+         * Whether power menu expanded desktop is enabled
+         */
+        public static final String POWER_DIALOG_EXPANDED_DESKTOP_ENABLED = "power_dialog_expanded_desktop_enabled";
 
          /**
          * @hide
