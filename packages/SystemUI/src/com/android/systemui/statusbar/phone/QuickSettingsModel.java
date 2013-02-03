@@ -718,7 +718,7 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
         mLocationState.enabled = inUse;
         mLocationState.iconId = inUse
                 ? R.drawable.ic_qs_gps_on
-                : R.drawable.ic_qs_gps_off;
+                : 0;
         if (hasFix) {
             mLocationState.iconId = R.drawable.ic_qs_gps_locked;
         }
