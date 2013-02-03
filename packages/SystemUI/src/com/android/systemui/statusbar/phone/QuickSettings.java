@@ -133,6 +133,7 @@ public class QuickSettings {
    // private static final int BT_TETHER_TILE = 23;
     private static final int SOUND_STATE_TILE = 24;
     private static final int NAVBAR_HIDE_TILE = 25;
+    private static final int STATUSBAR_TILE = 26;
 
     public static final String USER_TOGGLE = "USER";
     public static final String BRIGHTNESS_TOGGLE = "BRIGHTNESS";
@@ -161,6 +162,7 @@ public class QuickSettings {
     public static final String FAV_CONTACT_TOGGLE = "FAVCONTACT";
     public static final String SOUND_STATE_TOGGLE = "SOUNDSTATE";
     public static final String NAVBAR_HIDE_TOGGLE = "NAVBARHIDE";
+    public static final String STATUSBAR_TOGGLE = "STATUSBAR";
 
     private static final String DEFAULT_TOGGLES = "default";
 
@@ -242,6 +244,7 @@ public class QuickSettings {
             toggleMap.put(FAV_CONTACT_TOGGLE, FAV_CONTACT_TILE);
             toggleMap.put(SOUND_STATE_TOGGLE, SOUND_STATE_TILE);
             toggleMap.put(NAVBAR_HIDE_TOGGLE, NAVBAR_HIDE_TILE);
+            toggleMap.put(STATUSBAR_TOGGLE, STATUSBAR_TILE);
             //toggleMap.put(BT_TETHER_TOGGLE, BT_TETHER_TILE);
         }
         return toggleMap;
@@ -1367,6 +1370,41 @@ public class QuickSettings {
                         iv.setImageDrawable(us.avatar);
                         view.setContentDescription(mContext.getString(
                                 R.string.accessibility_quick_settings_user, state.label));
+                    }
+                });
+                break;
+            case STATUSBAR_TILE:
+                quick = (QuickSettingsTileView)
+                        inflater.inflate(R.layout.quick_settings_tile, parent, false);
+                quick.setContent(R.layout.quick_settings_tile_statusbar, inflater);
+                quick.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    boolean StatusbarState = Settings.System.getBoolean(mContext.getContentResolver(),
+                                 Settings.System.STATUSBAR_HIDDEN, false);
+                        Settings.System.putBoolean(mContext.getContentResolver(),
+                                 Settings.System.STATUSBAR_HIDDEN, !StatusbarState);
+                    }
+                });
+                quick.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Intent intent = new Intent("android.intent.action.MAIN");
+                        // Try to jump directly into UI settings
+                        intent.setComponent(ComponentName.
+                                unflattenFromString("com.aokp.romcontrol/.ROMControlActivity"));
+                        intent.addCategory("android.intent.category.LAUNCHER");
+                        startSettingsActivity(intent);
+                        return true;
+                    }
+                });
+                mModel.addStatusBarTile(quick, new QuickSettingsModel.RefreshCallback() {
+                    @Override
+                    public void refreshView(QuickSettingsTileView view, State state) {
+                        TextView tv = (TextView) view.findViewById(R.id.statusbar_hide_textview);
+                        tv.setCompoundDrawablesWithIntrinsicBounds(0, state.iconId, 0, 0);
+                        tv.setText(state.label);
+                        tv.setTextSize(1, mTileTextSize);
                     }
                 });
                 break;
