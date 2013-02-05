@@ -61,11 +61,15 @@ import android.graphics.drawable.LevelListDrawable;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.WifiDisplayStatus;
 import android.location.LocationManager;
+import android.media.MediaActionSound;
+import android.media.MediaRecorder;
+import android.media.MediaPlayer;
 import android.nfc.NfcAdapter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.UserHandle;
@@ -96,6 +100,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
@@ -132,6 +138,7 @@ public class QuickSettings {
     private static final int FAV_CONTACT_TILE = 23;
    // private static final int BT_TETHER_TILE = 23;
     private static final int SOUND_STATE_TILE = 24;
+    private static final int QUICKNOTE_TILE = 25;
 
     public static final String USER_TOGGLE = "USER";
     public static final String BRIGHTNESS_TOGGLE = "BRIGHTNESS";
@@ -159,6 +166,8 @@ public class QuickSettings {
     public static final String LTE_TOGGLE = "LTE";
     public static final String FAV_CONTACT_TOGGLE = "FAVCONTACT";
     public static final String SOUND_STATE_TOGGLE = "SOUNDSTATE";
+    public static final String QUICKNOTE_TOGGLE = "QUICKNOTE";
+    private static String mQuickAudio = null;
 
     private static final String DEFAULT_TOGGLES = "default";
 
@@ -175,6 +184,9 @@ public class QuickSettings {
     private ViewGroup mContainerView;
 
     private DisplayManager mDisplayManager;
+    private MediaPlayer mPlayer = null;
+    private MediaRecorder mRecorder = null;
+    private MediaActionSound mSound;
     private WifiDisplayStatus mWifiDisplayStatus;
     private WifiManager wifiManager;
     private ConnectivityManager connManager;
@@ -205,7 +217,10 @@ public class QuickSettings {
     private ArrayList<String> toggles;
     private String userToggles = null;
     private long tacoSwagger = 0;
+    private long quickRecord = 0;
     private boolean tacoToggle = false;
+    private boolean mIsRecording = false;
+    private boolean mIsPlaying = true;
     private int mTileTextSize = 12;
     private String mFastChargePath;
 
@@ -239,6 +254,7 @@ public class QuickSettings {
             toggleMap.put(LTE_TOGGLE, LTE_TILE);
             toggleMap.put(FAV_CONTACT_TOGGLE, FAV_CONTACT_TILE);
             toggleMap.put(SOUND_STATE_TOGGLE, SOUND_STATE_TILE);
+            toggleMap.put(QUICKNOTE_TOGGLE, QUICKNOTE_TILE);
             //toggleMap.put(BT_TETHER_TOGGLE, BT_TETHER_TILE);
         }
         return toggleMap;
@@ -287,6 +303,9 @@ public class QuickSettings {
         profileFilter.addAction(Intent.ACTION_USER_INFO_CHANGED);
         mContext.registerReceiverAsUser(mProfileReceiver, UserHandle.ALL, profileFilter,
                 null, null);
+
+        mQuickAudio = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mQuickAudio += "/quicknote.3gp";
 
         new SettingsObserver(new Handler()).observe();
         new SoundObserver(new Handler()).observe();
@@ -446,6 +465,66 @@ public class QuickSettings {
             }
         };
         mFavContactInfoTask.execute();
+    }
+
+    private void onPlay(boolean start) {
+        if (start) {
+            startPlaying();
+        } else {
+            stopPlaying();
+        }
+    }
+
+    private void startPlaying() {
+        mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource(mQuickAudio);
+            mPlayer.prepare();
+            mPlayer.start();
+        } catch (RemoteException e) {
+            Log.e(TAG, "prepare() failed", e);
+        }
+    }
+
+    private void stopPlaying() {
+        mPlayer.release();
+        mPlayer = null;
+    }
+
+    private void startRecording() {
+        mSound.play(MediaActionSound.START_VIDEO_RECORDING);
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(mQuickAudio);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (RemoteException e) {
+            Log.e(TAG, "prepare() failed", e);
+        }
+
+        mRecorder.start();
+        mHandler.postDelayed(new Runnable() {
+            @Override
+                public void run() {
+                    mRecorder.stop();
+                    mRecorder.release();
+                    mRecorder = null;
+                    mSound.play(MediaActionSound.STOP_VIDEO_RECORDING);
+                    mIsRecording = false;
+                }
+        }, 60000);
+    }
+
+    private void stopRecording() {
+        if (mIsRecording)
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+        mSound.play(MediaActionSound.STOP_VIDEO_RECORDING);
+        mIsRecording = false;
     }
 
     private void setupQuickSettings() {
@@ -1326,6 +1405,49 @@ public class QuickSettings {
                         iv.setImageDrawable(us.avatar);
                         view.setContentDescription(mContext.getString(
                                 R.string.accessibility_quick_settings_user, state.label));
+                    }
+                });
+                break;
+            case QUICKNOTE_TILE:
+                quick = (QuickSettingsTileView)
+                        inflater.inflate(R.layout.quick_settings_tile, parent, false);
+                quick.setContent(R.layout.quick_settings_tile_quicknote, inflater);
+                TextView t = (TextView) quick.findViewById(R.id.quicknote_textview);
+                t.setTextSize(1, mTileTextSize);
+                quick.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        switch (event.getAction()) {
+                            case MotionEvent.ACTION_DOWN:
+                                quickRecord = event.getEventTime();
+                                break;
+                            case MotionEvent.ACTION_UP:
+                                if ((event.getEventTime() - quickRecord) > 500) {
+                                    if (!mIsRecording) {
+                                        t.setText(R.string.quick_settings_recording);
+                                        t.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_fbgt_on, 0, 0);
+                                        startRecording();
+                                    }
+                                } else {
+                                    if (mIsRecording) {
+                                        t.setText(R.string.quick_settings_quicknote);
+                                        t.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_swagger, 0, 0);
+                                        stopRecording();
+                                    } else {
+                                        onPlay(mIsPlaying);
+                                        if (mIsPlaying) {
+                                        t.setText(R.string.quick_settings_playing);
+                                        t.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_sound_on, 0, 0);
+                                        } else {
+                                            t.setText(R.string.quick_settings_quicknote);
+                                            t.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_swagger, 0, 0);
+                                        }
+                                    mIsPlaying = !mIsPlaying;
+                                    }
+                                }
+                                break;
+                        }
+                        return true;
                     }
                 });
                 break;
