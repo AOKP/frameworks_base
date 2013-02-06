@@ -61,11 +61,14 @@ import android.graphics.drawable.LevelListDrawable;
 import android.hardware.display.DisplayManager;
 import android.hardware.display.WifiDisplayStatus;
 import android.location.LocationManager;
+import android.media.MediaRecorder;
+import android.media.MediaPlayer;
 import android.nfc.NfcAdapter;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.UserHandle;
@@ -94,8 +97,11 @@ import com.android.systemui.aokp.AwesomeAction;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
@@ -132,6 +138,7 @@ public class QuickSettings {
     private static final int FAV_CONTACT_TILE = 23;
    // private static final int BT_TETHER_TILE = 23;
     private static final int SOUND_STATE_TILE = 24;
+    private static final int QUICKRECORD_TILE = 25;
 
     public static final String USER_TOGGLE = "USER";
     public static final String BRIGHTNESS_TOGGLE = "BRIGHTNESS";
@@ -159,6 +166,9 @@ public class QuickSettings {
     public static final String LTE_TOGGLE = "LTE";
     public static final String FAV_CONTACT_TOGGLE = "FAVCONTACT";
     public static final String SOUND_STATE_TOGGLE = "SOUNDSTATE";
+    public static final String QUICKRECORD_TOGGLE = "QUICKRECORD";
+    private static final String LOG_TAG = "AudioRecord";
+    private static String mQuickAudio = null;
 
     private static final String DEFAULT_TOGGLES = "default";
 
@@ -175,6 +185,8 @@ public class QuickSettings {
     private ViewGroup mContainerView;
 
     private DisplayManager mDisplayManager;
+    private MediaPlayer mPlayer = null;
+    private MediaRecorder mRecorder = null;
     private WifiDisplayStatus mWifiDisplayStatus;
     private WifiManager wifiManager;
     private ConnectivityManager connManager;
@@ -206,6 +218,9 @@ public class QuickSettings {
     private String userToggles = null;
     private long tacoSwagger = 0;
     private boolean tacoToggle = false;
+    private boolean mIsRecording = false;
+    private boolean mIsPlaying = false;
+    private boolean mPlayPause = true;
     private int mTileTextSize = 12;
     private String mFastChargePath;
 
@@ -239,6 +254,7 @@ public class QuickSettings {
             toggleMap.put(LTE_TOGGLE, LTE_TILE);
             toggleMap.put(FAV_CONTACT_TOGGLE, FAV_CONTACT_TILE);
             toggleMap.put(SOUND_STATE_TOGGLE, SOUND_STATE_TILE);
+            toggleMap.put(QUICKRECORD_TOGGLE, QUICKRECORD_TILE);
             //toggleMap.put(BT_TETHER_TOGGLE, BT_TETHER_TILE);
         }
         return toggleMap;
@@ -446,6 +462,73 @@ public class QuickSettings {
             }
         };
         mFavContactInfoTask.execute();
+    }
+
+    private void loadSound() {
+        mQuickAudio = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mQuickAudio += "/quickrecord.3gp";
+    }
+
+    private void onPlay(boolean start) {
+        if (start) {
+            startPlaying();
+        } else {
+            stopPlaying();
+        }
+    }
+
+    private void startPlaying() {
+        mPlayer = new MediaPlayer();
+        try {
+            mPlayer.setDataSource(mQuickAudio);
+            mPlayer.prepare();
+            mPlayer.start();
+            mIsPlaying = true;
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+    }
+
+    private void stopPlaying() {
+        mPlayer.release();
+        mPlayer = null;
+        mIsPlaying = false;
+    }
+
+    private void startRecording() {
+        mRecorder = new MediaRecorder();
+        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        mRecorder.setOutputFile(mQuickAudio);
+        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        try {
+            mRecorder.prepare();
+        } catch (IOException e) {
+            Log.e(LOG_TAG, "prepare() failed");
+        }
+
+        mRecorder.start();
+        mIsRecording = true;
+        new Timer().schedule(new TimerTask() {
+            @Override
+                public void run() {
+                    if (mIsRecording) {
+                        mRecorder.stop();
+                        mRecorder.release();
+                        mRecorder = null;
+                        mIsRecording = false;
+                    }
+                }
+        }, 60000);
+    }
+
+    private void stopRecording() {
+        if (mIsRecording)
+        mRecorder.stop();
+        mRecorder.release();
+        mRecorder = null;
+        mIsRecording = false;
     }
 
     private void setupQuickSettings() {
@@ -1326,6 +1409,48 @@ public class QuickSettings {
                         iv.setImageDrawable(us.avatar);
                         view.setContentDescription(mContext.getString(
                                 R.string.accessibility_quick_settings_user, state.label));
+                    }
+                });
+                break;
+            case QUICKRECORD_TILE:
+                quick = (QuickSettingsTileView)
+                        inflater.inflate(R.layout.quick_settings_tile, parent, false);
+                quick.setContent(R.layout.quick_settings_tile_quickrecord, inflater);
+                TextView t = (TextView) quick.findViewById(R.id.quickrecord_textview);
+                t.setTextSize(1, mTileTextSize);
+                quick.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mIsRecording) {
+                            TextView tv = (TextView) v.findViewById(R.id.quickrecord_textview);
+                            tv.setText(R.string.quick_settings_recordingcap);
+                            tv.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_swagger, 0, 0);
+                            stopRecording();
+                        } else {
+                            loadSound();
+                            onPlay(mPlayPause);
+                            if (mPlayPause) {
+                            TextView tv = (TextView) v.findViewById(R.id.quickrecord_textview);
+                            tv.setText(R.string.quick_settings_playing);
+                            } else {
+                                TextView tv = (TextView) v.findViewById(R.id.quickrecord_textview);
+                                tv.setText(R.string.quick_settings_quickrecord);
+                            }
+                        mPlayPause = !mPlayPause;
+                        }
+                    }
+                });
+                quick.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (!mIsRecording) {
+                            TextView tv = (TextView) v.findViewById(R.id.quickrecord_textview);
+                            tv.setText(R.string.quick_settings_recording);
+                            tv.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_qs_fbgt_on, 0, 0);
+                            loadSound();
+                            startRecording();
+                        }
+                        return true;
                     }
                 });
                 break;
