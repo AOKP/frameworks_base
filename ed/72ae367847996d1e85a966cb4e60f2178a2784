@@ -1,0 +1,9 @@
+Change-Id: Ied72ae367847996d1e85a966cb4e60f2178a2784
+Code-Review+2: Jonathan Steadman <xxwhitehawk@gmail.com>
+Verified+1: Jonathan Steadman <xxwhitehawk@gmail.com>
+Code-Review+1: Brandon McAnsh <bmc08gt.teamb00sted@gmail.com>
+Submitted-by: Jonathan Steadman <xxwhitehawk@gmail.com>
+Submitted-at: Wed, 13 Feb 2013 05:24:16 +0000
+Reviewed-on: http://gerrit.sudoservers.com/5261
+Project: AOKP/frameworks_base
+Branch: refs/heads/jb-mr1
