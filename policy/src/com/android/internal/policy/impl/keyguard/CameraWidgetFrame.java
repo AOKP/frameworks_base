@@ -137,8 +137,9 @@ public class CameraWidgetFrame extends KeyguardWidgetFrame implements View.OnCli
         CameraWidgetInfo widgetInfo = launcher.getCameraWidgetInfo();
         if (widgetInfo == null)
             return null;
-        View widgetView = widgetInfo.layoutId > 0 ?
-                inflateWidgetView(context, widgetInfo) :
+        View widgetView =
+//        View widgetView = widgetInfo.layoutId > 0 ?
+//                inflateWidgetView(context, widgetInfo) :
                 inflateGenericWidgetView(context);
         if (widgetView == null)
             return null;
@@ -189,9 +190,9 @@ public class CameraWidgetFrame extends KeyguardWidgetFrame implements View.OnCli
     }
 
     public void render() {
-        final Throwable[] thrown = new Throwable[1];
-        final Bitmap[] offscreen = new Bitmap[1];
-        try {
+//        final Throwable[] thrown = new Throwable[1];
+//        final Bitmap[] offscreen = new Bitmap[1];
+//        try {
             final int width = getRootView().getWidth();
             final int height = getRootView().getHeight();
             if (mRenderedSize.x == width && mRenderedSize.y == height) {
@@ -202,41 +203,40 @@ public class CameraWidgetFrame extends KeyguardWidgetFrame implements View.OnCli
             if (width == 0 || height == 0) {
                 return;
             }
-            final long start = SystemClock.uptimeMillis();
-            offscreen[0] = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            final Canvas c = new Canvas(offscreen[0]);
-            mWidgetView.measure(
-                    MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
-                    MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
-            mWidgetView.layout(0, 0, width, height);
-            mWidgetView.draw(c);
+//            offscreen[0] = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//            final Canvas c = new Canvas(offscreen[0]);
+//            mWidgetView.measure(
+//                    MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY),
+//                    MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY));
+//            mWidgetView.layout(0, 0, width, height);
+//            mWidgetView.draw(c);
 
-            final long end = SystemClock.uptimeMillis();
-            if (DEBUG) Log.d(TAG, String.format(
-                    "Rendered camera widget in %sms size=%sx%s instance=%s at %s",
-                    end - start,
-                    width, height,
-                    instanceId(),
-                    end));
-            mRenderedSize.set(width, height);
-        } catch (Throwable t) {
-            thrown[0] = t;
-        }
+//            final long end = SystemClock.uptimeMillis();
+//            if (DEBUG) Log.d(TAG, String.format(
+//                    "Rendered camera widget in %sms size=%sx%s instance=%s at %s",
+//                    end - start,
+//                    width, height,
+//                    instanceId(),
+//                    end));
+//            mRenderedSize.set(width, height);
+//        } catch (Throwable t) {
+//            thrown[0] = t;
+//        }
 
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (thrown[0] == null) {
-                    try {
-                        ((ImageView) getChildAt(0)).setImageBitmap(offscreen[0]);
-                    } catch (Throwable t) {
-                        thrown[0] = t;
-                    }
-                }
-                if (thrown[0] == null)
-                    return;
-
-                Log.w(TAG, "Error rendering camera widget", thrown[0]);
+//                if (thrown[0] == null) {
+//                    try {
+//                        ((ImageView) getChildAt(0)).setImageBitmap(offscreen[0]);
+//                    } catch (Throwable t) {
+//                        thrown[0] = t;
+//                    }
+//                }
+//                if (thrown[0] == null)
+//                    return;
+//
+//                Log.w(TAG, "Error rendering camera widget", thrown[0]);
                 try {
                     removeAllViews();
                     final View genericView = inflateGenericWidgetView(mContext);
@@ -315,6 +315,7 @@ public class CameraWidgetFrame extends KeyguardWidgetFrame implements View.OnCli
 
     @Override
     protected void onDetachedFromWindow() {
+        removeAllViews();
         if (DEBUG) Log.d(TAG, "onDetachedFromWindow: instance " + instanceId()
                 + " at " + SystemClock.uptimeMillis());
         super.onDetachedFromWindow();
