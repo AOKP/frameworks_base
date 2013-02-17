@@ -46,15 +46,24 @@
 
         <include layout="@layout/system_bar_notification_panel_title"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/notification_panel_title_height"
-            android:layout_above="@id/content_frame"
-            android:layout_alignParentRight="true"
+            android:layout_height="0dp"
             android:layout_weight="0"
+            />
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
+            android:id="@+id/quick_toggles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
             />
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             >
             <ViewStub android:id="@+id/flip_settings_stub"
                 android:layout="@layout/flip_settings"
@@ -67,7 +76,6 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:overScrollMode="ifContentScrolls"
-                android:layout_weight="1"
                 >
                 <com.android.systemui.statusbar.policy.NotificationRowLayout
                     android:id="@+id/content"
