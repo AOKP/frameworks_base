@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2012 The Android Open Source Project
+<!--
+     Copyright (C) 2012 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -13,19 +14,19 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<com.android.systemui.statusbar.phone.QuickSettingsTileView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="@dimen/quick_settings_cell_height"
-    android:background="@drawable/qs_tile_background">
-    
-    
-    <TextView
-        android:id="@+id/label"
-        style="@style/TextAppearance.QuickSettings.TileView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="2.0dp" >
 
-</com.android.systemui.statusbar.phone.QuickSettingsTileView>
+    <AnalogClock
+        android:id="@+id/analog_clock"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:dial="@drawable/ic_qs_clock_circle"
+        android:hand_hour="@drawable/ic_qs_clock_hour"
+        android:hand_minute="@drawable/ic_qs_clock_minute" />
+
+</RelativeLayout>
