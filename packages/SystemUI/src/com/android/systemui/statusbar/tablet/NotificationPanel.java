@@ -215,7 +215,7 @@ public class NotificationPanel extends RelativeLayout implements StatusBarPanel,
                             | View.STATUS_BAR_DISABLE_SYSTEM_INFO);
                 }
                 if (mSettingsPanel != null) {
-                    mSettingsPanel.setQuickSettings(mQS);
+//                    mSettingsPanel.setQuickSettings(mQS);
                 }
             } else {
                 mQS = null; // fly away, be free
