@@ -102,6 +102,7 @@ import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.NotificationRowLayout;
 import com.android.systemui.statusbar.policy.OnSizeChangedListener;
 import com.android.systemui.statusbar.policy.Prefs;
+import com.android.systemui.statusbar.toggles.XzibitToggler;
 import com.android.systemui.aokp.AwesomeAction;
 
 import java.io.FileDescriptor;
@@ -206,7 +207,7 @@ public class PhoneStatusBar extends BaseStatusBar {
     TextView mNotificationPanelDebugText;
 
     // settings
-    QuickSettings mQS;
+    XzibitToggler mQS;
     boolean mHasSettingsPanel, mHasFlipSettings;
     SettingsPanelView mSettingsPanel;
     View mFlipSettingsView;
@@ -621,21 +622,18 @@ public class PhoneStatusBar extends BaseStatusBar {
             mSettingsContainer = (QuickSettingsContainerView)
                     mStatusBarWindow.findViewById(R.id.quick_settings_container);
             if (mSettingsContainer != null) {
-                mQS = new QuickSettings(mContext, mSettingsContainer);
+                mQS = new XzibitToggler(mContext, mSettingsContainer);
+                mQS.setControllers(mBluetoothController, mNetworkController, mBatteryController, mLocationController, null);
                 if (!mNotificationPanelIsFullScreenWidth) {
                     mSettingsContainer.setSystemUiVisibility(
                             View.STATUS_BAR_DISABLE_NOTIFICATION_TICKER
                             | View.STATUS_BAR_DISABLE_SYSTEM_INFO);
                 }
-                if (mSettingsPanel != null) {
-                    mSettingsPanel.setQuickSettings(mQS);
-                }
-                mQS.setService(this);
-                mQS.setBar(mStatusBarView);
-                mQS.setup(mNetworkController, mBluetoothController, mBatteryController,
-                        mLocationController);
             } else {
-                mQS = null; // fly away, be free
+                if(mQS != null) {
+                    mQS.cleanUp();
+                    mQS = null; // fly away, be free
+                }
             }
         }
 
@@ -2094,7 +2092,6 @@ public class PhoneStatusBar extends BaseStatusBar {
         mCommandQueue.setNavigationIconHints(
                 altBack ? (mNavigationIconHints | StatusBarManager.NAVIGATION_HINT_BACK_ALT)
                         : (mNavigationIconHints & ~StatusBarManager.NAVIGATION_HINT_BACK_ALT));
-        if (mQS != null) mQS.setImeWindowStatus(vis > 0);
     }
 
     @Override
@@ -2534,7 +2531,7 @@ public class PhoneStatusBar extends BaseStatusBar {
             }
 
             // Update the QuickSettings container
-            if (mQS != null) mQS.updateResources();
+//            if (mQS != null) mQS.updateResources();
 
             loadDimens();
         }

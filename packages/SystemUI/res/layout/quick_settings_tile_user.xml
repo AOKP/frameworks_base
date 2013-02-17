@@ -13,7 +13,7 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<FrameLayout
+<com.android.systemui.statusbar.phone.QuickSettingsTileView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -34,4 +34,4 @@
         android:text="@string/quick_settings_user_label"
         android:background="@color/qs_tile_user_label"
         />
-</FrameLayout>
+</com.android.systemui.statusbar.phone.QuickSettingsTileView>
