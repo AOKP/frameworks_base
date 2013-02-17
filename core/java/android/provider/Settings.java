@@ -3375,6 +3375,11 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_ALPHA_CONFIG = "status_bar_alpha_config";
+
+        /**
+         * @hide
+         */
+        public static final String TOGGLES_STYLE = "toggls_style";
     }
 
     /**
