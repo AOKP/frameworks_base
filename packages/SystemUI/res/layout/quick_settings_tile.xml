@@ -17,4 +17,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="@dimen/quick_settings_cell_height"
-    android:background="@drawable/qs_tile_background" />
+    android:background="@drawable/qs_tile_background">
+    
+    
+    <TextView
+        android:id="@+id/label"
+        style="@style/TextAppearance.QuickSettings.TileView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center" />
+
+</com.android.systemui.statusbar.phone.QuickSettingsTileView>

@@ -77,7 +77,7 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     private static final String TAG_TRY_SUPPRESSING_IME_SWITCHER = "TrySuppressingImeSwitcher";
 
     private String mFastChargePath;
-    
+
     private int dataState = -1;
 
     private WifiManager wifiManager;
@@ -299,9 +299,10 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     private RefreshCallback mWifiTetherCallback;
     private State mWifiTetherState = new State();
 
- /*   private QuickSettingsTileView mBTTetherTile;
-    private RefreshCallback mBTTetherCallback;
-    private State mBTTetherState = new State(); */
+    /*
+     * private QuickSettingsTileView mBTTetherTile; private RefreshCallback
+     * mBTTetherCallback; private State mBTTetherState = new State();
+     */
 
     private QuickSettingsTileView mUSBTetherTile;
     private RefreshCallback mUSBTetherCallback;
@@ -387,8 +388,10 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
                 refreshWifiTetherTile();
             if (toggle.equals(QuickSettings.USB_TETHER_TOGGLE))
                 refreshUSBTetherTile();
-           /* if (toggle.equals(QuickSettings.BT_TETHER_TOGGLE))
-                refreshBTTetherTile();  */
+            /*
+             * if (toggle.equals(QuickSettings.BT_TETHER_TOGGLE))
+             * refreshBTTetherTile();
+             */
             if (toggle.equals(QuickSettings.FCHARGE_TOGGLE))
                 refreshFChargeTile();
             if (toggle.equals(QuickSettings.TWOG_TOGGLE))
@@ -623,7 +626,8 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
             mRSSIState.dataTypeIconId = enabled && (dataTypeIconId > 0) && !mWifiState.enabled
                     ? dataTypeIconId
                     : 0;
-            mRSSIState.dataContentDescription = enabled && (dataTypeIconId > 0) && !mWifiState.enabled
+            mRSSIState.dataContentDescription = enabled && (dataTypeIconId > 0)
+                    && !mWifiState.enabled
                     ? dataContentDescription
                     : r.getString(R.string.accessibility_no_data);
             mRSSIState.label = enabled
@@ -665,10 +669,12 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
         if (mBluetoothState.enabled) {
             if (mBluetoothState.connected) {
                 mBluetoothState.iconId = R.drawable.ic_qs_bluetooth_on;
-                mBluetoothState.stateContentDescription = r.getString(R.string.accessibility_desc_connected);
+                mBluetoothState.stateContentDescription = r
+                        .getString(R.string.accessibility_desc_connected);
             } else {
                 mBluetoothState.iconId = R.drawable.ic_qs_bluetooth_not_connected;
-                mBluetoothState.stateContentDescription = r.getString(R.string.accessibility_desc_on);
+                mBluetoothState.stateContentDescription = r
+                        .getString(R.string.accessibility_desc_on);
             }
             mBluetoothState.label = r.getString(R.string.quick_settings_bluetooth_label);
         } else {
@@ -676,7 +682,7 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
             mBluetoothState.label = r.getString(R.string.quick_settings_bluetooth_off_label);
             mBluetoothState.stateContentDescription = r.getString(R.string.accessibility_desc_off);
         }
-        if(mBluetoothTile != null) {
+        if (mBluetoothTile != null) {
             mBluetoothCallback.refreshView(mBluetoothTile, mBluetoothState);
         }
     }
@@ -722,7 +728,8 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     @Override
     public void onLocationGpsStateChanged(boolean inUse, boolean hasFix, String description) {
         mLocationState.enabled = inUse;
-        mLocationState.iconId = 0; // let refreshView decide what icon to use when there is no fix
+        mLocationState.iconId = 0; // let refreshView decide what icon to use
+                                   // when there is no fix
         if (hasFix) {
             mLocationState.iconId = R.drawable.ic_qs_gps_locked;
         }
@@ -963,7 +970,7 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
             boolean enabled;
             int iconId;
             int label;
-            switch(am.getRingerMode()) {
+            switch (am.getRingerMode()) {
                 case AudioManager.RINGER_MODE_NORMAL:
                 default:
                     enabled = false;
@@ -1051,11 +1058,13 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
 
     void onLTEChanged() {
         try {
-            dataState = Settings.Global.getInt(mContext.getContentResolver(), Settings.Global.PREFERRED_NETWORK_MODE);
+            dataState = Settings.Global.getInt(mContext.getContentResolver(),
+                    Settings.Global.PREFERRED_NETWORK_MODE);
         } catch (SettingNotFoundException e) {
             e.printStackTrace();
         }
-        boolean enabled = (dataState == PhoneConstants.NT_MODE_LTE_CDMA_EVDO) || (dataState == PhoneConstants.NT_MODE_GLOBAL);
+        boolean enabled = (dataState == PhoneConstants.NT_MODE_LTE_CDMA_EVDO)
+                || (dataState == PhoneConstants.NT_MODE_GLOBAL);
         mLTEState.enabled = enabled;
         mLTEState.iconId = enabled
                 ? R.drawable.ic_qs_lte_on
@@ -1084,7 +1093,8 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
 
     void on2gChanged() {
         try {
-            dataState = Settings.Global.getInt(mContext.getContentResolver(), Settings.Global.PREFERRED_NETWORK_MODE);
+            dataState = Settings.Global.getInt(mContext.getContentResolver(),
+                    Settings.Global.PREFERRED_NETWORK_MODE);
         } catch (SettingNotFoundException e) {
             e.printStackTrace();
         }
@@ -1149,7 +1159,8 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     void onWifiTetherChanged() {
         wifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
         int mWifiApState = wifiManager.getWifiApState();
-        boolean enabled = mWifiApState == WifiManager.WIFI_AP_STATE_ENABLED || mWifiApState == WifiManager.WIFI_AP_STATE_ENABLING;
+        boolean enabled = mWifiApState == WifiManager.WIFI_AP_STATE_ENABLED
+                || mWifiApState == WifiManager.WIFI_AP_STATE_ENABLING;
         mWifiTetherState.enabled = enabled;
         mWifiTetherState.iconId = enabled
                 ? R.drawable.ic_qs_wifi_tether_on
@@ -1198,7 +1209,8 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     }
 
     public boolean updateUsbState() {
-        ConnectivityManager connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connManager = (ConnectivityManager) mContext
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         String[] mUsbRegexs = connManager.getTetherableUsbRegexs();
         String[] tethered = connManager.getTetheredIfaces();
         boolean usbTethered = false;
@@ -1211,7 +1223,7 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
                 }
             }
         }
-      return false;
+        return false;
     }
 
     // Torch
@@ -1222,7 +1234,8 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     }
 
     void onTorchChanged() {
-        boolean enabled = Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.TORCH_STATE, false);
+        boolean enabled = Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.TORCH_STATE, false);
         mTorchState.enabled = enabled;
         mTorchState.iconId = enabled
                 ? R.drawable.ic_qs_torch_on
@@ -1250,7 +1263,8 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     }
 
     void onNavBarHideChanged() {
-        boolean enabled = Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.NAV_HIDE_ENABLE, false);
+        boolean enabled = Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.NAV_HIDE_ENABLE, false);
         mNavBarHideState.enabled = enabled;
         mNavBarHideState.iconId = enabled
                 ? R.drawable.ic_qs_navbar_hide_on
@@ -1289,9 +1303,7 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
         mBrightnessState.iconId = mBrightnessState.autoBrightness
                 ? R.drawable.ic_qs_brightness_auto_on
                 : R.drawable.ic_qs_brightness_auto_off;
-        mBrightnessState.label = r.getString(R.string.quick_settings_brightness_label);
-        if (togglesContain(QuickSettings.BRIGHTNESS_TOGGLE))
-            mBrightnessCallback.refreshView(mBrightnessTile, mBrightnessState);
+        mBrightnessState.label = r.getString(R.string.quick_settings_brightness_label);        
     }
 
     void refreshBrightnessTile() {
@@ -1307,7 +1319,7 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     private boolean togglesContain(String tile) {
         ContentResolver resolver = mContext.getContentResolver();
         String toggles = Settings.System.getString(resolver, Settings.System.QUICK_TOGGLES);
-       
+
         if (toggles != null) {
             ArrayList tiles = new ArrayList();
             String[] splitter = toggles.split("\\|");
@@ -1319,7 +1331,7 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
 
         return getDefaultTiles().contains(tile);
     }
-    
+
     private ArrayList getDefaultTiles() {
         ArrayList tiles = new ArrayList();
         tiles.add(QuickSettings.USER_TOGGLE);
@@ -1355,11 +1367,11 @@ class QuickSettingsModel implements BluetoothStateChangeCallback,
     }
 
     protected boolean isFastChargeOn() {
-        if(mFastChargePath == null || mFastChargePath.isEmpty()) {
+        if (mFastChargePath == null || mFastChargePath.isEmpty()) {
             return false;
         }
         File file = new File(mFastChargePath);
-        if(!file.exists()) {
+        if (!file.exists()) {
             return false;
         }
         String content = null;
