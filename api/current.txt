@@ -20889,6 +20889,7 @@ package android.telephony {
     method public int getGsmBitErrorRate();
     method public int getGsmSignalStrength();
     method public boolean isGsm();
+    method public boolean needsOldRilFeature(java.lang.String);
     method public void writeToParcel(android.os.Parcel, int);
   }
 
