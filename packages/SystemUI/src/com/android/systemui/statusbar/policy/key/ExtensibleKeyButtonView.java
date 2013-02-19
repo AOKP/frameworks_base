@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.android.systemui.R;
 import com.android.systemui.aokp.AwesomeAction;
+import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.systemui.statusbar.policy.KeyButtonView;
 
 public class ExtensibleKeyButtonView extends KeyButtonView {
@@ -25,18 +26,18 @@ public class ExtensibleKeyButtonView extends KeyButtonView {
 
     public void setActions(String clickAction, String longPress) {
         if (clickAction != null) {
-            if (clickAction.equals(AwesomeAction.ACTION_HOME)) {
+            if (clickAction.equals(ACTION_HOME)) {
                 setCode(KeyEvent.KEYCODE_HOME);
                 setId(R.id.home);
-            } else if (clickAction.equals(AwesomeAction.ACTION_BACK)) {
+            } else if (clickAction.equals(ACTION_BACK)) {
                 setCode(KeyEvent.KEYCODE_BACK);
                 setId(R.id.back);
-            } else if (clickAction.equals(AwesomeAction.ACTION_MENU)) {
+            } else if (clickAction.equals(ACTION_MENU)) {
                 setCode(KeyEvent.KEYCODE_MENU);
                 setId(R.id.navbar_menu_big);
-            } else if (clickAction.equals(AwesomeAction.ACTION_POWER)) {
+            } else if (clickAction.equals(ACTION_POWER)) {
                 setCode(KeyEvent.KEYCODE_POWER);
-            } else if (clickAction.equals(AwesomeAction.ACTION_SEARCH)) {
+            } else if (clickAction.equals(ACTION_SEARCH)) {
                 setCode(KeyEvent.KEYCODE_SEARCH);
             } else {
                 setOnClickListener(mClickListener);
@@ -47,7 +48,7 @@ public class ExtensibleKeyButtonView extends KeyButtonView {
     protected void setLongPress() {
         setSupportsLongPress(false);
         if (mLongpress != null) {
-            if ((!mLongpress.equals(AwesomeAction.ACTION_NULL)) || (getCode() != 0)) {
+            if ((!mLongpress.equals(ACTION_NULL)) || (getCode() != 0)) {
                 // I want to allow long presses for defined actions, or if
                 // primary action is a 'key' and long press isn't defined
                 // otherwise
