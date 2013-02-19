@@ -95,6 +95,7 @@ import android.widget.Toast;
 
 import com.android.internal.telephony.PhoneConstants;
 import com.android.systemui.aokp.AwesomeAction;
+import static com.android.internal.util.aokp.AwesomeConstants.*;
 
 import java.io.File;
 import java.io.InputStream;
@@ -962,7 +963,7 @@ public class QuickSettings {
                 quick.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_VIB);
+                        AwesomeAction.getInstance(mContext).launchAction(ACTION_VIB);
                         mModel.refreshVibrateTile();
                     }
                 });
@@ -990,7 +991,7 @@ public class QuickSettings {
                 quick.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_SILENT);
+                        AwesomeAction.getInstance(mContext).launchAction(ACTION_SILENT);
                         mModel.refreshSilentTile();
                     }
                 });
@@ -1018,7 +1019,7 @@ public class QuickSettings {
                 quick.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_SILENT_VIB);
+                        AwesomeAction.getInstance(mContext).launchAction(ACTION_SILENT_VIB);
                         mModel.refreshSoundStateTile();
                     }
                 });
@@ -1046,7 +1047,7 @@ public class QuickSettings {
                 quick.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_TORCH);
+                        AwesomeAction.getInstance(mContext).launchAction(ACTION_TORCH);
                     }
                 });
                 quick.setOnLongClickListener(new View.OnLongClickListener() {
