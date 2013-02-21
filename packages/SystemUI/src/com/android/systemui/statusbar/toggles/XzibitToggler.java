@@ -65,6 +65,7 @@ public class XzibitToggler {
     public static final String FAV_CONTACT_TOGGLE = "FAVCONTACT";
     public static final String SOUND_STATE_TOGGLE = "SOUNDSTATE";
     public static final String NAVBAR_HIDE_TOGGLE = "NAVBARHIDE";
+    public static final String QUICKRECORD_TOGGLE = "QUICKRECORD";
 
     private static final String TAG = XzibitToggler.class.getSimpleName();
 
@@ -113,6 +114,7 @@ public class XzibitToggler {
             toggleMap.put(FAV_CONTACT_TOGGLE, FavoriteUserToggle.class);
             toggleMap.put(SOUND_STATE_TOGGLE, SoundStateToggle.class);
             toggleMap.put(NAVBAR_HIDE_TOGGLE, NavbarHideToggle.class);
+            toggleMap.put(QUICKRECORD_TOGGLE, QuickRecordToggle.class);
             // toggleMap.put(BT_TETHER_TOGGLE, null);
         }
         return toggleMap;
