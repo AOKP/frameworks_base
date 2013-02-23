@@ -7,7 +7,7 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.android.systemui.R;
-import com.android.systemui.aokp.AwesomeAction;
+import com.android.internal.util.aokp.AwesomeAction;
 import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.systemui.statusbar.policy.KeyButtonView;
 
@@ -61,14 +61,14 @@ public class ExtensibleKeyButtonView extends KeyButtonView {
     protected OnClickListener mClickListener = new OnClickListener() {
         @Override
         public void onClick(View v) {
-            AwesomeAction.getInstance(mContext).launchAction(mClickAction);
+            AwesomeAction.launchAction(mContext, mClickAction);
         }
     };
 
     protected OnLongClickListener mLongPressListener = new OnLongClickListener() {
         @Override
         public boolean onLongClick(View v) {
-            return AwesomeAction.getInstance(mContext).launchAction(mLongpress);
+            return AwesomeAction.launchAction(mContext, mLongpress);
         }
     };
 }

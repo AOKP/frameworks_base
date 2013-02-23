@@ -1,5 +1,5 @@
 /*
- * Copyright 2011 AOKP by Mike Wilson - Zaphod-Beeblebrox
+ * Copyright (C) 2013 Android Open Kang Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.systemui.aokp;
+package com.android.internal.util.aokp;
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -45,6 +45,7 @@ import android.provider.AlarmClock;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.speech.RecognizerIntent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyCharacterMap;
@@ -53,82 +54,27 @@ import android.widget.Toast;
 
 import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.internal.statusbar.IStatusBarService;
-import com.android.systemui.R;
+import com.android.internal.R;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 
-/*
- * Helper classes for managing AOKP custom actions
- */
 public class AwesomeAction {
 
     public final static String TAG = "AwesomeAction";
 
-    private HashMap<String, Integer> actionMap;
-
-    private HashMap<String, Integer> getActionMap() {
-        if (actionMap == null) {
-            actionMap = new HashMap<String, Integer>();
-            actionMap.put(ACTION_HOME, INT_ACTION_HOME);
-            actionMap.put(ACTION_BACK, INT_ACTION_BACK);
-            actionMap.put(ACTION_SCREENSHOT, INT_ACTION_SCREENSHOT);
-            actionMap.put(ACTION_MENU, INT_ACTION_MENU);
-            actionMap.put(ACTION_POWER, INT_ACTION_POWER);
-            actionMap.put(ACTION_NOTIFICATIONS, INT_ACTION_NOTIFICATIONS);
-            actionMap.put(ACTION_RECENTS, INT_ACTION_RECENTS);
-            actionMap.put(ACTION_IME, INT_ACTION_IME);
-            actionMap.put(ACTION_KILL, INT_ACTION_KILL);
-            actionMap.put(ACTION_ASSIST, INT_ACTION_ASSIST);
-            actionMap.put(ACTION_CUSTOM, INT_ACTION_CUSTOM);
-            actionMap.put(ACTION_SILENT, INT_ACTION_SILENT);
-            actionMap.put(ACTION_VIB, INT_ACTION_VIB);
-            actionMap.put(ACTION_SILENT_VIB, INT_ACTION_SILENT_VIB);
-            actionMap.put(ACTION_EVENT, INT_ACTION_EVENT);
-            actionMap.put(ACTION_ALARM, INT_ACTION_ALARM);
-            actionMap.put(ACTION_TODAY, INT_ACTION_TODAY);
-            actionMap.put(ACTION_CLOCKOPTIONS, INT_ACTION_CLOCKOPTIONS);
-            actionMap.put(ACTION_VOICEASSIST, INT_ACTION_VOICEASSIST);
-            actionMap.put(ACTION_TORCH, INT_ACTION_TORCH);
-            actionMap.put(ACTION_SEARCH, INT_ACTION_SEARCH);
-            actionMap.put(ACTION_LAST_APP, INT_ACTION_LAST_APP);
-            actionMap.put(ACTION_NULL, INT_ACTION_NULL);
-            actionMap.put(ACTION_RECENTS_GB, INT_ACTION_RECENTS_GB);
-        }
-        return actionMap;
+    private AwesomeAction() {
     }
 
-    private int mInjectKeyCode;
-    final private Context mContext;
-    final private Handler mHandler;
-    private AudioManager am;
-
-    final Object mScreenshotLock = new Object();
-    ServiceConnection mScreenshotConnection = null;
-
-    private static AwesomeAction sInstance = null;
-
-    public static AwesomeAction getInstance(Context c) {
-        if (sInstance == null) {
-            sInstance = new AwesomeAction(c);
-        }
-        return sInstance;
-    }
-
-    public AwesomeAction(Context context) {
-        mContext = context;
-        mHandler = new Handler();
-        am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-    }
-
-    public boolean launchAction(String action) {
-        if (action == null || action.equals(ACTION_NULL)) {
+    public static boolean launchAction(Context mContext, String action) {
+        if (TextUtils.isEmpty(action) || action.equals(ACTION_NULL)) {
             return false;
         }
 
-        if (getActionMap().containsKey(action)) {
-            switch(getActionMap().get(action)) {
+        if (actionMap.containsKey(action)) {
+            AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+            switch(actionMap.get(action)) {
 
             case INT_ACTION_RECENTS:
                 try {
@@ -159,6 +105,7 @@ public class AwesomeAction {
                 injectKeyDelayed(KeyEvent.KEYCODE_APP_SWITCH);
                 break;
             case INT_ACTION_KILL:
+                KillTask mKillTask = new KillTask(mContext);
                 mHandler.post(mKillTask);
                 break;
             case INT_ACTION_VIB:
@@ -217,7 +164,11 @@ public class AwesomeAction {
                 mContext.sendBroadcast(new Intent("android.settings.SHOW_INPUT_METHOD_PICKER"));
                 break;
             case INT_ACTION_SCREENSHOT:
-                takeScreenshot();
+                Intent intentScreenshot = new Intent();
+                intentScreenshot.setComponent(ComponentName.unflattenFromString("com.android.systemui/.aokp.Screenshot"));
+                intentScreenshot.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intentScreenshot);
+                //takeScreenshot();
                 break;
             case INT_ACTION_TORCH:
                 Intent intentTorch = new Intent("android.intent.action.MAIN");
@@ -258,7 +209,7 @@ public class AwesomeAction {
                 mContext.startActivity(intentAlarm);
                 break;
             case INT_ACTION_LAST_APP:
-                toggleLastApp();
+                toggleLastApp(mContext);
                 break;
             case INT_ACTION_NOTIFICATIONS:
                 try {
@@ -287,140 +238,51 @@ public class AwesomeAction {
         }
     }
 
-    public Drawable getIconImage(String uri) {
-        if (uri == null)
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_null);
-        if (uri.equals(ACTION_HOME))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_home);
-        if (uri.equals(ACTION_BACK))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_back);
-        if (uri.equals(ACTION_RECENTS))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_recent);
-        if (uri.equals(ACTION_RECENTS_GB))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_recent_gb);
-        if (uri.equals(ACTION_SCREENSHOT))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_screenshot);
-        if (uri.equals(ACTION_MENU))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_menu_big);
-        if (uri.equals(ACTION_IME))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_ime_switcher);
-        if (uri.equals(ACTION_KILL))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_killtask);
-        if (uri.equals(ACTION_POWER))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_power);
-        if (uri.equals(ACTION_SEARCH))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_search);
-        if (uri.equals(ACTION_NOTIFICATIONS))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_notifications);
-        if (uri.equals(ACTION_LAST_APP))
-            return mContext.getResources().getDrawable(R.drawable.ic_sysbar_lastapp);
-        try {
-            return mContext.getPackageManager().getActivityIcon(Intent.parseUri(uri, 0));
-        } catch (NameNotFoundException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        return mContext.getResources().getDrawable(R.drawable.ic_sysbar_null);
-    }
-
-    public String getProperSummary(String uri) {
-        if (uri.equals(ACTION_HOME))
-            return mContext.getResources().getString(R.string.action_home);
-        if (uri.equals(ACTION_BACK))
-            return mContext.getResources().getString(R.string.action_back);
-        if (uri.equals(ACTION_RECENTS))
-            return mContext.getResources().getString(R.string.action_recents);
-        if (uri.equals(ACTION_SCREENSHOT))
-            return mContext.getResources().getString(R.string.action_screenshot);
-        if (uri.equals(ACTION_MENU))
-            return mContext.getResources().getString(R.string.action_menu);
-        if (uri.equals(ACTION_IME))
-            return mContext.getResources().getString(R.string.action_ime);
-        if (uri.equals(ACTION_KILL))
-            return mContext.getResources().getString(R.string.action_kill);
-        if (uri.equals(ACTION_POWER))
-            return mContext.getResources().getString(R.string.action_power);
-        if (uri.equals(ACTION_SEARCH))
-            return mContext.getResources().getString(R.string.action_search);
-        if (uri.equals(ACTION_NOTIFICATIONS))
-            return mContext.getResources().getString(R.string.action_notifications);
-        if (uri.equals(ACTION_LAST_APP))
-            return mContext.getResources().getString(R.string.action_lastapp);
-        if (uri.equals(ACTION_NULL))
-            return mContext.getResources().getString(R.string.action_none);
-        try {
-            Intent intent = Intent.parseUri(uri, 0);
-            if (Intent.ACTION_MAIN.equals(intent.getAction())) {
-                return getFriendlyActivityName(intent);
-            }
-            return getFriendlyShortcutName(intent);
-        } catch (URISyntaxException e) {
-        }
-        return mContext.getResources().getString(R.string.action_none);
-    }
-
-    private String getFriendlyActivityName(Intent intent) {
-        PackageManager pm = mContext.getPackageManager();
-        ActivityInfo ai = intent.resolveActivityInfo(pm, PackageManager.GET_ACTIVITIES);
-        String friendlyName = null;
-
-        if (ai != null) {
-            friendlyName = ai.loadLabel(pm).toString();
-            if (friendlyName == null) {
-                friendlyName = ai.name;
-            }
-        }
-
-        return (friendlyName != null) ? friendlyName : intent.toUri(0);
-    }
-
-    private String getFriendlyShortcutName(Intent intent) {
-        String activityName = getFriendlyActivityName(intent);
-        String name = intent.getStringExtra(Intent.EXTRA_SHORTCUT_NAME);
-
-        if (activityName != null && name != null) {
-            return activityName + ": " + name;
-        }
-        return name != null ? name : intent.toUri(0);
-    }
-
-    private void injectKeyDelayed(int keycode) {
-        mInjectKeyCode = keycode;
+    private static void injectKeyDelayed(int keycode) {
+        KeyUp onInjectKey_Up = new KeyUp(keycode);
+        KeyDown onInjectKey_Down = new KeyDown(keycode);
         mHandler.removeCallbacks(onInjectKey_Down);
         mHandler.removeCallbacks(onInjectKey_Up);
         mHandler.post(onInjectKey_Down);
-        mHandler.postDelayed(onInjectKey_Up, 10); // introduce small delay to
-                                                  // handle key press
+        mHandler.postDelayed(onInjectKey_Up, 10);
     }
 
-    final Runnable onInjectKey_Down = new Runnable() {
+     public static class KeyDown implements Runnable {
+        private int mInjectKeyCode;
+        public KeyDown(int keycode) {
+            this.mInjectKeyCode = keycode;
+        }
         public void run() {
             final KeyEvent ev = new KeyEvent(SystemClock.uptimeMillis(),
                     SystemClock.uptimeMillis(),
-                    KeyEvent.ACTION_DOWN, mInjectKeyCode, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD,
-                    0,
-                    KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
-                    InputDevice.SOURCE_KEYBOARD);
-            InputManager.getInstance().injectInputEvent(ev,
-                    InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+                    KeyEvent.ACTION_DOWN, mInjectKeyCode, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
+                        KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY, InputDevice.SOURCE_KEYBOARD);
+                    InputManager.getInstance().injectInputEvent(ev,
+                        InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
         }
-    };
+    }
 
-    final Runnable onInjectKey_Up = new Runnable() {
+     public static class KeyUp implements Runnable {
+        private int mInjectKeyCode;
+        public KeyUp(int keycode) {
+            this.mInjectKeyCode = keycode;
+        }
         public void run() {
             final KeyEvent ev = new KeyEvent(SystemClock.uptimeMillis(),
                     SystemClock.uptimeMillis(),
                     KeyEvent.ACTION_UP, mInjectKeyCode, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
-                    KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
-                    InputDevice.SOURCE_KEYBOARD);
-            InputManager.getInstance().injectInputEvent(ev,
-                    InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+                    KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY, InputDevice.SOURCE_KEYBOARD);
+                    InputManager.getInstance().injectInputEvent(ev,
+                        InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
         }
-    };
+    }
 
-    Runnable mKillTask = new Runnable() {
-        public void run() {
+     public static class KillTask implements Runnable {
+         private Context mContext;
+         public KillTask(Context context) {
+             this.mContext = context;
+         }
+         public void run() {
             final Intent intent = new Intent(Intent.ACTION_MAIN);
             final ActivityManager am = (ActivityManager) mContext
                     .getSystemService(Activity.ACTIVITY_SERVICE);
@@ -436,21 +298,26 @@ public class AwesomeAction {
                 Toast.makeText(mContext, R.string.app_killed_message, Toast.LENGTH_SHORT).show();
             }
         }
-    };
+     }
 
-    final Runnable mScreenshotTimeout = new Runnable() {
-        @Override
-        public void run() {
+  /*  public static class Screenshot implements Runnable {
+         private Context mContext;
+         public Screenshot(Context context) {
+         this.mContext = context;
+         }
+         @Override
+         public void run() {
             synchronized (mScreenshotLock) {
                 if (mScreenshotConnection != null) {
                     mContext.unbindService(mScreenshotConnection);
                     mScreenshotConnection = null;
                 }
             }
-        }
-    };
+         }
+     }
 
-    private void takeScreenshot() {
+    private static void takeScreenshot(Context mContext) {
+        Screenshot mScreenshotTimeout = new Screenshot(mContext);
         synchronized (mScreenshotLock) {
             if (mScreenshotConnection != null) {
                 return;
@@ -469,14 +336,14 @@ public class AwesomeAction {
                         Messenger messenger = new Messenger(service);
                         Message msg = Message.obtain(null, 1);
                         final ServiceConnection myConn = this;
-                        Handler h = new Handler(H.getLooper()) {
+                        Handler h = new Handler(mHandler.getLooper()) {
                             @Override
                             public void handleMessage(Message msg) {
                                 synchronized (mScreenshotLock) {
                                     if (mScreenshotConnection == myConn) {
                                         mContext.unbindService(mScreenshotConnection);
                                         mScreenshotConnection = null;
-                                        H.removeCallbacks(mScreenshotTimeout);
+                                        mHandler.removeCallbacks(mScreenshotTimeout);
                                     }
                                 }
                             }
@@ -484,20 +351,11 @@ public class AwesomeAction {
                         msg.replyTo = new Messenger(h);
                         msg.arg1 = msg.arg2 = 0;
 
-                        /*
-                         * remove for the time being if (mStatusBar != null &&
-                         * mStatusBar.isVisibleLw()) msg.arg1 = 1; if
-                         * (mNavigationBar != null &&
-                         * mNavigationBar.isVisibleLw()) msg.arg2 = 1;
-                         */
-
-                        /* wait for the dialog box to close */
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException ie) {
                         }
 
-                        /* take the screenshot */
                         try {
                             messenger.send(msg);
                         } catch (RemoteException e) {
@@ -511,12 +369,12 @@ public class AwesomeAction {
             };
             if (mContext.bindService(intent, conn, Context.BIND_AUTO_CREATE)) {
                 mScreenshotConnection = conn;
-                H.postDelayed(mScreenshotTimeout, 10000);
+                mHandler.postDelayed(mScreenshotTimeout, 10000);
             }
         }
-    }
+    } */
 
-    private void toggleLastApp() {
+    private static void toggleLastApp(Context mContext) {
         int lastAppId = 0;
         int looper = 1;
         String packageName;
@@ -544,10 +402,9 @@ public class AwesomeAction {
         }
     }
 
-    private Handler H = new Handler() {
+    private static Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-
             }
         }
     };

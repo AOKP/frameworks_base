@@ -51,10 +51,11 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.android.internal.util.aokp.AwesomeAction;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.R;
+import com.android.systemui.aokp.NavBarHelpers;
 import com.android.systemui.TransparencyManager;
-import com.android.systemui.aokp.AwesomeAction;
 import com.android.systemui.statusbar.policy.KeyButtonView;
 import com.android.systemui.statusbar.policy.key.ExtensibleKeyButtonView;
 import com.android.systemui.statusbar.policy.key.RecentsKeyButtonView;
@@ -93,6 +94,7 @@ public class NavigationBarView extends LinearLayout {
     public DelegateViewHelper mDelegateHelper;
     private BaseStatusBar mBar;
     private SettingsObserver mSettingsObserver;
+    private Context mContext;
 
     // workaround for LayoutTransitions leaving the nav buttons in a weird state (bug 5549288)
     final static boolean WORKAROUND_INVALID_LAYOUT = true;
@@ -248,6 +250,7 @@ public class NavigationBarView extends LinearLayout {
     public NavigationBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        mContext = context;
         mHidden = false;
 
         mDisplay = ((WindowManager)context.getSystemService(
@@ -306,7 +309,7 @@ public class NavigationBarView extends LinearLayout {
                     }
                     v.setTint(mColorAllIcons);
                 } else {
-                    v.setImageDrawable(AwesomeAction.getInstance(mContext).getIconImage(mClickActions[j]));
+                    v.setImageDrawable(NavBarHelpers.getIconImage(mContext, mClickActions[j]));
                     v.setTint(mClickActions[j].startsWith("**") || mColorAllIcons);
                 }
                 addButton(navButtonLayout, v, landscape && !mLeftyMode);
