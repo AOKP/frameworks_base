@@ -1286,6 +1286,11 @@ public class InputManagerService extends IInputManager.Stub
     }
 
     // Native callback.
+    public void notifySPenSwitchChanged(long whenNanos,int switchCode, boolean penon) {
+        mWindowManagerCallbacks.notifySPenSwitchChanged(whenNanos, switchCode, penon);
+    }
+
+    // Native callback.
     private void notifyInputChannelBroken(InputWindowHandle inputWindowHandle) {
         mWindowManagerCallbacks.notifyInputChannelBroken(inputWindowHandle);
     }
@@ -1473,6 +1478,8 @@ public class InputManagerService extends IInputManager.Stub
         public void notifyConfigurationChanged();
 
         public void notifyLidSwitchChanged(long whenNanos, boolean lidOpen);
+
+        public void notifySPenSwitchChanged(long whenNanos,int switchCode, boolean penon);
 
         public void notifyInputChannelBroken(InputWindowHandle inputWindowHandle);
 

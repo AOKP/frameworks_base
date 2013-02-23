@@ -109,6 +109,12 @@ public interface WindowManagerPolicy {
     public final static String EXTRA_HDMI_PLUGGED_STATE = "state";
 
     /**
+     * Broadcast action for spen removal and insert events
+     */
+    public final static String ACTION_SPEN_REMOVED = "action_spen_removed";
+    public final static String ACTION_SPEN_INSERTED = "action_spen_insert";
+
+    /**
      * Pass this event to the user / app.  To be returned from
      * {@link #interceptKeyBeforeQueueing}.
      */
@@ -936,6 +942,13 @@ public interface WindowManagerPolicy {
      * @param lidOpen True if the lid is now open.
      */
     public void notifyLidSwitchChanged(long whenNanos, boolean lidOpen);
+
+    /**
+     * Tell the policy that the spen  has changed state.(removed or inserted)
+     * @param whenNanos The time when the change occurred in uptime nanoseconds.. 
+     * @param penon True if the spen  is now removed. 
+     */
+    public void notifySPenSwitchChanged(long whenNanos, boolean penon);
     
     /**
      * Tell the policy if anyone is requesting that keyguard not come on.

@@ -24,6 +24,7 @@
 // Log debug messages about InputDispatcherPolicy
 #define DEBUG_INPUT_DISPATCHER_POLICY 0
 
+#define SW_SPEN      0x0e 
 
 #include "JNIHelp.h"
 #include "jni.h"
@@ -63,7 +64,7 @@ static const float POINTER_SPEED_EXPONENT = 1.0f / 4;
 static struct {
     jmethodID notifyConfigurationChanged;
     jmethodID notifyInputDevicesChanged;
-    jmethodID notifySwitch;
+    jmethodID notifySPenSwitchChanged;
     jmethodID notifyInputChannelBroken;
     jmethodID notifyANR;
     jmethodID filterInputEvent;
@@ -187,7 +188,7 @@ public:
 
     /* --- InputDispatcherPolicyInterface implementation --- */
 
-    virtual void notifySwitch(nsecs_t when, uint32_t switchValues, uint32_t switchMask,
+    virtual void notifySwitch(nsecs_t when, int32_t switchCode, int32_t switchValue,
             uint32_t policyFlags);
     virtual void notifyConfigurationChanged(nsecs_t when);
     virtual nsecs_t notifyANR(const sp<InputApplicationHandle>& inputApplicationHandle,
@@ -527,18 +528,24 @@ String8 NativeInputManager::getDeviceAlias(const InputDeviceIdentifier& identifi
     return result;
 }
 
-void NativeInputManager::notifySwitch(nsecs_t when,
-        uint32_t switchValues, uint32_t switchMask, uint32_t policyFlags) {
-#if DEBUG_INPUT_DISPATCHER_POLICY
-    ALOGD("notifySwitch - when=%lld, switchValues=0x%08x, switchMask=0x%08x, policyFlags=0x%x",
-            when, switchValues, switchMask, policyFlags);
-#endif
+void NativeInputManager::notifySwitch(nsecs_t when, int32_t switchCode,
+        int32_t switchValue, uint32_t policyFlags) {
+ #if DEBUG_INPUT_DISPATCHER_POLICY 
+    ALOGD("notifySwitch - when=%lld, switchCode=%d, switchValue=%d, policyFlags=0x%x",
+            when, switchCode, switchValue, policyFlags);
+ #endif 
 
     JNIEnv* env = jniEnv();
 
-    env->CallVoidMethod(mServiceObj, gServiceClassInfo.notifySwitch,
-            when, switchValues, switchMask);
-    checkAndClearExceptionFromCallback(env, "notifySwitch");
+    switch (switchCode) {
+    case SW_SPEN:
+		ALOGD("SPEN-DETECT: In NativeInputManager-Before calling windowmanager service for SPEN CHANGE");
+		env->CallVoidMethod(mServiceObj,
+				gServiceClassInfo.notifySPenSwitchChanged, when, switchCode,
+				switchValue);
+		checkAndClearExceptionFromCallback(env, "notifySPenSwitchChanged");
+		break;
+    }
 }
 
 void NativeInputManager::notifyConfigurationChanged(nsecs_t when) {
@@ -1366,8 +1373,8 @@ int register_android_server_InputManager(JNIEnv* env) {
     GET_METHOD_ID(gServiceClassInfo.notifyInputDevicesChanged, clazz,
             "notifyInputDevicesChanged", "([Landroid/view/InputDevice;)V");
 
-    GET_METHOD_ID(gServiceClassInfo.notifySwitch, clazz,
-            "notifySwitch", "(JII)V");
+    GET_METHOD_ID(gServiceClassInfo.notifySPenSwitchChanged, clazz,
+            "notifySPenSwitchChanged", "(JIZ)V");
 
     GET_METHOD_ID(gServiceClassInfo.notifyInputChannelBroken, clazz,
             "notifyInputChannelBroken", "(Lcom/android/server/input/InputWindowHandle;)V");

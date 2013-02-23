@@ -247,8 +247,9 @@ public:
 
     /* Notifies the policy about switch events.
      */
+
     virtual void notifySwitch(nsecs_t when,
-            uint32_t switchValues, uint32_t switchMask, uint32_t policyFlags) = 0;
+            int32_t switchCode, int32_t switchValue, uint32_t policyFlags) = 0;
 
     /* Poke user activity for an event dispatched to a window. */
     virtual void pokeUserActivity(nsecs_t eventTime, int32_t eventType) = 0;

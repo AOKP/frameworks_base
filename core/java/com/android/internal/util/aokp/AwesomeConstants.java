@@ -22,6 +22,15 @@ public class AwesomeConstants {
 
     public static final String ASSIST_ICON_METADATA_NAME = "com.android.systemui.action_assist_icon";
 
+    public final static int SWIPE_LEFT = 0;
+    public final static int SWIPE_RIGHT = 1;
+    public final static int SWIPE_DOWN = 2;
+    public final static int SWIPE_UP = 3;
+    public final static int TAP_DOUBLE = 4;
+    public final static int PRESS_LONG = 5;
+    public final static int SPEN_REMOVE = 6;
+    public final static int SPEN_INSERT = 7;
+
     public final static String ACTION_HOME = "**home**";
     public final static String ACTION_BACK = "**back**";
     public final static String ACTION_SCREENSHOT = "**screenshot**";
@@ -71,7 +80,6 @@ public class AwesomeConstants {
     public final static int INT_ACTION_LAST_APP = 21;
     public final static int INT_ACTION_NULL = 22;
     public final static int INT_ACTION_RECENTS_GB = 23;
-
 
     public final static HashMap<String, Integer> actionMap = new HashMap<String, Integer>();
 
