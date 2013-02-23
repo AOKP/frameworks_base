@@ -586,6 +586,10 @@
     <string name="quick_settings_sound_on">Sound on</string>
     <string name="quick_settings_swaggersuntoast">#SwaggerSunday</string>
 
+    <string name="toggle_screenshot">Take Screenshot</string>
+    <string name="toggle_killapp">Kill App</string>
+    <string name="toggle_lastapp">Last App</string>
+
     <!--  RamBar -->
     <string name="memory">RAM</string>
     <!-- [CHAR LIMIT=10] Running services, summary of background processes -->

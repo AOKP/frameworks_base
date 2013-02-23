@@ -16,6 +16,8 @@
 
 package com.android.internal.util.aokp;
 
+import java.util.HashMap;
+
 public class AwesomeConstants {
 
     public static final String ASSIST_ICON_METADATA_NAME = "com.android.systemui.action_assist_icon";
@@ -69,4 +71,34 @@ public class AwesomeConstants {
     public final static int INT_ACTION_LAST_APP = 21;
     public final static int INT_ACTION_NULL = 22;
     public final static int INT_ACTION_RECENTS_GB = 23;
+
+
+    public final static HashMap<String, Integer> actionMap = new HashMap<String, Integer>();
+
+    static {
+        actionMap.put(ACTION_HOME, INT_ACTION_HOME);
+        actionMap.put(ACTION_BACK, INT_ACTION_BACK);
+        actionMap.put(ACTION_SCREENSHOT, INT_ACTION_SCREENSHOT);
+        actionMap.put(ACTION_MENU, INT_ACTION_MENU);
+        actionMap.put(ACTION_POWER, INT_ACTION_POWER);
+        actionMap.put(ACTION_NOTIFICATIONS, INT_ACTION_NOTIFICATIONS);
+        actionMap.put(ACTION_RECENTS, INT_ACTION_RECENTS);
+        actionMap.put(ACTION_IME, INT_ACTION_IME);
+        actionMap.put(ACTION_KILL, INT_ACTION_KILL);
+        actionMap.put(ACTION_ASSIST, INT_ACTION_ASSIST);
+        actionMap.put(ACTION_CUSTOM, INT_ACTION_CUSTOM);
+        actionMap.put(ACTION_SILENT, INT_ACTION_SILENT);
+        actionMap.put(ACTION_VIB, INT_ACTION_VIB);
+        actionMap.put(ACTION_SILENT_VIB, INT_ACTION_SILENT_VIB);
+        actionMap.put(ACTION_EVENT, INT_ACTION_EVENT);
+        actionMap.put(ACTION_ALARM, INT_ACTION_ALARM);
+        actionMap.put(ACTION_TODAY, INT_ACTION_TODAY);
+        actionMap.put(ACTION_CLOCKOPTIONS, INT_ACTION_CLOCKOPTIONS);
+        actionMap.put(ACTION_VOICEASSIST, INT_ACTION_VOICEASSIST);
+        actionMap.put(ACTION_TORCH, INT_ACTION_TORCH);
+        actionMap.put(ACTION_SEARCH, INT_ACTION_SEARCH);
+        actionMap.put(ACTION_LAST_APP, INT_ACTION_LAST_APP);
+        actionMap.put(ACTION_NULL, INT_ACTION_NULL);
+        actionMap.put(ACTION_RECENTS_GB, INT_ACTION_RECENTS_GB);
+    }
 }
