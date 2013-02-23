@@ -2033,6 +2033,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         final boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         final boolean canceled = event.isCanceled();
 
+        // Lets catch every keycode so I can see if spen insert and remove trigger a keycode.
+        Log.d(TAG, "Spen keycode == " + String.valueOf(keyCode));
+
         if (DEBUG_INPUT) {
             Log.d(TAG, "interceptKeyTi keyCode=" + keyCode + " down=" + down + " repeatCount="
                     + repeatCount + " keyguardOn=" + keyguardOn + " mHomePressed=" + mHomePressed
@@ -5193,5 +5196,16 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 pw.print(" mUpsideDownRotation="); pw.println(mUpsideDownRotation);
         pw.print(prefix); pw.print("mHdmiRotation="); pw.print(mHdmiRotation);
                 pw.print(" mHdmiRotationLock="); pw.println(mHdmiRotationLock);
+    }
+
+    @Override 
+    public void notifySPenSwitchChanged(long whenNanos, boolean penon) {
+        Intent i = new Intent();
+        if (penon) {
+            i.setAction(ACTION_SPEN_REMOVED);
+        } else {
+            i.setAction(ACTION_SPEN_INSERTED);
+        }
+       mContext.sendBroadcast(i);
     }
 }

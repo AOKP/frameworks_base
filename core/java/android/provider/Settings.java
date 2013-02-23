@@ -2557,6 +2557,50 @@ public final class Settings {
         };
 
         /**
+
+         * Custom navring icons
+         *
+         * @hide
+         */
+        public static final String[] SYSTEMUI_NAVRING_ICON = new String[] {
+                "navring_icon_0",
+                "navring_icon_1",
+                "navring_icon_2",
+                "navring_icon_3",
+                "navring_icon_4",
+        };
+
+        /**
+         * Custom Spen Actions
+         *
+         * @hide
+         */
+        public static final String[] SPEN_ACTIONS = new String[] {
+                "spen_action_left",
+                "spen_action_right",
+                "spen_action_down",
+                "spen_action_up",
+                "spen_action_double",
+                "spen_action_long",
+                "spen_action_remove",
+                "spen_action_insert",
+        };
+
+        /**
+         * Setting to enable Spen actions.
+         *
+         * @hide
+         */
+        public static final String ENABLE_SPEN_ACTIONS = "enable_spen_actions";
+
+        /**
+         * Setting to enable Spen actions.
+         *
+         * @hide
+         */
+        public static final String ENABLE_SPEN_INSERT_REMOVE = "enable_spen_insert_remove";
+
+        /**
          * Setting to enable volume options.
          *
          * @hide
