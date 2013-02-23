@@ -8,6 +8,8 @@ import android.view.View;
 import com.android.systemui.R;
 import com.android.systemui.aokp.AwesomeAction;
 
+import static com.android.internal.util.aokp.AwesomeConstants.*;
+
 public class SilentToggle extends StatefulToggle {
     private AudioManager mAudioManager;
 
@@ -18,12 +20,12 @@ public class SilentToggle extends StatefulToggle {
 
     @Override
     protected void doEnable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_SILENT);
+        AwesomeAction.launchAction(mContext, AwesomeConstant.ACTION_SILENT.toString());
     }
 
     @Override
     protected void doDisable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_SILENT);
+        AwesomeAction.launchAction(mContext, AwesomeConstant.ACTION_SILENT.toString());
     }
 
     @Override
