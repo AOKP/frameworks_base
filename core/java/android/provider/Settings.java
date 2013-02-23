@@ -2570,6 +2570,27 @@ public final class Settings {
         };
 
         /**
+         * Custom Spen Actions
+         *
+         * @hide
+         */
+        public static final String[] SPEN_ACTIONS = new String[] {
+                "spen_action_left",
+                "spen_action_right",
+                "spen_action_down",
+                "spen_action_up",
+                "spen_action_double",
+                "spen_action_long",
+        };
+
+        /**
+         * Setting to enable Spen actions.
+         *
+         * @hide
+         */
+        public static final String ENABLE_SPEN_ACTIONS = "enable_spen_actions";
+
+        /**
          * Setting to enable volume options.
          *
          * @hide
