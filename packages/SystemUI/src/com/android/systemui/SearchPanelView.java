@@ -86,7 +86,7 @@ import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.PhoneStatusBar;
 import com.android.systemui.statusbar.tablet.StatusBarPanel;
 import com.android.systemui.statusbar.tablet.TabletStatusBar;
-import com.android.systemui.aokp.AwesomeAction;
+import com.android.internal.util.aokp.AwesomeAction;
 import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.internal.util.aokp.NavRingHelpers;
 
@@ -228,7 +228,7 @@ public class SearchPanelView extends FrameLayout implements
                     Log.d(TAG,"LongPress!");
                     mBar.hideSearchPanel();
                     maybeSkipKeyguard();
-                    AwesomeAction.getInstance(mContext).launchAction(longList.get(mTarget));
+                    AwesomeAction.launchAction(mContext, longList.get(mTarget));
                     mSearchPanelLock = true;
                  }
             }
@@ -268,7 +268,7 @@ public class SearchPanelView extends FrameLayout implements
                     startAssistActivity();
                 } else {
                     maybeSkipKeyguard();
-                    AwesomeAction.getInstance(mContext).launchAction(intentList.get(target));
+                    AwesomeAction.launchAction(mContext, intentList.get(target));
                 }
                 mHandler.removeCallbacks(SetLongPress);
             }
