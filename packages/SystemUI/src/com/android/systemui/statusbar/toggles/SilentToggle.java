@@ -10,7 +10,7 @@ import com.android.systemui.aokp.AwesomeAction;
 
 public class SilentToggle extends StatefulToggle {
     private AudioManager mAudioManager;
-
+    private static final String ACTION_SILENT = "**ring_silent**";
     @Override
     protected void init(Context c, int style) {
         super.init(c, style);
@@ -18,12 +18,12 @@ public class SilentToggle extends StatefulToggle {
 
     @Override
     protected void doEnable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_SILENT);
+        AwesomeAction.launchAction(mContext, ACTION_SILENT);
     }
 
     @Override
     protected void doDisable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_SILENT);
+        AwesomeAction.launchAction(mContext, ACTION_SILENT);
     }
 
     @Override

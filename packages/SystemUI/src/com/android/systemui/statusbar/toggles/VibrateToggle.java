@@ -11,6 +11,7 @@ import com.android.systemui.aokp.AwesomeAction;
 public class VibrateToggle extends StatefulToggle {
 
     private AudioManager mAudioManager;
+    private static final String ACTION_VIB = "**ring_vib**";
 
     @Override
     protected void init(Context c, int style) {
@@ -19,12 +20,12 @@ public class VibrateToggle extends StatefulToggle {
 
     @Override
     protected void doEnable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_VIB);
+        AwesomeAction.launchAction(mContext, ACTION_VIB);
     }
 
     @Override
     protected void doDisable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_VIB);
+        AwesomeAction.launchAction(mContext, ACTION_VIB);
     }
 
     @Override

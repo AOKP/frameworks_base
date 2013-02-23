@@ -11,7 +11,7 @@ import com.android.systemui.R;
 import com.android.systemui.aokp.AwesomeAction;
 
 public class TorchToggle extends StatefulToggle {
-
+    private static final String ACTION_TORCH = "**torch**";
     TorchObserver mObserver = null;
 
     @Override
@@ -32,12 +32,12 @@ public class TorchToggle extends StatefulToggle {
 
     @Override
     protected void doEnable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_TORCH);
+        AwesomeAction.launchAction(mContext, ACTION_TORCH);
     }
 
     @Override
     protected void doDisable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_TORCH);
+        AwesomeAction.launchAction(mContext, ACTION_TORCH);
     }
 
     @Override
