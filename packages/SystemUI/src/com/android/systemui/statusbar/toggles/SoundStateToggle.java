@@ -10,6 +10,7 @@ import com.android.systemui.aokp.AwesomeAction;
 
 public class SoundStateToggle extends StatefulToggle {
     private AudioManager mAudioManager;
+    private static final String ACTION_SILENT_VIB = "**ring_vib_silent**";
 
     @Override
     protected void init(Context c, int style) {
@@ -19,12 +20,12 @@ public class SoundStateToggle extends StatefulToggle {
 
     @Override
     protected void doEnable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_SILENT_VIB);
+        AwesomeAction.launchAction(mContext, ACTION_SILENT_VIB);
     }
 
     @Override
     protected void doDisable() {
-        AwesomeAction.getInstance(mContext).launchAction(AwesomeAction.ACTION_SILENT_VIB);
+        AwesomeAction.launchAction(mContext, ACTION_SILENT_VIB);
     }
 
     @Override
