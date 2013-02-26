@@ -34,6 +34,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ResolveInfo;
 import android.content.pm.UserInfo;
 import android.content.ServiceConnection;
 import android.database.ContentObserver;
@@ -81,6 +82,7 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.collect.Lists;
 import com.android.internal.app.ThemeUtils;
@@ -1037,7 +1039,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         }
     }
 
-    private static class NavBarAction implements Action, View.OnClickListener {
+    private static class NavBarAction implements Action, View.OnClickListener, View.OnLongClickListener {
 
         private final int[] ITEM_IDS = { R.id.navbartoggle, R.id.navbarhome, R.id.navbarback,R.id.navbarmenu };
 
@@ -1066,6 +1068,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                 // Set up click handler
                 itemView.setTag(i);
                 itemView.setOnClickListener(this);
+                itemView.setOnLongClickListener(this);
             }
             return v;
         }
@@ -1090,6 +1093,26 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         }
 
         void willCreate() {
+        }
+
+        public boolean onLongClick(View v) {
+            if (!(v.getTag() instanceof Integer)) return false;
+
+            int index = (Integer) v.getTag();
+
+            switch (index) {
+
+            case 0 :
+            case 1:
+                break;
+            case 2:
+                mHandler.post(mKillTask);
+                break;
+
+            case 3:
+                break;
+            }
+            return false;
         }
 
         public void onClick(View v) {
@@ -1121,6 +1144,26 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                 break;
             }
         }
+
+        Runnable mKillTask = new Runnable() {
+            public void run() {
+                final Intent intent = new Intent(Intent.ACTION_MAIN);
+                final ActivityManager am = (ActivityManager) mContext
+                      .getSystemService(Activity.ACTIVITY_SERVICE);
+                String defaultHomePackage = "com.android.launcher";
+                intent.addCategory(Intent.CATEGORY_HOME);
+                final ResolveInfo res = mContext.getPackageManager().resolveActivity(intent, 0);
+                if (res.activityInfo != null && !res.activityInfo.packageName.equals("android")) {
+                    defaultHomePackage = res.activityInfo.packageName;
+                }
+                String packageName = am.getRunningTasks(1).get(0).topActivity.getPackageName();
+                if (!defaultHomePackage.equals(packageName)) {
+                    am.forceStopPackage(packageName);
+                    Toast.makeText(mContext, R.string.app_killed_message, Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
         public void injectKeyDelayed(int keycode,long downtime){
             mInjectKeycode = keycode;
             mDownTime = downtime;
