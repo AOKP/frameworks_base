@@ -801,10 +801,10 @@ public class SignalStrength implements Parcelable {
         int rssiIconLevel = SIGNAL_STRENGTH_NONE_OR_UNKNOWN, rsrpIconLevel = -1, snrIconLevel = -1;
 
         if (mLteRsrp > -44) rsrpIconLevel = -1;
-        else if (mLteRsrp >= -85) rsrpIconLevel = SIGNAL_STRENGTH_GREAT;
-        else if (mLteRsrp >= -95) rsrpIconLevel = SIGNAL_STRENGTH_GOOD;
-        else if (mLteRsrp >= -105) rsrpIconLevel = SIGNAL_STRENGTH_MODERATE;
-        else if (mLteRsrp >= -115) rsrpIconLevel = SIGNAL_STRENGTH_POOR;
+        else if (mLteRsrp >= -113) rsrpIconLevel = SIGNAL_STRENGTH_GREAT;
+        else if (mLteRsrp >= -118) rsrpIconLevel = SIGNAL_STRENGTH_GOOD;
+        else if (mLteRsrp >= -123) rsrpIconLevel = SIGNAL_STRENGTH_MODERATE;
+        else if (mLteRsrp >= -128) rsrpIconLevel = SIGNAL_STRENGTH_POOR;
         else if (mLteRsrp >= -140) rsrpIconLevel = SIGNAL_STRENGTH_NONE_OR_UNKNOWN;
 
         /*
