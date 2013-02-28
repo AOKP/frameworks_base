@@ -34,6 +34,7 @@ public abstract class BaseToggle
     protected int mStyle;
 
     private Drawable mIconDrawable = null;
+    private int mIconLevel = -1;
     private CharSequence mLabelText = null;
     private int mTextSize = 12;
 
@@ -93,6 +94,10 @@ public abstract class BaseToggle
     protected final void setIcon(Drawable d) {
         mIconDrawable = d;
         mIconId = -1;
+    }
+
+    protected final void setIconLevel(int level) {
+        mIconLevel = level;
     }
 
     protected void cleanup() {
@@ -184,6 +189,9 @@ public abstract class BaseToggle
             if (mIcon != null) {
                 if (mIconDrawable != null) {
                     mIcon.setImageDrawable(mIconDrawable);
+                    if (mIconLevel != -1) {
+                        mIcon.setImageLevel(mIconLevel);
+                    }
                 }
             }
 

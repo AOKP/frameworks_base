@@ -16,19 +16,17 @@
 
 package com.android.systemui.statusbar.policy;
 
-import java.util.ArrayList;
-
-import android.bluetooth.BluetoothAdapter.BluetoothStateChangeCallback;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.BatteryManager;
-import android.util.Slog;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.systemui.R;
+
+import java.util.ArrayList;
 
 public class BatteryController extends BroadcastReceiver {
     private static final String TAG = "StatusBar.BatteryController";
@@ -43,6 +41,9 @@ public class BatteryController extends BroadcastReceiver {
     public interface BatteryStateChangeCallback {
         public void onBatteryLevelChanged(int level, boolean pluggedIn);
     }
+
+    private static int sBatteryLevel = 50;
+    private static boolean sBatteryCharging = false;
 
     public BatteryController(Context context) {
         mContext = context;
@@ -96,10 +97,15 @@ public class BatteryController extends BroadcastReceiver {
                 v.setText(mContext.getString(R.string.status_bar_settings_battery_meter_format,
                         level));
             }
+            sBatteryLevel = level;
+            sBatteryCharging = plugged;
+            updateCallbacks();
+        }
+    }
 
-            for (BatteryStateChangeCallback cb : mChangeCallbacks) {
-                cb.onBatteryLevelChanged(level, plugged);
-            }
+    public void updateCallbacks() {
+        for (BatteryStateChangeCallback cb : mChangeCallbacks) {
+            cb.onBatteryLevelChanged(sBatteryLevel, sBatteryCharging);
         }
     }
 }
