@@ -15,6 +15,9 @@ public class BatteryToggle extends BaseToggle implements BatteryStateChangeCallb
     LevelListDrawable mBatteryLevels;
     LevelListDrawable mChargingBatteryLevels;
 
+    private static int sBatteryLevel = 50;
+    private static boolean sBatteryCharging = false;
+
     @Override
     protected void init(Context c, int style) {
         super.init(c, style);
@@ -23,9 +26,12 @@ public class BatteryToggle extends BaseToggle implements BatteryStateChangeCallb
         mChargingBatteryLevels =
                 (LevelListDrawable) c.getResources()
                         .getDrawable(R.drawable.qs_sys_battery_charging);
-        setIcon(R.drawable.qs_sys_battery);
+        mBatteryLevels.setLevel(sBatteryLevel);
+        mChargingBatteryLevels.setLevel(sBatteryLevel);
+
+        setIcon(sBatteryCharging ? mChargingBatteryLevels : mBatteryLevels);
         setLabel(mContext.getString(R.string.quick_settings_battery_charging_label,
-                50));
+                sBatteryLevel));
     }
 
     @Override
@@ -41,6 +47,8 @@ public class BatteryToggle extends BaseToggle implements BatteryStateChangeCallb
 
     @Override
     public void onBatteryLevelChanged(int level, boolean pluggedIn) {
+        sBatteryLevel = level;
+        sBatteryCharging = pluggedIn;
         Drawable d = null;
         if (pluggedIn) {
             mChargingBatteryLevels.setLevel(level);
