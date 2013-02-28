@@ -19,24 +19,30 @@
     android:layout_height="@dimen/quick_settings_cell_height"
     android:background="@drawable/qs_tile_background" >
 
-    <AnalogClock
-        android:id="@+id/analog_clock"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+    <FrameLayout
+        android:id="@+id/analog_clock_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:paddingBottom="10dp"
-        android:dial="@drawable/ic_qs_clock_circle"
-        android:hand_hour="@drawable/ic_qs_clock_hour"
-        android:hand_minute="@drawable/ic_qs_clock_minute" />
+        android:paddingBottom="10dp" >
+
+        <AnalogClock
+            android:id="@+id/analog_clock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:dial="@drawable/ic_qs_clock_circle"
+            android:gravity="center"
+            android:hand_hour="@drawable/ic_qs_clock_hour"
+            android:hand_minute="@drawable/ic_qs_clock_minute" />
+    </FrameLayout>
 
     <com.android.systemui.statusbar.policy.DateView
         android:id="@+id/clock_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/analog_clock"
+        android:layout_below="@id/analog_clock_container"
         android:layout_gravity="center_horizontal"
         android:gravity="center"
-        android:layout_marginTop="12dp"
         android:textAppearance="@style/TextAppearance.QuickSettings.TileView" />
 
 </com.android.systemui.statusbar.phone.QuickSettingsTileView>
