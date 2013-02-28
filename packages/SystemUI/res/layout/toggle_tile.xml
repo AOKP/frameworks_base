@@ -29,7 +29,8 @@
         android:scaleType="centerInside"
         android:src="@drawable/ic_qs_default_user" />
 
-    <TextView
+    <!--
+         <TextView
         android:id="@+id/label"
         style="@style/TextAppearance.QuickSettings.TileView"
         android:layout_width="match_parent"
@@ -37,5 +38,20 @@
         android:layout_below="@id/icon"
         android:layout_gravity="center_horizontal"
         android:gravity="center" />
+    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/label"
+            style="@style/TextAppearance.QuickSettings.TileView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:text="@string/quick_settings_user_label" />
+    </RelativeLayout>
 
 </com.android.systemui.statusbar.phone.QuickSettingsTileView>
