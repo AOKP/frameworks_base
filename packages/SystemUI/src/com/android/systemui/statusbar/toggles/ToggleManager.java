@@ -89,6 +89,7 @@ public class ToggleManager {
     public static final String QUIETHOURS_TOGGLE = "QUIETHOURS";
     public static final String SLEEP_TOGGLE = "SLEEP";
     public static final String STATUSBAR_TOGGLE = "STATUSBAR";
+    public static final String CUSTOM_TOGGLE = "CUSTOM";
 
     private int mStyle;
 
@@ -139,6 +140,7 @@ public class ToggleManager {
             toggleMap.put(QUIETHOURS_TOGGLE, QuietHoursToggle.class);
             toggleMap.put(SLEEP_TOGGLE, SleepToggle.class);
             toggleMap.put(STATUSBAR_TOGGLE, StatusbarToggle.class);
+            toggleMap.put(CUSTOM_TOGGLE, CustomToggle.class);
             // toggleMap.put(BT_TETHER_TOGGLE, null);
         }
         return toggleMap;
