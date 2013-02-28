@@ -7,6 +7,7 @@ import android.os.FileObserver;
 
 import com.android.systemui.R;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -23,14 +24,11 @@ public class FastChargeToggle extends StatefulToggle {
         mObserver = new FileObserver(mFastChargePath) {
             @Override
             public void onEvent(int event, String file) {
-                if (file == null)
-                    file = "null";
                 log("fast charge file modified, event:" + event + ", file: " + file);
                 scheduleViewUpdate();
             }
         };
         mObserver.startWatching();
-        scheduleViewUpdate();
     }
 
     @Override
@@ -55,6 +53,7 @@ public class FastChargeToggle extends StatefulToggle {
     @Override
     protected void updateView() {
         boolean enabled = isFastChargeOn();
+        setEnabledState(enabled);
         setLabel(enabled
                 ? R.string.quick_settings_fcharge_on_label
                 : R.string.quick_settings_fcharge_off_label);
@@ -81,26 +80,25 @@ public class FastChargeToggle extends StatefulToggle {
             return false;
         }
         String content = null;
-        FileReader reader = null;
+        BufferedReader reader = null;
         try {
-            reader = new FileReader(file);
-            char[] chars = new char[(int) file.length()];
-            reader.read(chars);
-            content = new String(chars).trim();
+            reader = new BufferedReader(new FileReader(file));
+            content = reader.readLine();
+            log("isFastChargeOn(): content: " + content);
+            return "1".equals(content) || "Y".equalsIgnoreCase(content)
+                    || "on".equalsIgnoreCase(content);
         } catch (Exception e) {
-            e.printStackTrace();
-            content = null;
+            log("exception reading fast charge file", e);
+            return false;
         } finally {
             try {
-                reader.close();
+                if (reader != null) {
+                    reader.close();
+                }
             } catch (IOException e) {
                 // ignore
             }
         }
-        if (content == null)
-            content = "";
-        log("isFastChargeOn(): content: " + content);
-        return "1".equals(content) || "Y".equalsIgnoreCase(content);
     }
 
 }
