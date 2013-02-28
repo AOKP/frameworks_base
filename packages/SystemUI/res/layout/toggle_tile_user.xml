@@ -22,18 +22,22 @@
         android:id="@+id/user_imageview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="10dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_qs_default_user" />
 
-    <TextView
-        android:id="@+id/user_textview"
-        style="@style/TextAppearance.QuickSettings.TileView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:background="@color/qs_tile_user_label"
-        android:gravity="center"
-        android:text="@string/quick_settings_user_label" />
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/user_textview"
+            style="@style/TextAppearance.QuickSettings.TileView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/qs_tile_user_label"
+            android:gravity="center"
+            android:text="@string/quick_settings_user_label" />
+    </RelativeLayout>
 
 </com.android.systemui.statusbar.phone.QuickSettingsTileView>
