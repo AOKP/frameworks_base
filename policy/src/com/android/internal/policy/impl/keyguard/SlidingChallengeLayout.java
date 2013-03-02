@@ -29,6 +29,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.FloatProperty;
@@ -1248,6 +1249,21 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
     @Override
     public int getPaddingBottom() {
         int padding = super.getPaddingBottom();
+
+        if (!TextUtils.isEmpty(Settings.System.getString(mContext.getContentResolver(),
+                Settings.System.LOCKSCREEN_TARGETS_SHORT[5]))
+                || !TextUtils.isEmpty(Settings.System.getString(mContext.getContentResolver(),
+                Settings.System.LOCKSCREEN_TARGETS_SHORT[6]))
+                || !TextUtils.isEmpty(Settings.System.getString(mContext.getContentResolver(),
+                Settings.System.LOCKSCREEN_TARGETS_SHORT[7]))) {
+            int adjustment = Settings.System.getInt(
+                        mContext.getContentResolver(),
+                        Settings.System.NAVIGATION_BAR_HEIGHT,
+                        mContext.getResources()
+                                .getDimensionPixelSize(
+                                        com.android.internal.R.dimen.navigation_bar_height));
+            padding += adjustment;
+        }
 
         if (Settings.System.getBoolean(mContext.getContentResolver(),
                 Settings.System.NAV_HIDE_ENABLE, false)) {
