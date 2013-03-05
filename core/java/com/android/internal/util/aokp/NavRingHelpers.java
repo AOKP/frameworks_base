@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -133,6 +134,8 @@ public class NavRingHelpers {
                         }, iconActivated);
                     return new TargetDrawable(res, selector);
                 } catch (URISyntaxException e) {
+                    resourceId = com.android.internal.R.drawable.ic_action_empty;
+                } catch (NameNotFoundException nnfe ) {
                     resourceId = com.android.internal.R.drawable.ic_action_empty;
                 }
                 break;
