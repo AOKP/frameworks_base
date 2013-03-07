@@ -1850,9 +1850,12 @@ public final class WebViewClassic implements WebViewProvider, WebViewProvider.Sc
             neverRemember.getData().putString("password", password);
             neverRemember.obj = resumeMsg;
 
+            String message = mContext.getResources().getString(com.android.internal.R.string.save_password_message);
+            String warning = mContext.getResources().getString(com.android.internal.R.string.save_password_warning);
+
             mSavePasswordDialog = new AlertDialog.Builder(mContext)
                     .setTitle(com.android.internal.R.string.save_password_label)
-                    .setMessage(com.android.internal.R.string.save_password_message)
+                    .setMessage(message +"\n"+ warning)
                     .setPositiveButton(com.android.internal.R.string.save_password_notnow,
                     new DialogInterface.OnClickListener() {
                         @Override
