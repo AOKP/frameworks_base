@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.view.View;
+import android.util.Log;
 
 import com.android.systemui.R;
 
@@ -17,17 +18,22 @@ public class NfcToggle extends StatefulToggle {
     @Override
     protected void init(Context c, int style) {
         super.init(c, style);
-        mNfcAdapter = NfcAdapter.getDefaultAdapter(mContext);
-        if(mNfcAdapter == null) {
-            return;
+        mNfcAdapter = NfcAdapter.getDefaultAdapter(c);
+        if (mNfcAdapter != null) {
+            Log.d("####", "init, notNull");
+            setEnabledState(mNfcAdapter.isEnabled());
         }
-        setEnabledState(mNfcAdapter.isEnabled());
+
         registerBroadcastReceiver(new BroadcastReceiver() {
 
             @Override
             public void onReceive(Context context, Intent intent) {
                 final boolean enabled = (intent.getIntExtra(NfcAdapter.EXTRA_ADAPTER_STATE,
                         NfcAdapter.STATE_OFF) == NfcAdapter.STATE_ON);
+                if (mNfcAdapter == null) {
+                    Log.d("####", "onReceive, null");
+                    mNfcAdapter = NfcAdapter.getDefaultAdapter();
+                }
                 updateCurrentState(enabled ? State.ENABLED : State.DISABLED);
             }
         }, new IntentFilter(NfcAdapter.ACTION_ADAPTER_STATE_CHANGED));
@@ -66,13 +72,19 @@ public class NfcToggle extends StatefulToggle {
 
     private void toggleNfc(boolean state) {
         if (mNfcAdapter == null) {
-                return;
-        }
-
-        if (state) {
-            mNfcAdapter.enable();
+            Log.d("####", "toggle, null");
+            mNfcAdapter = NfcAdapter.getDefaultAdapter();
         } else {
-            mNfcAdapter.disable();
+            Log.d("####", "toggle, notNull");
+        }
+        try {
+            if (state) {
+                mNfcAdapter.enable();
+            } else {
+                mNfcAdapter.disable();
+            }
+        } catch (NullPointerException ex) {
+            // swallow
         }
     }
 }
