@@ -2656,6 +2656,8 @@
 
     <!-- If the user enters a password in a form on a website, a dialog will come up asking if they want to save the password. Text in the save password dialog, asking if the browser should remember a password. -->
     <string name="save_password_message">Do you want the browser to remember this password?</string>
+    <!-- If the user enters a password in a form on a website, a dialog will come up asking if they want to save the password. Warning in the save password dialog, informing the users that currently their passwords are not secure and are stored in a db as plain text-->
+    <string name="save_password_warning">Warning: Please be aware that your passwords may be comprimised in the event of a malicious attack</string> 
     <!-- If the user enters a password in a form on a website, a dialog will come up asking if they want to save the password. Button in the save password dialog, saying not to remember this password. -->
     <string name="save_password_notnow">Not now</string>
     <!-- If the user enters a password in a form on a website, a dialog will come up asking if they want to save the password. Button in the save password dialog, saying to remember this password. -->
