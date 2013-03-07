@@ -41,7 +41,10 @@ import android.text.TextUtils;
 import android.util.Slog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
@@ -111,7 +114,7 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
 
     private String mDataConnectionApn = "";
 
-    private ArrayList<String> mConnectedApns;
+    private HashMap<String, Integer> mApnStateMap;
 
     private LinkProperties mDataConnectionLinkProperties;
 
@@ -175,7 +178,7 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
         }
         mContext = context;
         mBatteryStats = BatteryStatsService.getService();
-        mConnectedApns = new ArrayList<String>();
+        mApnStateMap = new HashMap<String, Integer>();
     }
 
     public void systemReady() {
@@ -474,6 +477,32 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
         }
     }
 
+    private int getDataConnectionState(String newApnType, int newState) {
+        int retState = TelephonyManager.DATA_DISCONNECTED;
+        Iterator<Map.Entry<String, Integer>> iter = null;
+
+        mApnStateMap.put(newApnType, Integer.valueOf(newState));
+        iter = mApnStateMap.entrySet().iterator();
+
+        while (iter.hasNext()) {
+            Map.Entry<String, Integer> entry = iter.next();
+            int state = entry.getValue().intValue();
+
+            if (TelephonyManager.DATA_CONNECTED == state) {
+                // Return Connected if any APN is connected.
+                return TelephonyManager.DATA_CONNECTED;
+            } else {
+                // If no APN is CONNECTED, here is the return value priority:
+                // SUSPENDED > CONNECTING > DISCONNECTED
+                // DATA_DISCONNECTED   = 0; DATA_CONNECTING     = 1;
+                // DATA_CONNECTED      = 2; DATA_SUSPENDED      = 3;
+                retState = ((retState < state) ? state : retState);
+            }
+        }
+
+        return retState;
+    }
+
     public void notifyDataConnection(int state, boolean isDataConnectivityPossible,
             String reason, String apn, String apnType, LinkProperties linkProperties,
             LinkCapabilities linkCapabilities, int networkType, boolean roaming) {
@@ -488,24 +517,11 @@ class TelephonyRegistry extends ITelephonyRegistry.Stub {
         }
         synchronized (mRecords) {
             boolean modified = false;
-            if (state == TelephonyManager.DATA_CONNECTED) {
-                if (!mConnectedApns.contains(apnType)) {
-                    mConnectedApns.add(apnType);
-                    if (mDataConnectionState != state) {
-                        mDataConnectionState = state;
-                        modified = true;
-                    }
-                }
-            } else {
-                if (mConnectedApns.remove(apnType)) {
-                    if (mConnectedApns.isEmpty()) {
-                        mDataConnectionState = state;
-                        modified = true;
-                    } else {
-                        // leave mDataConnectionState as is and
-                        // send out the new status for the APN in question.
-                    }
-                }
+
+            int newState = getDataConnectionState(apnType, state);
+            if (mDataConnectionState != newState) {
+                mDataConnectionState = newState;
+                modified = true;
             }
             mDataConnectionPossible = isDataConnectivityPossible;
             mDataConnectionReason = reason;
