@@ -587,6 +587,7 @@
     <string name="quick_settings_quiet_hours_off_label">QuietHours Off</string>
     <string name="quick_settings_sound_on">Sound on</string>
     <string name="quick_settings_swaggersuntoast">#SwaggerSunday</string>
+    <string name="quick_settings_screenshot">Screenshot</string>
 
     <!--  RamBar -->
     <string name="memory">RAM</string>
