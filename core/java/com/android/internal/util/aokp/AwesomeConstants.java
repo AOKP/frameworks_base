@@ -16,6 +16,9 @@
 
 package com.android.internal.util.aokp;
 
+import android.content.Context;
+import android.content.res.Resources;
+
 public class AwesomeConstants {
 
     public static final String ASSIST_ICON_METADATA_NAME = "com.android.systemui.action_assist_icon";
@@ -29,6 +32,9 @@ public class AwesomeConstants {
     public final static int SPEN_REMOVE = 6;
     public final static int SPEN_INSERT = 7;
 
+    /* Adding Actions here will automatically add them to NavBar actions in ROMControl.
+     * **app** must remain the last action.  Add other actions before that final action.
+     */
     public static enum AwesomeConstant {
         ACTION_HOME          { @Override public String value() { return "**home**";}},
         ACTION_BACK          { @Override public String value() { return "**back**";}},
@@ -65,5 +71,95 @@ public class AwesomeConstants {
         }
         // not in ENUM must be custom
         return AwesomeConstant.ACTION_APP;
+    }
+
+    public static String[] AwesomeActions() {
+        AwesomeConstant[] allTargs = AwesomeConstant.values();
+        String[] values = new String [AwesomeConstant.values().length];
+        for (int i = 0; i < AwesomeConstant.values().length; i++) {
+            values [i] = allTargs[i].value();
+        }
+        return values;
+    }
+
+    public static String getProperName(Context context,String actionstring) {
+        // Will return a string for the associated action, but will need the caller's context to get resources.
+        Resources res = context.getResources();
+        String value = "";
+        AwesomeConstant action = fromString(actionstring);
+        switch (action) {
+            case ACTION_HOME :
+                value = res.getString(com.android.internal.R.string.action_home);
+                break;
+            case ACTION_BACK:
+                value = res.getString(com.android.internal.R.string.action_back);
+                break;
+            case ACTION_RECENTS:
+                value = res.getString(com.android.internal.R.string.action_recents);
+                break;
+            case ACTION_RECENTS_GB:
+                value = res.getString(com.android.internal.R.string.action_recents_gb);
+                break;
+            case ACTION_SEARCH:
+                value = res.getString(com.android.internal.R.string.action_search);
+                break;
+            /*case ACTION_SCREENSHOT:
+                value = res.getString(com.android.internal.R.string.action_screenshot);
+                break;*/
+            case ACTION_MENU:
+                value = res.getString(com.android.internal.R.string.action_menu);
+                break;
+            case ACTION_IME: 
+                value = res.getString(com.android.internal.R.string.action_ime);
+                break;
+            case ACTION_KILL:
+                value = res.getString(com.android.internal.R.string.action_kill);
+                break;
+            case ACTION_LAST_APP:
+                value = res.getString(com.android.internal.R.string.action_lastapp);
+                break;
+            case ACTION_POWER:
+                value = res.getString(com.android.internal.R.string.action_power);
+                break;
+            case ACTION_NOTIFICATIONS: 
+                value = res.getString(com.android.internal.R.string.action_notifications);
+                break;
+            case ACTION_ASSIST:
+                value = res.getString(com.android.internal.R.string.action_assist);
+                break;
+            case ACTION_CLOCKOPTIONS:
+                value = res.getString(com.android.internal.R.string.action_clockoptions);
+                break;
+            case ACTION_TORCH:
+                value = res.getString(com.android.internal.R.string.action_torch);
+                break;
+            case ACTION_SILENT:
+                value = res.getString(com.android.internal.R.string.action_silent);
+                break;
+            case ACTION_VIB:
+                value = res.getString(com.android.internal.R.string.action_vib);
+                break;
+            case ACTION_SILENT_VIB:
+                value = res.getString(com.android.internal.R.string.action_silent_vib);
+                break;
+            case ACTION_EVENT:
+                value = res.getString(com.android.internal.R.string.action_event);
+                break;
+            case ACTION_TODAY:
+                value = res.getString(com.android.internal.R.string.action_today);
+                break;
+            case ACTION_ALARM:
+                value = res.getString(com.android.internal.R.string.action_alarm);
+                break;
+            case ACTION_APP:
+                value = res.getString(com.android.internal.R.string.action_app);
+                break;
+            case ACTION_NULL:
+            default:
+                value = res.getString(com.android.internal.R.string.action_null);
+                break;
+
+        }
+        return value;
     }
 }
