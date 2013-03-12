@@ -57,6 +57,7 @@ import com.android.internal.widget.ILockSettings;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 
 /**
  * The Settings provider contains global system-level device preferences.
@@ -659,6 +660,11 @@ public final class Settings {
     public static final String CALL_METHOD_GET_GLOBAL = "GET_global";
 
     /**
+     * @hide - Private call() method on SettingsProvider to read from 'aokp' table.
+     */
+    public static final String CALL_METHOD_GET_AOKP = "GET_aokp";
+
+    /**
      * @hide - User handle argument extra to the fast-path call()-based requests
      */
     public static final String CALL_METHOD_USER_KEY = "_user";
@@ -671,6 +677,9 @@ public final class Settings {
 
     /** @hide - Private call() method to write to 'global' table */
     public static final String CALL_METHOD_PUT_GLOBAL= "PUT_global";
+
+    /** @hide - Private call() method to write to 'aokp' table */
+    public static final String CALL_METHOD_PUT_AOKP= "PUT_aokp";
 
     /**
      * Activity Extra: Limit available options in launched activity based on the given authority.
@@ -6549,6 +6558,383 @@ public final class Settings {
          * are always stored as strings, so this function converts the given
          * value to a string before storing it.
          *
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to modify.
+         * @param value The new value for the setting.
+         * @return true if the value was set, false on database errors
+         */
+        public static boolean putFloat(ContentResolver cr, String name, float value) {
+            return putString(cr, name, Float.toString(value));
+        }
+    }
+
+    /**
+     * AOKP settings
+     */
+    public static final class AOKP extends NameValueTable {
+        public static final String SYS_PROP_SETTING_VERSION = "1";
+        public static final String LIST_SEPARATOR = "|";
+        public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/aokp");
+
+        // Populated lazily, guarded by class object:
+        private static NameValueCache sNameValueCache = new NameValueCache(
+                SYS_PROP_SETTING_VERSION,
+                CONTENT_URI,
+                CALL_METHOD_GET_AOKP,
+                CALL_METHOD_PUT_AOKP);
+
+        /**
+         * Attempt to get values in name as a String List. You are responsible
+         * for creating the List, this function does not allocate any new lists.
+         * 
+         * @param cr
+         * @param name lookup name for list
+         * @param outList the list to add String values to. This list is cleared
+         *            before any new values are added.
+         */
+        public static void getStringList(ContentResolver cr, String name, List<String> outList) {
+            outList.clear();
+            String v = getString(cr, name);
+            if (v != null) {
+                String[] split = v.split(LIST_SEPARATOR);
+                for (String value : split) {
+                    outList.add(value);
+                }
+            }
+        }
+
+        /**
+         * Helper method to store a List of Strings
+         * 
+         * @param cr
+         * @param name
+         * @param srcList
+         * @return whether it was stored
+         */
+        public static boolean putStringList(ContentResolver cr, String name, List<String> srcList) {
+            StringBuffer sb = new StringBuffer();
+            int N = srcList.size();
+            for (int i = 0; i < N - 1; i++) {
+                sb.append(srcList.get(i));
+                sb.append(LIST_SEPARATOR);
+            }
+            sb.append(srcList.get(N - 1));
+            return putString(cr, name, sb.toString());
+        }
+
+        /**
+         * Attempt to get values in name as a String array.
+         * 
+         * @param cr
+         * @param name
+         * @return an array of Strings, or null if not found.
+         */
+        public static String[] getStringArray(ContentResolver cr, String name) {
+            String v = getString(cr, name);
+            if (v != null) {
+                return v.split(LIST_SEPARATOR);
+            }
+            return null;
+        }
+
+        /**
+         * Store a string array (helper method that flattens srcList and stores
+         * it)
+         * 
+         * @param cr
+         * @param name
+         * @param srcList
+         * @return whether it was stored
+         */
+        public static boolean putStringArray(ContentResolver cr, String name, String[] srcList) {
+            StringBuffer sb = new StringBuffer();
+            int N = srcList.length;
+            for (int i = 0; i < N - 1; i++) {
+                sb.append(srcList[i]);
+                sb.append(LIST_SEPARATOR);
+            }
+            if (N > 0) {
+                sb.append(srcList[N - 1]);
+            }
+            return putString(cr, name, sb.toString());
+        }
+
+        /**
+         * Store a boolean
+         * 
+         * @param cr
+         * @param name
+         * @param value
+         * @return whether it was stored
+         */
+        public static boolean putBoolean(ContentResolver cr, String name, boolean value) {
+            return putString(cr, name, Boolean.toString(value));
+        }
+
+        /**
+         * Get a boolean
+         * 
+         * @param cr resolver
+         * @param name
+         * @param def default value if not found
+         * @return the value found or def if value was not found
+         */
+        public static boolean getBoolean(ContentResolver cr, String name, boolean def) {
+            String v = getString(cr, name);
+            if (v != null) {
+                if (v.length() == 1) {
+                    try {
+                        return Integer.parseInt(v) != 0;
+                    } catch (NumberFormatException e) {
+                        return def;
+                    }
+                }
+                return Boolean.parseBoolean(v);
+            }
+            return def;
+        }
+
+        /**
+         * Look up a name in the database.
+         * 
+         * @param resolver to access the database with
+         * @param name to look up in the table
+         * @return the corresponding value, or null if not present
+         */
+        public static String getString(ContentResolver resolver, String name) {
+            return getStringForUser(resolver, name, UserHandle.myUserId());
+        }
+
+        /** @hide */
+        public static String getStringForUser(ContentResolver resolver, String name,
+                int userHandle) {
+            return sNameValueCache.getStringForUser(resolver, name, userHandle);
+        }
+
+        /**
+         * Store a name/value pair into the database.
+         * 
+         * @param resolver to access the database with
+         * @param name to store
+         * @param value to associate with the name
+         * @return true if the value was set, false on database errors
+         */
+        public static boolean putString(ContentResolver resolver,
+                String name, String value) {
+            return putStringForUser(resolver, name, value, UserHandle.myUserId());
+        }
+
+        /** @hide */
+        public static boolean putStringForUser(ContentResolver resolver,
+                String name, String value, int userHandle) {
+            if (LOCAL_LOGV) {
+                Log.v(TAG, "AOKP.putString(name=" + name + ", value=" + value
+                        + " for " + userHandle);
+            }
+            return sNameValueCache.putStringForUser(resolver, name, value, userHandle);
+        }
+
+        /**
+         * Construct the content URI for a particular name/value pair, useful
+         * for monitoring changes with a ContentObserver.
+         * 
+         * @param name to look up in the table
+         * @return the corresponding content URI, or null if not present
+         */
+        public static Uri getUriFor(String name) {
+            return getUriFor(CONTENT_URI, name);
+        }
+
+        /**
+         * Convenience function for retrieving a single secure settings value as
+         * an integer. Note that internally setting values are always stored as
+         * strings; this function converts the string to an integer for you. The
+         * default value will be returned if the setting is not defined or not
+         * an integer.
+         * 
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to retrieve.
+         * @param def Value to return if the setting is not defined.
+         * @return The setting's current value, or 'def' if it is not defined or
+         *         not a valid integer.
+         */
+        public static int getInt(ContentResolver cr, String name, int def) {
+            String v = getString(cr, name);
+            try {
+                return v != null ? Integer.parseInt(v) : def;
+            } catch (NumberFormatException e) {
+                return def;
+            }
+        }
+
+        /**
+         * Convenience function for retrieving a single secure settings value as
+         * an integer. Note that internally setting values are always stored as
+         * strings; this function converts the string to an integer for you.
+         * <p>
+         * This version does not take a default value. If the setting has not
+         * been set, or the string value is not a number, it throws
+         * {@link SettingNotFoundException}.
+         * 
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to retrieve.
+         * @throws SettingNotFoundException Thrown if a setting by the given name
+         *             can't be found or the setting value is not an integer.
+         * @return The setting's current value.
+         */
+        public static int getInt(ContentResolver cr, String name)
+                throws SettingNotFoundException {
+            String v = getString(cr, name);
+            try {
+                return Integer.parseInt(v);
+            } catch (NumberFormatException e) {
+                throw new SettingNotFoundException(name);
+            }
+        }
+
+        /**
+         * Convenience function for updating a single settings value as an
+         * integer. This will either create a new entry in the table if the
+         * given name does not exist, or modify the value of the existing row
+         * with that name. Note that internally setting values are always stored
+         * as strings, so this function converts the given value to a string
+         * before storing it.
+         * 
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to modify.
+         * @param value The new value for the setting.
+         * @return true if the value was set, false on database errors
+         */
+        public static boolean putInt(ContentResolver cr, String name, int value) {
+            return putString(cr, name, Integer.toString(value));
+        }
+
+        /**
+         * Convenience function for retrieving a single secure settings value as
+         * a {@code long}. Note that internally setting values are always stored
+         * as strings; this function converts the string to a {@code long} for
+         * you. The default value will be returned if the setting is not defined
+         * or not a {@code long}.
+         * 
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to retrieve.
+         * @param def Value to return if the setting is not defined.
+         * @return The setting's current value, or 'def' if it is not defined or
+         *         not a valid {@code long}.
+         */
+        public static long getLong(ContentResolver cr, String name, long def) {
+            String valString = getString(cr, name);
+            long value;
+            try {
+                value = valString != null ? Long.parseLong(valString) : def;
+            } catch (NumberFormatException e) {
+                value = def;
+            }
+            return value;
+        }
+
+        /**
+         * Convenience function for retrieving a single secure settings value as
+         * a {@code long}. Note that internally setting values are always stored
+         * as strings; this function converts the string to a {@code long} for
+         * you.
+         * <p>
+         * This version does not take a default value. If the setting has not
+         * been set, or the string value is not a number, it throws
+         * {@link SettingNotFoundException}.
+         * 
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to retrieve.
+         * @return The setting's current value.
+         * @throws SettingNotFoundException Thrown if a setting by the given
+         *             name can't be found or the setting value is not an
+         *             integer.
+         */
+        public static long getLong(ContentResolver cr, String name)
+                throws SettingNotFoundException {
+            String valString = getString(cr, name);
+            try {
+                return Long.parseLong(valString);
+            } catch (NumberFormatException e) {
+                throw new SettingNotFoundException(name);
+            }
+        }
+
+        /**
+         * Convenience function for updating a secure settings value as a long
+         * integer. This will either create a new entry in the table if the
+         * given name does not exist, or modify the value of the existing row
+         * with that name. Note that internally setting values are always stored
+         * as strings, so this function converts the given value to a string
+         * before storing it.
+         * 
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to modify.
+         * @param value The new value for the setting.
+         * @return true if the value was set, false on database errors
+         */
+        public static boolean putLong(ContentResolver cr, String name, long value) {
+            return putString(cr, name, Long.toString(value));
+        }
+
+        /**
+         * Convenience function for retrieving a single secure settings value as
+         * a floating point number. Note that internally setting values are
+         * always stored as strings; this function converts the string to an
+         * float for you. The default value will be returned if the setting is
+         * not defined or not a valid float.
+         * 
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to retrieve.
+         * @param def Value to return if the setting is not defined.
+         * @return The setting's current value, or 'def' if it is not defined or
+         *         not a valid float.
+         */
+        public static float getFloat(ContentResolver cr, String name, float def) {
+            String v = getString(cr, name);
+            try {
+                return v != null ? Float.parseFloat(v) : def;
+            } catch (NumberFormatException e) {
+                return def;
+            }
+        }
+
+        /**
+         * Convenience function for retrieving a single secure settings value as
+         * a float. Note that internally setting values are always stored as
+         * strings; this function converts the string to a float for you.
+         * <p>
+         * This version does not take a default value. If the setting has not
+         * been set, or the string value is not a number, it throws
+         * {@link SettingNotFoundException}.
+         * 
+         * @param cr The ContentResolver to access.
+         * @param name The name of the setting to retrieve.
+         * @throws SettingNotFoundException Thrown if a setting by the given name
+         *             can't be found or the setting value is not a float.
+         * @return The setting's current value.
+         */
+        public static float getFloat(ContentResolver cr, String name)
+                throws SettingNotFoundException {
+            String v = getString(cr, name);
+            if (v == null) {
+                throw new SettingNotFoundException(name);
+            }
+            try {
+                return Float.parseFloat(v);
+            } catch (NumberFormatException e) {
+                throw new SettingNotFoundException(name);
+            }
+        }
+
+        /**
+         * Convenience function for updating a single settings value as a
+         * floating point number. This will either create a new entry in the
+         * table if the given name does not exist, or modify the value of the
+         * existing row with that name. Note that internally setting values are
+         * always stored as strings, so this function converts the given value
+         * to a string before storing it.
+         * 
          * @param cr The ContentResolver to access.
          * @param name The name of the setting to modify.
          * @param value The new value for the setting.

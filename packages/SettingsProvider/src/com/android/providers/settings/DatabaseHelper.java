@@ -86,6 +86,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         mValidTables.add(TABLE_SYSTEM);
         mValidTables.add(TABLE_SECURE);
         mValidTables.add(TABLE_GLOBAL);
+        mValidTables.add("aokp");
         mValidTables.add("bluetooth_devices");
         mValidTables.add("bookmarks");
 
