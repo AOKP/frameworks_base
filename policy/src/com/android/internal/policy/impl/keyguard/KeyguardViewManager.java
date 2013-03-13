@@ -19,7 +19,9 @@ package com.android.internal.policy.impl.keyguard;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.appwidget.AppWidgetManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -41,6 +43,7 @@ import android.view.ViewManager;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import com.android.internal.app.ThemeUtils;
 import com.android.internal.R;
 import com.android.internal.widget.LockPatternUtils;
 
@@ -59,6 +62,7 @@ public class KeyguardViewManager {
     static final int DIGIT_PRESS_WAKE_MILLIS = 5000;
 
     private final Context mContext;
+    private Context mUiContext;
     private final ViewManager mViewManager;
     private final KeyguardViewMediator.ViewMediatorCallback mViewMediatorCallback;
 
@@ -88,6 +92,7 @@ public class KeyguardViewManager {
         mViewManager = viewManager;
         mViewMediatorCallback = callback;
         mLockPatternUtils = lockPatternUtils;
+        ThemeUtils.registerThemeChangeReceiver(context, mThemeChangeReceiver);
     }
 
     /**
@@ -235,6 +240,19 @@ public class KeyguardViewManager {
         mKeyguardHost.restoreHierarchyState(mStateContainer);
     }
 
+        private BroadcastReceiver mThemeChangeReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            mUiContext = null;
+        }
+    };
+
+        private Context getUiContext() {
+        if (mUiContext == null) {
+            mUiContext = ThemeUtils.createUiContext(mContext);
+        }
+        return mUiContext != null ? mUiContext : mContext;
+    }
+
     private void inflateKeyguardView(Bundle options) {
         View v = mKeyguardHost.findViewById(R.id.keyguard_host_view);
         if (v != null) {
@@ -243,7 +261,7 @@ public class KeyguardViewManager {
         // TODO: Remove once b/7094175 is fixed
         if (false) Slog.d(TAG, "inflateKeyguardView: b/7094175 mContext.config="
                 + mContext.getResources().getConfiguration());
-        final LayoutInflater inflater = LayoutInflater.from(mContext);
+                final LayoutInflater inflater = LayoutInflater.from(getUiContext());
         View view = inflater.inflate(R.layout.keyguard_host_view, mKeyguardHost, true);
         mKeyguardView = (KeyguardHostView) view.findViewById(R.id.keyguard_host_view);
         mKeyguardView.setLockPatternUtils(mLockPatternUtils);
