@@ -22,14 +22,17 @@ import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.Slog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.internal.util.aokp.StatusBarHelpers;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.NetworkController;
 
@@ -58,6 +61,9 @@ public class SignalClusterView
 
     private boolean showingSignalText = false;
     private boolean showingWiFiText = false;
+    private int mStockFontSize;
+    private int mFontSize;
+    private float mWifiWidth = 0, mWifiActWidth = 0, mMobileWidth = 0, mMobileActWidth = 0, mMobileTypeWidth = 0;
     private boolean showingAltCluster = false;
 
     ViewGroup mWifiGroup, mMobileGroup;
@@ -105,6 +111,7 @@ public class SignalClusterView
 
         mHandler = new Handler();
 
+        mStockFontSize = StatusBarHelpers.pixelsToSp(mContext,mMobileText.getTextSize());
         mSettingsObserver.observe();
 
         apply();
@@ -175,7 +182,13 @@ public class SignalClusterView
     // Run after each indicator change.
     private void apply() {
         if (mWifiGroup == null) return;
-
+        if (mMobileVisible && (mMobileWidth == 0 || mMobileActWidth == 0 || mMobileTypeWidth == 0 ))
+            // need to update the stockIcon Widths
+            getStockIconWidths();
+        if (mWifiVisible && (mWifiWidth == 0 || mWifiActWidth == 0))
+            // need to update the stockIcon Widths
+            getStockIconWidths();
+        updateIconWidths();
         if (mWifiVisible) {
             mWifiGroup.setVisibility(View.VISIBLE);
             mWifi.setImageResource(mWifiStrengthId);
@@ -243,6 +256,60 @@ public class SignalClusterView
         }
     }
 
+    public void getStockIconWidths() {
+        // this might get called several times depending on the state of various icons
+        // however, the widths are only valid the first time they show up 
+        // (before the Fontsize code changes them) thus, we only want to change them if they are 0.
+        // this needs to be done this way as different themes might use different width icons.  
+        // relying on a stock width, or something populated from @dimen would effect themes.
+        if (mWifiWidth == 0)
+            mWifiWidth = mWifi.getWidth();
+        if (mWifiActWidth == 0)
+            mWifiActWidth = mWifiActivity.getMeasuredWidth();
+        if (mMobileWidth == 0)
+            mMobileWidth = mMobile.getMeasuredWidth();
+        if (mMobileActWidth == 0)
+            mMobileActWidth = mMobileActivity.getMeasuredWidth();
+        if (mMobileTypeWidth == 0)
+            mMobileTypeWidth = mMobileType.getMeasuredWidth();
+    }
+
+    public void updateIconWidths() {
+        float width = StatusBarHelpers.getIconWidth(mContext, mFontSize);
+        float stockwidth = StatusBarHelpers.getIconWidth(mContext, mStockFontSize);
+        Log.d(TAG,"fontSize:" + mFontSize +" StockFontSize:"+ mStockFontSize);
+        Log.d(TAG,"width:" + width +" stockwidth:"+ stockwidth);
+        // We now have the optimal width, but need to apply a scale to the original source
+        // We also need to be careful not to set a 0 width.  Depending on when these icons first
+        // show up in the statusbar, we may not yet have a stockwidth by which to compare
+        float newwidth = width * (mWifiWidth / stockwidth);
+        if (mWifiWidth != 0) {
+            Log.d(TAG,"Wifiwidth:" + newwidth);
+            mWifi.getLayoutParams().width = (int) newwidth;
+        }
+        if (mWifiActWidth != 0) {
+            newwidth = width * (mWifiActWidth / stockwidth);
+            Log.d(TAG,"WifiActwidth:" + newwidth);
+            mWifiActivity.getLayoutParams().width = (int) newwidth;
+        }
+        if (mMobileWidth != 0) {
+            newwidth =width * (mMobileWidth / stockwidth);
+            Log.d(TAG,"Mobilewidth:" + newwidth);
+            mMobile.getLayoutParams().width = (int) newwidth;
+        }
+        if (mMobileActWidth != 0) {
+            newwidth =width * (mMobileActWidth / stockwidth);
+            Log.d(TAG,"MobileActwidth:" + newwidth);
+            mMobileActivity.getLayoutParams().width = (int) newwidth;
+        }
+        if (mMobileTypeWidth != 0) {
+            newwidth =width * (mMobileTypeWidth / stockwidth);
+            Log.d(TAG,"MobileTypewidth:" + newwidth);
+            mMobileType.getLayoutParams().width = (int) newwidth;
+        }
+        mAirplane.getLayoutParams().width = (int) width;
+    }
+
     class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
@@ -271,6 +338,8 @@ public class SignalClusterView
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
 
+        int fontSize = Settings.System.getInt(resolver,
+                Settings.System.STATUSBAR_FONT_SIZE,mStockFontSize);
         showingSignalText = (Settings.System.getInt(resolver,
                 Settings.System.STATUSBAR_SIGNAL_TEXT,STYLE_HIDE) > 0);
         showingWiFiText = Settings.System.getInt(resolver,
@@ -278,6 +347,11 @@ public class SignalClusterView
         boolean clustdefault = getResources().getBoolean(R.bool.statusbar_alt_signal_layout);
         showingAltCluster = Settings.System.getBoolean(resolver,
                 Settings.System.STATUSBAR_SIGNAL_CLUSTER_ALT, clustdefault);
+        if (fontSize != mFontSize) {
+            mFontSize = fontSize;
+            mWiFiText.setTextSize(mFontSize);
+            mMobileText.setTextSize(mFontSize);
+        }
         apply();
     }
 }
