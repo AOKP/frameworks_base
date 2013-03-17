@@ -16,39 +16,23 @@
 
 package com.android.systemui.statusbar.phone;
 
-import java.util.List;
-
 import android.app.ActivityManager;
-import android.app.KeyguardManager;
 import android.app.StatusBarManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
-import android.database.ContentObserver;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Broadcaster;
-import android.os.Handler;
-import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 
 import com.android.internal.util.aokp.BackgroundAlphaColorDrawable;
 import com.android.systemui.R;
-import com.android.systemui.statusbar.NavigationBarView;
 
 public class PhoneStatusBarView extends PanelBar {
     private static final String TAG = "PhoneStatusBarView";
@@ -89,7 +73,7 @@ public class PhoneStatusBarView extends PanelBar {
     }
 
     public void setBar(PhoneStatusBar bar) {
-        mBar = bar;
+        mBar = bar; // as soon as we know who the bar is, update our height.
     }
 
     public boolean hasFullWidthNotifications() {
