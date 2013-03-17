@@ -58,6 +58,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.util.Slog;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.IWindowManager;
@@ -105,6 +106,7 @@ import com.android.systemui.statusbar.policy.OnSizeChangedListener;
 import com.android.systemui.statusbar.policy.Prefs;
 import com.android.systemui.statusbar.toggles.ToggleManager;
 import com.android.systemui.aokp.AwesomeAction;
+import com.android.internal.util.aokp.StatusBarHelpers;
 import com.android.internal.util.aokp.AokpRibbonHelper;
 
 import java.io.FileDescriptor;
@@ -172,6 +174,8 @@ public class PhoneStatusBar extends BaseStatusBar {
     int mNaturalBarHeight = -1;
     int mIconSize = -1;
     int mIconHPadding = -1;
+    int mStockFontSize = 16;
+    int mFontSize = 16;
     Display mDisplay;
     Point mCurrentDisplaySize = new Point();
 
@@ -386,9 +390,9 @@ public class PhoneStatusBar extends BaseStatusBar {
         mWm = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
 
         updateDisplaySize(); // populates mDisplayMetrics
-        loadDimens();
+        //loadDimens();
 
-        mIconSize = res.getDimensionPixelSize(com.android.internal.R.dimen.status_bar_icon_size);
+        //mIconSize = res.getDimensionPixelSize(com.android.internal.R.dimen.status_bar_icon_size);
 
         mStatusBarWindow = (StatusBarWindowView) View.inflate(context,
                 R.layout.super_status_bar, null);
@@ -465,6 +469,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         mNotificationIcons.setOverflowIndicator(mMoreIcon);
         mStatusBarContents = (LinearLayout)mStatusBarView.findViewById(R.id.status_bar_contents);
         mCenterClockLayout = (LinearLayout)mStatusBarView.findViewById(R.id.center_clock_layout);
+        mStockFontSize = StatusBarHelpers.pixelsToSp(mContext,((TextView) mStatusBarView.findViewById(R.id.clock)).getTextSize());
         mTickerView = mStatusBarView.findViewById(R.id.ticker);
 
         mPile = (NotificationRowLayout)mStatusBarWindow.findViewById(R.id.latestItems);
@@ -672,6 +677,13 @@ public class PhoneStatusBar extends BaseStatusBar {
         // listen for USER_SETUP_COMPLETE setting (per-user)
         resetUserSetupObserver();
 
+        // Once the SBView is fully inflated and attached to window, we should re-draw
+        // since user adjustable font sizing is likely to screw with the layouts.
+            int barHeight = getStatusBarHeight();
+            ViewGroup.LayoutParams lp = mStatusBarView.getLayoutParams();
+            lp.height = barHeight;
+            mStatusBarView.setLayoutParams(lp);
+            mStatusBarView.invalidate();
         mTransparencyManager.setStatusbar(mStatusBarView);
         updateRibbonTargets();
         return mStatusBarView;
@@ -1042,7 +1054,13 @@ public class PhoneStatusBar extends BaseStatusBar {
                 + " icon=" + icon);
         StatusBarIconView view = new StatusBarIconView(mContext, slot, null);
         view.set(icon);
-        mStatusIcons.addView(view, viewIndex, new LinearLayout.LayoutParams(mIconSize, mIconSize));
+        view.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        view.setAdjustViewBounds(true);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        int padding = mContext.getResources().getDimensionPixelSize(R.dimen.notification_icon_padding);
+        view.setPadding(0, 0, padding,0);
+        mStatusIcons.addView(view, viewIndex, params);
     }
 
     public void updateIcon(String slot, int index, int viewIndex,
@@ -1061,8 +1079,8 @@ public class PhoneStatusBar extends BaseStatusBar {
     public void addNotification(IBinder key, StatusBarNotification notification) {
         if (DEBUG) Slog.d(TAG, "addNotification score=" + notification.score);
         StatusBarIconView iconView = addNotificationViews(key, notification);
-        if (iconView == null) return;
-
+        if (iconView == null)
+            return;
         boolean immersive = false;
         try {
             immersive = ActivityManagerNative.getDefault().isTopActivityImmersive();
@@ -1071,42 +1089,6 @@ public class PhoneStatusBar extends BaseStatusBar {
             }
         } catch (RemoteException ex) {
         }
-
-        /*
-         * DISABLED due to missing API
-        if (ENABLE_INTRUDERS && (
-                   // TODO(dsandler): Only if the screen is on
-                notification.notification.intruderView != null)) {
-            Slog.d(TAG, "Presenting high-priority notification");
-            // special new transient ticker mode
-            // 1. Populate mIntruderAlertView
-
-            if (notification.notification.intruderView == null) {
-                Slog.e(TAG, notification.notification.toString() + " wanted to intrude but intruderView was null");
-                return;
-            }
-
-            // bind the click event to the content area
-            PendingIntent contentIntent = notification.notification.contentIntent;
-            final View.OnClickListener listener = (contentIntent != null)
-                    ? new NotificationClicker(contentIntent,
-                            notification.pkg, notification.tag, notification.id)
-                    : null;
-
-            mIntruderAlertView.applyIntruderContent(notification.notification.intruderView, listener);
-
-            mCurrentlyIntrudingNotification = notification;
-
-            // 2. Animate mIntruderAlertView in
-            mHandler.sendEmptyMessage(MSG_SHOW_INTRUDER);
-
-            // 3. Set alarm to age the notification off (TODO)
-            mHandler.removeMessages(MSG_HIDE_INTRUDER);
-            if (INTRUDER_ALERT_DECAY_MS > 0) {
-                mHandler.sendEmptyMessageDelayed(MSG_HIDE_INTRUDER, INTRUDER_ALERT_DECAY_MS);
-            }
-        } else
-         */
 
         if (notification.notification.fullScreenIntent != null) {
             // Stop screensaver if the notification has a full-screen intent.
@@ -1203,7 +1185,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         loadNotificationShade();
 
         final LinearLayout.LayoutParams params
-            = new LinearLayout.LayoutParams(mIconSize + 2*mIconHPadding, mNaturalBarHeight);
+            = new LinearLayout.LayoutParams(mIconSize + 2*mIconHPadding, LinearLayout.LayoutParams.MATCH_PARENT);
 
         int N = mNotificationData.size();
 
@@ -2286,6 +2268,7 @@ public class PhoneStatusBar extends BaseStatusBar {
 
     private void addStatusBarWindow() {
         // Put up the view
+        loadDimens();
         final int height = getStatusBarHeight();
 
         // Now that the status bar window encompasses the sliding panel and its
@@ -2636,19 +2619,25 @@ public class PhoneStatusBar extends BaseStatusBar {
     protected void loadDimens() {
         final Resources res = mContext.getResources();
 
-        mNaturalBarHeight = res.getDimensionPixelSize(
-                com.android.internal.R.dimen.status_bar_height);
+        mFontSize = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUSBAR_FONT_SIZE, mStockFontSize);
 
-        int newIconSize = res.getDimensionPixelSize(
-            com.android.internal.R.dimen.status_bar_icon_size);
         int newIconHPadding = res.getDimensionPixelSize(
-            R.dimen.status_bar_icon_padding);
+                R.dimen.status_bar_icon_padding);
+        int padding = mContext.getResources().getDimensionPixelSize(
+                com.android.internal.R.dimen.status_bar_padding);
+        float fontSizepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mFontSize,
+                mContext.getResources().getDisplayMetrics());
+
+        mNaturalBarHeight = (int) (fontSizepx + padding);
+        // Set the Bar height to the size of the font plus padding.
+
+        int newIconSize =  (int) fontSizepx;
+
 
         if (newIconHPadding != mIconHPadding || newIconSize != mIconSize) {
-//            Slog.d(TAG, "size=" + newIconSize + " padding=" + newIconHPadding);
             mIconHPadding = newIconHPadding;
             mIconSize = newIconSize;
-            //reloadAllNotificationIcons(); // reload the tray
         }
 
         mEdgeBorder = res.getDimensionPixelSize(R.dimen.status_bar_edge_ignore);
@@ -2688,8 +2677,6 @@ public class PhoneStatusBar extends BaseStatusBar {
         if (mNotificationPanelMinHeightFrac < 0f || mNotificationPanelMinHeightFrac > 1f) {
             mNotificationPanelMinHeightFrac = 0f;
         }
-
-        if (false) Slog.v(TAG, "updateResources");
     }
 
     //
