@@ -87,8 +87,8 @@ public class StatusBarIconView extends AnimatedImageView {
             final float alpha = res.getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
             setAlpha(alpha);
         }
-
-        setScaleType(ImageView.ScaleType.CENTER);
+        // Disregard above note.  I want them scaled!!  - Zaphod.
+        setScaleType(ImageView.ScaleType.FIT_CENTER);
     }
 
     public StatusBarIconView(Context context, AttributeSet attrs) {
@@ -98,9 +98,10 @@ public class StatusBarIconView extends AnimatedImageView {
         final int imageBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size);
         final float scale = (float)imageBounds / (float)outerBounds;
         setScaleX(scale);
-        setScaleY(scale);
+        setScaleY(scale); 
         final float alpha = res.getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
         setAlpha(alpha);
+        setScaleType(ImageView.ScaleType.FIT_CENTER);
     }
 
     private static boolean streq(String a, String b) {
