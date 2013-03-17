@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
+import android.provider.Settings;
 import android.text.StaticLayout;
 import android.text.Layout.Alignment;
 import android.text.TextPaint;
@@ -28,6 +29,7 @@ import android.util.Slog;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ImageSwitcher;
@@ -169,8 +171,9 @@ public abstract class Ticker {
                     AnimationUtils.loadAnimation(context, com.android.internal.R.anim.push_up_in));
         mIconSwitcher.setOutAnimation(
                     AnimationUtils.loadAnimation(context, com.android.internal.R.anim.push_up_out));
-        mIconSwitcher.setScaleX(mIconScale);
-        mIconSwitcher.setScaleY(mIconScale);
+        // Let's let the base image attributes decide scaling.
+        //mIconSwitcher.setScaleX(mIconScale);
+        //mIconSwitcher.setScaleY(mIconScale);
 
         mTextSwitcher = (TextSwitcher)sb.findViewById(R.id.tickerText);
         mTextSwitcher.setInAnimation(
@@ -181,6 +184,12 @@ public abstract class Ticker {
         // Copy the paint style of one of the TextSwitchers children to use later for measuring
         TextView text = (TextView)mTextSwitcher.getChildAt(0);
         mPaint = text.getPaint();
+        int stockFontSize = pixelsToSp(text.getTextSize());
+        int fontSize = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUSBAR_FONT_SIZE, stockFontSize);
+        text.setTextSize(fontSize);
+        text = (TextView)mTextSwitcher.getChildAt(1);
+        text.setTextSize(fontSize);
     }
 
 
@@ -292,5 +301,9 @@ public abstract class Ticker {
     public abstract void tickerStarting();
     public abstract void tickerDone();
     public abstract void tickerHalting();
+    public int pixelsToSp(Float px) {
+        float scaledDensity = mContext.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (px/scaledDensity);
+    }
 }
 

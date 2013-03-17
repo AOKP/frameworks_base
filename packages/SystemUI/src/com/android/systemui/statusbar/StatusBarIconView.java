@@ -79,28 +79,29 @@ public class StatusBarIconView extends AnimatedImageView {
         // We do not resize and scale system icons (on the right), only notification icons (on the
         // left).
         if (notification != null) {
-            final int outerBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_size);
-            final int imageBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size);
-            final float scale = (float)imageBounds / (float)outerBounds;
-            setScaleX(scale);
-            setScaleY(scale);
+            //final int outerBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_size);
+            //final int imageBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size);
+            //final float scale = (float)imageBounds / (float)outerBounds;
+            //setScaleX(scale);
+            //setScaleY(scale);
             final float alpha = res.getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
             setAlpha(alpha);
         }
-
-        setScaleType(ImageView.ScaleType.CENTER);
+        // Disregard above note.  I want them scaled!!  - Zaphod.
+        setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 
     public StatusBarIconView(Context context, AttributeSet attrs) {
         super(context, attrs);
         final Resources res = context.getResources();
-        final int outerBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_size);
-        final int imageBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size);
-        final float scale = (float)imageBounds / (float)outerBounds;
-        setScaleX(scale);
-        setScaleY(scale);
+        //final int outerBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_size);
+        //final int imageBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size);
+        //final float scale = (float)imageBounds / (float)outerBounds;
+        //setScaleX(scale);
+        //setScaleY(scale);
         final float alpha = res.getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
         setAlpha(alpha);
+        setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 
     private static boolean streq(String a, String b) {

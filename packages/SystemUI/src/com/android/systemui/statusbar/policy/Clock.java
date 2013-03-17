@@ -78,6 +78,8 @@ public class Clock extends TextView {
     protected int mClockStyle = STYLE_CLOCK_RIGHT;
 
     protected int mClockColor;
+    protected int mStockFontSize;
+    protected int mFontSize;
 
     public Clock(Context context) {
         this(context, null);
@@ -98,6 +100,7 @@ public class Clock extends TextView {
         if (!mAttached) {
             mAttached = true;
             mClockColor = getTextColors().getDefaultColor();
+            mStockFontSize = pixelsToSp(getTextSize());
             IntentFilter filter = new IntentFilter();
 
             filter.addAction(Intent.ACTION_TIME_TICK);
@@ -166,9 +169,6 @@ public class Clock extends TextView {
             res = R.string.twelve_hour_time_format;
         }
 
-        final char MAGIC1 = '\uEF00';
-        final char MAGIC2 = '\uEF01';
-
         SimpleDateFormat sdf;
         String format = context.getString(res);
         if (!format.equals(mClockFormatString)) {
@@ -226,6 +226,11 @@ public class Clock extends TextView {
         return formatted;
     }
 
+    public int pixelsToSp(Float px) {
+        float scaledDensity = mContext.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (px/scaledDensity);
+    }
+
     protected class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
@@ -264,12 +269,17 @@ public class Clock extends TextView {
                 Settings.System.STATUSBAR_CLOCK_STYLE, STYLE_CLOCK_RIGHT);
         mWeekdayStyle = Settings.System.getInt(resolver,
                 Settings.System.STATUSBAR_CLOCK_WEEKDAY, WEEKDAY_STYLE_GONE);
-
+        mFontSize = Settings.System.getInt(resolver,
+                Settings.System.STATUSBAR_FONT_SIZE, mStockFontSize);
         newColor = Settings.System.getInt(resolver,
                 Settings.System.STATUSBAR_CLOCK_COLOR, mClockColor);
+
         if (newColor < 0 && newColor != mClockColor) {
             mClockColor = newColor;
             setTextColor(mClockColor);
+        }
+        if (mFontSize != getTextSize()){
+            setTextSize(mFontSize);
         }
         updateClockVisibility();
         updateClock();
