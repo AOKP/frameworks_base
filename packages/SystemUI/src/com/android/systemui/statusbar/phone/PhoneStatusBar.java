@@ -58,6 +58,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Pair;
 import android.util.Slog;
+import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.IWindowManager;
@@ -170,6 +171,8 @@ public class PhoneStatusBar extends BaseStatusBar {
     int mNaturalBarHeight = -1;
     int mIconSize = -1;
     int mIconHPadding = -1;
+    int mStockFontSize = 16;
+    int mFontSize = 16;
     Display mDisplay;
     Point mCurrentDisplaySize = new Point();
 
@@ -382,8 +385,6 @@ public class PhoneStatusBar extends BaseStatusBar {
         updateDisplaySize(); // populates mDisplayMetrics
         loadDimens();
 
-        mIconSize = res.getDimensionPixelSize(com.android.internal.R.dimen.status_bar_icon_size);
-
         mStatusBarWindow = (StatusBarWindowView) View.inflate(context,
                 R.layout.super_status_bar, null);
         mStatusBarWindow.mService = this;
@@ -460,6 +461,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         mNotificationIcons.setOverflowIndicator(mMoreIcon);
         mStatusBarContents = (LinearLayout)mStatusBarView.findViewById(R.id.status_bar_contents);
         mCenterClockLayout = (LinearLayout)mStatusBarView.findViewById(R.id.center_clock_layout);
+        mStockFontSize = pixelsToSp(((TextView) mStatusBarView.findViewById(R.id.clock)).getTextSize());
         mTickerView = mStatusBarView.findViewById(R.id.ticker);
 
         mPile = (NotificationRowLayout)mStatusBarWindow.findViewById(R.id.latestItems);
@@ -775,11 +777,6 @@ public class PhoneStatusBar extends BaseStatusBar {
     }
 
     public int getStatusBarHeight() {
-        if (mNaturalBarHeight < 0) {
-            final Resources res = mContext.getResources();
-            mNaturalBarHeight =
-                    res.getDimensionPixelSize(com.android.internal.R.dimen.status_bar_height);
-        }
         return mNaturalBarHeight;
     }
 
@@ -2541,19 +2538,25 @@ public class PhoneStatusBar extends BaseStatusBar {
     protected void loadDimens() {
         final Resources res = mContext.getResources();
 
-        mNaturalBarHeight = res.getDimensionPixelSize(
-                com.android.internal.R.dimen.status_bar_height);
+        mFontSize = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUSBAR_FONT_SIZE, mStockFontSize);
 
-        int newIconSize = res.getDimensionPixelSize(
-            com.android.internal.R.dimen.status_bar_icon_size);
         int newIconHPadding = res.getDimensionPixelSize(
-            R.dimen.status_bar_icon_padding);
+                R.dimen.status_bar_icon_padding);
+        int padding = mContext.getResources().getDimensionPixelSize(
+                com.android.internal.R.dimen.status_bar_padding);
+        float fontSizepx = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, mFontSize,
+                mContext.getResources().getDisplayMetrics());
+
+        mNaturalBarHeight = (int) (fontSizepx + padding);
+        // Set the Bar height to the size of the font plus padding.
+
+        int newIconSize =  (int) fontSizepx;
+
 
         if (newIconHPadding != mIconHPadding || newIconSize != mIconSize) {
-//            Slog.d(TAG, "size=" + newIconSize + " padding=" + newIconHPadding);
             mIconHPadding = newIconHPadding;
             mIconSize = newIconSize;
-            //reloadAllNotificationIcons(); // reload the tray
         }
 
         mEdgeBorder = res.getDimensionPixelSize(R.dimen.status_bar_edge_ignore);
@@ -2593,8 +2596,6 @@ public class PhoneStatusBar extends BaseStatusBar {
         if (mNotificationPanelMinHeightFrac < 0f || mNotificationPanelMinHeightFrac > 1f) {
             mNotificationPanelMinHeightFrac = 0f;
         }
-
-        if (false) Slog.v(TAG, "updateResources");
     }
 
     //
@@ -2642,6 +2643,11 @@ public class PhoneStatusBar extends BaseStatusBar {
         return !isDeviceProvisioned()
                 || mExpandedVisible
                 || (mDisabled & StatusBarManager.DISABLE_SEARCH) != 0;
+    }
+
+    public int pixelsToSp(Float px) {
+        float scaledDensity = mContext.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (px/scaledDensity);
     }
 
     private static class FastColorDrawable extends Drawable {
