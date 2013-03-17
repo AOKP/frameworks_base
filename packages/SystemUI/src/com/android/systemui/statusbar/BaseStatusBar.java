@@ -942,6 +942,7 @@ public abstract class BaseStatusBar extends SystemUI implements
                 notification.pkg + "/0x" + Integer.toHexString(notification.id),
                 notification.notification);
         iconView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        //iconView.setAdjustViewBounds(true);
 
         final StatusBarIcon ic = new StatusBarIcon(notification.pkg,
                     notification.user,
