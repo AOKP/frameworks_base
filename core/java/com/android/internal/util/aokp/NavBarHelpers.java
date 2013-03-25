@@ -92,6 +92,32 @@ public class NavBarHelpers {
         }
     }
 
+    public static String getMultiLineSummary(Context mContext, String uri) {
+        String temp;
+        if (TextUtils.isEmpty(uri)) {
+            uri = AwesomeConstants.AwesomeConstant.ACTION_NULL.value();
+        }
+        if (uri.startsWith("**")) {
+            return AwesomeConstants.getProperName(mContext, uri);
+        } else {  // This must be an app
+            try {
+                Intent intent = Intent.parseUri(uri, 0);
+                if (Intent.ACTION_MAIN.equals(intent.getAction())) {
+                    temp = getFriendlyActivityName(mContext, intent);
+                    return makeMultiLineSafe(temp);
+                }
+                temp = getFriendlyShortcutName(mContext, intent);
+                return makeMultiLineSafe(temp);
+            } catch (URISyntaxException e) {
+                return AwesomeConstants.getProperName(mContext, AwesomeConstants.AwesomeConstant.ACTION_NULL.value());
+            }
+        }
+    }
+
+    private static String makeMultiLineSafe(String uri) {
+        return uri.replace(" ", "\n");
+    }
+
     private static String getFriendlyActivityName(Context mContext, Intent intent) {
         PackageManager pm = mContext.getPackageManager();
         ActivityInfo ai = intent.resolveActivityInfo(pm, PackageManager.GET_ACTIVITIES);
