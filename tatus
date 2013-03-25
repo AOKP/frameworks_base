@@ -1,0 +1,48 @@
+[1mdiff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java[m
+[1mindex 42cf179..4e51ea4 100644[m
+[1m--- a/core/java/android/provider/Settings.java[m
+[1m+++ b/core/java/android/provider/Settings.java[m
+[36m@@ -3101,6 +3101,7 @@[m [mpublic final class Settings {[m
+         public static final String[] RIBBON_TARGETS_SHORT = new String[] {[m
+             "ribbon_targets_short_lockscreen",[m
+             "ribbon_targets_short_notification",[m
+[32m+[m[32m            "ribbon_targets_short_navbar",[m
+         };[m
+ [m
+         /**[m
+[36m@@ -3111,6 +3112,7 @@[m [mpublic final class Settings {[m
+         public static final String[] RIBBON_TARGETS_LONG = new String[] {[m
+             "ribbon_targets_long_lockscreen",[m
+             "ribbon_targets_long_notification",[m
+[32m+[m[32m            "ribbon_targets_long_navbar",[m
+         };[m
+ [m
+         /**[m
+[36m@@ -3121,6 +3123,7 @@[m [mpublic final class Settings {[m
+         public static final String[] ENABLE_RIBBON_TEXT = new String[] {[m
+             "ribbon_text_lockscreen",[m
+             "ribbon_text_notification",[m
+[32m+[m[32m            "ribbon_text_navbar",[m
+         };[m
+ [m
+         /**[m
+[36m@@ -3131,6 +3134,7 @@[m [mpublic final class Settings {[m
+         public static final String[] RIBBON_ICON_SIZE = new String[] {[m
+             "ribbon_icon_lockscreen",[m
+             "ribbon_icon_notification",[m
+[32m+[m[32m            "ribbon_icon_navbar",[m
+         };[m
+         /**[m
+          * enabled and order of quick toggles[m
+[1mdiff --git a/core/java/com/android/internal/util/aokp/AokpRibbonHelper.java b/core/java/com/android/internal/util/aokp/AokpRibbonHelper.java[m
+[1mindex 05730be..656415a 100644[m
+[1m--- a/core/java/com/android/internal/util/aokp/AokpRibbonHelper.java[m
+[1m+++ b/core/java/com/android/internal/util/aokp/AokpRibbonHelper.java[m
+[36m@@ -17,6 +17,7 @@[m [mpublic class AokpRibbonHelper {[m
+     private static final String TARGET_DELIMITER = "|";[m
+     public static final int LOCKSCREEN = 0;[m
+     public static final int NOTIFICATIONS = 1;[m
+[32m+[m[32m    public static final int NAVBAR = 2;[m
+ [m
+     private static final LinearLayout.LayoutParams PARAMS_TOGGLE = new LinearLayout.LayoutParams([m
+             LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, 1f);[m
