@@ -3094,6 +3094,45 @@ public final class Settings {
         public static final String LOCKSCREEN_USE_WIDGET_CONTAINER_CAROUSEL = "lockscreen_use_widget_container_carousel";
 
         /**
+         * Ribbon Targets
+         *
+         * @hide
+         */
+        public static final String[] RIBBON_TARGETS_SHORT = new String[] {
+            "ribbon_targets_short_lockscreen",
+            "ribbon_targets_short_notification",
+        };
+
+        /**
+         * Ribbon Targets
+         *
+         * @hide
+         */
+        public static final String[] RIBBON_TARGETS_LONG = new String[] {
+            "ribbon_targets_long_lockscreen",
+            "ribbon_targets_long_notification",
+        };
+
+        /**
+         * Ribbon Targets
+         *
+         * @hide
+         */
+        public static final String[] ENABLE_RIBBON_TEXT = new String[] {
+            "ribbon_text_lockscreen",
+            "ribbon_text_notification",
+        };
+
+        /**
+         * Ribbon Targets
+         *
+         * @hide
+         */
+        public static final String[] RIBBON_ICON_SIZE = new String[] {
+            "ribbon_icon_lockscreen",
+            "ribbon_icon_notification",
+        };
+        /**
          * enabled and order of quick toggles
          * 
          * @hide
