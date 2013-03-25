@@ -72,7 +72,17 @@
             android:orientation="vertical"
             android:visibility="gone" 
             />
-        
+
+        <LinearLayout
+            android:id="@+id/ribbon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="8.0dp"
+            android:paddingRight="8.0dp"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal" >
+        </LinearLayout>
+
         <TextView
             android:id="@+id/emergency_calls_only"
             android:textAppearance="@style/TextAppearance.StatusBar.Expanded.Network.EmergencyOnly"
