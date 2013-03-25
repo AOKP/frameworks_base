@@ -45,6 +45,8 @@ public class AwesomeConstants {
         ACTION_RECENTS       { @Override public String value() { return "**recents**";}},
         ACTION_ASSIST        { @Override public String value() { return "**assist**";}},
         ACTION_POWER         { @Override public String value() { return "**power**";}},
+        ACTION_RIBBON        { @Override public String value() { return "**ribbon**";}},
+        ACTION_WIDGETS        { @Override public String value() { return "**widgets**";}},
         ACTION_NOTIFICATIONS { @Override public String value() { return "**notifications**";}},
         ACTION_CLOCKOPTIONS  { @Override public String value() { return "**clockoptions**";}},
         ACTION_VOICEASSIST   { @Override public String value() { return "**voiceassist**";}},
@@ -155,6 +157,12 @@ public class AwesomeConstants {
             case ACTION_POWER:
                 value = res.getString(com.android.internal.R.string.action_power);
                 break;
+            case ACTION_RIBBON:
+                value = res.getString(com.android.internal.R.string.action_ribbon);
+                break;
+            case ACTION_WIDGETS:
+                value = res.getString(com.android.internal.R.string.action_widgets);
+                break;
             case ACTION_NOTIFICATIONS:
                 value = res.getString(com.android.internal.R.string.action_notifications);
                 break;
@@ -237,6 +245,12 @@ public class AwesomeConstants {
                 break;
             case ACTION_POWER:
                 value = getSystemUIDrawable(context, "com.android.systemui:drawable/ic_sysbar_power");
+                break;
+            case ACTION_RIBBON:
+                value = getSystemUIDrawable(context, "com.android.systemui:drawable/ic_sysbar_widget");
+                break;
+            case ACTION_WIDGETS:
+                value = getSystemUIDrawable(context, "com.android.systemui:drawable/ic_sysbar_widget");
                 break;
             case ACTION_NOTIFICATIONS:
                 value = getSystemUIDrawable(context, "com.android.systemui:drawable/ic_sysbar_notifications");
