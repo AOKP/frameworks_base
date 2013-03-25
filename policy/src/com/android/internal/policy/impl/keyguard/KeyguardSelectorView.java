@@ -42,6 +42,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import static com.android.internal.util.aokp.AwesomeConstants.*;
+import com.android.internal.util.aokp.AokpRibbonHelper;
 import com.android.internal.util.aokp.LockScreenHelpers;
 import com.android.internal.telephony.IccCardConstants.State;
 import com.android.internal.widget.LockPatternUtils;
@@ -58,6 +59,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
     private KeyguardSecurityCallback mCallback;
     private GlowPadView mGlowPadView;
+    private LinearLayout mRibbon;
+    private LinearLayout msgAndShortcutsContainer;
     private ObjectAnimator mAnim;
     private View mFadeView;
     private boolean mIsBouncing;
@@ -223,6 +226,13 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         res = getResources();
         mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
         mGlowPadView.setOnTriggerListener(mOnTriggerListener);
+        msgAndShortcutsContainer = (LinearLayout) findViewById(R.id.keyguard_message_and_shortcuts);
+        msgAndShortcutsContainer.bringToFront();
+        mRibbon = (LinearLayout) msgAndShortcutsContainer.findViewById(R.id.ribbon);
+        mRibbon.addView(AokpRibbonHelper.getRibbon(mContext,
+            Settings.System.getString(mContext.getContentResolver(), Settings.System.RIBBON_TARGETS_SHORT[AokpRibbonHelper.LOCKSCREEN]),
+            Settings.System.getString(mContext.getContentResolver(), Settings.System.RIBBON_TARGETS_LONG[AokpRibbonHelper.LOCKSCREEN]),
+            Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.ENABLE_RIBBON_TEXT[AokpRibbonHelper.LOCKSCREEN], true)));
         updateTargets();
 
         mSecurityMessageDisplay = new KeyguardMessageArea.Helper(this);
