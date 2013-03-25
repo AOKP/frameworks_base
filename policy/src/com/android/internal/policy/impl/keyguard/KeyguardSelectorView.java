@@ -21,6 +21,7 @@ import android.app.SearchManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -42,6 +43,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import static com.android.internal.util.aokp.AwesomeConstants.*;
+import com.android.internal.util.aokp.AokpRibbonHelper;
 import com.android.internal.util.aokp.LockScreenHelpers;
 import com.android.internal.telephony.IccCardConstants.State;
 import com.android.internal.widget.LockPatternUtils;
@@ -58,6 +60,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
     private KeyguardSecurityCallback mCallback;
     private GlowPadView mGlowPadView;
+    private LinearLayout mRibbon;
+    private LinearLayout ribbonView;
     private ObjectAnimator mAnim;
     private View mFadeView;
     private boolean mIsBouncing;
@@ -85,11 +89,6 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private H mHandler = new H();
 
     private void launchAction(String action) {
-        try {
-            ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
-        } catch (RemoteException ignored) {
-        }
-
         AwesomeConstant AwesomeEnum = fromString(action);
         switch (AwesomeEnum) {
         case ACTION_UNLOCK:
@@ -222,8 +221,26 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     protected void onFinishInflate() {
         super.onFinishInflate();
         res = getResources();
+        ContentResolver cr = mContext.getContentResolver();
         mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
         mGlowPadView.setOnTriggerListener(mOnTriggerListener);
+        ribbonView = (LinearLayout) findViewById(R.id.keyguard_ribbon_and_battery);
+        ribbonView.bringToFront();
+        mRibbon = (LinearLayout) ribbonView.findViewById(R.id.ribbon);
+        mRibbon.removeAllViews();
+        mRibbon.addView(AokpRibbonHelper.getRibbon(mContext,
+            Settings.System.getArrayList(cr,
+                Settings.System.RIBBON_TARGETS_SHORT[AokpRibbonHelper.LOCKSCREEN]),
+            Settings.System.getArrayList(cr,
+                Settings.System.RIBBON_TARGETS_LONG[AokpRibbonHelper.LOCKSCREEN]),
+            Settings.System.getArrayList(cr,
+                Settings.System.RIBBON_TARGETS_ICONS[AokpRibbonHelper.LOCKSCREEN]),
+            Settings.System.getBoolean(cr,
+                Settings.System.ENABLE_RIBBON_TEXT[AokpRibbonHelper.LOCKSCREEN], true),
+            Settings.System.getInt(cr,
+                Settings.System.RIBBON_TEXT_COLOR[AokpRibbonHelper.LOCKSCREEN], -1),
+            Settings.System.getInt(cr,
+                Settings.System.RIBBON_ICON_SIZE[AokpRibbonHelper.LOCKSCREEN], 0)));
         updateTargets();
 
         mSecurityMessageDisplay = new KeyguardMessageArea.Helper(this);
