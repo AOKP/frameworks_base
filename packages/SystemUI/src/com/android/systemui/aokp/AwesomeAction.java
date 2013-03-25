@@ -55,6 +55,8 @@ import android.view.KeyEvent;
 import android.widget.Toast;
 
 import static com.android.internal.util.aokp.AwesomeConstants.*;
+import com.android.systemui.statusbar.WidgetView;
+import com.android.systemui.aokp.AokpSwipeRibbon;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.R;
 
@@ -112,6 +114,17 @@ public class AwesomeAction {
             case ACTION_KILL:
                 KillTask mKillTask = new KillTask(mContext);
                 mHandler.post(mKillTask);
+                break;
+            case ACTION_WIDGETS:
+                Intent toggleWidgets = new Intent(
+                    WidgetView.WidgetReceiver.ACTION_TOGGLE_WIDGETS);
+                mContext.sendBroadcast(toggleWidgets);
+                break;
+            case ACTION_RIBBON:
+                Intent toggleRibbon = new Intent(
+                    AokpSwipeRibbon.RibbonReceiver.ACTION_TOGGLE_RIBBON);
+                toggleRibbon.putExtra("action", "bottom");
+                mContext.sendBroadcast(toggleRibbon);
                 break;
             case ACTION_VIB:
                 if(am != null){
