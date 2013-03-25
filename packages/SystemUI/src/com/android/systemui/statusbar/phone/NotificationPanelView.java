@@ -29,9 +29,12 @@ import android.view.View;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
+import android.widget.LinearLayout;
 
 import com.android.systemui.R;
 import com.android.systemui.statusbar.GestureRecorder;
+
+import com.android.internal.util.aokp.AokpRibbonHelper;
 
 public class NotificationPanelView extends PanelView {
 
@@ -51,6 +54,9 @@ public class NotificationPanelView extends PanelView {
     int mToggleStyle;
     Handler mHandler = new Handler();
 
+    private LinearLayout mRibbon;
+    private boolean ribbonOn;
+
     public NotificationPanelView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -67,6 +73,8 @@ public class NotificationPanelView extends PanelView {
         mHandleBar = resources.getDrawable(R.drawable.status_bar_close);
         mHandleBarHeight = resources.getDimensionPixelSize(R.dimen.close_handle_height);
         mHandleView = findViewById(R.id.handle);
+        mRibbon = (LinearLayout) findViewById(R.id.ribbon);
+        updateRibbon();
 
         setContentDescription(resources.getString(
                 R.string.accessibility_desc_notification_shade));
@@ -79,6 +87,7 @@ public class NotificationPanelView extends PanelView {
                         Settings.System.FAST_TOGGLE, false);
                 mToggleStyle = Settings.System.getInt(resolver,
                         Settings.System.TOGGLES_STYLE, 0);
+                updateRibbon();
             }
         };
 
@@ -104,6 +113,18 @@ public class NotificationPanelView extends PanelView {
         resolver.registerContentObserver(
                 Settings.System.getUriFor(Settings.System.TOGGLES_STYLE),
                 true, mEnableObserver);
+        resolver.registerContentObserver(
+                Settings.System.getUriFor(Settings.System.RIBBON_TARGETS_SHORT[AokpRibbonHelper.NOTIFICATIONS]),
+                true, mEnableObserver);
+        resolver.registerContentObserver(
+                Settings.System.getUriFor(Settings.System.RIBBON_TARGETS_LONG[AokpRibbonHelper.NOTIFICATIONS]),
+                true, mEnableObserver);
+        resolver.registerContentObserver(
+                Settings.System.getUriFor(Settings.System.ENABLE_RIBBON_TEXT[AokpRibbonHelper.NOTIFICATIONS]),
+                true, mEnableObserver);
+        resolver.registerContentObserver(
+                Settings.System.getUriFor(Settings.System.RIBBON_ICON_SIZE[AokpRibbonHelper.NOTIFICATIONS]),
+                true, mEnableObserver);
 
         resolver.registerContentObserver(
                 Settings.System.getUriFor(Settings.System.CHOOSE_FASTTOGGLE_SIDE),
@@ -115,6 +136,15 @@ public class NotificationPanelView extends PanelView {
         getContext().getContentResolver().unregisterContentObserver(mEnableObserver);
         getContext().getContentResolver().unregisterContentObserver(mChangeSideObserver);
         super.onDetachedFromWindow();
+    }
+
+    private void updateRibbon() {
+        mRibbon.removeAllViews();
+        mRibbon.addView(AokpRibbonHelper.getRibbon(mContext,
+            Settings.System.getString(mContext.getContentResolver(), Settings.System.RIBBON_TARGETS_SHORT[AokpRibbonHelper.NOTIFICATIONS]),
+            Settings.System.getString(mContext.getContentResolver(), Settings.System.RIBBON_TARGETS_LONG[AokpRibbonHelper.NOTIFICATIONS]),
+            Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.ENABLE_RIBBON_TEXT[AokpRibbonHelper.NOTIFICATIONS], true),
+            Settings.System.getInt(mContext.getContentResolver(), Settings.System.RIBBON_ICON_SIZE[AokpRibbonHelper.NOTIFICATIONS], 60)));
     }
 
     @Override
