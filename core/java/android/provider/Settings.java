@@ -2809,6 +2809,10 @@ public final class Settings {
          * Show the Reboot on lockscreen dialog in Power menu
          * @hide
          */
+        public static final String POWER_DIALOG_SHOW_VOLUME_STATE_TOGGLE = "power_dialog_show_volume_state_toggle";
+        /**
+        *
+        */
         public static final String POWER_DIALOG_SHOW_REBOOT_KEYGUARD = "power_dialog_show_reboot_keyguard";
 
         /**
