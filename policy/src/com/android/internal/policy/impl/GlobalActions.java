@@ -113,6 +113,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     private final WindowManagerFuncs mWindowManagerFuncs;
 
     private Context mUiContext;
+    private Handler mHandler;
     private final AudioManager mAudioManager;
     private final IDreamManager mDreamManager;
 
@@ -148,6 +149,25 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mDreamManager = IDreamManager.Stub.asInterface(
                 ServiceManager.getService(DreamService.DREAM_SERVICE));
+
+        mHandler = new Handler(getUiContext().getMainLooper()) {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                case MESSAGE_DISMISS:
+                    if (mDialog != null) {
+                        mDialog.dismiss();
+                    }
+                    break;
+                case MESSAGE_REFRESH:
+                    refreshSilentMode();
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                case MESSAGE_SHOW:
+                    handleShow();
+                    break;
+                }
+            }
+        };
 
         // receive broadcasts
         IntentFilter filter = new IntentFilter();
@@ -1230,25 +1250,6 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     private static final int MESSAGE_REFRESH = 1;
     private static final int MESSAGE_SHOW = 2;
     private static final int DIALOG_DISMISS_DELAY = 300; // ms
-
-    private Handler mHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-            case MESSAGE_DISMISS:
-                if (mDialog != null) {
-                    mDialog.dismiss();
-                }
-                break;
-            case MESSAGE_REFRESH:
-                refreshSilentMode();
-                mAdapter.notifyDataSetChanged();
-                break;
-            case MESSAGE_SHOW:
-                handleShow();
-                break;
-            }
-        }
-    };
 
     private void onAirplaneModeChanged() {
         // Let the service state callbacks handle the state.
