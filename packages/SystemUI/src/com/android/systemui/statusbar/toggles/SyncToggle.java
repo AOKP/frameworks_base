@@ -41,15 +41,14 @@ public class SyncToggle extends StatefulToggle implements SyncStatusObserver {
 
     @Override
     protected void updateView() {
-        boolean enabled = ContentResolver.getMasterSyncAutomatically();
-        updateCurrentState(enabled ? State.ENABLED : State.DISABLED);
+        super.updateView();
+        boolean enabled = getState() == State.ENABLED;
         setIcon(enabled
                 ? R.drawable.ic_qs_sync_on
                 : R.drawable.ic_qs_sync_off);
         setLabel(enabled
                 ? mContext.getString(R.string.quick_settings_sync_on_label)
                 : mContext.getString(R.string.quick_settings_sync_off_label));
-        super.updateView();
     }
 
     @Override
@@ -60,7 +59,7 @@ public class SyncToggle extends StatefulToggle implements SyncStatusObserver {
 
     @Override
     public void onStatusChanged(int which) {
-        scheduleViewUpdate();
+        setEnabledState(ContentResolver.getMasterSyncAutomatically());
     }
 
 }
