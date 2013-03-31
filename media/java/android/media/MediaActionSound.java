@@ -18,6 +18,7 @@ package android.media;
 
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.SystemProperties;
 import android.util.Log;
 
 /**
@@ -99,6 +100,8 @@ public class MediaActionSound {
     private static final int STATE_LOADING_PLAY_REQUESTED = 2;
     private static final int STATE_LOADED                 = 3;
 
+    private static final String PROP_CAMERA_SOUND = "persist.sys.camera-sound";
+
     private class SoundState {
         public final int name;
         public int id;
@@ -153,20 +156,22 @@ public class MediaActionSound {
      * @see #STOP_VIDEO_RECORDING
      */
     public void load(int soundName) {
-        if (soundName < 0 || soundName >= SOUND_FILES.length) {
-            throw new RuntimeException("Unknown sound requested: " + soundName);
-        }
-        SoundState sound = mSounds[soundName];
-        synchronized (sound) {
-            switch (sound.state) {
-            case STATE_NOT_LOADED:
-                if (loadSound(sound) <= 0) {
-                    Log.e(TAG, "load() error loading sound: " + soundName);
+        if (SystemProperties.getBoolean(PROP_CAMERA_SOUND, true)) {
+            if (soundName < 0 || soundName >= SOUND_FILES.length) {
+                throw new RuntimeException("Unknown sound requested: " + soundName);
+            }
+            SoundState sound = mSounds[soundName];
+            synchronized (sound) {
+                switch (sound.state) {
+                case STATE_NOT_LOADED:
+                    if (loadSound(sound) <= 0) {
+                        Log.e(TAG, "load() error loading sound: " + soundName);
+                    }
+                    break;
+                default:
+                    Log.e(TAG, "load() called in wrong state: " + sound + " for sound: "+ soundName);
+                    break;
                 }
-                break;
-            default:
-                Log.e(TAG, "load() called in wrong state: " + sound + " for sound: "+ soundName);
-                break;
             }
         }
     }
