@@ -40,6 +40,7 @@ import android.content.res.TypedArray;
 import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
+import android.hardware.input.InputManager;
 import android.media.AudioManager;
 import android.media.IAudioService;
 import android.media.Ringtone;
@@ -70,6 +71,7 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.telephony.ITelephony;
 import com.android.internal.widget.PointerLocationView;
 
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.EventLog;
 import android.util.Log;
@@ -157,6 +159,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 
 /**
  * WindowManagerPolicy implementation for the Android phone UI.  This
@@ -498,6 +501,20 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     boolean mConsumeSearchKeyUp;
     boolean mAssistKeyLongPressed;
 
+    // Tracks user-customisable behavior for certain key events
+    // They are arrayed by soft key 0 = single, 1 = long, 2 = double
+    private String[] mHomeActions = new String[3];
+    private String[] mMenuActions = new String[3];
+    private String[] mBackActions = new String[3];
+    private String[] mRecentsActions = new String[3];
+    private String[] mSearchActions = new String[3];
+    private String sSingleClick;
+
+    private boolean mDoubleClickSoftKeys;
+    private boolean mCustomSoftKeysEnabled;
+    private boolean mDoubleClicked = false;
+    private int mDelayTime = 0;
+
     // support for activating the lock screen while the screen is on
     boolean mAllowLockscreenWhenOn;
     int mLockScreenTimeout;
@@ -647,6 +664,29 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     "fancy_rotation_anim"), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SOFT_KEY_ENABLE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SOFT_KEY_ENABLE_DOUBLE_CLICK), false, this);
+
+            for (int i = 0; i < 3; i++) {
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.SOFT_KEY_BACK[i]),
+                        false, this);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.SOFT_KEY_HOME[i]),
+                        false, this);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.SOFT_KEY_MENU[i]),
+                        false, this);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.SOFT_KEY_SEARCH[i]),
+                        false, this);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.SOFT_KEY_APPSWITCH[i]),
+                        false, this);
+            }
+
             updateSettings();
         }
 
@@ -901,6 +941,21 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     boolean isDeviceProvisioned() {
         return Settings.Global.getInt(
                 mContext.getContentResolver(), Settings.Global.DEVICE_PROVISIONED, 0) != 0;
+    }
+
+    private Runnable SingleClick = new Runnable () {
+        public void run() {
+            launchSoftKeyAction(sSingleClick);
+        }
+    };
+
+
+    private void launchSoftKeyAction(String action) {
+            mDoubleClicked = false;
+            Intent i = new Intent();
+            i.setAction("com.android.systemui.aokp.LAUNCH_ACTION");
+            i.putExtra("action", action);
+            mContext.sendBroadcast(i);
     }
 
     private void handleLongPressOnHome() {
@@ -1321,6 +1376,60 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.System.VOLUME_WAKE_SCREEN, false);
             mVolBtnMusicControls = Settings.System.getBoolean(resolver,
                     Settings.System.VOLUME_MUSIC_CONTROLS, false);
+
+            mCustomSoftKeysEnabled = (Settings.System.getBoolean(resolver,
+                    Settings.System.SOFT_KEY_ENABLE, false));
+
+            mDoubleClickSoftKeys = (Settings.System.getBoolean(resolver,
+                    Settings.System.SOFT_KEY_ENABLE_DOUBLE_CLICK, false));
+
+
+            for (int i = 0; i < 3; i++) {
+                mHomeActions[i] = Settings.System.getString(resolver,
+                        Settings.System.SOFT_KEY_HOME[i]);
+                if (TextUtils.isEmpty(mHomeActions[i])) {
+                    mHomeActions[i] = "**home**";
+                    Settings.System.putString(resolver,
+                            Settings.System.SOFT_KEY_HOME[i], mHomeActions[i]);
+                }
+
+                mMenuActions[i] = Settings.System.getString(resolver,
+                        Settings.System.SOFT_KEY_MENU[i]);
+                if (TextUtils.isEmpty(mMenuActions[i])) {
+                    mMenuActions[i] = "**menu**";
+                    Settings.System.putString(resolver,
+                            Settings.System.SOFT_KEY_MENU[i], mMenuActions[i]);
+                }
+
+                mBackActions[i] = Settings.System.getString(resolver,
+                        Settings.System.SOFT_KEY_BACK[i]);
+                if (TextUtils.isEmpty(mBackActions[i])) {
+                    mBackActions[i] = "**back**";
+                    Settings.System.putString(resolver,
+                            Settings.System.SOFT_KEY_BACK[i], mBackActions[i]);
+                }
+
+                mSearchActions[i] = Settings.System.getString(resolver,
+                        Settings.System.SOFT_KEY_SEARCH[i]);
+                if (TextUtils.isEmpty(mSearchActions[i])) {
+                    mSearchActions[i] = "**search**";
+                    Settings.System.putString(resolver,
+                            Settings.System.SOFT_KEY_SEARCH[i], mSearchActions[i]);
+                }
+
+                mRecentsActions[i] = Settings.System.getString(resolver,
+                        Settings.System.SOFT_KEY_APPSWITCH[i]);
+                if (TextUtils.isEmpty(mRecentsActions[i])) {
+                    mRecentsActions[i] = "**recents**";
+                    Settings.System.putString(resolver,
+                            Settings.System.SOFT_KEY_APPSWITCH[i], mRecentsActions[i]);
+                }
+            }
+
+            if (mDoubleClickSoftKeys) {
+                mDelayTime = 300;
+            }
+
             if (mSystemReady) {
                 int pointerLocation = Settings.System.getIntForUser(resolver,
                         Settings.System.POINTER_LOCATION, 0, UserHandle.USER_CURRENT);
@@ -2107,11 +2216,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         final int flags = event.getFlags();
         final boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         final boolean canceled = event.isCanceled();
+        final boolean longPress = (flags & KeyEvent.FLAG_LONG_PRESS) != 0;
+        Log.d("HEY STEVE !!!!!!", "source == " + String.valueOf(event.getSource()));
+        boolean isSoftKey = event.getSource() == 257;
 
         if (DEBUG_INPUT) {
             Log.d(TAG, "interceptKeyTi keyCode=" + keyCode + " down=" + down + " repeatCount="
-                    + repeatCount + " keyguardOn=" + keyguardOn + " mHomePressed=" + mHomePressed
-                    + " canceled=" + canceled);
+                    + repeatCount + " keyguardOn=" + keyguardOn + " canceled=" + canceled);
         }
 
         // If we think we might have a volume down & power key chord on the way
@@ -2134,14 +2245,97 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
         }
 
+     if (mCustomSoftKeysEnabled && isSoftKey) {
+
+        if (down) {
+            if (longPress && !keyguardOn) {
+                switch (keyCode) {
+                case KeyEvent.KEYCODE_HOME:
+                     launchSoftKeyAction(mHomeActions[1]);
+                     break;
+                case KeyEvent.KEYCODE_MENU:
+                     launchSoftKeyAction(mMenuActions[1]);
+                     break;
+                case KeyEvent.KEYCODE_SEARCH:
+                     launchSoftKeyAction(mSearchActions[1]);
+                     break;
+                case KeyEvent.KEYCODE_APP_SWITCH:
+                     launchSoftKeyAction(mRecentsActions[1]);
+                     break;
+                case KeyEvent.KEYCODE_BACK:
+                     launchSoftKeyAction(mBackActions[1]);
+                     break;
+                }
+            }
+        //if not down... must be up.
+        } else {
+            if (!longPress && !keyguardOn) {
+                switch (keyCode) {
+                case KeyEvent.KEYCODE_HOME:
+                    if (mDoubleClicked && mDoubleClickSoftKeys) {
+                        mHandler.removeCallbacks(SingleClick);
+                        launchSoftKeyAction(mHomeActions[2]);
+                        return -1;
+                    } else {
+                        mDoubleClicked = true;
+                        sSingleClick = mHomeActions[0];
+                        mHandler.postDelayed(SingleClick, mDelayTime);
+                        return -1;
+                    }
+                case KeyEvent.KEYCODE_MENU:
+                    if (mDoubleClicked && mDoubleClickSoftKeys) {
+                        mHandler.removeCallbacks(SingleClick);
+                        launchSoftKeyAction(mMenuActions[2]);
+                        return -1;
+                    } else {
+                        mDoubleClicked = true;
+                        sSingleClick = mMenuActions[0];
+                        mHandler.postDelayed(SingleClick, mDelayTime);
+                        return -1;
+                    }
+                case KeyEvent.KEYCODE_SEARCH:
+                    if (mDoubleClicked && mDoubleClickSoftKeys) {
+                        mHandler.removeCallbacks(SingleClick);
+                        launchSoftKeyAction(mSearchActions[2]);
+                        return -1;
+                    } else {
+                        mDoubleClicked = true;
+                        sSingleClick = mSearchActions[0];
+                        mHandler.postDelayed(SingleClick, mDelayTime);
+                        return -1;
+                    }
+                case KeyEvent.KEYCODE_APP_SWITCH:
+                    if (mDoubleClicked && mDoubleClickSoftKeys) {
+                        mHandler.removeCallbacks(SingleClick);
+                        launchSoftKeyAction(mRecentsActions[2]);
+                        return -1;
+                    } else {
+                        mDoubleClicked = true;
+                        sSingleClick = mRecentsActions[0];
+                        mHandler.postDelayed(SingleClick, mDelayTime);
+                        return -1;
+                    }
+                case KeyEvent.KEYCODE_BACK:
+                    if (mDoubleClicked && mDoubleClickSoftKeys) {
+                        mHandler.removeCallbacks(SingleClick);
+                        launchSoftKeyAction(mBackActions[2]);
+                        return -1;
+                    } else {
+                        mDoubleClicked = true;
+                        sSingleClick = mBackActions[0];
+                        mHandler.postDelayed(SingleClick, mDelayTime);
+                        return -1;
+                    }
+                }
+          }
+        }
+
+     } else {
+
         if (keyCode == KeyEvent.KEYCODE_BACK && !down) {
             mHandler.removeCallbacks(mKillTask);
         }
 
-        // First we always handle the home key here, so applications
-        // can never break it, although if keyguard is on, we do let
-        // it handle it, because that gives us the correct 5 second
-        // timeout.
         if (keyCode == KeyEvent.KEYCODE_HOME) {
 
             // If we have released the home key, and didn't do anything else
@@ -2311,7 +2505,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 }
             }
         }
-
+    }
         // Shortcuts are invoked through Search+key, so intercept those here
         // Any printing key that is chorded with Search should be consumed
         // even if no shortcut was invoked.  This prevents text from being
