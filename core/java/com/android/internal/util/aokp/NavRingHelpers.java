@@ -43,6 +43,9 @@ import android.media.AudioManager;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.WindowManager;
 
 import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.internal.widget.multiwaveview.GlowPadView;
@@ -60,6 +63,9 @@ public class NavRingHelpers {
         int resourceId = -1;
         final Resources res = context.getResources();
         Drawable activityIcon;
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
 
         if (TextUtils.isEmpty(action)) {
             TargetDrawable drawable = new TargetDrawable(res, com.android.internal.R.drawable.ic_action_empty);
@@ -88,7 +94,20 @@ public class NavRingHelpers {
                     return drawable;
                 }
 
-            activityIcon = info.loadIcon(pm);
+                activityIcon = info.loadIcon(pm);
+
+                int desiredSize = (int)(48 * metrics.density);
+                int width = activityIcon.getIntrinsicWidth();
+
+                if (width > desiredSize)
+                {
+                    Bitmap bm = ((BitmapDrawable) activityIcon).getBitmap();
+                    if (bm != null) {
+                        Bitmap bitmapOrig = Bitmap.createScaledBitmap(bm, desiredSize, desiredSize, false);
+                        activityIcon = new BitmapDrawable(res, bitmapOrig);
+                    }
+                }
+
             } catch (URISyntaxException e) {
                 TargetDrawable drawable = new TargetDrawable(res, com.android.internal.R.drawable.ic_action_empty);
                 drawable.setEnabled(false);
