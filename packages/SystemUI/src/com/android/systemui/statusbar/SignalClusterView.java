@@ -137,6 +137,11 @@ public class SignalClusterView
         mWifiActivityId = activityIcon;
         mWifiDescription = contentDescription;
 
+        if (showingWiFiText){
+            mWifi.setVisibility(View.GONE);
+            mWifiActivity.setVisibility(View.GONE);
+            mWiFiText.setVisibility(View.VISIBLE);
+        }
         apply();
     }
 
@@ -150,6 +155,10 @@ public class SignalClusterView
         mMobileDescription = contentDescription;
         mMobileTypeDescription = typeContentDescription;
 
+        if (showingSignalText && !mIsAirplaneMode) {
+            mMobile.setVisibility(View.GONE);
+            mMobileText.setVisibility(View.VISIBLE);
+        }
         apply();
     }
 
@@ -280,5 +289,6 @@ public class SignalClusterView
                 Settings.System.STATUSBAR_SIGNAL_CLUSTER_ALT, clustdefault);
         apply();
     }
+
 }
 
