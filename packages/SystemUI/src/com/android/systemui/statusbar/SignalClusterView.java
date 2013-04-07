@@ -137,6 +137,7 @@ public class SignalClusterView
         mWifiActivityId = activityIcon;
         mWifiDescription = contentDescription;
 
+        changeClusterVisibility();
         apply();
     }
 
@@ -150,6 +151,7 @@ public class SignalClusterView
         mMobileDescription = contentDescription;
         mMobileTypeDescription = typeContentDescription;
 
+        changeClusterVisibility();
         apply();
     }
 
@@ -181,15 +183,7 @@ public class SignalClusterView
             mWifi.setImageResource(mWifiStrengthId);
             mWifiActivity.setImageResource(mWifiActivityId);
             mWifiGroup.setContentDescription(mWifiDescription);
-            if (showingWiFiText){
-                mWifi.setVisibility(View.GONE);
-                mWifiActivity.setVisibility(View.GONE);
-                mWiFiText.setVisibility(View.VISIBLE);
-            } else {
-                mWifi.setVisibility(View.VISIBLE);
-                mWifiActivity.setVisibility(View.VISIBLE);
-                mWiFiText.setVisibility(View.GONE);
-            }
+            changeClusterVisibility();
         } else {
             mWifiGroup.setVisibility(View.GONE);
         }
@@ -205,13 +199,7 @@ public class SignalClusterView
             mMobileActivity.setImageResource(mMobileActivityId);
             mMobileType.setImageResource(mMobileTypeId);
             mMobileGroup.setContentDescription(mMobileTypeDescription + " " + mMobileDescription);
-            if (showingSignalText && !mIsAirplaneMode) {
-                mMobile.setVisibility(View.GONE);
-                mMobileText.setVisibility(View.VISIBLE);
-            } else{
-                mMobile.setVisibility(View.VISIBLE);
-                mMobileText.setVisibility(View.GONE);
-            }
+            changeClusterVisibility();
         } else {
             mMobileGroup.setVisibility(View.GONE);
         }
@@ -279,6 +267,29 @@ public class SignalClusterView
         showingAltCluster = Settings.System.getBoolean(resolver,
                 Settings.System.STATUSBAR_SIGNAL_CLUSTER_ALT, clustdefault);
         apply();
+    }
+
+    protected void changeClusterVisibility() {
+         mWifi.setImageResource(mWifiStrengthId);
+         mWifiActivity.setImageResource(mWifiActivityId);
+         mMobile.setImageResource(mMobileStrengthId);
+
+        if (showingWiFiText){
+            mWifi.setVisibility(View.GONE);
+            mWifiActivity.setVisibility(View.GONE);
+            mWiFiText.setVisibility(View.VISIBLE);
+        } else {
+            mWifi.setVisibility(View.VISIBLE);
+            mWifiActivity.setVisibility(View.VISIBLE);
+            mWiFiText.setVisibility(View.GONE);
+        }
+        if (showingSignalText && !mIsAirplaneMode) {
+            mMobile.setVisibility(View.GONE);
+            mMobileText.setVisibility(View.VISIBLE);
+        } else{
+            mMobile.setVisibility(View.VISIBLE);
+            mMobileText.setVisibility(View.GONE);
+        }
     }
 }
 
