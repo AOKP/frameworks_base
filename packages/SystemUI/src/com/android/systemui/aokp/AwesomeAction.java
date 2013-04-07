@@ -67,6 +67,8 @@ public class AwesomeAction {
     public final static String TAG = "AwesomeAction";
     private final static String SysUIPackage = "com.android.systemui";
 
+    private static boolean mStatusBarShowing = false;
+
     private AwesomeAction() {
     }
 
@@ -211,8 +213,15 @@ public class AwesomeAction {
                 break;
             case ACTION_NOTIFICATIONS:
                 try {
-                    IStatusBarService.Stub.asInterface(
-                            ServiceManager.getService(mContext.STATUS_BAR_SERVICE)).expandNotificationsPanel();
+                    if (!mStatusBarShowing) {
+                        IStatusBarService.Stub.asInterface(
+                                ServiceManager.getService(mContext.STATUS_BAR_SERVICE)).expandNotificationsPanel();
+                        mStatusBarShowing = true;
+                    } else {
+                        IStatusBarService.Stub.asInterface(
+                                ServiceManager.getService(mContext.STATUS_BAR_SERVICE)).collapsePanels();
+                        mStatusBarShowing = false;
+                    }
                 } catch (RemoteException e) {
                     // A RemoteException is like a cold
                     // Let's hope we don't catch one!
