@@ -92,7 +92,15 @@ public class DisplayMetrics {
      * density for a display in {@link #densityDpi}.
      */
     @Deprecated
-    public static int DENSITY_DEVICE = getDeviceDensity();
+    public static int DENSITY_DEVICE;
+
+    public static int   DENSITY_CURRENT;
+
+    static {
+        DENSITY_DEVICE = SystemProperties.getInt("qemu.sf.lcd_density", SystemProperties
+            .getInt("ro.sf.lcd_density", DENSITY_DEFAULT));
+        DENSITY_CURRENT = SystemProperties.getInt("persist.lcd_density", DENSITY_DEVICE);
+    }
 
     /**
      * The absolute width of the display in pixels.
@@ -183,6 +191,15 @@ public class DisplayMetrics {
      */
     public float noncompatYdpi;
 
+    public void updateDensity() {
+        density = DENSITY_CURRENT / (float) DisplayMetrics.DENSITY_DEFAULT;
+        densityDpi = DENSITY_CURRENT;
+        scaledDensity = DENSITY_CURRENT / (float) DisplayMetrics.DENSITY_DEFAULT;
+        noncompatDensity = densityDpi;
+        noncompatDensityDpi = densityDpi;
+        noncompatScaledDensity = scaledDensity;
+    }
+
     public DisplayMetrics() {
     }
     
@@ -201,6 +218,7 @@ public class DisplayMetrics {
         noncompatScaledDensity = o.noncompatScaledDensity;
         noncompatXdpi = o.noncompatXdpi;
         noncompatYdpi = o.noncompatYdpi;
+        updateDensity();
     }
     
     public void setToDefaults() {
@@ -274,12 +292,7 @@ public class DisplayMetrics {
             ", xdpi=" + xdpi + ", ydpi=" + ydpi + "}";
     }
 
-    private static int getDeviceDensity() {
-        // qemu.sf.lcd_density can be used to override ro.sf.lcd_density
-        // when running in the emulator, allowing for dynamic configurations.
-        // The reason for this is that ro.sf.lcd_density is write-once and is
-        // set by the init process when it parses build.prop before anything else.
-        return SystemProperties.getInt("qemu.sf.lcd_density",
-                SystemProperties.getInt("ro.sf.lcd_density", DENSITY_DEFAULT));
+    public static int getDeviceDensity() {
+        return DENSITY_CURRENT;
     }
 }
