@@ -18,7 +18,6 @@
 <!-- TabletStatusBarView extends FrameLayout -->
 <com.android.systemui.statusbar.tablet.TabletStatusBarView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
     android:background="@drawable/system_bar_background"
     android:layout_height="@*android:dimen/system_bar_height"
     >
@@ -39,7 +38,7 @@
                <include layout="@layout/navigation_bar"
                     android:id="@+id/navigationBar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent""/>
          </LinearLayout>
 
         <!-- fake space bar zone -->
@@ -66,12 +65,12 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="1dp" />
-        </RelativeLayout>>
+        </RelativeLayout>
     </LinearLayout>
     <FrameLayout
         android:id="@+id/bar_shadow_holder"
         android:layout_width="match_parent"
-        android:layout_height="@*android:dimen/system_bar_height"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom"
         >
         <!-- lights out shade -->
