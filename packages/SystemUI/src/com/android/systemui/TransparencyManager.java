@@ -10,9 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.database.ContentObserver;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
@@ -42,7 +40,10 @@ public class TransparencyManager {
     boolean mIsHomeShowing;
     boolean mIsKeyguardShowing;
 
-    private class SomeInfo {
+    KeyguardManager km;
+    ActivityManager am;
+
+    private static class SomeInfo {
         float keyguardAlpha;
         float homeAlpha;
         boolean tempDisable;
@@ -57,6 +58,9 @@ public class TransparencyManager {
 
     public TransparencyManager(Context context) {
         mContext = context;
+
+        km = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
+        am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -94,48 +98,36 @@ public class TransparencyManager {
     }
 
     private void doTransparentUpdate() {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                mIsHomeShowing = isLauncherShowing();
-                mIsKeyguardShowing = isKeyguardShowing();
-                return null;
+        mIsHomeShowing = isLauncherShowing();
+        mIsKeyguardShowing = isKeyguardShowing();
+        if (mNavbar != null) {
+            if (mNavbarInfo.tempDisable) {
+                mNavbar.setBackgroundAlpha(1);
+                mNavbarInfo.tempDisable = false;
+            } else if (mIsKeyguardShowing) {
+                mNavbar.setBackgroundAlpha(mNavbarInfo.keyguardAlpha);
+            } else if (mIsHomeShowing) {
+                mNavbar.setBackgroundAlpha(mNavbarInfo.homeAlpha);
+            } else {
+                mNavbar.setBackgroundAlpha(1);
             }
-
-            @Override
-            protected void onPostExecute(Void v) {
-                // TODO animate alpha~
-                if (mNavbar != null) {
-                    if (mNavbarInfo.tempDisable) {
-                        mNavbar.setBackgroundAlpha(1);
-                        mNavbarInfo.tempDisable = false;
-                    } else if (mIsKeyguardShowing) {
-                        mNavbar.setBackgroundAlpha(mNavbarInfo.keyguardAlpha);
-                    } else if (mIsHomeShowing) {
-                        mNavbar.setBackgroundAlpha(mNavbarInfo.homeAlpha);
-                    } else {
-                        mNavbar.setBackgroundAlpha(1);
-                    }
-                }
-                if (mStatusbar != null) {
-                    if (mStatusbarInfo.tempDisable) {
-                        mStatusbar.setBackgroundAlpha(1);
-                        mStatusbarInfo.tempDisable = false;
-                    } else if (mIsKeyguardShowing) {
-                        mStatusbar.setBackgroundAlpha(mStatusbarInfo.keyguardAlpha);
-                    } else if (mIsHomeShowing) {
-                        mStatusbar.setBackgroundAlpha(mStatusbarInfo.homeAlpha);
-                    } else {
-                        mStatusbar.setBackgroundAlpha(1);
-                    }
-                }
+        }
+        if (mStatusbar != null) {
+            if (mStatusbarInfo.tempDisable) {
+                mStatusbar.setBackgroundAlpha(1);
+                mStatusbarInfo.tempDisable = false;
+            } else if (mIsKeyguardShowing) {
+                mStatusbar.setBackgroundAlpha(mStatusbarInfo.keyguardAlpha);
+            } else if (mIsHomeShowing) {
+                mStatusbar.setBackgroundAlpha(mStatusbarInfo.homeAlpha);
+            } else {
+                mStatusbar.setBackgroundAlpha(1);
             }
-        }.execute();
+        }
     }
 
     private boolean isLauncherShowing() {
         try {
-            ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
             final List<ActivityManager.RecentTaskInfo> recentTasks = am
                     .getRecentTasksForUser(
                             1, ActivityManager.RECENT_WITH_EXCLUDED,
@@ -156,7 +148,6 @@ public class TransparencyManager {
     }
 
     private boolean isKeyguardShowing() {
-        KeyguardManager km = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         if (km == null)
             return false;
         return km.isKeyguardLocked();
