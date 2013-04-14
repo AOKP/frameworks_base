@@ -127,7 +127,8 @@ public class TransparencyManager {
         final float alpha = a;
 
         final BackgroundAlphaColorDrawable bg = (BackgroundAlphaColorDrawable) v.getBackground();
-        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), info.color, BackgroundAlphaColorDrawable.applyAlphaToColor(info.color, alpha));
+
+        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), info.color, BackgroundAlphaColorDrawable.applyAlphaToColor(bg.getBgColor(), alpha));
         anim.addUpdateListener(new AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
