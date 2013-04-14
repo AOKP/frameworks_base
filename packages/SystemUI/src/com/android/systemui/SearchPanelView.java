@@ -146,6 +146,7 @@ public class SearchPanelView extends FrameLayout implements
 
         mContentResolver = mContext.getContentResolver();
         mSettingsObserver = new SettingsObserver(new Handler());
+        updateSettings();
     }
 
     @Override
@@ -614,7 +615,6 @@ public class SearchPanelView extends FrameLayout implements
         @Override
         public void onChange(boolean selfChange) {
             updateSettings();
-            setDrawables();
         }
     }
 
@@ -640,5 +640,6 @@ public class SearchPanelView extends FrameLayout implements
         // Not using getBoolean here, because CURRENT_UI_MODE can be 0,1 or 2
         mCurrentUIMode = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.CURRENT_UI_MODE, 0);
+        setDrawables();
     }
 }
