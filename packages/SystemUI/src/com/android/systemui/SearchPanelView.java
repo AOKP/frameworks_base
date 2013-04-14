@@ -146,6 +146,8 @@ public class SearchPanelView extends FrameLayout implements
 
         mContentResolver = mContext.getContentResolver();
         mSettingsObserver = new SettingsObserver(new Handler());
+        updateSettings();
+        setDrawables();
     }
 
     @Override
