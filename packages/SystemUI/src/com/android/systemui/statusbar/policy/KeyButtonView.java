@@ -34,6 +34,7 @@ import android.os.ServiceManager;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Slog;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.HapticFeedbackConstants;
 import android.view.InputDevice;
@@ -61,6 +62,7 @@ public class KeyButtonView extends ImageView {
     int mGlowWidth, mGlowHeight;
     int mDurationSpeedOn = 500;
     int mDurationSpeedOff = 50;
+    float mCustomGlowScale = GLOW_MAX_SCALE_FACTOR;
     float mGlowAlpha = 0f, mGlowScale = 1f, mDrawingAlpha = 1f;
     boolean mSupportsLongpress = true;
     boolean mShouldTintIcons = true;
@@ -97,7 +99,7 @@ public class KeyButtonView extends ImageView {
                 defStyle, 0);
 
         mCode = a.getInteger(R.styleable.KeyButtonView_keyCode, 0);
-        
+
         mSupportsLongpress = a.getBoolean(R.styleable.KeyButtonView_keyRepeat, true);
 
         mGlowBG = a.getDrawable(R.styleable.KeyButtonView_glowBackground);
@@ -106,7 +108,7 @@ public class KeyButtonView extends ImageView {
             mGlowWidth = mGlowBG.getIntrinsicWidth();
             mGlowHeight = mGlowBG.getIntrinsicHeight();
         }
-        
+
         a.recycle();
 
         setClickable(true);
@@ -200,12 +202,25 @@ public class KeyButtonView extends ImageView {
         return mGlowScale;
     }
 
+    public void setCustomGlowScale (float x) {
+        mCustomGlowScale = x;
+        // GlowScale is to be calculated by the NavBar based on the number of buttons used.
+        // However, we should never let it be less than 1.0 (the size of our view) or greater
+        // than GLOW_MAX_SCALE_FACTOR
+        if (mCustomGlowScale > GLOW_MAX_SCALE_FACTOR) {
+            mCustomGlowScale = GLOW_MAX_SCALE_FACTOR;
+        }
+        if (mCustomGlowScale < 1) {
+            mCustomGlowScale = 1.0f;
+        }
+        Slog.d("NavigationBarView", "customGlowScale set:" + mCustomGlowScale);
+    }
     public void setGlowScale(float x) {
         if (mGlowBG == null) return;
         mGlowScale = x;
         final float w = getWidth();
         final float h = getHeight();
-        if (GLOW_MAX_SCALE_FACTOR <= 1.0f) {
+        if (mCustomGlowScale <= 1.0f) {
             // this only works if we know the glow will never leave our bounds
             invalidate();
         } else {
@@ -244,14 +259,14 @@ public class KeyButtonView extends ImageView {
                 }
                 final AnimatorSet as = mPressedAnim = new AnimatorSet();
                 if (pressed) {
-                    if (mGlowScale < GLOW_MAX_SCALE_FACTOR) 
-                        mGlowScale = GLOW_MAX_SCALE_FACTOR;
+                    if (mGlowScale < mCustomGlowScale) 
+                        mGlowScale = mCustomGlowScale;
                     if (mGlowAlpha < BUTTON_QUIESCENT_ALPHA)
                         mGlowAlpha = BUTTON_QUIESCENT_ALPHA;
                     setDrawingAlpha(1f);
                     as.playTogether(
                         ObjectAnimator.ofFloat(this, "glowAlpha", 1f),
-                        ObjectAnimator.ofFloat(this, "glowScale", GLOW_MAX_SCALE_FACTOR)
+                        ObjectAnimator.ofFloat(this, "glowScale", mCustomGlowScale)
                     );
                     as.setDuration(mDurationSpeedOff);
                 } else {

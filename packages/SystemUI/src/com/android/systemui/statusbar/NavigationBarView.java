@@ -63,7 +63,7 @@ import com.android.systemui.statusbar.policy.key.RecentsKeyButtonView;
 
 public class NavigationBarView extends LinearLayout {
     final static boolean DEBUG = false;
-    final static String TAG = "PhoneStatusBar/NavigationBarView";
+    final static String TAG = "NavigationBarView";
 
     final static boolean NAVBAR_ALWAYS_AT_RIGHT = true;
 
@@ -81,6 +81,7 @@ public class NavigationBarView extends LinearLayout {
     boolean mVertical;
     boolean mScreenOn;
 
+    float mButtonWidth, mMenuWidth;
     private boolean mNavBarAutoHide = false;
     private boolean isRotating = false;
 
@@ -90,7 +91,7 @@ public class NavigationBarView extends LinearLayout {
     private Drawable mBackIcon, mBackAltIcon;
     private boolean mMenuArrowKeys;
     private boolean mColorAllIcons;
-    
+
     public DelegateViewHelper mDelegateHelper;
     private BaseStatusBar mBar;
     private SettingsObserver mSettingsObserver;
@@ -265,6 +266,8 @@ public class NavigationBarView extends LinearLayout {
 
         mBackIcon = NavBarHelpers.getIconImage(mContext, AwesomeConstant.ACTION_BACK.value());
         mBackAltIcon = ((KeyButtonView)generateKey(false, KEY_BACK_ALT)).getDrawable();
+        mButtonWidth = res.getDimensionPixelSize(R.dimen.navigation_key_width);
+        mMenuWidth = res.getDimensionPixelSize(R.dimen.navigation_menu_key_width);
     }
 
     public void setTransparencyManager(TransparencyManager tm) {
@@ -381,7 +384,7 @@ public class NavigationBarView extends LinearLayout {
 
             case KEY_MENU_RIGHT:
                 v = new KeyButtonView(mContext, null);
-                v.setLayoutParams(getLayoutParams(landscape, (mCurrentUIMode == 1) ? 80 : 40));
+                v.setLayoutParams(getLayoutParams(landscape, (mCurrentUIMode == 1) ? mButtonWidth : mMenuWidth));
 
                 v.setId(R.id.menu);
                 v.setCode(KeyEvent.KEYCODE_MENU);
@@ -400,7 +403,7 @@ public class NavigationBarView extends LinearLayout {
                 break;
             case KEY_MENU_LEFT:
                 v = new KeyButtonView(mContext, null);
-                v.setLayoutParams(getLayoutParams(landscape, (mCurrentUIMode == 1) ? 80 : 40));
+                v.setLayoutParams(getLayoutParams(landscape, (mCurrentUIMode == 1) ? mButtonWidth : mMenuWidth));
 
                 v.setId(R.id.menu_left);
                 v.setCode(KeyEvent.KEYCODE_MENU);
@@ -419,7 +422,7 @@ public class NavigationBarView extends LinearLayout {
                 break;
             case KEY_ARROW_LEFT:
                 v = new KeyButtonView(mContext, null);
-                v.setLayoutParams(getLayoutParams(landscape, 81));
+                v.setLayoutParams(getLayoutParams(landscape, mButtonWidth));
                 v.setId(KEY_ARROW_LEFT);
                 v.setCode(KeyEvent.KEYCODE_DPAD_LEFT);
                 v.setImageResource(R.drawable.ic_sysbar_ime_left);
@@ -431,7 +434,7 @@ public class NavigationBarView extends LinearLayout {
                 break;
             case KEY_ARROW_RIGHT:
                 v = new KeyButtonView(mContext, null);
-                v.setLayoutParams(getLayoutParams(landscape, 81));
+                v.setLayoutParams(getLayoutParams(landscape, mButtonWidth));
                 v.setId(KEY_ARROW_RIGHT);
                 v.setCode(KeyEvent.KEYCODE_DPAD_RIGHT);
                 v.setImageResource(R.drawable.ic_sysbar_ime_right);
@@ -443,21 +446,18 @@ public class NavigationBarView extends LinearLayout {
                 break;
             case KEY_BACK_ALT:
                 v = new KeyButtonView(mContext, null);
-                v.setLayoutParams(getLayoutParams(landscape, 80));
+                v.setLayoutParams(getLayoutParams(landscape, mButtonWidth));
                 v.setImageResource(R.drawable.ic_sysbar_back_ime);
                 v.setGlowBackground(landscape ? R.drawable.ic_sysbar_highlight_land
                         : R.drawable.ic_sysbar_highlight);
                 v.setTint(true);
         }
-
         return v;
     }
 
     private ExtensibleKeyButtonView generateKey(boolean landscape, String clickAction,
-            String longpress,
-            String iconUri) {
+            String longpress, String iconUri) {
 
-        final int iconSize = 80;
         ExtensibleKeyButtonView v = null;
         if(clickAction.equals(AwesomeConstant.ACTION_RECENTS)) {
             v = new RecentsKeyButtonView(mContext, null, clickAction, longpress);
@@ -465,7 +465,7 @@ public class NavigationBarView extends LinearLayout {
             v = new ExtensibleKeyButtonView(mContext, null, clickAction,
                 longpress);
         }
-        v.setLayoutParams(getLayoutParams(landscape, iconSize));
+        v.setLayoutParams(getLayoutParams(landscape, mButtonWidth));
         v.setGlowBackground(landscape ? R.drawable.ic_sysbar_highlight_land
                 : R.drawable.ic_sysbar_highlight);
         return v;
@@ -800,6 +800,7 @@ public class NavigationBarView extends LinearLayout {
          // this takes care of making the buttons
          mSettingsObserver = new SettingsObserver(new Handler());
          updateSettings();
+         calcGlowScale();
     }
 
     @Override
@@ -807,6 +808,7 @@ public class NavigationBarView extends LinearLayout {
         super.onAttachedToWindow();
         mSettingsObserver.observe();
         updateSettings();
+        calcGlowScale();
     }
 
     @Override
@@ -855,7 +857,7 @@ public class NavigationBarView extends LinearLayout {
             //Slog.v(TAG, String.format("onSizeChanged: h=%d, w=%d, vert=%s", h, w, mVertical?"y":"n"));
             reorient();
         }
-
+        calcGlowScale();
         postCheckForInvalidLayout("sizeChanged");
         super.onSizeChanged(w, h, oldw, oldh);
     }
@@ -992,6 +994,11 @@ public class NavigationBarView extends LinearLayout {
                     Settings.System.NAV_HIDE_ENABLE), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_MENU_ARROW_KEYS), false, this);
+            /*// We don't act on these, but need to know when they change to recalc certain variables
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_WIDTH_LAND), false, this);
+            resolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_WIDTH_PORT), false, this); */
 
             for (int j = 0; j < 7; j++) { // watch all 7 settings for changes.
                 resolver.registerContentObserver(
@@ -1090,8 +1097,36 @@ public class NavigationBarView extends LinearLayout {
             }
         }
         makeBar();
+        calcGlowScale();
         setMenuVisibility(mShowMenu);
         updateMenuArrowKeys();
+    }
+
+    private void calcGlowScale() {
+        Slog.d(TAG,"Calculating Scale");
+        if (mCurrentView == null) {
+            return;
+        }
+        final ViewGroup navButtons = (ViewGroup) mCurrentView.findViewById(R.id.nav_buttons);
+        float width = (float) navButtons.getWidth();
+        //if (width > 0) { // this might get called before the view is completely set up
+            if (mMenuLocation != SHOW_DONT && mCurrentUIMode != 1) { // We need to account for little menus
+                width -= mMenuWidth * 2;
+            }
+            float GlowScale = (width / mNumberOfButtons) / mButtonWidth;
+            Slog.d(TAG,"GlowCalc  ButtonW:" + mButtonWidth +" MenuW:" + mMenuWidth + " mNumberofButtons:" + mNumberOfButtons +
+                    " Width:" + width +" GlowScale:"+ GlowScale);
+            for (int i = 0; i < navButtons.getChildCount(); i ++) {
+                View key = navButtons.getChildAt(i);
+                if (key instanceof KeyButtonView) {
+                    ((KeyButtonView) key).setCustomGlowScale(GlowScale);
+                }
+            }
+            /*int padding = (int) ((mButtonWidth * (GlowScale - 1.0f)) / 2);
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mCurrentView.getLayoutParams();
+            lp.setMargins(padding,0,padding,0);
+            mCurrentView.setLayoutParams(lp); */
+       // }
     }
 
     private void postCheckForInvalidLayout(final String how) {
