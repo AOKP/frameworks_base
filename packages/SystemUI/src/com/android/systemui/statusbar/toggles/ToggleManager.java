@@ -296,7 +296,12 @@ public class ToggleManager {
                 Class<? extends BaseToggle> theclass = map.get(toggleIdent);
                 BaseToggle toggle = theclass.newInstance();
                 toggle.init(mContext, mStyle);
-                mToggles.add(toggle);
+                if(toggle.isToggleAvailable()) {
+                    mToggles.add(toggle);
+                } else {
+                    toggle = null;
+                    continue;
+                }
 
                 if (networkController != null && toggle instanceof NetworkSignalChangedCallback) {
                     networkController

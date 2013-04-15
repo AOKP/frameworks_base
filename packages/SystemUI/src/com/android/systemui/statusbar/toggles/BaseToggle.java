@@ -252,6 +252,10 @@ public abstract class BaseToggle
         return string;
     }
 
+    public boolean isToggleAvailable() {
+        return true;
+    }
+
     protected static void log(String msg) {
         ToggleManager.log(msg);
     }
