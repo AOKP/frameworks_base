@@ -2998,6 +2998,16 @@ public final class Settings {
          * This version does not take a default value.  If the setting has not
          * been set, or the string value is not a number,
          * it throws {@link SettingNotFoundException}.
+         * MediaScanner behavior on boot.
+         * 0 = enabled
+         * 1 = ask (notification)
+         * 2 = disabled
+         * @hide
+         */
+         public static final String MEDIA_SCANNER_ON_BOOT = "media_scanner_on_boot";
+
+        /**
+         * down Swipe Action
          *
          * @param cr The ContentResolver to access.
          * @param name The name of the setting to retrieve.
