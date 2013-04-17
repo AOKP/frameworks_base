@@ -1768,6 +1768,13 @@ public final class Settings {
         public static final String SCREEN_OFF_TIMEOUT = "screen_off_timeout";
 
         /**
+         * The timeout set in ROMControl for longpress of StayAwake Toggle
+         * before the screen turns off.
+         */
+        public static final String SCREEN_OFF_TIMEOUT_LONG = "screen_off_timeout_long";
+
+
+        /**
          * The screen backlight brightness between 0 and 255.
          */
         public static final String SCREEN_BRIGHTNESS = "screen_brightness";
