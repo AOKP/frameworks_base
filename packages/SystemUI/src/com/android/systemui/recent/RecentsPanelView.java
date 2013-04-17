@@ -300,20 +300,6 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         mRecentTasksLoader = RecentTasksLoader.getInstance(context);
         a.recycle();
         mSettingsObserver = new SettingsObserver(mHandler);
-        updateSettings();
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        mSettingsObserver.observe();
-        updateSettings();
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        mContext.getContentResolver().unregisterContentObserver(mSettingsObserver);
-        super.onDetachedFromWindow();
     }
 
     public int numItemsInOneScreenful() {
@@ -399,12 +385,20 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         }
     }
 
+    @Override
     protected void onAttachedToWindow () {
         super.onAttachedToWindow();
         final ViewRootImpl root = getViewRootImpl();
         if (root != null) {
             root.setDrawDuringWindowsAnimating(true);
         }
+        mSettingsObserver.observe(); // observe will call updateSettings()
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        mContext.getContentResolver().unregisterContentObserver(mSettingsObserver);
+        super.onDetachedFromWindow();
     }
 
     public void onUiHidden() {
@@ -499,9 +493,17 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 ((BitmapDrawable) mRecentsScrim.getBackground()).setTileModeY(TileMode.REPEAT);
             }
         }
-        updateSettings();
 
-        mHandler.post(updateRamBarTask);
+        mRamUsageBar = (LinearColorBar) findViewById(R.id.ram_usage_bar);
+        mForegroundProcessText = (TextView) findViewById(R.id.foregroundText);
+        mBackgroundProcessText = (TextView) findViewById(R.id.backgroundText);
+        mRecentsKillAllButton = (Button) findViewById(R.id.recents_kill_all_button);
+        mRecentsKillAllButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                killAllRecentApps();
+            }
+        });
     }
 
     public void setMinSwipeAlpha(float minAlpha) {
@@ -928,37 +930,11 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                 mContext.getContentResolver(),
                 Settings.System.RECENT_KILL_ALL_BUTTON, false);
 
-        mRamUsageBar = (LinearColorBar) findViewById(R.id.ram_usage_bar);
-        if (ramBarEnabled) {
-            if (mRamUsageBar != null) {
-                mRamUsageBar.setVisibility(View.VISIBLE);
-                mForegroundProcessText = (TextView) findViewById(R.id.foregroundText);
-                mBackgroundProcessText = (TextView) findViewById(R.id.backgroundText);
-            } else {
-                mForegroundProcessText = null;
-                mBackgroundProcessText = null;
-            }
-        } else {
-            if (mRamUsageBar != null) {
-                mRamUsageBar.setVisibility(View.GONE);
-            }
+        if (mRamUsageBar != null) {
+            mRamUsageBar.setVisibility(ramBarEnabled ? View.VISIBLE : View.GONE);
         }
-
-        mRecentsKillAllButton = (Button) findViewById(R.id.recents_kill_all_button);
-        if (mRecentsKillAllEnabled) {
-            if (mRecentsKillAllButton != null) {
-                mRecentsKillAllButton.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        killAllRecentApps();
-                    }
-                });
-                mRecentsKillAllButton.setVisibility(View.VISIBLE);
-            }
-        } else {
-            if (mRecentsKillAllButton != null) {
-                mRecentsKillAllButton.setVisibility(View.GONE);
-            }
+        if (mRecentsKillAllButton != null) {
+            mRecentsKillAllButton.setVisibility(mRecentsKillAllEnabled ? View.VISIBLE : View.GONE);
         }
     }
 }
