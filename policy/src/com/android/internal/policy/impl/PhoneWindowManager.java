@@ -1106,29 +1106,24 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         if (width > height) {
             shortSize = height;
             longSize = width;
-            mLandscapeRotation = Surface.ROTATION_0;
-            mSeascapeRotation = Surface.ROTATION_180;
-            if (mContext.getResources().getBoolean(
-                    com.android.internal.R.bool.config_reverseDefaultRotation)) {
-                mPortraitRotation = Surface.ROTATION_90;
-                mUpsideDownRotation = Surface.ROTATION_270;
-            } else {
-                mPortraitRotation = Surface.ROTATION_270;
-                mUpsideDownRotation = Surface.ROTATION_90;
-            }
-        } else {
+        } else { 
             shortSize = width;
             longSize = height;
-            mPortraitRotation = Surface.ROTATION_0;
-            mUpsideDownRotation = Surface.ROTATION_180;
-            if (mContext.getResources().getBoolean(
-                    com.android.internal.R.bool.config_reverseDefaultRotation)) {
-                mLandscapeRotation = Surface.ROTATION_270;
-                mSeascapeRotation = Surface.ROTATION_90;
-            } else {
-                mLandscapeRotation = Surface.ROTATION_90;
-                mSeascapeRotation = Surface.ROTATION_270;
-            }
+        }
+        /* set InitialDisplay was only designed to be called once and it set orientations based
+         * on screen sizes.  Since we call this frequently to deal with changes in NavBar & statusbar,
+         * we need not to detect orientations based on screen size.  We need to assume that portrait
+         * is Rot_0, etc.
+         */
+        mPortraitRotation = Surface.ROTATION_0;
+        mUpsideDownRotation = Surface.ROTATION_180;
+        if (mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_reverseDefaultRotation)) {
+            mLandscapeRotation = Surface.ROTATION_270;
+            mSeascapeRotation = Surface.ROTATION_90;
+        } else {
+            mLandscapeRotation = Surface.ROTATION_90;
+            mSeascapeRotation = Surface.ROTATION_270;
         }
 
         mStatusBarHeight = mContext.getResources().getDimensionPixelSize(
@@ -1225,7 +1220,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
         }
 
-         if (!mHasNavigationBar) {
+         if (!mHasNavigationBar && !mHasSystemNavBar) {
              mNavigationBarWidthForRotation[mPortraitRotation] =
                      mNavigationBarWidthForRotation[mUpsideDownRotation] =
                      mNavigationBarWidthForRotation[mLandscapeRotation] =
