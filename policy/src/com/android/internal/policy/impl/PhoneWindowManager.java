@@ -1102,32 +1102,64 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     public void setInitialDisplaySize(Display display, int width, int height, int density) {
         mDisplay = display;
 
+        boolean reverseConfig = mContext.getResources().getBoolean(
+                com.android.internal.R.bool.config_reverseDefaultRotation);
+        int currentRotation = mOrientationListener.getProposedRotation();
         int shortSize, longSize;
         if (width > height) {
             shortSize = height;
             longSize = width;
-            mLandscapeRotation = Surface.ROTATION_0;
-            mSeascapeRotation = Surface.ROTATION_180;
-            if (mContext.getResources().getBoolean(
-                    com.android.internal.R.bool.config_reverseDefaultRotation)) {
-                mPortraitRotation = Surface.ROTATION_90;
-                mUpsideDownRotation = Surface.ROTATION_270;
+            if (currentRotation== Surface.ROTATION_0 || currentRotation == Surface.ROTATION_180){
+                // Width is Greater than height and rotation is 0/180.  This must be
+                // a large tablet that defaults to 'landscape'
+                mLandscapeRotation = Surface.ROTATION_0;
+                mSeascapeRotation = Surface.ROTATION_180;
+                if (reverseConfig) {
+                    mPortraitRotation = Surface.ROTATION_90;
+                    mUpsideDownRotation = Surface.ROTATION_270;
+                } else {
+                    mPortraitRotation = Surface.ROTATION_270;
+                    mUpsideDownRotation = Surface.ROTATION_90;
+                }
             } else {
-                mPortraitRotation = Surface.ROTATION_270;
-                mUpsideDownRotation = Surface.ROTATION_90;
+             // Width is Greater than Height, but rotation is 1.  This must be
+             // a Phone/Phablet device that just happens to be in landscape at the moment
+                mPortraitRotation = Surface.ROTATION_0;
+                mUpsideDownRotation = Surface.ROTATION_180;
+                if (reverseConfig) {
+                    mLandscapeRotation = Surface.ROTATION_270;
+                    mSeascapeRotation = Surface.ROTATION_90;
+                } else {
+                    mLandscapeRotation = Surface.ROTATION_90;
+                    mSeascapeRotation = Surface.ROTATION_270;
+                }
             }
-        } else {
+        } else { 
             shortSize = width;
             longSize = height;
-            mPortraitRotation = Surface.ROTATION_0;
-            mUpsideDownRotation = Surface.ROTATION_180;
-            if (mContext.getResources().getBoolean(
-                    com.android.internal.R.bool.config_reverseDefaultRotation)) {
-                mLandscapeRotation = Surface.ROTATION_270;
-                mSeascapeRotation = Surface.ROTATION_90;
+            if (currentRotation== Surface.ROTATION_0 || currentRotation == Surface.ROTATION_180){
+                // Height is greater than width with Rot0/180 . Must be a phone/phablet
+                mPortraitRotation = Surface.ROTATION_0;
+                mUpsideDownRotation = Surface.ROTATION_180;
+                if (reverseConfig) {
+                    mLandscapeRotation = Surface.ROTATION_270;
+                    mSeascapeRotation = Surface.ROTATION_90;
+                } else {
+                    mLandscapeRotation = Surface.ROTATION_90;
+                    mSeascapeRotation = Surface.ROTATION_270;
+                }
             } else {
-                mLandscapeRotation = Surface.ROTATION_90;
-                mSeascapeRotation = Surface.ROTATION_270;
+                // Height is greater than width, but Rot is 90/270.  Must be a tablet
+                // that happened to be in portrait when called
+                mLandscapeRotation = Surface.ROTATION_0;
+                mSeascapeRotation = Surface.ROTATION_180;
+                if (reverseConfig) {
+                    mPortraitRotation = Surface.ROTATION_90;
+                    mUpsideDownRotation = Surface.ROTATION_270;
+                } else {
+                    mPortraitRotation = Surface.ROTATION_270;
+                    mUpsideDownRotation = Surface.ROTATION_90;
+                }
             }
         }
 
@@ -1225,7 +1257,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
         }
 
-         if (!mHasNavigationBar) {
+         if (!mHasNavigationBar && !mHasSystemNavBar) {
              mNavigationBarWidthForRotation[mPortraitRotation] =
                      mNavigationBarWidthForRotation[mUpsideDownRotation] =
                      mNavigationBarWidthForRotation[mLandscapeRotation] =
