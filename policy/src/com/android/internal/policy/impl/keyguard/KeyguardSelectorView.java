@@ -97,6 +97,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
             mCallback.dismiss(false);
             break;
         case ACTION_ASSIST:
+            mCallback.userActivity(0);
+            mCallback.dismiss(false);
             Intent assistIntent =
                 ((SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE))
                 .getAssistIntent(mContext, UserHandle.USER_CURRENT);
@@ -105,18 +107,19 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
                 } else {
                     Log.w(TAG, "Failed to get intent for assist activity");
                 }
-                mCallback.userActivity(0);
                 break;
         case ACTION_CAMERA:
-            mActivityLauncher.launchCamera(null, null);
             mCallback.userActivity(0);
+            mCallback.dismiss(false);
+            mActivityLauncher.launchCamera(null, null);
             break;
         case ACTION_APP:
+            mCallback.userActivity(0);
+            mCallback.dismiss(false);
             Intent i = new Intent();
             i.setAction("com.android.systemui.aokp.LAUNCH_ACTION");
             i.putExtra("action", action);
             mContext.sendBroadcastAsUser(i, UserHandle.ALL);
-            mCallback.userActivity(0);
             break;
         }
     }
