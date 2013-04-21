@@ -1949,6 +1949,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             // Set default noise suppression value
             loadSetting(stmt, Settings.System.NOISE_SUPPRESSION, 0);
 
+            // Rejected calls are by default received calls
+            loadSetting(stmt, Settings.System.REJECT_TO_MISS, 0);
+
             loadIntegerSetting(stmt, Settings.System.SCREEN_BRIGHTNESS,
                     R.integer.def_screen_brightness);
 
