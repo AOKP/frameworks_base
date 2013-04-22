@@ -20,6 +20,7 @@ import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_STARTING;
 
 import com.android.server.input.InputApplicationHandle;
 import com.android.server.wm.WindowManagerService.H;
+import com.android.server.wm.WindowManagerService.WindowPanel;
 
 import android.content.pm.ActivityInfo;
 import android.os.Message;
@@ -283,5 +284,47 @@ class AppWindowToken extends WindowToken {
             stringName = sb.toString();
         }
         return stringName;
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 11/03/2011
+     *
+     * Utility method to check if the token is in the main panel or not. Returns true
+     * if can't figure out which panel it is in
+     */
+     public boolean isInMainPanelWindowPanel() {
+		final ArrayList<WindowPanel> WindowPanels = mService.getWindowPanels();
+		for(int i=0; i<WindowPanels.size(); i++) {
+			WindowPanel wp = WindowPanels.get(i);
+			if(wp.isMainPanel()) {
+				if(wp.contains(token)) {
+					return true;
+				} else {
+					break;
+				}
+			}
+		}
+		return false;
+     }
+
+    /**
+     * Author: Onskreen
+     * Date: 19/04/2011
+     *
+     * Utility method to check if the token is in the cornerstone panel or not.
+     * Returns true if it's in cornerstone panel else false.
+     */
+    public boolean isInCornerstonePanelWindowPanel() {
+		final ArrayList<WindowPanel> WindowPanels = mService.getWindowPanels();
+		for(int i=0; i<WindowPanels.size(); i++) {
+			WindowPanel wp = WindowPanels.get(i);
+			if(wp.isCornerstonePanel()) {
+				if(wp.contains(groupId)) {
+					return true;
+				}
+			}
+		}
+		return false;
     }
 }

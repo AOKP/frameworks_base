@@ -368,6 +368,57 @@ public interface IActivityManager extends IInterface {
 
     public long inputDispatchingTimedOut(int pid, boolean aboveSystem) throws RemoteException;
 
+
+    /**
+     * Author: Onskreen
+     * Date: 15/02/2011
+     *
+     * Cornerstone specific Activity capabilities
+     */
+    public void swapPanels(int panelIndex) throws RemoteException;
+
+    /**
+     * Author: Onskreen
+     * Date: 22/02/2011
+     *
+     * Cornerstone specific Activity capabilities
+     */
+    public void setCornerstoneState(boolean open) throws RemoteException;
+
+    /**
+     * Author: Onskreen
+     * Date: 28/02/2011
+     *
+     * Sets the ICornerstoneManager interface, so that AMS can notify CSPanel app whenever CS app
+     * gains or loses the focus.
+     */
+    public void setCornerstoneManager(ICornerstoneManager cs) throws RemoteException;
+
+    /**
+     * Author: Onskreen
+     * Date: 28/02/2011
+     *
+     * WMS notifies to AMS to broadcst the CornerstoneManager's onCornerStonePanelFocusChanged
+     * method so that CSPanel changes the cs apps' controls appropriately.
+     */
+    public void broadcastCornerstonePanelFocusChanged(String pkgName, boolean focus, int panelIndex) throws RemoteException;
+
+    /**
+     * Author: Onskreen
+     * Date: 08/03/2011
+     *
+     * Notifies AMS to launch the Cornerstone app in appropriate index.
+     */
+     public void startCornerstoneApp(Intent intent, int panelIndex) throws RemoteException;
+
+    /**
+     * Author: Onskreen
+     * Date: 11/04/2011
+     *
+     * Notifies AMS to set the focused Cornerstone app in appropriate index.
+     */
+     public void setCornerstoneFocusedApp(int panelIndex) throws RemoteException;
+
     /*
      * Private non-Binder interfaces
      */
@@ -616,6 +667,50 @@ public interface IActivityManager extends IInterface {
     int UNSTABLE_PROVIDER_DIED_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+150;
     int IS_INTENT_SENDER_AN_ACTIVITY_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+151;
     int START_ACTIVITY_AS_USER_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+152;
+
+    /**
+     * Author: Onskreen
+     * Date: 15/02/2011
+     *
+     * Cornerstone specific transactions
+     */
+    int SWAP_PANELS_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+152;
+    /**
+     * Author: Onskreen
+     * Date: 22/02/2011
+     *
+     * Cornerstone specific transactions
+     */
+    int CORNERSTONE_STATE_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+153;
+    /**
+     * Author: Onskreen
+     * Date: 28/02/2011
+     *
+     * Cornerstone specific transactions
+     */
+    int CORNERSTONE_MANAGER_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+154;
+    /**
+     * Author: Onskreen
+     * Date: 28/02/2011
+     *
+     * Cornerstone specific transactions
+     */
+    int CORNERSTONE_MANAGER_BROADCAST_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+155;
+    /**
+     * Author: Onskreen
+     * Date: 08/03/2011
+     *
+     * Cornerstone specific transactions
+     */
+    int START_CORNERSTONE_APP_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+156;
+
+    /**
+     * Author: Onskreen
+     * Date: 11/04/2011
+     *
+     * Cornerstone specific transactions
+     */
+    int SET_CORNERSTONE_FOCUSED_APP_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+157;
     int STOP_USER_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+153;
     int REGISTER_USER_SWITCH_OBSERVER_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+154;
     int UNREGISTER_USER_SWITCH_OBSERVER_TRANSACTION = IBinder.FIRST_CALL_TRANSACTION+155;

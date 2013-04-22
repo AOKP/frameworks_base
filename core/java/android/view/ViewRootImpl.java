@@ -4360,6 +4360,28 @@ public final class ViewRootImpl implements ViewParent,
 
         @Override
         public void onInputEvent(InputEvent event) {
+			if (event instanceof MotionEvent) {
+				final MotionEvent motionEvent = (MotionEvent)event;
+				/**
+				* Author: Onskreen
+				* Date: 17/02/2011
+				*
+				* Notifies the WindowManagerService to reshuffle its z-order before
+				* dispatching events to the focused window.
+				*/
+				try{
+					//Only send Down Event. Touch will focus the window, rest will
+					//be handled by the view/window.
+					if(motionEvent.getAction()==MotionEvent.ACTION_DOWN) {
+						//If the window of this view already has the focus, no need
+						//to trigger the java side processing of managing this event
+						if(!mView.hasWindowFocus()) {
+							sWindowSession.handleFocusChange(mWindowAttributes.token);
+						}
+					}
+				} catch (RemoteException e) {
+				}
+			}
             enqueueInputEvent(event, this, 0, true);
         }
 

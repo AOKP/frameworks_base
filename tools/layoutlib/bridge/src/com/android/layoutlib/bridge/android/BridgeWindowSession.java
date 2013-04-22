@@ -84,6 +84,7 @@ public final class BridgeWindowSession implements IWindowSession {
         // pass for now.
         return false;
     }
+
     @Override
     public int relayout(IWindow arg0, int seq, LayoutParams arg1, int arg2, int arg3, int arg4,
             int arg4_5, Rect arg5, Rect arg6, Rect arg7, Configuration arg7b,
@@ -197,6 +198,17 @@ public final class BridgeWindowSession implements IWindowSession {
 
     @Override
     public void onRectangleOnScreenRequested(IBinder window, Rect rectangle, boolean immediate) {
+        // pass for now.
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 17/02/2011
+     *
+     * Notifies the WindowManagerService to reshuffle its z-order to dispatch
+     * the user input event to the newly focused window.
+     */
+    public void handleFocusChange(IBinder token){
         // pass for now.
     }
 }
