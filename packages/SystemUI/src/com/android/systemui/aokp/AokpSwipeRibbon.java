@@ -414,7 +414,6 @@ public class AokpSwipeRibbon extends LinearLayout {
                 }
             } else if (ACTION_SHOW_RIBBON.equals(action)) {
                 if (location.equals(mLocation)) {
-                    mHandler.removeCallbacks(delayHide);
                     if (!showing) {
                         showRibbonView();
                     }
