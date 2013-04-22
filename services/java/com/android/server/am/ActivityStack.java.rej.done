@@ -1,0 +1,128 @@
+--- frameworks/base/services/java/com/android/server/am/ActivityStack.java
++++ frameworks/base/services/java/com/android/server/am/ActivityStack.java
+@@ -1304,7 +1519,21 @@
+         if (prev != null) {
+             if (prev.finishing) {
+                 if (DEBUG_PAUSE) Slog.v(TAG, "Executing finish of activity: " + prev);
++                /*
++                 * Onscreen-Cornerstone
++                 * Version: 0.84
++                 * Date: 08.11.2011
++                 *
++                 * When cornerstone is exiting, we must kill the activities in the specific stack.
++                 * As we don't want to resume any previous activity in the stack, we should call the
++                 * finishCurrentActivityLocked with FINISH_IMMEDIATELY mode.
++                 */
++                 if(mService.mActivityStackExiting) {
++                     mStackPaused = false;
++                     prev = finishCurrentActivityLocked(prev, FINISH_IMMEDIATELY);
++                 } else {
+                 prev = finishCurrentActivityLocked(prev, FINISH_AFTER_VISIBLE);
++                 }
+             } else if (prev.app != null) {
+                 if (DEBUG_PAUSE) Slog.v(TAG, "Enqueueing pending stop: " + prev);
+                 if (prev.waitingVisible) {
+@@ -1402,12 +1631,12 @@
+             mHandler.sendMessage(msg);
+         }
+ 
+-        if (mMainStack) {
++        if (mMainStack || mCornerstoneStack || mCornerstonePanelStack) {
+             mService.reportResumedActivityLocked(next);
+         }
+         
+         next.clearThumbnail();
+-        if (mMainStack) {
++        if (mMainStack || mCornerstoneStack || mCornerstonePanelStack) {
+             mService.setFocusedActivityLocked(next);
+         }
+         next.resumeKeyDispatchingLocked();
+@@ -2079,8 +2398,19 @@
+                         }
+                         mHistory.add(addPos, r);
+                         r.putInHistory();
++                        //mService.mWindowManager.addAppToken(addPos, r.appToken, r.task.taskId,
++                        //        r.info.screenOrientation, r.fullscreen);
++                        /**
++                         * Author: Onskreen
++                         * Date: 24/01/2011
++                         *
++                         * Udpated to use new overloaded version
++                         */
+                         mService.mWindowManager.addAppToken(addPos, r.appToken, r.task.taskId,
+-                                r.info.screenOrientation, r.fullscreen);
++                                r.info.screenOrientation, r.fullscreen,
++                                mMainStack,
++                                mService.isCornerstone(r),
++                                mCornerstonePanelIndex);
+                         if (VALIDATE_TOKENS) {
+                             validateAppTokensLocked();
+                         }
+@@ -2143,8 +2473,19 @@
+                 mNoAnimActivities.remove(r);
+             }
+             r.updateOptionsLocked(options);
++            //mService.mWindowManager.addAppToken(
++            //        addPos, r.appToken, r.task.taskId, r.info.screenOrientation, r.fullscreen);
++			/**
++             * Author: Onskreen
++             * Date: 24/01/2011
++             *
++             * Updated to use new overloaded version
++             */
+             mService.mWindowManager.addAppToken(
+-                    addPos, r.appToken, r.task.taskId, r.info.screenOrientation, r.fullscreen);
++                    addPos, r.appToken, r.task.taskId, r.info.screenOrientation, r.fullscreen,
++                    mMainStack,
++                    mService.isCornerstone(r),
++                    mCornerstonePanelIndex);
+             boolean doShow = true;
+             if (newTask) {
+                 // Even though this activity is starting fresh, we still need
+@@ -2181,8 +2522,20 @@
+         } else {
+             // If this is the first activity, don't do any fancy animations,
+             // because there is nothing for it to animate on top of.
++            //mService.mWindowManager.addAppToken(addPos, r.appToken, r.task.taskId,
++            //        r.info.screenOrientation, r.fullscreen);
++            /**
++             * Author: Onskreen
++             * Date: 24/01/2011
++             *
++             * Updated to use new overloaded version
++             */
++             //Log.i(TAG, "First Activity in the stack");
+             mService.mWindowManager.addAppToken(addPos, r.appToken, r.task.taskId,
+-                    r.info.screenOrientation, r.fullscreen);
++                   r.info.screenOrientation, r.fullscreen,
++                   mMainStack,
++                   mService.isCornerstone(r),
++                   mCornerstonePanelIndex);
+             ActivityOptions.abort(options);
+         }
+         if (VALIDATE_TOKENS) {
+@@ -4100,8 +4522,22 @@
+             // If the activity is PAUSING, we will complete the finish once
+             // it is done pausing; else we can just directly finish it here.
+             if (DEBUG_PAUSE) Slog.v(TAG, "Finish not pausing: " + r);
+-            return finishCurrentActivityLocked(r, index,
+-                    FINISH_AFTER_PAUSE) == null;
++            /*
++             * Onscreen-Cornerstone
++             * Date: 08.11.2011
++             *
++             * When cornerstone is exiting, we must kill the activities in the specific stack.
++             * As we don't want to resume any previous activity in the stack, we should call the
++             * finishCurrentActivityLocked with FINISH_IMMEDIATELY mode.
++             */
++            boolean finished = false;
++            if(mService.mActivityStackExiting) {
++                mStackPaused = false;
++                finished = finishCurrentActivityLocked(r, index, FINISH_IMMEDIATELY) == null;
++            } else {
++                finished = finishCurrentActivityLocked(r, index, FINISH_AFTER_PAUSE) == null;
++            }
++            return finished;
+         } else {
+             if (DEBUG_PAUSE) Slog.v(TAG, "Finish waiting for pause of: " + r);
+         }

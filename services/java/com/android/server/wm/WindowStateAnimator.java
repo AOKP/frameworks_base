@@ -27,6 +27,8 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 
 import com.android.server.wm.WindowManagerService.H;
+import com.android.server.wm.WindowManagerService.WindowPanel;
+import com.android.server.wm.WindowManagerService.Cornerstone_State;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -938,6 +940,59 @@ class WindowStateAnimator {
 
             // Now set the alpha...  but because our current hardware
             // can't do alpha transformation on a non-opaque surface,
+
+        /**
+         * Author: Onskreen
+         * Date: 25/02/2011
+         *
+         * When the cornerstone is in a state change we know there is an animation. At the end
+         * of which we want the cornerstone and cornerstone panels to remain in there final
+         * animated positions, not the original position they started in (which is what
+         * happens with no changes to the logic here).
+         *
+         * We are relying on the fact that the cornerstone is always at the bottom of the
+         * mWindows, so not unsetting mCornerstoneStateChange flag until we encounter it
+         * after the animation is complete.
+         */
+        if(mService.mCornerstoneState != Cornerstone_State.TERMINATED &&			//Cornerstone is active
+             mService.mCornerstoneStateChangeAnimating &&//In the midst of a cornerstone state change
+             mWin.mAppToken!=null) {			//Ignore non app tokens
+
+			WindowPanel wp = mService.findWindowPanel(mWin.mAppToken.token);
+			if(wp!=null) {					//just in case...
+				if(WindowManagerService.DEBUG_CORNERSTONE) {
+					Slog.v(WindowManagerService.TAG, "WindowState.computeShownFrameLocked for: " + this);
+					Slog.v(WindowManagerService.TAG, "mCornerstoneStateChangeProcessing: " + mService.mCornerstoneStateChangeProcessing);
+					Slog.v(WindowManagerService.TAG, "mCornerstoneStateChangeAnimating: " + mService.mCornerstoneStateChangeAnimating);
+					Slog.v(WindowManagerService.TAG, "WP: " + wp);
+					Slog.v(WindowManagerService.TAG, "mFrame: " + mWin.mFrame);
+					Slog.v(WindowManagerService.TAG, "mShownFrame: " + mWin.mShownFrame);
+				}
+
+				/**
+				 * Cornerstone and panels should be locked to their final
+				 * animated position.
+				 */
+				if(wp.isCornerstone() || wp.isCornerstonePanel() &&
+						mAnimating == false) {						//Only lock the frame at the end of the animation
+					if(WindowManagerService.DEBUG_CORNERSTONE) {
+						Slog.v(WindowManagerService.TAG, "Animation complete, locking frames");
+					}
+
+					Rect rect = mService.computeWindowPanelRect(wp, mService.mCurConfiguration.orientation, mService.mCornerstoneState);
+					if(WindowManagerService.DEBUG_CORNERSTONE) {
+						Slog.v(WindowManagerService.TAG, "Updating " + wp + " to: " + rect);
+					}
+					wp.setFrame(rect);
+
+					if(wp.isCornerstone()) {
+						if(WindowManagerService.DEBUG_CORNERSTONE) Slog.v(WindowManagerService.TAG, "Setting mCornerstoneStateChangeAnimating to False");
+						mService.mCornerstoneStateChangeAnimating = false;
+					}
+				}
+			}
+        }
+
             // turn it off if we are running an animation that is also
             // transforming since it is more important to have that
             // animation be smooth.

@@ -1,0 +1,39 @@
+--- frameworks/base/services/java/com/android/server/am/ActivityManagerService.java
++++ frameworks/base/services/java/com/android/server/am/ActivityManagerService.java
+@@ -3712,27 +4631,27 @@
+         }
+ 
+-        if (mMainStack.mLastPausedActivity != null && mMainStack.mLastPausedActivity.app == app) {
+-            mMainStack.mLastPausedActivity = null;
++        if (currStack.mLastPausedActivity != null && currStack.mLastPausedActivity.app == app) {
++            currStack.mLastPausedActivity = null;
+         }
+ 
+         // Remove this application's activities from active lists.
+-        mMainStack.removeHistoryRecordsForAppLocked(app);
++        currStack.removeHistoryRecordsForAppLocked(app);
+ 
+         boolean atTop = true;
+         boolean hasVisibleActivities = false;
+ 
+         // Clean out the history list.
+-        int i = mMainStack.mHistory.size();
++        int i = currStack.mHistory.size();
+         if (localLOGV) Slog.v(
+             TAG, "Removing app " + app + " from history with " + i + " entries");
+         while (i > 0) {
+             i--;
+-            ActivityRecord r = (ActivityRecord)mMainStack.mHistory.get(i);
++            ActivityRecord r = (ActivityRecord)currStack.mHistory.get(i);
+             if (localLOGV) Slog.v(
+                 TAG, "Record #" + i + " " + r + ": app=" + r.app);
+             if (r.app == app) {
+@@ -3753,7 +4672,7 @@
+                                 r.task.taskId, r.shortComponentName,
+                                 "proc died without state saved");
+                     }
+-                    mMainStack.removeActivityFromHistoryLocked(r);
++                    currStack.removeActivityFromHistoryLocked(r);
+ 
+                 } else {
+                     // We have the current state for this activity, so
