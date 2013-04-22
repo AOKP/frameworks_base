@@ -109,7 +109,6 @@ public class RibbonTarget {
                     vib.vibrate(10);
                 }
                 collapseStatusBar();
-                maybeSkipKeyguard();
                 sendIt(sClick);
             }
         });
@@ -118,7 +117,6 @@ public class RibbonTarget {
                 @Override
                 public boolean onLongClick(View v) {
                     collapseStatusBar();
-                    maybeSkipKeyguard();
                     sendIt(lClick);
                     return true;
                 }
@@ -156,7 +154,6 @@ public class RibbonTarget {
                     vib.vibrate(10);
                 }
                 collapseStatusBar();
-                maybeSkipKeyguard();
                 sendIt(sClick);
             }
         });
@@ -165,7 +162,6 @@ public class RibbonTarget {
                 @Override
                 public boolean onLongClick(View v) {
                     collapseStatusBar();
-                    maybeSkipKeyguard();
                     sendIt(lClick);
                     return true;
                 }
@@ -187,7 +183,9 @@ public class RibbonTarget {
     }
 
     private void sendIt(String action) {
-        mContext.sendBroadcastAsUser(u, UserHandle.ALL);
+        if (!action.equals(AwesomeConstants.AwesomeConstant.ACTION_TORCH.value())) {
+            mContext.sendBroadcastAsUser(u, UserHandle.ALL);
+        }
         Intent i = new Intent();
         i.setAction("com.android.systemui.aokp.LAUNCH_ACTION");
         i.putExtra("action", action);
@@ -205,15 +203,6 @@ public class RibbonTarget {
                 return mContext.getResources().getDimensionPixelSize(R.dimen.icon_size_15);
         }
         return -1;
-    }
-
-    private void maybeSkipKeyguard() {
-        try {
-            if (mWm.isKeyguardLocked() && !mWm.isKeyguardSecure()) {
-                ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
-            }
-        } catch (RemoteException ignored) {
-        }
     }
 
     private void collapseStatusBar() {
