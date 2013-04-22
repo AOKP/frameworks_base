@@ -12,6 +12,8 @@ import static com.android.server.wm.WindowManagerService.LayoutFields.SET_ORIENT
 
 import static com.android.server.wm.WindowManagerService.H.UPDATE_ANIM_PARAMETERS;
 
+import android.graphics.Rect;
+import android.os.IBinder;
 import android.content.Context;
 import android.os.Debug;
 import android.os.SystemClock;
@@ -21,6 +23,7 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.util.TimeUtils;
 import android.view.Display;
+import com.android.server.wm.WindowManagerService.WindowPanel;
 import android.view.Surface;
 import android.view.WindowManagerPolicy;
 import android.view.animation.Animation;
