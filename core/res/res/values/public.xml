@@ -1139,6 +1139,7 @@
   <public type="drawable" name="stat_sys_vp_phone_call_on_hold" id="0x010800a8" />
 
   <public type="anim" name="anticipate_interpolator" id="0x010a0007" />
+  <java-symbol type="xml" name="cornerstone" />
   <public type="anim" name="overshoot_interpolator" id="0x010a0008" />
   <public type="anim" name="anticipate_overshoot_interpolator" id="0x010a0009" />
   <public type="anim" name="bounce_interpolator" id="0x010a000a" />
@@ -1390,6 +1391,14 @@
   <public type="attr" name="fastScrollPreviewBackgroundLeft" id="0x01010337" />
   <public type="attr" name="fastScrollPreviewBackgroundRight" id="0x01010338" />
   <public type="attr" name="fastScrollTrackDrawable" id="0x01010339" />
+  <java-symbol type="anim" name="activity_close_enter_reverse" />
+  <java-symbol type="anim" name="activity_close_exit_reverse" />
+  <java-symbol type="anim" name="activity_open_enter_reverse" />
+  <java-symbol type="anim" name="activity_open_exit_reverse" />
+  <java-symbol type="anim" name="task_close_enter_reverse" />
+  <java-symbol type="anim" name="task_close_exit_reverse" />
+  <java-symbol type="anim" name="task_open_enter_reverse" />
+  <java-symbol type="anim" name="task_open_exit_reverse" />
   <public type="attr" name="fastScrollOverlayPosition" id="0x0101033a" />
   <public type="attr" name="customTokens" id="0x0101033b" />
   <public type="attr" name="nextFocusForward" id="0x0101033c" />

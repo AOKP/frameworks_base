@@ -172,6 +172,15 @@ interface IWindowSession {
     void setWallpaperPosition(IBinder windowToken, float x, float y, float xstep, float ystep);
     
     void wallpaperOffsetsComplete(IBinder window);
+
+    /**
+     * Author: Onskreen
+     * Date: 17/02/2011
+     *
+     * Notifies the WindowManagerService to reshuffle its z-order to dispatch the user
+     * input event to the newly focused window.
+     */
+    void handleFocusChange(IBinder token);
     
     Bundle sendWallpaperCommand(IBinder window, String action, int x, int y,
             int z, in Bundle extras, boolean sync);
