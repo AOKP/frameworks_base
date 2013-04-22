@@ -494,4 +494,20 @@ final class Session extends IWindowSession.Stub
     public String toString() {
         return mStringName;
     }
+
+   /**
+    * Author: Onskreen
+    * Date: 14/02/2011
+    *
+    * Trigger a move of all the contents of a WindowPanel to the top of the z-order. Also triggers move
+    * of all tokens/window panels that are in the same panel to the top. This is to ensure that the z-order
+    * contains all the app tokesn in order from the same panel at the top.
+    *
+    * This does not necessarily indicate a change in visibility because multiple WP's are visible at the
+    * same time, but is used in the context of focus changes so that the currently focused app
+    * is the top of the mWindows z-order.
+    */
+    public void handleFocusChange(IBinder token) {
+	  mService.handleFocusChangeLocked(token);
+    }
 }

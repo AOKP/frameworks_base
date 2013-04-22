@@ -1818,6 +1818,94 @@ public abstract class ActivityManagerNative extends Binder implements IActivityM
             return true;
         }
 
+        /**
+         * Author: Onskreen
+         * Date: 15/02/2011
+         *
+         * Cornerstone specific transaction
+         */
+        case SWAP_PANELS_TRANSACTION: {
+            data.enforceInterface(IActivityManager.descriptor);
+            int panelIndex = data.readInt();
+            swapPanels(panelIndex);
+            reply.writeNoException();
+            return true;
+        }
+
+        /**
+         * Author: Onskreen
+         * Date: 22/02/2011
+         *
+         * Cornerstone specific transaction
+         */
+        case CORNERSTONE_STATE_TRANSACTION: {
+            data.enforceInterface(IActivityManager.descriptor);
+            boolean open = data.readInt() != 0;
+            setCornerstoneState(open);
+            reply.writeNoException();
+            return true;
+        }
+
+        /**
+         * Author: Onskreen
+         * Date: 28/02/2011
+         *
+         * Cornerstone specific transaction
+         */
+        case CORNERSTONE_MANAGER_BROADCAST_TRANSACTION: {
+            data.enforceInterface(IActivityManager.descriptor);
+            String targetPkg = data.readString();
+            boolean focus = data.readInt() != 0;
+            int panelIndex = data.readInt();
+            broadcastCornerstonePanelFocusChanged(targetPkg, focus, panelIndex);
+            reply.writeNoException();
+            return true;
+        }
+
+        /**
+         * Author: Onskreen
+         * Date: 28/02/2011
+         *
+         * Cornerstone specific transaction
+         */
+        case CORNERSTONE_MANAGER_TRANSACTION: {
+            data.enforceInterface(IActivityManager.descriptor);
+            ICornerstoneManager manager = ICornerstoneManager.Stub.asInterface(
+            data.readStrongBinder());
+            setCornerstoneManager(manager);
+            reply.writeNoException();
+            return true;
+        }
+
+        /**
+         * Author: Onskreen
+         * Date: 08/03/2011
+         *
+         * Cornerstone specific transaction
+         */
+        case START_CORNERSTONE_APP_TRANSACTION: {
+            data.enforceInterface(IActivityManager.descriptor);
+            Intent intent = Intent.CREATOR.createFromParcel(data);
+            int panelIndex = data.readInt();
+            startCornerstoneApp(intent, panelIndex);
+            reply.writeNoException();
+            return true;
+        }
+
+        /**
+         * Author: Onskreen
+         * Date: 11/04/2011
+         *
+         * Cornerstone specific transaction
+         */
+        case SET_CORNERSTONE_FOCUSED_APP_TRANSACTION: {
+            data.enforceInterface(IActivityManager.descriptor);
+            int panelIndex = data.readInt();
+            setCornerstoneFocusedApp(panelIndex);
+            reply.writeNoException();
+            return true;
+        }
+
         }
 
         return super.onTransact(code, data, reply, flags);
@@ -4147,6 +4235,111 @@ class ActivityManagerProxy implements IActivityManager
         data.recycle();
         reply.recycle();
         return res;
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 15/02/2011
+     *
+     * Cornerstone specific method
+     */
+    public void swapPanels(int panelIndex) throws RemoteException {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        data.writeInterfaceToken(IActivityManager.descriptor);
+        data.writeInt(panelIndex);
+        mRemote.transact(SWAP_PANELS_TRANSACTION, data, reply, 0);
+        reply.readException();
+        data.recycle();
+        reply.recycle();
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 22/02/2011
+     *
+     * Cornerstone specific method
+     */
+    public void setCornerstoneState(boolean open) throws RemoteException {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        data.writeInterfaceToken(IActivityManager.descriptor);
+        data.writeInt(open? 1 : 0);
+        mRemote.transact(CORNERSTONE_STATE_TRANSACTION, data, reply, 0);
+        reply.readException();
+        data.recycle();
+        reply.recycle();
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 28/02/2011
+     *
+     * Cornerstone specific method
+     */
+    public void setCornerstoneManager(ICornerstoneManager manager) throws RemoteException {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        data.writeInterfaceToken(IActivityManager.descriptor);
+        data.writeStrongBinder(manager != null ? manager.asBinder() : null);
+        mRemote.transact(CORNERSTONE_MANAGER_TRANSACTION, data, reply, 0);
+        reply.readException();
+        data.recycle();
+        reply.recycle();
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 28/02/2011
+     *
+     * Cornerstone specific method
+     */
+    public void broadcastCornerstonePanelFocusChanged(String pkgName, boolean focus, int panelIndex) throws RemoteException {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        data.writeInterfaceToken(IActivityManager.descriptor);
+        data.writeString(pkgName);
+        data.writeInt(focus? 1 : 0);
+        data.writeInt(panelIndex);
+        mRemote.transact(CORNERSTONE_MANAGER_BROADCAST_TRANSACTION, data, reply, 0);
+        reply.readException();
+        data.recycle();
+        reply.recycle();
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 08/03/2011
+     *
+     * Cornerstone specific method
+     */
+    public void startCornerstoneApp(Intent intent, int panelIndex) throws RemoteException {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        data.writeInterfaceToken(IActivityManager.descriptor);
+        intent.writeToParcel(data, 0);
+        data.writeInt(panelIndex);
+        mRemote.transact(START_CORNERSTONE_APP_TRANSACTION, data, reply, 0);
+        reply.readException();
+        data.recycle();
+        reply.recycle();
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 11/04/2011
+     *
+     * Cornerstone specific method
+     */
+    public void setCornerstoneFocusedApp(int panelIndex) throws RemoteException {
+        Parcel data = Parcel.obtain();
+        Parcel reply = Parcel.obtain();
+        data.writeInterfaceToken(IActivityManager.descriptor);
+        data.writeInt(panelIndex);
+        mRemote.transact(SET_CORNERSTONE_FOCUSED_APP_TRANSACTION, data, reply, 0);
+        reply.readException();
+        data.recycle();
+        reply.recycle();
     }
 
     private IBinder mRemote;
