@@ -425,7 +425,7 @@ public class ActiveServices {
 
     int bindServiceLocked(IApplicationThread caller, IBinder token,
             Intent service, String resolvedType,
-            IServiceConnection connection, int flags, int userId) {
+            IServiceConnection connection, int flags, int userId, ActivityRecord activity) {
         if (DEBUG_SERVICE) Slog.v(TAG, "bindService: " + service
                 + " type=" + resolvedType + " conn=" + connection.asBinder()
                 + " flags=0x" + Integer.toHexString(flags));
@@ -437,14 +437,10 @@ public class ActiveServices {
                     + ") when binding service " + service);
         }
 
-        ActivityRecord activity = null;
-        if (token != null) {
-            activity = mAm.mMainStack.isInStackLocked(token);
             if (activity == null) {
                 Slog.w(TAG, "Binding with unknown activity: " + token);
                 return 0;
             }
-        }
 
         int clientLabel = 0;
         PendingIntent clientIntent = null;

@@ -26,6 +26,10 @@ import static android.view.WindowManager.LayoutParams.TYPE_WALLPAPER;
 
 import com.android.server.input.InputWindowHandle;
 
+import com.android.server.wm.WindowManagerService.Cornerstone_State;
+import com.android.server.wm.WindowManagerService.H;
+import com.android.server.wm.WindowManagerService.WindowPanel;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
@@ -383,6 +387,25 @@ final class WindowState implements WindowManagerPolicy.WindowState {
         final Rect display = mDisplayFrame;
         display.set(df);
 
+        /**
+         * Author: Onskreen
+         * Date: 08/04/2011
+         *
+         * This block commented out.
+         * Compatibility mode is not yet fully supported. It causes issues on the
+         * Viewsonic. Until we fully evaluate this feature, we are
+         * laying out the same regardless of compatibility mode being set or not
+         * by the WindowState. Assumedly, This will have to be reverted when we fully
+         * support compatibility mode.
+         *
+         */
+		/*if ((mAttrs.flags & FLAG_COMPATIBLE_WINDOW) != 0) {
+			container.intersect(mCompatibleScreenFrame);
+			if ((mAttrs.flags & FLAG_LAYOUT_NO_LIMITS) == 0) {
+			    display.intersect(mCompatibleScreenFrame);
+			}
+		}*/
+
         final int pw = container.right - container.left;
         final int ph = container.bottom - container.top;
 
@@ -418,6 +441,28 @@ final class WindowState implements WindowManagerPolicy.WindowState {
                 h = mRequestedHeight;
             }
         }
+
+        /**
+         * Author: Onskreen
+         * Date: 03/08/2011
+         *
+         * When width(w) and height(h) of the window frame exceeds the container rect's
+         * width(pw) and height(ph), we should set the width(w) and height(h) of the window
+         * frame to the actual container rect. It's been exprienced that when apps like YouTube
+         * runs in to portrait mode in either cs panels, it renders outside of its layout
+         * rect and to overcome that issue, we're setting the width of frame to its container
+         * rect's width. This solution renders the Youtube app within its layout rect but for
+         * some unknown reason when video is playing, it doesn't render by covering the width
+         * of the cs panel window.
+         */
+		if(w > pw && h > ph){
+			w = pw;
+			//h = ph;
+			if(mAttrs.x < 0){
+				mAttrs.x = 0;
+			}
+			mRequestedWidth = w;
+		}
 
         if (!mParentFrame.equals(pf)) {
             //Slog.i(TAG, "Window " + this + " content frame from " + mParentFrame
@@ -461,6 +506,62 @@ final class WindowState implements WindowManagerPolicy.WindowState {
 
         // Now make sure the window fits in the overall display.
         Gravity.applyDisplay(mAttrs.gravity, df, frame);
+
+        /**
+         * Author: Onskreen
+         * Date: 16/12/2011
+         *
+         * When user launches actionbar menu or types in search/address
+         * bar in browser app in either cs panels, then such Windows
+         * mFrame was set or calculated outside the total screen area
+         * after the Gravity applied by the above code. This can be
+         * resolved by setting the frame rect to fit into its container
+         * rect.
+         */
+        if(this.mAppToken != null) {
+			WindowPanel wp = mService.findWindowPanel(this.mAppToken.token);
+			if(wp!=null) {
+				if(wp.isCornerstonePanel() &&
+					mAttrs.type == WindowManager.LayoutParams.TYPE_APPLICATION_PANEL
+					&& (frame.left > container.left ||
+						frame.bottom < container.bottom)) {
+					frame.left = container.right - w;
+					frame.right = container.right;
+
+                   /**
+                    * Author: Onskreen
+                    * Date: 04/01/2013
+                    *
+                    * Resetting frame's top and bottom positions
+                    * of Action bar window.
+                    */
+					if(frame.bottom > container.bottom) {
+						frame.top = container.top + 44;
+						int diff = 0;
+						if(mRequestedHeight > ph) {
+							diff = mRequestedHeight - ph;
+						} else {
+							diff = ph - mRequestedHeight;
+						}
+						frame.bottom = container.bottom + diff + 44;
+					}
+                   /**
+                    * Author: Onskreen
+                    * Date: 04/01/2013
+                    *
+                    * Resetting frame's top and bottom positions
+                    * of attached windows such as Browser app's
+                    * auto-complete PopupWindow.
+                    */
+					if(frame.top < container.top) {
+						frame.top = container.top + 50;
+						frame.bottom = mRequestedHeight + container.top + 50;
+					}
+					//mRequestedHeight = frame.bottom - frame.top;
+					//h = mRequestedHeight;
+				}
+			}
+		}
 
         // Make sure the system, content and visible frames are inside of the
         // final window frame.
@@ -924,6 +1025,142 @@ final class WindowState implements WindowManagerPolicy.WindowState {
 
         mInputWindowHandle.inputChannel = null;
     }
+
+    /**
+     * Author: Onskreen
+     * Date: 14/04/2011
+     *
+     * Newly added method to WindowManagerPolicy.WindowState.
+     * Returns true if this WindowState is currently focused.
+     */
+    public boolean isFocused() {
+		if(mService.getFocusedWindow() == this) {
+			return true;
+		} else {
+			return false;
+		}
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 15/04/2011
+     *
+     * Newly added method to WindowManagerPolicy.WindowState.
+     * Returns true if the WindowState will be obstructed by the soft keyboard
+     * due to it's position on the screen.
+     *
+     * Perhaps this should be named wouldBeObstructedByKeyboard, because
+     * doesn't check if IME is present. That is responsibility of the caller.
+     *
+     */
+    public boolean isObstructedByKeyboard() {
+		if(this.mAppToken == null) return false;
+		WindowPanel wp = mService.findWindowPanel(mAppToken.groupId);
+
+		if(mConfiguration == null) {
+			return false;
+		}
+
+		//Landscape logic - Only lower Cornerstone Panel is obstructed
+		if(mConfiguration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+			if(wp.isCornerstonePanel()&& wp.mCornerstonePanelIndex==1)
+				return true;
+			else
+				return false;
+
+		} else if(mConfiguration.orientation == Configuration.ORIENTATION_PORTRAIT) {
+			//Portrait Logic - Both Cornerstone Panels are obstructed
+			if(wp.isCornerstonePanel())
+				return true;
+			else
+				return false;
+		} else {
+			//Unknown configuration
+			return false;
+		}
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 26/05/2011
+     *
+     * Newly added method to WindowManagerPolicy.WindowState.
+     * Returns true if the WindowState is of type dialog
+     *
+     */
+    public boolean isDialog(){
+		boolean dialog = false;
+		WindowManager.LayoutParams params = mAttrs;
+		int type = params.type;
+		int flags = params.flags;
+		if (params != null) {
+            /**
+             * Author: Onskreen
+             * Date: 20/12/2011
+             *
+             * None of these TYPEs exist anymore in 4.0.3. For now returning false. Have to figure out how to detect dialogs now?
+             *
+             * Commented out entire if block for now.
+             */
+			dialog = false;
+			/**dialog = ((type == TYPE_APPLICATION_ATTACHED_DIALOG)
+                 || (type == TYPE_KEYGUARD_DIALOG)
+                 || (type == TYPE_TOAST)
+                 || (type == TYPE_SYSTEM_ERROR)
+                 || (type == TYPE_SYSTEM_ALERT)
+               //|| (type == TYPE_SEARCH_BAR)
+               //|| (type == TYPE_STATUS_BAR)
+                 || (type == TYPE_SYSTEM_DIALOG)
+                 || (type == TYPE_CHANGED)
+                 || (((flags == (FLAG_ALT_FOCUSABLE_IM | FLAG_DIM_BEHIND))) && (type == TYPE_BASE_APPLICATION))) ? true : false; **/
+		}
+		return dialog;
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 26/05/2011
+     *
+     * Newly added method to WindowManagerPolicy.WindowState.
+     * Returns IBinder token value
+     *
+     */
+    public IBinder getToken(){
+        return mToken != null ? mToken.token : null;
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 31/05/2011
+     *
+     * Newly added method to WindowManagerPolicy.WindowState.
+     * Removes the Window from the window list.
+     */
+    public void removeWindowState(){
+        if(mClient != null && mSession != null){
+            mSession.remove(mClient);
+        }
+    }
+
+    /**
+     * Author: Onskreen
+     * Date: 16/06/2011
+     *
+     * Newly added method to WindowManagerPolicy.WindowState.
+     * Returns true if window panel is in cornerstone panel else false.
+     */
+    public boolean isInCornerstonePanelWindowPanel(IBinder token){
+        IBinder appToken = getToken();
+        if(appToken != null){
+            WindowPanel wp = mService.findWindowPanel(appToken);
+            if(wp != null){
+                return wp.contains(token);
+            }
+        }
+        return false;
+    }
+
+
 
     private class DeathRecipient implements IBinder.DeathRecipient {
         @Override

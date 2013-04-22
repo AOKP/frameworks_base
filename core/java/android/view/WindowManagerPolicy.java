@@ -341,6 +341,61 @@ public interface WindowManagerPolicy {
         public boolean isAlive();
 
         /**
+         * Author: Onskreen
+         * Date: 14/04/2011
+         *
+         * Newly added method to WindowManagerPolicy.WindowState.
+         * Returns true if this WindowState is currently focused.
+         */
+        public boolean isFocused();
+
+        /**
+         * Author: Onskreen
+         * Date: 15/04/2011
+         *
+         * Newly added method to WindowManagerPolicy.WindowState.
+         * Returns true if the WindowState will be obstructed by the soft keyboard
+         * due to it's position on the screen
+         */
+        public boolean isObstructedByKeyboard();
+
+        /**
+         * Author: Onskreen
+         * Date: 26/05/2011
+         *
+         * Newly added method to WindowManagerPolicy.WindowState.
+         * Returns true if the WindowState is of type dialog
+         */
+        public boolean isDialog();
+
+        /**
+         * Author: Onskreen
+         * Date: 26/05/2011
+         *
+         * Newly added method to WindowManagerPolicy.WindowState.
+         * Returns IBinder token value
+         */
+        public IBinder getToken();
+
+        /**
+         * Author: Onskreen
+         * Date: 31/05/2011
+         *
+         * Newly added method to WindowManagerPolicy.WindowState.
+         * Removes the Window from the window list.
+         */
+         public void removeWindowState();
+
+        /**
+         * Author: Onskreen
+         * Date: 16/06/2011
+         *
+         * Newly added method to WindowManagerPolicy.WindowState.
+         * Returns true if window frame is in cornerstone panel else false.
+         */
+         public boolean isInCornerstonePanelWindowPanel(IBinder token);
+
+        /**
          * Check if window is on {@link Display#DEFAULT_DISPLAY}.
          * @return true if window is on default display.
          */

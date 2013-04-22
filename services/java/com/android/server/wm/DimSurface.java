@@ -30,6 +30,14 @@ class DimSurface {
     boolean mDimShown = false;
     int mDimColor = 0;
     int mLayer = -1;
+    /**
+     * Author: Onskreen
+     * Date: 21/12/2011
+     *
+     * Setting DimSurface position variables
+     */
+    int mDimX = 0, mDimY = 0;
+
     int mLastDimWidth, mLastDimHeight;
 
     DimSurface(SurfaceSession session, final int layerStack) {
@@ -71,7 +79,15 @@ class DimSurface {
             try {
                 mLastDimWidth = dw;
                 mLastDimHeight = dh;
-                mDimSurface.setPosition(0, 0);
+                //mDimSurface.setPosition(0, 0);
+                /**
+                 * Author: Onskreen
+                 * Date: 21/12/2011
+                 *
+                 * set the correct position based on the x,y set in
+                 * performLayoutAndPlaceSurfacesLockedInner method.
+                 */
+                mDimSurface.setPosition(mDimX, mDimY);
                 mDimSurface.setSize(dw, dh);
                 mDimSurface.setLayer(layer);
                 mDimSurface.show();
