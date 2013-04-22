@@ -54,7 +54,7 @@ public class KeyButtonView extends ImageView {
     float BUTTON_QUIESCENT_ALPHA = 0.70f;
 
     long mDownTime;
-    int mCode;
+    int mCode = 0;
     int mTouchSlop;
     Drawable mGlowBG;
     int mGlowBGColor = Integer.MIN_VALUE;

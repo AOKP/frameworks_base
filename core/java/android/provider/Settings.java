@@ -2950,6 +2950,19 @@ public final class Settings {
         /**
          * @hide
          */
+        public static final String[] NAVIGATION_DOUBLETAP_ACTIVITIES = new String[] {
+            "navigation_doubletap_app_intent_0",
+            "navigation_doubletap_app_intent_1",
+            "navigation_doubletap_app_intent_2",
+            "navigation_doubletap_app_intent_3",
+            "navigation_doubletap_app_intent_4",
+            "navigation_doubletap_app_intent_5",
+            "navigation_doubletap_app_intent_6",
+        };
+
+        /**
+         * @hide
+         */
         public static final String[] NAVIGATION_CUSTOM_APP_ICONS = new String[] {
             "navigation_custom_app_icon_0",
             "navigation_custom_app_icon_1",
@@ -3764,6 +3777,7 @@ public final class Settings {
          * @hide
          */
         public static final String TOGGLES_STYLE = "toggls_style";
+
     }
 
     /**

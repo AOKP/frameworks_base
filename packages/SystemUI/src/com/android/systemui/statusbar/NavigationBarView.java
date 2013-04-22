@@ -117,6 +117,7 @@ public class NavigationBarView extends LinearLayout {
     public String[] mClickActions = new String[7];
     public String[] mLongpressActions = new String[7];
     public String[] mPortraitIcons = new String[7];
+    public String[] mDoubleTapActions = new String[7];
 
     public final static int StockButtonsQty = 3;
     public final static String[] StockClickActions = {
@@ -293,7 +294,8 @@ public class NavigationBarView extends LinearLayout {
             for (int j = 0; j < mNumberOfButtons; j++) {
                 ExtensibleKeyButtonView v = generateKey(landscape, mClickActions[j],
                         mLongpressActions[j],
-                        mPortraitIcons[j]);
+                        mPortraitIcons[j],
+                        mDoubleTapActions[j]);
                 v.setTag((landscape ? "key_land_" : "key_") + j);
                 iconUri = mPortraitIcons[j];
                 if (iconUri != null && iconUri.length() > 0) {
@@ -454,11 +456,11 @@ public class NavigationBarView extends LinearLayout {
 
     private ExtensibleKeyButtonView generateKey(boolean landscape, String clickAction,
             String longpress,
-            String iconUri) {
+            String iconUri, String doubleTapAction) {
 
         final int iconSize = 80;
         ExtensibleKeyButtonView v = new ExtensibleKeyButtonView(mContext, null,
-                clickAction, longpress);
+                clickAction, longpress, doubleTapAction);
         v.setLayoutParams(getLayoutParams(landscape, iconSize));
         v.setGlowBackground(landscape ? R.drawable.ic_sysbar_highlight_land
                 : R.drawable.ic_sysbar_highlight);
@@ -1001,6 +1003,10 @@ public class NavigationBarView extends LinearLayout {
                         Settings.System.getUriFor(Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j]),
                         false,
                         this);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.NAVIGATION_DOUBLETAP_ACTIVITIES[j]),
+                        false,
+                        this);
             }
             updateSettings();
         }
@@ -1075,6 +1081,8 @@ public class NavigationBarView extends LinearLayout {
                 Settings.System.putString(resolver,
                         Settings.System.NAVIGATION_LONGPRESS_ACTIVITIES[j], mLongpressActions[j]);
             }
+            mDoubleTapActions[j] = Settings.System.getString(resolver,
+                    Settings.System.NAVIGATION_DOUBLETAP_ACTIVITIES[j]);
             mPortraitIcons[j] = Settings.System.getString(resolver,
                     Settings.System.NAVIGATION_CUSTOM_APP_ICONS[j]);
             if (mPortraitIcons[j] == null) {
