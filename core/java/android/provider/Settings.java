@@ -3212,6 +3212,23 @@ public final class Settings {
          *
          * @hide
          */
+        public static final String[] RIBBON_ICON_SPACE = new String[] {
+            "ribbon_icon_lockscreen_space",
+            "ribbon_icon_notification_space",
+            "ribbon_icon_swipe_space",
+            "ribbon_icon_quicksettings_space",
+        };
+
+        /**
+         *
+         * @hide
+         */
+        public static final String RIBBON_ICON_SPACE_VERTICAL = "ribbon_icon_space_vertical";
+
+        /**
+         *
+         * @hide
+         */
         public static final String RIBBON_HIDE_TIMEOUT = "ribbon_hide_timeout";
 
         /**

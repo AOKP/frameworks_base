@@ -6,6 +6,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.ScrollView;
 import android.widget.LinearLayout;
@@ -31,7 +33,12 @@ public class AokpRibbonHelper {
             LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f);
 
     public static HorizontalScrollView getRibbon(Context mContext, ArrayList<String> shortTargets,
-             ArrayList<String> longTargets, ArrayList<String> customIcons, boolean text, int color, int size) {
+             ArrayList<String> longTargets, ArrayList<String> customIcons, boolean text, int color, int size, int pad) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        int padding = (int) (pad * metrics.density);
+        int top = (int) (1 * metrics.density);
         int length = shortTargets.size();
         HorizontalScrollView targetScrollView = new HorizontalScrollView(mContext);
         if (length > 0 && (shortTargets.size() == customIcons.size())) {
@@ -42,6 +49,9 @@ public class AokpRibbonHelper {
                     RibbonTarget newTarget = null;
                     newTarget = new RibbonTarget(mContext, shortTargets.get(i), longTargets.get(i), customIcons.get(i), text, color, size);
                     if (newTarget != null) {
+                        if (i < length -1) {
+                            newTarget.setPadding(padding, top);
+                        }
                         targets.add(newTarget);
                     }
                 }
@@ -58,7 +68,12 @@ public class AokpRibbonHelper {
     }
 
     public static ScrollView getVerticalRibbon(Context mContext, ArrayList<String> shortTargets,
-                    ArrayList<String> longTargets, ArrayList<String> customIcons, boolean text, int color, int size) {
+                    ArrayList<String> longTargets, ArrayList<String> customIcons, boolean text, int color, int size, int pad) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        wm.getDefaultDisplay().getMetrics(metrics);
+        int padding = (int) (pad * metrics.density);
+        int sides = (int) (5 * metrics.density);
         int length = shortTargets.size();
         ScrollView targetScrollView = new ScrollView(mContext);
         if (length > 0 && (shortTargets.size() == customIcons.size())) {
@@ -69,6 +84,9 @@ public class AokpRibbonHelper {
                     RibbonTarget newTarget = null;
                     newTarget = new RibbonTarget(mContext, shortTargets.get(i), longTargets.get(i), customIcons.get(i), text, color, size);
                     if (newTarget != null) {
+                        if (i < length -1) {
+                            newTarget.setVerticalPadding(padding, sides);
+                        }
                         targets.add(newTarget);
                     }
                 }
