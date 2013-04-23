@@ -53,6 +53,7 @@ import android.widget.TextView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.R;
@@ -64,6 +65,7 @@ public class RibbonTarget {
     private static final String TAG = "Ribbon Target";
 
     private View mView;
+    private LinearLayout mContainer;
     private Context mContext;
     private IWindowManager mWm;
     private ImageButton mIcon;
@@ -79,10 +81,12 @@ public class RibbonTarget {
      * cIcon = custom icon
      * text = a boolean for weither to show the app text label
      * color = text color
+     * touchVib = vibrate on touch
      * size = size used to resize icons 0 is default and will not resize the icons at all.
      */
 
-    public RibbonTarget(Context context, final String sClick, final String lClick, final String cIcon, final boolean text, final int color, final int size) {
+    public RibbonTarget(Context context, final String sClick, final String lClick,
+            final String cIcon, final boolean text, final int color, final int size, final boolean touchVib) {
         mContext = context;
         u = new Intent();
         u.setAction("com.android.lockscreen.ACTION_UNLOCK_RECEIVER");
@@ -94,6 +98,7 @@ public class RibbonTarget {
         wm.getDefaultDisplay().getMetrics(metrics);
         vib = (Vibrator) mContext.getSystemService(mContext.VIBRATOR_SERVICE);
         mView = View.inflate(mContext, R.layout.target_button, null);
+        mContainer = (LinearLayout) mView.findViewById(R.id.container);
         mText = (TextView) mView.findViewById(R.id.label);
         if (!text) {
             mText.setVisibility(View.GONE);
@@ -105,12 +110,12 @@ public class RibbonTarget {
         mText.setOnClickListener(new OnClickListener() {
             @Override
             public final void onClick(View v) {
-                if(vib != null) {
+                if(vib != null && touchVib) {
                     vib.vibrate(10);
                 }
                 collapseStatusBar();
                 maybeSkipKeyguard();
-                sendIt(sClick);
+                sendIt(sClick.equals("**null**") ? lClick : sClick);
             }
         });
         if (!lClick.equals("**null**")) {
@@ -134,9 +139,9 @@ public class RibbonTarget {
             }
         } else {
             if (size > 0) {
-                newIcon = resize(NavBarHelpers.getIconImage(mContext, sClick), mapChosenDpToPixels(size));
+                newIcon = resize(NavBarHelpers.getIconImage(mContext, sClick.equals("**null**") ? lClick : sClick), mapChosenDpToPixels(size));
             } else {
-                newIcon = NavBarHelpers.getIconImage(mContext, sClick);
+                newIcon = NavBarHelpers.getIconImage(mContext, sClick.equals("**null**") ? lClick : sClick);
                 int desiredSize = (int) (48 * metrics.density);
                 int width = newIcon.getIntrinsicWidth();
                 if (width > desiredSize) {
@@ -149,17 +154,19 @@ public class RibbonTarget {
             }
         }
         mIcon.setImageDrawable(newIcon);
-        mIcon.setOnClickListener(new OnClickListener() {
-            @Override
-            public final void onClick(View v) {
-                if(vib != null) {
-                    vib.vibrate(10);
+        if (!sClick.equals("**null**")) {
+            mIcon.setOnClickListener(new OnClickListener() {
+                @Override
+                public final void onClick(View v) {
+                    if(vib != null && touchVib) {
+                        vib.vibrate(10);
+                    }
+                    collapseStatusBar();
+                    maybeSkipKeyguard();
+                    sendIt(sClick);
                 }
-                collapseStatusBar();
-                maybeSkipKeyguard();
-                sendIt(sClick);
-            }
-        });
+            });
+        }
         if (!lClick.equals("**null**")) {
             mIcon.setOnLongClickListener(new OnLongClickListener() {
                 @Override
@@ -228,6 +235,14 @@ public class RibbonTarget {
 
     public View getView() {
         return mView;
+    }
+
+    public void setVerticalPadding(int pad, int side) {
+        mContainer.setPadding(side, 0, side, pad);
+    }
+
+    public void setPadding(int pad, int top) {
+        mContainer.setPadding(pad, top, pad, top);
     }
 
     public static Drawable getCustomDrawable(Context context, String action) {
