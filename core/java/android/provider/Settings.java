@@ -3354,11 +3354,6 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String CUSTOM_TOGGLE_ADVANCED = "custom_toggle_advanced";
-
-        /**
-         * @hide
-         */
         public static final String CUSTOM_TOGGLE_REVERT = "custom_toggle_revert";
 
         /**
