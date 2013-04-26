@@ -2,6 +2,8 @@ package com.android.systemui.statusbar.toggles;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
@@ -12,11 +14,12 @@ import com.android.systemui.R;
 public class StayAwakeToggle extends StatefulToggle {
 
     private static final String TAG = "AOKPInsomnia";
+    private static final String KEY_USER_TIMEOUT = "toggle_state";
     private static final int FALLBACK_SCREEN_TIMEOUT_VALUE = 30000;
     private static final int neverSleep = Integer.MAX_VALUE; // MAX_VALUE equates to approx 24 days
 
     private boolean enabled;
-    private int currentTimeout, storedUserTimeout;
+    private int storedUserTimeout;
 
     SettingsObserver mObserver = null;
 
@@ -26,6 +29,8 @@ public class StayAwakeToggle extends StatefulToggle {
 
         mObserver = new SettingsObserver(mHandler);
         mObserver.observe();
+        SharedPreferences p = mContext.getSharedPreferences(KEY_USER_TIMEOUT, Context.MODE_PRIVATE);
+        storedUserTimeout = p.getInt("timeout", FALLBACK_SCREEN_TIMEOUT_VALUE);
     }
 
     @Override
@@ -55,33 +60,29 @@ public class StayAwakeToggle extends StatefulToggle {
 
     @Override
     public void updateView() {
-       currentTimeout = Settings.System.getInt(mContext.getContentResolver(),
-                        Settings.System.SCREEN_OFF_TIMEOUT, FALLBACK_SCREEN_TIMEOUT_VALUE);
-       if (currentTimeout == neverSleep) {
-           enabled = true;
-       } else {
-           enabled = false;
-       }
-       setEnabledState(enabled);
-       setLabel(enabled ? R.string.quick_settings_stayawake_on
-               : R.string.quick_settings_stayawake_off);
-       setIcon(enabled ? R.drawable.ic_qs_stayawake_on : R.drawable.ic_qs_stayawake_off);
-       super.updateView();
+        if (storedUserTimeout == neverSleep) {
+            enabled = true;
+        } else {
+            enabled = false;
+            storedUserTimeout = Settings.System.getInt(mContext.getContentResolver(),
+                            Settings.System.SCREEN_OFF_TIMEOUT, FALLBACK_SCREEN_TIMEOUT_VALUE);
+            SharedPreferences p = mContext.getSharedPreferences(KEY_USER_TIMEOUT, Context.MODE_PRIVATE);
+            p.edit().putInt("state", storedUserTimeout).commit();
+        }
+        setEnabledState(enabled);
+        setLabel(enabled ? R.string.quick_settings_stayawake_on
+                : R.string.quick_settings_stayawake_off);
+        setIcon(enabled ? R.drawable.ic_qs_stayawake_on : R.drawable.ic_qs_stayawake_off);
+        super.updateView();
     }
 
     protected void toggleInsomnia(boolean state) {
         if (state) {
-            storedUserTimeout = currentTimeout;
             Settings.System.putInt(mContext.getContentResolver(),
                     Settings.System.SCREEN_OFF_TIMEOUT, neverSleep);
         } else {
-            if (currentTimeout != storedUserTimeout) {
-                currentTimeout = storedUserTimeout;
-            } else {
-                currentTimeout = FALLBACK_SCREEN_TIMEOUT_VALUE;
-            }
             Settings.System.putInt(mContext.getContentResolver(),
-                    Settings.System.SCREEN_OFF_TIMEOUT, currentTimeout);
+                    Settings.System.SCREEN_OFF_TIMEOUT, storedUserTimeout);
         }
     }
 
