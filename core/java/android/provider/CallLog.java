@@ -124,6 +124,8 @@ public class CallLog {
         public static final int OUTGOING_TYPE = 2;
         /** Call log type for missed calls. */
         public static final int MISSED_TYPE = 3;
+        /** Call log type for rejected calls. */
+        public static final int REJECTED_TYPE = 5;
         /**
          * Call log type for voicemails.
          * @hide
