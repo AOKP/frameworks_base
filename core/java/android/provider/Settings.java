@@ -3408,70 +3408,100 @@ public final class Settings {
         /**
          * @hide
          */
-        public static final String CUSTOM_TOGGLE_REVERT = "custom_toggle_revert";
+        public static final String[] CUSTOM_TOGGLE_REVERT = new String[] {
+            "custom_toggle_one_boot",
+            "custom_toggle_two_boot",
+            "custom_toggle_three_boot",
+            "custom_toggle_four_boot",
+            "custom_toggle_five_boot",
+        };
 
         /**
          * @hide
          */
-        public static final String DCLICK_TOGGLE_REVERT = "dclick_toggle_revert";
+        public static final String[] DCLICK_TOGGLE_REVERT = new String[] {
+            "custom_toggle_one_revert",
+            "custom_toggle_two_revert",
+            "custom_toggle_three_revert",
+            "custom_toggle_four_revert",
+            "custom_toggle_five_revert",
+        };
 
         /**
          * @hide
          */
-        public static final String MATCH_ACTION_ICON = "match_action_icon";
+        public static final String[] MATCH_ACTION_ICON = new String[] {
+            "custom_toggle_one_match",
+            "custom_toggle_two_match",
+            "custom_toggle_three_match",
+            "custom_toggle_four_match",
+            "custom_toggle_five_match",
+        };
 
         /**
          * @hide
          */
-        public static final String COLLAPSE_SHADE = "collapse_shade";
+        public static final String[] COLLAPSE_SHADE = new String[] {
+            "custom_toggle_one_collapse",
+            "custom_toggle_two_collapse",
+            "custom_toggle_three_collapse",
+            "custom_toggle_four_collapse",
+            "custom_toggle_five_collapse",
+        };
 
         /**
          * @hide
          */
-        public static final String CUSTOM_TOGGLE_QTY = "custom_toggle_qty";
+        public static final String[] CUSTOM_TOGGLE_QTY = new String[] {
+            "custom_toggle_one_qty",
+            "custom_toggle_two_qty",
+            "custom_toggle_three_qty",
+            "custom_toggle_four_qty",
+            "custom_toggle_five_qty",
+        };
 
         /**
          * @hide
          */
         public static final String[] CUSTOM_PRESS_TOGGLE = new String[] {
-            "toggle_custom_app_intent_0",
-            "toggle_custom_app_intent_1",
-            "toggle_custom_app_intent_2",
-            "toggle_custom_app_intent_3",
-            "toggle_custom_app_intent_4",
+            "toggle_custom_one_app_intent",
+            "toggle_custom_two_app_intent",
+            "toggle_custom_three_app_intent",
+            "toggle_custom_four_app_intent",
+            "toggle_custom_five_app_intent",
         };
 
         /**
          * @hide
          */
         public static final String[] CUSTOM_LONGPRESS_TOGGLE = new String[] {
-            "toggle_custom_app_longintent_0",
-            "toggle_custom_app_longintent_1",
-            "toggle_custom_app_longintent_2",
-            "toggle_custom_app_longintent_3",
-            "toggle_custom_app_longintent_4",
+            "toggle_custom_one_app_longintent",
+            "toggle_custom_two_app_longintent",
+            "toggle_custom_three_app_longintent",
+            "toggle_custom_four_app_longintent",
+            "toggle_custom_five_app_longintent",
         };
 
         /**
          * @hide
          */
         public static final String[] CUSTOM_TOGGLE_ICONS = new String[] {
-            "custom_toggle_icons_0",
-            "custom_toggle_icons_1",
-            "custom_toggle_icons_2",
-            "custom_toggle_icons_3",
-            "custom_toggle_icons_4",
+            "custom_toggle_one_icons",
+            "custom_toggle_two_icons",
+            "custom_toggle_three_icons",
+            "custom_toggle_four_icons",
+            "custom_toggle_five_icons",
         };
 
         /**
          * @hide
          */
         public static final String[] CUSTOM_TOGGLE_TEXT = new String[] {
-            "custom_toggle_text_0",
-            "custom_toggle_text_1",
-            "custom_toggle_text_2",
-            "custom_toggle_text_3",
-            "custom_toggle_text_4",
+            "custom_toggle_one_text",
+            "custom_toggle_two_text",
+            "custom_toggle_three_text",
+            "custom_toggle_four_text",
+            "custom_toggle_five_text",
         };
 
         /**
