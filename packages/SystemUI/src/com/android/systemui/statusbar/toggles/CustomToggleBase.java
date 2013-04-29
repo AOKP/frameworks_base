@@ -28,7 +28,7 @@ import com.android.systemui.R;
 import java.io.File;
 import java.io.IOException;
 
-public class CustomToggle extends BaseToggle {
+public class CustomToggleBase extends BaseToggle {
 
     public String[] mClickActions = new String[5];
     public String[] mLongActions = new String[5];
@@ -39,10 +39,10 @@ public class CustomToggle extends BaseToggle {
     private int mNumberOfActions;
     private int mCollapseShade;
     private int mCustomState= 0;
-    private int mMatchState = 0;
+    private int matchState = 0;
     private int doubleClickCounter = 0;
+    public int toggleNumber;
     private boolean mActionRevert;
-    private boolean mAdvancedToggle;
     private boolean mMatchAction;
 
     public static final int NO_ACTION = 0;
@@ -68,200 +68,164 @@ public class CustomToggle extends BaseToggle {
     private SettingsObserver mObserver = null;
 
     @Override
-    protected void init(Context c, int style) {
-        super.init(c, style);
-        mObserver = new SettingsObserver(mHandler);
-        mObserver.observe();
-        startMagicTricks();
-        registerBroadcastReceiver(new BroadcastReceiver() {
-
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (mActionRevert) {
-                    mHandler.postDelayed(delayBootAction, 25000);
-                }
-            }
-        }, new IntentFilter(Intent.ACTION_BOOT_COMPLETED));
+    public void onClick(View v) {
+        //let toggle dictate
     }
 
     @Override
-    protected void cleanup() {
-        if (mObserver != null) {
-            mContext.getContentResolver().unregisterContentObserver(mObserver);
-            mObserver = null;
-        }
-        super.cleanup();
+    protected void updateView() {
+        super.updateView();
     }
 
-    final Runnable delayBootAction = new Runnable () {
-        public void run() {
-            mCustomState = 0;
-            commitState();
-            AwesomeAction.launchAction(mContext, mClickActions[mCustomState]);
-            startMagicTricks();
-        }
-    };
+    public void getToggle(int toggle) {
+         toggleNumber = toggle;
+    }
 
-    final Runnable DelayShortPress = new Runnable () {
-        public void run() {
-            doubleClickCounter = 0;
-            startCounting();
-        }
-    };
+    public void getAction(int state) {
+        AwesomeAction.launchAction(mContext, "**null**".equals(mClickActions[state])
+                ? mLongActions[state] : mClickActions[state]);
+    }
 
-    final Runnable ResetDoubleClickCounter = new Runnable () {
-        public void run() {
-            doubleClickCounter = 0;
-        }
-    };
-
-    private void checkForDoubleClick() {
-        if (doubleClickCounter > 0) {
-            mHandler.removeCallbacks(DelayShortPress);
-            switch (mDoubleClick) {
-                case REVERSE_ONE:
-                    startReverse();
-                    break;
-                case STATE_ONE:
-                    mCustomState = 0;
-                    commitState();
-                    AwesomeAction.launchAction(mContext, mClickActions[mCustomState]);
-                    shouldCollapse();
-                    startMagicTricks();
-                    break;
-                case SKIP_BACK:
-                    if (mCustomState > 0) {
-                        mCustomState--;
-                        commitState();
-                    } else {
-                        mCustomState = mNumberOfActions-1;
-                        commitState();
-                    }
-                    startMagicTricks();
-                    break;
-                case SKIP_FORWARD:
-                    if (mCustomState < mNumberOfActions-1) {
-                        mCustomState += 1;
-                        commitState();
-                    } else {
-                        mCustomState = 0;
-                        commitState();
-                    }
-                    startMagicTricks();
-                    break;
-            }
-            mHandler.postDelayed(ResetDoubleClickCounter, 20);
+    public int getCounting(int toggle, int state, int min, int max) {
+        int stateHolder = state;
+        if (state < practiceKungFu(stateHolder, min, max)) {
+            state += 1;
+            matchState = state-1;
         } else {
-            doubleClickCounter = doubleClickCounter + 1;
-            mHandler.postDelayed(DelayShortPress, 300);
+            state = 0;
+            matchState = practiceKungFu(state, min, max);
         }
+        return state;
     }
 
-    private void startCounting() {
-        if (mCustomState < mNumberOfActions-1) {
-            mCustomState += 1;
-            commitState();
-            mMatchState = mCustomState-1;
+    public int getMatch() {
+        return matchState;
+    }
+
+    public void getClickActions(int toggle, int state, int statematch) {
+        getToggle(toggle);
+        if (mMatchAction) {
+            AwesomeAction.launchAction(mContext, mClickActions[statematch]);
         } else {
-            mCustomState = 0;
-            commitState();
-            mMatchState = mNumberOfActions-1;
+            AwesomeAction.launchAction(mContext, mClickActions[state]);
         }
-        startActions();
+        collapseClick(toggle);
     }
 
-    private void startReverse() {
-        if (mCustomState > 0) {
-            mCustomState--;
-            commitState();
-        } else {
-            mCustomState = mNumberOfActions-1;
-            commitState();
-        }
-        AwesomeAction.launchAction(mContext, mClickActions[mCustomState]);
-        shouldCollapse();
-        startMagicTricks();
-    }
-
-    private void startActions() {
-        if (mAdvancedToggle) {
-            if (mMatchAction) {
-                AwesomeAction.launchAction(mContext, mClickActions[mMatchState]);
-            } else {
-                AwesomeAction.launchAction(mContext, mClickActions[mCustomState]);
-            }
-            shouldCollapse();
-        }
-        startMagicTricks();
-    }
-
-    private void shouldCollapse() {
+    public void getLongActions(int toggle, int state) {
+        getToggle(toggle);
+        AwesomeAction.launchAction(mContext, mLongActions[state]);
         switch (mCollapseShade) {
             case NO_COLLAPSE:
-            case ON_LONG:
-                break;
             case ON_CLICK:
+                break;
+            case ON_LONG:
             case ON_BOTH:
                 collapseStatusBar();
                 break;
         }
     }
 
-    private void commitState() {
-        SharedPreferences p = mContext.getSharedPreferences(KEY_TOGGLE_STATE, Context.MODE_PRIVATE);
-        p.edit().putInt("state", mCustomState).commit();
-    }
-
-    private void startMagicTricks() {
-        String iconUri = "";
-        Drawable myIcon = null;
-        String toggleText = mToggleText[mCustomState];
-        iconUri = mToggleIcons[mCustomState];
-        if (iconUri != null && iconUri.length() > 0) {
-            File f = new File(Uri.parse(iconUri).getPath());
-            if (f.exists()) {
-                myIcon = new BitmapDrawable(mContext.getResources(), f.getAbsolutePath());
-            }
-        } else {
-            myIcon = NavBarHelpers.getIconImage(mContext, mClickActions[mCustomState]);
-        }
-        setLabel(toggleText);
-        setIcon(myIcon);
-        scheduleViewUpdate();
-    };
-
-    @Override
-    public void onClick(View v) {
+    public boolean shouldDouble(int toggle) {
+        boolean doubleClick = false;
+        getToggle(toggle);
         switch (mDoubleClick) {
             case NO_ACTION:
-                startCounting();
                 break;
             case REVERSE_ONE:
             case STATE_ONE:
             case SKIP_BACK:
             case SKIP_FORWARD:
-                checkForDoubleClick();
+                doubleClick = true;
                 break;
         }
+        return doubleClick;
     }
-    @Override
-    public boolean onLongClick(View v) {
-        if (mAdvancedToggle) {
-            AwesomeAction.launchAction(mContext, mLongActions[mCustomState]);
-        } else {
-            AwesomeAction.launchAction(mContext, mClickActions[mCustomState]);
+
+    public int getDoubleAction(int toggle, int state, int min, int max) {
+        int stateHolder = state;
+        getToggle(toggle);
+        switch (mDoubleClick) {
+            case REVERSE_ONE:
+                if (stateHolder > min) {
+                    state--;
+                } else {
+                    state = practiceKungFu(stateHolder, min, max);
+                }
+                getAction(state);
+                collapseClick(toggle);
+                break;
+            case STATE_ONE:
+                state = min;
+                getAction(state);
+                collapseClick(toggle);
+                break;
+            case SKIP_BACK:
+                if (stateHolder > min) {
+                    state--;
+                } else {
+                    state = practiceKungFu(stateHolder, min, max);
+                }
+                break;
+            case SKIP_FORWARD:
+                if (state < practiceKungFu(stateHolder, min, max)) {
+                    state += 1;
+                } else {
+                    state = min;
+                }
+                break;
         }
+        return state;
+    }
+
+    public int practiceKungFu(int state, int min, int max) {
+        int stateNow = max;
+        if (state == min+1) {
+                stateNow = max-5;
+        }
+        if (state == min+2) {
+                stateNow = max-4;
+        }
+        if (state == min+3) {
+                stateNow = max-3;
+        }
+        if (state == min+4) {
+                stateNow = max-2;
+        }
+        if (state == min+5) {
+                stateNow = max-1;
+        }
+        return stateNow;
+    }
+
+    public void collapseClick(int toggle) {
+        getToggle(toggle);
         switch (mCollapseShade) {
             case NO_COLLAPSE:
-            case ON_CLICK:
-                break;
             case ON_LONG:
+                break;
+            case ON_CLICK:
             case ON_BOTH:
                 collapseStatusBar();
                 break;
         }
-        return true;
     }
+
+    public Drawable userIcon(int state) {
+        String iconUri = "";
+        Drawable icon = null;
+        iconUri = mToggleIcons[state];
+        if (iconUri != null && iconUri.length() > 0) {
+            File f = new File(Uri.parse(iconUri).getPath());
+            if (f.exists()) {
+                icon = new BitmapDrawable(mContext.getResources(), f.getAbsolutePath());
+            }
+        } else {
+            icon = NavBarHelpers.getIconImage(mContext, "**null**".equals(mClickActions[state])
+                    ? mLongActions[state] : mClickActions[state]);
+        }
+        return icon;
+    };
 
     private void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
@@ -272,22 +236,19 @@ public class CustomToggle extends BaseToggle {
         mCustomState = p.getInt("state", 0);
 
         mActionRevert = Settings.System.getBoolean(resolver,
-                Settings.System.CUSTOM_TOGGLE_REVERT, false);
-
-        mAdvancedToggle = Settings.System.getBoolean(resolver,
-                Settings.System.CUSTOM_TOGGLE_ADVANCED, false);
+                Settings.System.CUSTOM_TOGGLE_REVERT[toggleNumber], false);
 
         mMatchAction = Settings.System.getBoolean(resolver,
-                Settings.System.MATCH_ACTION_ICON, false);
+                Settings.System.MATCH_ACTION_ICON[toggleNumber], false);
 
         mCollapseShade = Settings.System.getInt(resolver,
-                Settings.System.COLLAPSE_SHADE, 10);
+                Settings.System.COLLAPSE_SHADE[toggleNumber], 10);
 
         mNumberOfActions = Settings.System.getInt(resolver,
-                Settings.System.CUSTOM_TOGGLE_QTY, 3);
+                Settings.System.CUSTOM_TOGGLE_QTY[toggleNumber], 3);
 
         mDoubleClick = Settings.System.getInt(resolver,
-                Settings.System.DCLICK_TOGGLE_REVERT, 0);
+                Settings.System.DCLICK_TOGGLE_REVERT[toggleNumber], 0);
 
         for (int j = 0; j < 5; j++) {
             mClickActions[j] = Settings.System.getString(resolver,
@@ -327,27 +288,23 @@ public class CustomToggle extends BaseToggle {
             ContentResolver resolver = mContext.getContentResolver();
 
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.CUSTOM_TOGGLE_REVERT),
+                    .getUriFor(Settings.System.CUSTOM_TOGGLE_REVERT[toggleNumber]),
                     false, this);
 
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.CUSTOM_TOGGLE_ADVANCED),
+                    .getUriFor(Settings.System.MATCH_ACTION_ICON[toggleNumber]),
                     false, this);
 
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.MATCH_ACTION_ICON),
+                    .getUriFor(Settings.System.COLLAPSE_SHADE[toggleNumber]),
                     false, this);
 
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.COLLAPSE_SHADE),
+                    .getUriFor(Settings.System.CUSTOM_TOGGLE_QTY[toggleNumber]),
                     false, this);
 
             resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.CUSTOM_TOGGLE_QTY),
-                    false, this);
-
-            resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.DCLICK_TOGGLE_REVERT),
+                    .getUriFor(Settings.System.DCLICK_TOGGLE_REVERT[toggleNumber]),
                     false, this);
 
             for (int j = 0; j < 5; j++) {
