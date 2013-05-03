@@ -73,6 +73,7 @@ public class RibbonTarget {
     private Vibrator vib;
     private Intent u;
     private Intent b;
+    private Intent a;
 
 
     /*
@@ -92,6 +93,8 @@ public class RibbonTarget {
         u.setAction("com.android.lockscreen.ACTION_UNLOCK_RECEIVER");
         b = new Intent();
         b.setAction("com.android.systemui.ACTION_HIDE_RIBBON");
+        a = new Intent();
+        a.setAction("com.android.systemui.ACTION_HIDE_APP_WINDOW");
         mWm = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
 	    DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -193,6 +196,7 @@ public class RibbonTarget {
     }
 
     private void sendIt(String action) {
+        mContext.sendBroadcastAsUser(a, UserHandle.ALL);
         if (shouldUnlock(action)) {
             mContext.sendBroadcastAsUser(u, UserHandle.ALL);
         }
