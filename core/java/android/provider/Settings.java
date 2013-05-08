@@ -2583,6 +2583,7 @@ public final class Settings {
          *
          * @hide
          */
+
         public static final String[] SPEN_ACTIONS = new String[] {
                 "spen_action_left",
                 "spen_action_right",
@@ -2807,11 +2808,36 @@ public final class Settings {
         public static final String NAVIGATION_BAR_SHOW_NOW = "navigation_bar_show_now";
 
         /**
+         * Used as a flag to determine if StatusBar hidden is checked
+         * @hide
+         */
+        public static final String HIDE_STATUSBAR = "hide_statusbar";
+
+        /**
          * Used as a flag to determine if we have statusbar hidden
          * @hide
          */
         public static final String STATUSBAR_HIDDEN = "statusbar_hidden";
-        
+
+        /**
+         * Whether Status bar should be hiidden when there are no
+         * notifications
+         * @hide
+         */
+        public static final String AUTO_HIDE_STATUSBAR = "auto_hide_statusbar";
+
+        /**
+         * Whether or not hidden Statusbar can be pulled down
+         * @hide
+         */
+        public static final String HIDDEN_STATUSBAR_PULLDOWN = "hidden_statusbar_pulldown";
+
+        /**
+         * Allows hidden Statusbar timeout to be configured
+         * @hide
+         */
+        public static final String HIDDEN_STATUSBAR_PULLDOWN_TIMEOUT = "hidden_statusbar_pulldown_timeout";
+
         /**
          * Statusbar toggle for quick settings
          * @hide
