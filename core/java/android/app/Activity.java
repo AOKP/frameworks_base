@@ -49,6 +49,7 @@ import android.os.Parcelable;
 import android.os.RemoteException;
 import android.os.StrictMode;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.text.Selection;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -78,6 +79,7 @@ import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
+import android.widget.Toast;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -2393,6 +2395,9 @@ public class Activity extends ContextThemeWrapper
         return onKeyShortcut(event.getKeyCode(), event);
     }
 
+    boolean mightBeMyGesture = false;
+    float tStatus;
+
     /**
      * Called to process touch screen events.  You can override this to
      * intercept all touch screen events before they are dispatched to the
@@ -2404,6 +2409,44 @@ public class Activity extends ContextThemeWrapper
      * @return boolean Return true if this event was consumed.
      */
     public boolean dispatchTouchEvent(MotionEvent ev) {
+            boolean mHiddenStatusbarPulldown = (Settings.System.getInt(getContentResolver(),
+                Settings.System.HIDDEN_STATUSBAR_PULLDOWN, 0) == 1);
+            int mHiddenStatusbarPulldownTimeout = (Settings.System.getInt(getContentResolver(),
+                Settings.System.HIDDEN_STATUSBAR_PULLDOWN_TIMEOUT, 5000));
+
+            switch (ev.getAction())
+            {
+                case MotionEvent.ACTION_DOWN:
+                    tStatus = ev.getY();
+                    if (tStatus < getStatusBarHeight())
+                    {
+                        mightBeMyGesture = true;
+                        return true;
+                    }
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (mightBeMyGesture && mHiddenStatusbarPulldown)
+                    {
+                        if(ev.getY() > tStatus)
+                        {
+                            getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                            mHandler.postDelayed(new Runnable() {
+                            public void run() {
+                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+                                getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                            }
+                            }, mHiddenStatusbarPulldownTimeout);
+                        }
+                        mightBeMyGesture = false;
+                        return true;
+                    }
+                    break;
+                default:
+                    mightBeMyGesture = false;
+                    break;
+              }
+              
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             onUserInteraction();
         }
@@ -2411,6 +2454,10 @@ public class Activity extends ContextThemeWrapper
             return true;
         }
         return onTouchEvent(ev);
+    }
+
+    public int getStatusBarHeight() {
+      return getResources().getDimensionPixelSize(com.android.internal.R.dimen.status_bar_height);
     }
     
     /**
