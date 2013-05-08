@@ -67,7 +67,7 @@ public class CustomToggle extends BaseToggle {
     private SettingsObserver mObserver = null;
 
     @Override
-    protected void init(Context c, int style) {
+    public void init(Context c, int style) {
         super.init(c, style);
         mObserver = new SettingsObserver(mHandler);
         mObserver.observe();
