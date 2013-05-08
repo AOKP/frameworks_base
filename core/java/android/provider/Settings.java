@@ -2811,7 +2811,19 @@ public final class Settings {
          * @hide
          */
         public static final String STATUSBAR_HIDDEN = "statusbar_hidden";
-        
+
+        /**
+         * Whether or not hidden Statusbar can be pulled down
+         * @hide
+         */
+        public static final String HIDDEN_STATUSBAR_PULLDOWN = "hidden_statusbar_pulldown";
+
+        /**
+         * Allows hidden Statusbar timeout to be configured
+         * @hide
+         */
+        public static final String HIDDEN_STATUSBAR_PULLDOWN_TIMEOUT = "hidden_statusbar_pulldown_timeout";
+
         /**
          * Statusbar toggle for quick settings
          * @hide
