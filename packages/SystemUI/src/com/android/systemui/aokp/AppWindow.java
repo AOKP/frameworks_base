@@ -76,10 +76,11 @@ public class AppWindow extends LinearLayout {
     private Button mBackGround;
     private boolean showing = false;
     private boolean animating = false;
-    private int mColor, mColumns, mTextColor, mOpacity;
+    private int mColor, mColumns, mTextColor, mOpacity, mAnimDur;
     private ArrayList<String> mApps = new ArrayList<String>();
     private Handler mHandler;
     private int APP_WINDOW = 6;
+    ArrayList<String> mHiddenApps = new ArrayList<String>();
 
 
     private static final LinearLayout.LayoutParams backgroundParams = new LinearLayout.LayoutParams(
@@ -100,6 +101,12 @@ public class AppWindow extends LinearLayout {
         mHandler = new Handler();
         mSettingsObserver = new SettingsObserver(new Handler());
         mSettingsObserver.observe();
+        mContext.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateSettings();
+            }
+        }, new IntentFilter(Intent.ACTION_PACKAGE_ADDED));
         updateSettings();
     }
 
@@ -114,11 +121,11 @@ public class AppWindow extends LinearLayout {
 
     public void showWindowView() {
         if (!showing) {
-            showing = true;
             WindowManager.LayoutParams params = getParams();
             params.gravity = Gravity.CENTER;
             params.setTitle("AppWindow");
-            if (mWindowManager != null) {
+            if (mWindowManager != null && !animating) {
+                showing = true;
                 mWindowManager.addView(mPopupView, params);
                 PlayInAnim();
             }
@@ -213,6 +220,7 @@ public class AppWindow extends LinearLayout {
         if (mWindowMain != null) {
             Animation animation = AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.fade_in);
             animation.setStartOffset(0);
+            animation.setDuration((int) (animation.getDuration() * (mAnimDur * 0.01f)));
             mWindowMain.startAnimation(animation);
             return animation;
         }
@@ -223,6 +231,7 @@ public class AppWindow extends LinearLayout {
         if (mWindowMain != null) {
             Animation animation = AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.fade_out);
             animation.setStartOffset(0);
+            animation.setDuration((int) (animation.getDuration() * (mAnimDur * 0.01f)));
             mWindowMain.startAnimation(animation);
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -269,11 +278,25 @@ public class AppWindow extends LinearLayout {
         for (int i = 0; i < apps.size(); i++) {
             mGoodName.add(NavBarHelpers.getProperSummary(mContext, apps.get(i)));
         }
+
+        // Manually add camera
+        mGoodName.add("Camera");
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        apps.add(cameraIntent.toUri(0));
+
+        for (int i = 0; i < mHiddenApps.size(); i++) {
+            int temp = mGoodName.indexOf(mHiddenApps.get(i));
+            if (temp > -1) {
+                mGoodName.remove(temp);
+                apps.remove(temp);
+            }
+        }
+
         for (int i = 0; i < mGoodName.size(); i++) {
             mTemp.add(mGoodName.get(i));
         }
         Collections.sort(mTemp, String.CASE_INSENSITIVE_ORDER);
-        for (int i = 0; i < apps.size(); i++) {
+        for (int i = 0; i < mTemp.size(); i++) {
             int j = mGoodName.indexOf(mTemp.get(i));
             mTemp.set(i, apps.get(j));
         }
@@ -294,6 +317,10 @@ public class AppWindow extends LinearLayout {
                     Settings.System.APP_WINDOW_OPACITY), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.APP_WINDOW_COLUMNS), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.APP_WINDOW_ANIMATION_DURATION), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.APP_WINDOW_HIDDEN_APPS), false, this);
         }
          @Override
         public void onChange(boolean selfChange) {
@@ -309,7 +336,11 @@ public class AppWindow extends LinearLayout {
         mColumns = Settings.System.getInt(cr,
                  Settings.System.APP_WINDOW_COLUMNS, 5);
         mOpacity = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_OPACITY, 255);
+                 Settings.System.APP_WINDOW_OPACITY, 100);
+        mAnimDur = Settings.System.getInt(cr,
+                 Settings.System.APP_WINDOW_ANIMATION_DURATION, 100);
+        mHiddenApps = Settings.System.getArrayList(cr,
+                 Settings.System.APP_WINDOW_HIDDEN_APPS);
         createWindowView();
     }
 
