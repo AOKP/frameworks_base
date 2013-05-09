@@ -1758,7 +1758,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                     Settings.System.getBoolean(cr,
                          Settings.System.RIBBON_ICON_VIBRATE[AokpRibbonHelper.QUICK_SETTINGS], true),
                     Settings.System.getBoolean(cr,
-                         Settings.System.RIBBON_ICON_COLORIZE[AokpRibbonHelper.QUICK_SETTINGS], false)));
+                         Settings.System.RIBBON_ICON_COLORIZE[AokpRibbonHelper.QUICK_SETTINGS], false), 0));
             }
             mRibbonNotif.removeAllViews();
             mRibbonNotif.addView(AokpRibbonHelper.getRibbon(mContext,
@@ -1779,7 +1779,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                 Settings.System.getBoolean(cr,
                      Settings.System.RIBBON_ICON_VIBRATE[AokpRibbonHelper.NOTIFICATIONS], true),
                 Settings.System.getBoolean(cr,
-                     Settings.System.RIBBON_ICON_COLORIZE[AokpRibbonHelper.NOTIFICATIONS], false)));
+                     Settings.System.RIBBON_ICON_COLORIZE[AokpRibbonHelper.NOTIFICATIONS], false), 0));
     }
 
     public void updateRibbon() {
