@@ -40,7 +40,7 @@ public class AokpRibbonHelper {
             0, LayoutParams.WRAP_CONTENT, 1f);
 
     public static HorizontalScrollView getRibbon(Context mContext, ArrayList<String> shortTargets, ArrayList<String> longTargets,
-            ArrayList<String> customIcons, boolean text, int color, int size, int pad, boolean vib, boolean colorize) {
+            ArrayList<String> customIcons, boolean text, int color, int size, int pad, boolean vib, boolean colorize, int dismiss) {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
@@ -54,7 +54,8 @@ public class AokpRibbonHelper {
             for (int i = 0; i < length; i++) {
                 if (!TextUtils.isEmpty(shortTargets.get(i))) {
                     RibbonTarget newTarget = null;
-                    newTarget = new RibbonTarget(mContext, shortTargets.get(i), longTargets.get(i), customIcons.get(i), text, color, size, vib, colorize);
+                    newTarget = new RibbonTarget(mContext, shortTargets.get(i), longTargets.get(i),
+                        customIcons.get(i), text, color, size, vib, colorize, dismiss);
                     if (newTarget != null) {
                         if (i < length -1) {
                             newTarget.setPadding(padding, top);
@@ -75,7 +76,7 @@ public class AokpRibbonHelper {
     }
 
     public static ScrollView getVerticalRibbon(Context mContext, ArrayList<String> shortTargets, ArrayList<String> longTargets,
-            ArrayList<String> customIcons, boolean text, int color, int size, int pad, boolean vib, boolean colorize) {
+            ArrayList<String> customIcons, boolean text, int color, int size, int pad, boolean vib, boolean colorize, int dismiss) {
         DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
@@ -89,7 +90,8 @@ public class AokpRibbonHelper {
             for (int i = 0; i < length; i++) {
                 if (!TextUtils.isEmpty(shortTargets.get(i))) {
                     RibbonTarget newTarget = null;
-                    newTarget = new RibbonTarget(mContext, shortTargets.get(i), longTargets.get(i), customIcons.get(i), text, color, size, vib, colorize);
+                    newTarget = new RibbonTarget(mContext, shortTargets.get(i), longTargets.get(i),
+                        customIcons.get(i), text, color, size, vib, colorize, dismiss);
                     if (newTarget != null) {
                         if (i < length -1) {
                             newTarget.setVerticalPadding(padding, sides);
@@ -117,7 +119,7 @@ public class AokpRibbonHelper {
         for (int i = 0; i < length; i++) {
             if (!TextUtils.isEmpty(apps.get(i))) {
                 RibbonTarget newApp = null;
-                newApp = new RibbonTarget(mContext, apps.get(i), "**null**", "**null**", true, color, 0, true, false);
+                newApp = new RibbonTarget(mContext, apps.get(i), "**null**", "**null**", true, color, 0, true, false, 0);
                 if (newApp != null) {
                     targets.add(newApp);
                 }

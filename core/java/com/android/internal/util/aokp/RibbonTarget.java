@@ -78,6 +78,7 @@ public class RibbonTarget {
     private Intent u;
     private Intent b;
     private Intent a;
+    private boolean mDismiss;
 
 
     /*
@@ -88,10 +89,11 @@ public class RibbonTarget {
      * color = text color
      * touchVib = vibrate on touch
      * size = size used to resize icons 0 is default and will not resize the icons at all.
+     * dismiss = weither or not to dismiss a swipe ribbon, 0 == never, 1 == always, 2 == dont dismiss navbar actions
      */
 
     public RibbonTarget(Context context, final String sClick, final String lClick,
-            final String cIcon, final boolean text, final int color, final int size, final boolean touchVib, final boolean colorize) {
+            final String cIcon, final boolean text, final int color, final int size, final boolean touchVib, final boolean colorize, final int dismiss) {
         mContext = context;
         u = new Intent();
         u.setAction("com.android.lockscreen.ACTION_UNLOCK_RECEIVER");
@@ -103,6 +105,7 @@ public class RibbonTarget {
 	    DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
+        mDismiss = ((dismiss == 1) || ((dismiss == 2) && (sClick.equals("**null**") ? !lClick.startsWith("**") : !sClick.startsWith("**"))));
         vib = (Vibrator) mContext.getSystemService(mContext.VIBRATOR_SERVICE);
         mView = View.inflate(mContext, R.layout.target_button, null);
         mContainer = (LinearLayout) mView.findViewById(R.id.container);
@@ -243,7 +246,9 @@ public class RibbonTarget {
         i.setAction("com.android.systemui.aokp.LAUNCH_ACTION");
         i.putExtra("action", action);
         mContext.sendBroadcastAsUser(i, UserHandle.ALL);
-        mContext.sendBroadcastAsUser(b, UserHandle.ALL);
+        if (mDismiss) {
+            mContext.sendBroadcastAsUser(b, UserHandle.ALL);
+        }
     }
 
     private boolean shouldUnlock(String action) {
