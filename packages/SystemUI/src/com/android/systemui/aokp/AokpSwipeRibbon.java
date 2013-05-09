@@ -82,6 +82,7 @@ public class AokpSwipeRibbon extends LinearLayout {
     private Context mContext;
     private RibbonGestureCatcherView mGesturePanel;
     public FrameLayout mPopupView;
+    public FrameLayout mContainerFrame;
     public WindowManager mWindowManager;
     private SettingsObserver mSettingsObserver;
     private LinearLayout mRibbon;
@@ -93,7 +94,8 @@ public class AokpSwipeRibbon extends LinearLayout {
     private int mHideTimeOut = 5000;
     private boolean showing = false;
     private boolean animating = false;
-    private int mRibbonNumber, mLocationNumber, mSize, mColor, mTextColor, mOpacity, animationIn, animationOut, animTogglesOut, mIconLoc, mPad;
+    private int mRibbonNumber, mLocationNumber, mSize, mColor, mTextColor, mOpacity, animationIn,
+        animationOut, animTogglesOut, mIconLoc, mPad, mAnimDur, mDismiss;
     private ArrayList<String> shortTargets = new ArrayList<String>();
     private ArrayList<String> longTargets = new ArrayList<String>();
     private ArrayList<String> customIcons = new ArrayList<String>();
@@ -247,6 +249,8 @@ public class AokpSwipeRibbon extends LinearLayout {
         }
         mPopupView = new FrameLayout(mContext);
         mPopupView.removeAllViews();
+        mContainerFrame = new FrameLayout(mContext);
+        mContainerFrame.removeAllViews();
         if (mNavBarShowing) {
             int adjustment = mContext.getResources().getDimensionPixelSize(
                         com.android.internal.R.dimen.status_bar_height);
@@ -274,8 +278,11 @@ public class AokpSwipeRibbon extends LinearLayout {
         }
         mRibbon = (LinearLayout) ribbonView.findViewById(R.id.ribbon);
         setupRibbon();
-        mPopupView.addView(mBackGround, backgroundParams);
-        mPopupView.addView(ribbonView);
+        maybeToggleOnly();
+        mContainerFrame.addView(mBackGround, backgroundParams);
+        mContainerFrame.addView(ribbonView);
+        mContainerFrame.setDrawingCacheEnabled(true);
+        mPopupView.addView(mContainerFrame, backgroundParams);
         mPopupView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -302,12 +309,23 @@ public class AokpSwipeRibbon extends LinearLayout {
         return false;
     }
 
+    private boolean maybeToggleOnly() {
+        if (shortTargets.size() < 1 && longTargets.size() < 1  && toggles.size() > 0) {
+            mTogglesButton.setVisibility(View.GONE);
+            mTogglesText.setVisibility(View.GONE);
+            mRibbon.removeView(mRibbonSV);
+            mRibbon.addView(mTogglesSV);
+            return true;
+        }
+        return false;
+    }
+
     public Animation PlayInAnim() {
         if (mRibbon != null) {
             Animation animation = AnimationUtils.loadAnimation(mContext, animationIn);
             animation.setStartOffset(0);
-            mBackGround.startAnimation(animation);
-            mRibbonMain.startAnimation(animation);
+            animation.setDuration((int) (animation.getDuration() * (mAnimDur * 0.01f)));
+            mContainerFrame.startAnimation(animation);
             return animation;
         }
         return null;
@@ -317,8 +335,8 @@ public class AokpSwipeRibbon extends LinearLayout {
         if (mRibbon != null) {
             Animation animation = AnimationUtils.loadAnimation(mContext, animationOut);
             animation.setStartOffset(0);
-            mBackGround.startAnimation(animation);
-            mRibbonMain.startAnimation(animation);
+            animation.setDuration((int) (animation.getDuration() * (mAnimDur * 0.01f)));
+            mContainerFrame.startAnimation(animation);
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -345,7 +363,8 @@ public class AokpSwipeRibbon extends LinearLayout {
         if (mLocation.equals("bottom")) {
             HorizontalScrollView hsv = new HorizontalScrollView(mContext);
             hsv = AokpRibbonHelper.getRibbon(mContext,
-                shortTargets, longTargets, customIcons, mText, mTextColor, mSize, mPad, mVib, mColorize);
+                shortTargets, longTargets, customIcons,
+                mText, mTextColor, mSize, mPad, mVib, mColorize, mDismiss);
             hsv.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -360,7 +379,8 @@ public class AokpSwipeRibbon extends LinearLayout {
         } else {
             mRibbonSV = new ScrollView(mContext);
             mRibbonSV = AokpRibbonHelper.getVerticalRibbon(mContext,
-                shortTargets, longTargets, customIcons, mText, mTextColor, mSize, mPad, mVib, mColorize);
+                shortTargets, longTargets, customIcons, mText, mTextColor,
+                mSize, mPad, mVib, mColorize, mDismiss);
             mRibbonSV.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
@@ -430,6 +450,7 @@ public class AokpSwipeRibbon extends LinearLayout {
             toggleMap.put(REBOOT_TOGGLE, RebootToggle.class);
             toggleMap.put(CUSTOM_TOGGLE, CustomToggle.class);
             toggleMap.put(STAYAWAKE_TOGGLE, StayAwakeToggle.class);
+            toggleMap.put(WIRELESS_ADB_TOGGLE, WirelessAdbToggle.class);
             // toggleMap.put(BT_TETHER_TOGGLE, null);
         }
         return toggleMap;
@@ -581,12 +602,12 @@ public class AokpSwipeRibbon extends LinearLayout {
             final Animation inAnimation = AnimationUtils.loadAnimation(mContext, animationIn);
             final Animation inIcon = AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.fade_in);
             final Animation outIcon = AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.fade_out);
-            inIcon.setDuration(250);
+            inIcon.setDuration((int) (250 * (mAnimDur * 0.01f)));
             inIcon.setStartOffset(0);
             outIcon.setStartOffset(0);
-            outIcon.setDuration(250);
+            outIcon.setDuration((int) (250 * (mAnimDur * 0.01f)));
             outAnimation.setStartOffset(0);
-            outAnimation.setDuration(250);
+            outAnimation.setDuration((int) (250 * (mAnimDur * 0.01f)));
             outAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -611,7 +632,7 @@ public class AokpSwipeRibbon extends LinearLayout {
                 }
             });
             inAnimation.setStartOffset(0);
-            inAnimation.setDuration(250);
+            inAnimation.setDuration((int) (250 * (mAnimDur * 0.01f)));
             inAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
@@ -658,7 +679,7 @@ public class AokpSwipeRibbon extends LinearLayout {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAV_HIDE_ENABLE), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.RIBBON_DRAG_HANDLE_LOCATION), false, this);
+                    Settings.System.RIBBON_DRAG_HANDLE_LOCATION[mLocationNumber]), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.RIBBON_TEXT_COLOR[mRibbonNumber]), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -682,9 +703,12 @@ public class AokpSwipeRibbon extends LinearLayout {
                     Settings.System.SWIPE_RIBBON_OPACITY[mLocationNumber]), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.SWIPE_RIBBON_COLOR[mLocationNumber]), false, this);
-
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.SWIPE_RIBBON_TOGGLES[mLocationNumber]), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.RIBBON_DISMISS[mLocationNumber]), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.RIBBON_ANIMATION_DURATION[mLocationNumber]), false, this);
 
             if (mLocationNumber < 2) {
                 resolver.registerContentObserver(Settings.System.getUriFor(
@@ -717,7 +741,10 @@ public class AokpSwipeRibbon extends LinearLayout {
                  Settings.System.RIBBON_ICON_VIBRATE[mRibbonNumber], true);
         mColorize = Settings.System.getBoolean(cr,
                  Settings.System.RIBBON_ICON_COLORIZE[mRibbonNumber], false);
-
+        mAnimDur = Settings.System.getInt(cr,
+                 Settings.System.RIBBON_ANIMATION_DURATION[mLocationNumber], 100);
+        mDismiss = Settings.System.getInt(cr,
+                 Settings.System.RIBBON_DISMISS[mLocationNumber], 1);
         mHideTimeOut = Settings.System.getInt(cr,
                  Settings.System.RIBBON_HIDE_TIMEOUT[mLocationNumber], mHideTimeOut);
         mColor = Settings.System.getInt(cr,
