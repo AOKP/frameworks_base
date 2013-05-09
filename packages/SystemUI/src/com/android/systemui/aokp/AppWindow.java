@@ -76,7 +76,7 @@ public class AppWindow extends LinearLayout {
     private Button mBackGround;
     private boolean showing = false;
     private boolean animating = false;
-    private int mColor, mColumns, mTextColor, mOpacity;
+    private int mColor, mColumns, mTextColor, mOpacity, mAnimDur;
     private ArrayList<String> mApps = new ArrayList<String>();
     private Handler mHandler;
     private int APP_WINDOW = 6;
@@ -100,6 +100,12 @@ public class AppWindow extends LinearLayout {
         mHandler = new Handler();
         mSettingsObserver = new SettingsObserver(new Handler());
         mSettingsObserver.observe();
+        mContext.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateSettings();
+            }
+        }, new IntentFilter(Intent.ACTION_PACKAGE_ADDED));
         updateSettings();
     }
 
@@ -118,7 +124,7 @@ public class AppWindow extends LinearLayout {
             WindowManager.LayoutParams params = getParams();
             params.gravity = Gravity.CENTER;
             params.setTitle("AppWindow");
-            if (mWindowManager != null) {
+            if (mWindowManager != null && !animating) {
                 mWindowManager.addView(mPopupView, params);
                 PlayInAnim();
             }
@@ -213,6 +219,7 @@ public class AppWindow extends LinearLayout {
         if (mWindowMain != null) {
             Animation animation = AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.fade_in);
             animation.setStartOffset(0);
+            animation.setDuration((int) (animation.getDuration() * (mAnimDur * 0.01f)));
             mWindowMain.startAnimation(animation);
             return animation;
         }
@@ -223,6 +230,7 @@ public class AppWindow extends LinearLayout {
         if (mWindowMain != null) {
             Animation animation = AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.fade_out);
             animation.setStartOffset(0);
+            animation.setDuration((int) (animation.getDuration() * (mAnimDur * 0.01f)));
             mWindowMain.startAnimation(animation);
             animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
@@ -294,6 +302,8 @@ public class AppWindow extends LinearLayout {
                     Settings.System.APP_WINDOW_OPACITY), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.APP_WINDOW_COLUMNS), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.APP_WINDOW_ANIMATION_DURATION), false, this);
         }
          @Override
         public void onChange(boolean selfChange) {
@@ -309,7 +319,9 @@ public class AppWindow extends LinearLayout {
         mColumns = Settings.System.getInt(cr,
                  Settings.System.APP_WINDOW_COLUMNS, 5);
         mOpacity = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_OPACITY, 255);
+                 Settings.System.APP_WINDOW_OPACITY, 100);
+        mAnimDur = Settings.System.getInt(cr,
+                 Settings.System.APP_WINDOW_ANIMATION_DURATION, 100);
         createWindowView();
     }
 
