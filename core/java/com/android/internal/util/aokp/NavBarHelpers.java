@@ -101,6 +101,7 @@ public class NavBarHelpers {
         if (TextUtils.isEmpty(uri)) {
             uri = AwesomeConstants.AwesomeConstant.ACTION_NULL.value();
         }
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         if (uri.startsWith("**")) {
             return AwesomeConstants.getProperName(mContext, uri);
         } else {  // This must be an app 
@@ -108,6 +109,8 @@ public class NavBarHelpers {
                 Intent intent = Intent.parseUri(uri, 0);
                 if (Intent.ACTION_MAIN.equals(intent.getAction())) {
                     return getFriendlyActivityName(mContext, intent);
+                } else if (intent.filterEquals(cameraIntent)) {
+                    return AwesomeConstants.getProperName(mContext, "**camera**");
                 }
                 return getFriendlyShortcutName(mContext, intent);
             } catch (URISyntaxException e) {
