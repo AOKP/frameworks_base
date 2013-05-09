@@ -1927,6 +1927,13 @@
   <java-symbol type="string" name="action_widgets"/>
   <java-symbol type="string" name="action_app_window"/>
 
+  <!--  Animations -->
+  <java-symbol type="string" name="animation_fade"/>
+  <java-symbol type="string" name="animation_slide_left"/>
+  <java-symbol type="string" name="animation_slide_right"/>
+  <java-symbol type="string" name="animation_slide_up"/>
+  <java-symbol type="string" name="animation_default"/>
+
   <!--  AOKP Ribbon -->
   <java-symbol type="layout" name="target_button" />
   <java-symbol type="id" name="ribbon" />
