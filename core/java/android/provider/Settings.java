@@ -3308,7 +3308,61 @@ public final class Settings {
          *
          * @hide
          */
-        public static final String RIBBON_DRAG_HANDLE_WEIGHT = "ribbon_drag_handle_weight";
+        public static final String[] RIBBON_LONG_PRESS = new String[] {
+            "ribbon_long_press_left",
+            "ribbon_long_press_right",
+            "ribbon_long_press_bottom",
+        };
+
+        /**
+         *
+         * @hide
+         */
+        public static final String[] RIBBON_LONG_SWIPE = new String[] {
+            "ribbon_long_swipe_left",
+            "ribbon_long_swipe_right",
+            "ribbon_long_swipe_bottom",
+        };
+
+        /**
+         *
+         * @hide
+         */
+        public static final String[] RIBBON_ANIMATION_DURATION = new String[] {
+            "ribbon_animation_duration_left",
+            "ribbon_animation_duration_right",
+            "ribbon_animation_duration_bottom",
+        };
+
+        /**
+         * Ribbon Targets
+         *
+         * @hide
+         */
+        public static final String[] RIBBON_DISMISS = new String[] {
+            "ribbon_left_dismiss",
+            "ribbon_right_dismiss",
+            "ribbon_bottom_dismiss",
+
+        };
+
+        /**
+         *
+         * @hide
+         */
+        public static final String APP_WINDOW_ANIMATION_DURATION = "app_window_animation_duration";
+
+        /**
+         * Ribbon Targets
+         *
+         * @hide
+         */
+        public static final String[] RIBBON_DRAG_HANDLE_WEIGHT = new String[] {
+            "ribbon_drag_handle_weight_left",
+            "ribbon_drag_handle_weight_right",
+            "ribbon_drag_handle_weight_bottom",
+
+        };
 
         /**
          *
@@ -3335,10 +3389,16 @@ public final class Settings {
         public static final String APP_WINDOW_OPACITY = "app_window_opacity";
 
         /**
+         * Ribbon Targets
          *
          * @hide
          */
-        public static final String RIBBON_DRAG_HANDLE_LOCATION = "ribbon_drag_handle_location";
+        public static final String[] RIBBON_DRAG_HANDLE_LOCATION = new String[] {
+            "ribbon_drag_handle_location_left",
+            "ribbon_drag_handle_location_right",
+            "ribbon_drag_handle_location_bottom",
+
+        };
 
         /**
          *
@@ -3350,22 +3410,40 @@ public final class Settings {
         };
 
         /**
+         * Ribbon Targets
          *
          * @hide
          */
-        public static final String SWIPE_RIBBON_VIBRATE = "swipe_ribbon_vibrate";
+        public static final String[] SWIPE_RIBBON_VIBRATE = new String[] {
+            "swipe_ribbon_vibrate_left",
+            "swipe_ribbon_vibrate_right",
+            "swipe_ribbon_vibrate_bottom",
+
+        };
 
         /**
+         * Ribbon Targets
          *
          * @hide
          */
-        public static final String RIBBON_DRAG_HANDLE_HEIGHT = "ribbon_drag_handle_height";
+        public static final String[] RIBBON_DRAG_HANDLE_HEIGHT = new String[] {
+            "ribbon_drag_handle_height_left",
+            "ribbon_drag_handle_height_right",
+            "ribbon_drag_handle_height_bottom",
+
+        };
 
         /**
+         * Ribbon Targets
          *
          * @hide
          */
-        public static final String RIBBON_DRAG_HANDLE_OPACITY = "ribbon_drag_handle_opacity";
+        public static final String[] RIBBON_DRAG_HANDLE_OPACITY = new String[] {
+            "ribbon_drag_handle_opacity_left",
+            "ribbon_drag_handle_opacity_right",
+            "ribbon_drag_handle_opacity_bottom",
+
+        };
 
         /**
          * enabled and order of quick toggles
