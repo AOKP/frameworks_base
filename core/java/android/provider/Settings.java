@@ -3308,6 +3308,26 @@ public final class Settings {
          *
          * @hide
          */
+        public static final String[] RIBBON_LONG_PRESS = new String[] {
+            "ribbon_long_press_left",
+            "ribbon_long_press_right",
+            "ribbon_long_press_bottom",
+        };
+
+        /**
+         *
+         * @hide
+         */
+        public static final String[] RIBBON_LONG_SWIPE = new String[] {
+            "ribbon_long_swipe_left",
+            "ribbon_long_swipe_right",
+            "ribbon_long_swipe_bottom",
+        };
+
+        /**
+         *
+         * @hide
+         */
         public static final String RIBBON_DRAG_HANDLE_WEIGHT = "ribbon_drag_handle_weight";
 
         /**

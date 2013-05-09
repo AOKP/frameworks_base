@@ -113,15 +113,19 @@ public class AppWindow extends LinearLayout {
     }
 
     public void showWindowView() {
-        if (!showing) {
-            showing = true;
-            WindowManager.LayoutParams params = getParams();
-            params.gravity = Gravity.CENTER;
-            params.setTitle("AppWindow");
-            if (mWindowManager != null) {
-                mWindowManager.addView(mPopupView, params);
-                PlayInAnim();
+        try {
+            if (!showing) {
+                showing = true;
+                WindowManager.LayoutParams params = getParams();
+                params.gravity = Gravity.CENTER;
+                params.setTitle("AppWindow");
+                if (mWindowManager != null) {
+                    mWindowManager.addView(mPopupView, params);
+                    PlayInAnim();
+                }
             }
+        } catch (IllegalArgumentException e) {
+                // For the one guy pressing open and close as fast as he can to make this thing crash
         }
     }
 
