@@ -21,6 +21,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.TimeInterpolator;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
 import android.app.Notification;
@@ -68,6 +69,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewStub;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManager.BadTokenException;
 import android.view.animation.AccelerateInterpolator;
@@ -158,6 +160,8 @@ public class PhoneStatusBar extends BaseStatusBar {
 
     private float mFlingGestureMaxOutputVelocityPx; // how fast can it really go? (should be a little 
                                                     // faster than mSelfCollapseVelocityPx)
+
+    private Window mWindow;
 
     PhoneStatusBarPolicy mIconPolicy;
 
@@ -2481,6 +2485,7 @@ public class PhoneStatusBar extends BaseStatusBar {
             public void run() {
                     doubleClickCounter = 0;
                     animateCollapsePanels();
+                    dismissKeyguard();
                     AwesomeAction.launchAction(mContext, mClockActions[shortClick]);
             }
         };
@@ -2498,6 +2503,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                     mHandler.removeCallbacks(DelayShortPress);
                     vibrate();
                     animateCollapsePanels();
+                    dismissKeyguard();
                     AwesomeAction.launchAction(mContext, mClockActions[doubleClick]);
                     mHandler.postDelayed(ResetDoubleClickCounter, 50);
                 } else {
@@ -2508,6 +2514,7 @@ public class PhoneStatusBar extends BaseStatusBar {
             } else {
                 vibrate();
                 animateCollapsePanels();
+                dismissKeyguard();
                 AwesomeAction.launchAction(mContext, mClockActions[shortClick]);
             }
 
@@ -2518,6 +2525,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         @Override
         public boolean onLongClick(View v) {
             animateCollapsePanels();
+            dismissKeyguard();
             AwesomeAction.launchAction(mContext, mClockActions[longClick]);
             return true;
         }
@@ -2528,6 +2536,10 @@ public class PhoneStatusBar extends BaseStatusBar {
             animateExpandNotificationsPanel();
         }
     };
+
+    private void dismissKeyguard() {
+        mWindow.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD);
+    }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
