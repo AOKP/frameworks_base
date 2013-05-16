@@ -2456,11 +2456,7 @@ public class PhoneStatusBar extends BaseStatusBar {
 
     public void startActivityDismissingKeyguard(Intent intent, boolean onlyProvisioned) {
         if (onlyProvisioned && !isDeviceProvisioned()) return;
-        try {
-            // Dismiss the lock screen when Settings starts.
-            ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
-        } catch (RemoteException e) {
-        }
+        dismissKeyguard();
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         mContext.startActivityAsUser(intent, new UserHandle(UserHandle.USER_CURRENT));
         animateCollapsePanels();
@@ -2482,6 +2478,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                     doubleClickCounter = 0;
                     animateCollapsePanels();
                     AwesomeAction.launchAction(mContext, mClockActions[shortClick]);
+                    dismissKeyguard();
             }
         };
 
@@ -2499,6 +2496,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                     vibrate();
                     animateCollapsePanels();
                     AwesomeAction.launchAction(mContext, mClockActions[doubleClick]);
+                    dismissKeyguard();
                     mHandler.postDelayed(ResetDoubleClickCounter, 50);
                 } else {
                     doubleClickCounter = doubleClickCounter + 1;
@@ -2509,6 +2507,7 @@ public class PhoneStatusBar extends BaseStatusBar {
                 vibrate();
                 animateCollapsePanels();
                 AwesomeAction.launchAction(mContext, mClockActions[shortClick]);
+                dismissKeyguard();
             }
 
         }
@@ -2519,6 +2518,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         public boolean onLongClick(View v) {
             animateCollapsePanels();
             AwesomeAction.launchAction(mContext, mClockActions[longClick]);
+            dismissKeyguard();
             return true;
         }
     };
@@ -2528,6 +2528,15 @@ public class PhoneStatusBar extends BaseStatusBar {
             animateExpandNotificationsPanel();
         }
     };
+
+    private void dismissKeyguard() {
+        if (!mLockscreenOn) {
+            try {
+                ActivityManagerNative.getDefault().dismissKeyguardOnNextActivity();
+            } catch (RemoteException e) {
+            }
+        }
+    }
 
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
