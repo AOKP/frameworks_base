@@ -96,58 +96,57 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private void launchAction(String action) {
         AwesomeConstant AwesomeEnum = fromString(action);
         switch (AwesomeEnum) {
-        case ACTION_UNLOCK:
-            mCallback.userActivity(0);
-            mCallback.dismiss(false);
-            break;
-        case ACTION_ASSIST:
-            mCallback.userActivity(0);
-            mCallback.dismiss(false);
-            Intent assistIntent =
-                ((SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE))
-                .getAssistIntent(mContext, UserHandle.USER_CURRENT);
+            case ACTION_UNLOCK:
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+                break;
+            case ACTION_ASSIST:
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+                Intent assistIntent =
+                        ((SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE))
+                        .getAssistIntent(mContext, UserHandle.USER_CURRENT);
                 if (assistIntent != null) {
                     mActivityLauncher.launchActivity(assistIntent, false, true, null, null);
                 } else {
                     Log.w(TAG, "Failed to get intent for assist activity");
                 }
                 break;
-        case ACTION_CAMERA:
-            mCallback.userActivity(0);
-            mCallback.dismiss(false);
-            mActivityLauncher.launchCamera(null, null);
-            break;
-        case ACTION_APP:
-            mCallback.userActivity(0);
-            mCallback.dismiss(false);
-            Intent i = new Intent();
-            i.setAction("com.android.systemui.aokp.LAUNCH_ACTION");
-            i.putExtra("action", action);
-            mContext.sendBroadcastAsUser(i, UserHandle.ALL);
-            break;
+            case ACTION_CAMERA:
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+                mActivityLauncher.launchCamera(null, null);
+                break;
+            case ACTION_APP:
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+                Intent i = new Intent();
+                i.setAction("com.android.systemui.aokp.LAUNCH_ACTION");
+                i.putExtra("action", action);
+                mContext.sendBroadcastAsUser(i, UserHandle.ALL);
+                break;
+            }
         }
-    }
 
     OnTriggerListener mOnTriggerListener = new OnTriggerListener() {
 
        final Runnable SetLongPress = new Runnable () {
             public void run() {
-                if (!mGlowPadLock) {
-                    mGlowPadLock = true;
-                    mLongPress = true;
-                    mContext.unregisterReceiver(receiver);
-                    launchAction(longActivities[mTarget]);
-                 }
+                mLongPress = true;
+                mContext.unregisterReceiver(receiver);
+                launchAction(longActivities[mTarget]);
             }
         };
 
         public void onTrigger(View v, int target) {
             mContext.unregisterReceiver(receiver);
+            
             if ((!mUsesCustomTargets) || (mTargetCounter() == 0 && mUnlockCounter() < 2)) {
                 mCallback.userActivity(0);
                 mCallback.dismiss(false);
             } else {
-                if (!mLongPress) {
+                if (!mGlowPadLock && !mLongPress) {
+                    mGlowPadLock = true;
                     mHandler.removeCallbacks(SetLongPress);
                     launchAction(targetActivities[target]);
                 }
@@ -175,7 +174,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
                 mHandler.removeCallbacks(SetLongPress);
                 mLongPress = false;
             } else {
-                if (mBoolLongPress && !TextUtils.isEmpty(longActivities[target]) && !longActivities[target].equals(AwesomeConstant.ACTION_NULL.value())) {
+                if (mBoolLongPress && !TextUtils.isEmpty(longActivities[target]) && !longActivities[target].equals(AwesomeConstant.ACTION_NULL.value()) && !mGlowPadLock) {
+                    mGlowPadLock = true;
                     mTarget = target;
                     mHandler.postDelayed(SetLongPress, ViewConfiguration.getLongPressTimeout());
                 }
