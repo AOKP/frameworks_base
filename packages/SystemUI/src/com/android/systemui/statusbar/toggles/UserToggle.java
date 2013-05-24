@@ -63,10 +63,8 @@ public class UserToggle extends BaseToggle {
                 log("Couldn't show user switcher", e);
             }
         } else {
-            Intent intent = ContactsContract.QuickContact.composeQuickContactsIntent(
-                    mContext, v, ContactsContract.Profile.CONTENT_URI,
-                    ContactsContract.QuickContact.MODE_LARGE, null);
-            mContext.startActivityAsUser(intent, new UserHandle(UserHandle.USER_CURRENT));
+            Intent intent = new Intent(Intent.ACTION_VIEW, ContactsContract.Profile.CONTENT_URI);
+                startSettingsActivity(intent);
         }
     }
 
