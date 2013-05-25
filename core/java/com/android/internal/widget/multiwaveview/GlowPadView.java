@@ -24,6 +24,7 @@ import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
@@ -138,7 +139,12 @@ public class GlowPadView extends View {
     private int mMaxTargetWidth;
     private float mRingScaleFactor = 1f;
     private boolean mAllowScaling;
+    private long downTime;
+    private long finalTime;
 
+    private float downX;
+    private float downY;
+    private float distance;
     private float mOuterRadius = 0.0f;
     private float mSnapMargin = 0.0f;
     private float mFirstItemOffset = 0.0f;
@@ -501,8 +507,17 @@ public class GlowPadView extends View {
             hideTargets(false, false);
         } else {
             // Animate handle back to the center based on current state.
+            boolean mGlowTorch = Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.CUSTOM_TOGGLE_REVERT, false);
             hideGlow(HIDE_ANIMATION_DURATION, 0, 0.0f, mResetListenerWithPing);
             hideTargets(true, false);
+            if (downTime > 0 && finalTime > 1000 && distance < 10 && mGlowTorch) {
+                Intent intentTorch = new Intent("android.intent.action.MAIN");
+                intentTorch.setComponent(ComponentName.unflattenFromString("com.aokp.Torch/.TorchActivity"));
+                intentTorch.addCategory("android.intent.category.LAUNCHER");
+                intentTorch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                mContext.startActivity(intentTorch);
+            }
         }
 
         setGrabbedState(OnTriggerListener.NO_HANDLE);
@@ -825,9 +840,12 @@ public class GlowPadView extends View {
             case MotionEvent.ACTION_POINTER_DOWN:
             case MotionEvent.ACTION_DOWN:
                 if (DEBUG) Log.v(TAG, "*** DOWN ***");
+                downX = event.getX();
+                downY = event.getY();
                 handleDown(event);
                 handleMove(event);
                 handled = true;
+                downTime = event.getEventTime();
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -842,6 +860,8 @@ public class GlowPadView extends View {
                 handleMove(event);
                 handleUp(event);
                 handled = true;
+                distance = findDistance(downX, downY, event);
+                finalTime = event.getEventTime() - downTime;
                 break;
 
             case MotionEvent.ACTION_CANCEL:
@@ -854,6 +874,14 @@ public class GlowPadView extends View {
         }
         invalidate();
         return handled ? true : super.onTouchEvent(event);
+    }
+
+    private float findDistance(float downX, float downY, MotionEvent event) {
+        float distance = 0;
+        float upX = (event.getX()-downX);
+        float upY = (event.getY()-downY);
+        distance += Math.sqrt(upX*upX+upY*upY);
+        return distance;        
     }
 
     private void updateGlowPosition(float x, float y) {
