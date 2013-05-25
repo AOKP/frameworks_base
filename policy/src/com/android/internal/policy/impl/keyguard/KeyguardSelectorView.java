@@ -54,6 +54,8 @@ import com.android.internal.widget.multiwaveview.GlowPadView.OnTriggerListener;
 import com.android.internal.widget.multiwaveview.TargetDrawable;
 import com.android.internal.R;
 
+import com.android.systemui.aokp.AwesomeAction;
+
 import java.util.ArrayList;
 
 public class KeyguardSelectorView extends LinearLayout implements KeyguardSecurityView {
@@ -72,6 +74,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private Drawable mBouncerFrame;
     private Resources res;
 
+    private boolean mGlowTorch;
+    private boolean mTorchActive;
     private boolean mGlowPadLock;
     private boolean mBoolLongPress;
     private int mTarget;
@@ -146,6 +150,9 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         };
 
         public void onTrigger(View v, int target) {
+            mGlowTorch = Settings.System.getBoolean(mContext.getContentResolver(),
+                Settings.System.CUSTOM_TOGGLE_REVERT, false);
+
             if (mReceiverRegistered) {
                 mContext.unregisterReceiver(receiver);
                 mReceiverRegistered = false;
@@ -159,11 +166,19 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
                     launchAction(targetActivities[target]);
                 }
             }
+            if (mGlowTorch) {
+                mHandler.postDelayed(startTorch, 1500);
+            }
         }
 
         public void onReleased(View v, int handle) {
             if (!mIsBouncing) {
                 doTransition(mFadeView, 1.0f);
+            }
+            if (mGlowTorch && mTorchActive) {
+                mHandler.removeCallbacks(startTorch);
+                mTorchActive = false;
+                AwesomeAction.launchAction(mContext, AwesomeConstant.ACTION_TORCH.value());
             }
         }
 
@@ -293,6 +308,13 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     public boolean isScreenPortrait() {
         return res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
+
+    final Runnable startTorch = new Runnable () {
+        public void run() {
+            AwesomeAction.launchAction(mContext, AwesomeConstant.ACTION_TORCH.value());
+            mTorchActive = true;
+        }
+    };
 
     private void updateTargets() {
         mLongPress = false;
