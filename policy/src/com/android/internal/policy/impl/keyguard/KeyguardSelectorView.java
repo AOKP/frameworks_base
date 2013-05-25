@@ -54,11 +54,15 @@ import com.android.internal.widget.multiwaveview.GlowPadView.OnTriggerListener;
 import com.android.internal.widget.multiwaveview.TargetDrawable;
 import com.android.internal.R;
 
+import com.android.systemui.aokp.AwesomeAction;
+
 import java.util.ArrayList;
 
 public class KeyguardSelectorView extends LinearLayout implements KeyguardSecurityView {
     private static final boolean DEBUG = KeyguardHostView.DEBUG;
     private static final String TAG = "SecuritySelectorView";
+
+    private final int TORCH_TIMEOUT = 2 * ViewConfiguration.getLongPressTimeout();
 
     private KeyguardSecurityCallback mCallback;
     private GlowPadView mGlowPadView;
@@ -72,6 +76,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private Drawable mBouncerFrame;
     private Resources res;
 
+    private boolean mGlowTorch;
+    private boolean mTorchActive;
     private boolean mGlowPadLock;
     private boolean mBoolLongPress;
     private int mTarget;
@@ -93,6 +99,10 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         }
     }
     private H mHandler = new H();
+
+    private SettingsObserver mObserver = null;
+    mObserver = new SettingsObserver(mHandler);
+    mObserver.observe();
 
     private void launchAction(String action) {
         AwesomeConstant AwesomeEnum = fromString(action);
@@ -159,11 +169,19 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
                     launchAction(targetActivities[target]);
                 }
             }
+            if (mGlowTorch) {
+                mHandler.postDelayed(startTorch, TORCH_TIMEOUT);
+            }
         }
 
         public void onReleased(View v, int handle) {
             if (!mIsBouncing) {
                 doTransition(mFadeView, 1.0f);
+            }
+            if (mGlowTorch && mTorchActive) {
+                mHandler.removeCallbacks(startTorch);
+                mTorchActive = false;
+                AwesomeAction.launchAction(mContext, AwesomeConstant.ACTION_TORCH.value());
             }
         }
 
@@ -293,6 +311,13 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     public boolean isScreenPortrait() {
         return res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
+
+    final Runnable startTorch = new Runnable () {
+        public void run() {
+            AwesomeAction.launchAction(mContext, AwesomeConstant.ACTION_TORCH.value());
+            mTorchActive = true;
+        }
+    };
 
     private void updateTargets() {
         mLongPress = false;
@@ -488,6 +513,34 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
                 mContext.unregisterReceiver(receiver);
                 mReceiverRegistered = false;
             }
+        }
+    }
+
+    private void updateSettings() {
+        ContentResolver resolver = mContext.getContentResolver();
+
+        mGlowTorch = Settings.System.getBoolean(resolver,
+                Settings.System.LOCKSCREEN_GLOW_TORCH, false);
+    }
+
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+
+            resolver.registerContentObserver(Settings.System
+                    .getUriFor(Settings.System.LOCKSCREEN_GLOW_TORCH),
+                    false, this);
+            }
+            updateSettings();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
         }
     }
 }
