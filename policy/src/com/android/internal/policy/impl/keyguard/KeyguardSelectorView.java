@@ -139,15 +139,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
        final Runnable SetLongPress = new Runnable () {
             public void run() {
-                if (!mGlowPadLock) {
-                    mGlowPadLock = true;
-                    mLongPress = true;
-                    if (mReceiverRegistered) {
-                        mContext.unregisterReceiver(receiver);
-                        mReceiverRegistered = false;
-                    }
-                    launchAction(longActivities[mTarget]);
-                }
+                mLongPress = true;
+                vibrate();
             }
         };
 
@@ -171,6 +164,14 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
             fireTorch();
             if (!mIsBouncing) {
                 doTransition(mFadeView, 1.0f);
+            }
+            if (!mGlowPadLock && mLongPress) {
+                mGlowPadLock = true;
+                if (mReceiverRegistered) {
+                    mContext.unregisterReceiver(receiver);
+                    mReceiverRegistered = false;
+                }
+                launchAction(longActivities[mTarget]);
             }
         }
 
