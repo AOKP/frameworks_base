@@ -32,6 +32,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.UserHandle;
+import android.os.Vibrator;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -133,15 +134,10 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
        final Runnable SetLongPress = new Runnable () {
             public void run() {
-                if (!mGlowPadLock) {
-                    mGlowPadLock = true;
+                if (!mLongPress) {
+                    vibrate();
                     mLongPress = true;
-                    if (mReceiverRegistered) {
-                        mContext.unregisterReceiver(receiver);
-                        mReceiverRegistered = false;
-                    }
-                    launchAction(longActivities[mTarget]);
-                 }
+                }
             }
         };
 
@@ -164,6 +160,14 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         public void onReleased(View v, int handle) {
             if (!mIsBouncing) {
                 doTransition(mFadeView, 1.0f);
+            }
+            if (!mGlowPadLock && mLongPress) {
+                mGlowPadLock = true;
+                if (mReceiverRegistered) {
+                    mContext.unregisterReceiver(receiver);
+                    mReceiverRegistered = false;
+                }
+                launchAction(longActivities[mTarget]);
             }
         }
 
@@ -292,6 +296,15 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
     public boolean isScreenPortrait() {
         return res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+    }
+
+    private void vibrate() {
+        if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.HAPTIC_FEEDBACK_ENABLED, 1, UserHandle.USER_CURRENT) != 0) {
+            android.os.Vibrator vib = (android.os.Vibrator)mContext.getSystemService(
+                    Context.VIBRATOR_SERVICE);
+            vib.vibrate(25);
+        }
     }
 
     private void updateTargets() {
