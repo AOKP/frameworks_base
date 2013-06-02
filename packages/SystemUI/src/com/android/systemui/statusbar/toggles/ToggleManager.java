@@ -69,6 +69,8 @@ public class ToggleManager {
     public static final String WIFI_TOGGLE = "WIFI";
     public static final String SIGNAL_TOGGLE = "SIGNAL";
     public static final String ROTATE_TOGGLE = "ROTATE";
+    public static final String TURNLEFT_TOGGLE = "TURNLEFT";
+    public static final String TURNRIGHT_TOGGLE = "TURNRIGHT";
     public static final String CLOCK_TOGGLE = "CLOCK";
     public static final String GPS_TOGGLE = "GPS";
     public static final String IME_TOGGLE = "IME";
@@ -128,6 +130,8 @@ public class ToggleManager {
                 toggleMap.put(WIFI_TETHER_TOGGLE, WifiApToggle.class);
             }
             toggleMap.put(ROTATE_TOGGLE, RotateToggle.class);
+            toggleMap.put(TURNLEFT_TOGGLE, TurnLeftToggle.class);
+            toggleMap.put(TURNRIGHT_TOGGLE, TurnRightToggle.class);
             toggleMap.put(CLOCK_TOGGLE, ClockToggle.class);
             toggleMap.put(GPS_TOGGLE, GpsToggle.class);
             toggleMap.put(IME_TOGGLE, ImeToggle.class);
