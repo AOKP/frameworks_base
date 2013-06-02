@@ -21,6 +21,8 @@
     <string name="toggle_WIFI">WiFi</string>
     <string name="toggle_SIGNAL">Signal</string>
     <string name="toggle_ROTATE">Auto-rotate</string>
+    <string name="toggle_TURNLEFT">Turn left</string>
+    <string name="toggle_TURNRIGHT">Turn right</string>
     <string name="toggle_CLOCK">Clock</string>
     <string name="toggle_GPS">GPS</string>
     <string name="toggle_IME">IME</string>
