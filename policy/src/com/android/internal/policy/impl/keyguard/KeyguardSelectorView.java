@@ -189,6 +189,9 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         public void onGrabbedStateChange(View v, int handle) {
             mHandler.removeCallbacks(SetLongPress);
             mLongPress = false;
+            if (mGlowTorchOn) {
+                mCallback.userActivity(0);
+            }
         }
 
         public void onTargetChange(View v, int target) {
