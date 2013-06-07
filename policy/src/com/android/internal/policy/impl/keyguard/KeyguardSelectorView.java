@@ -76,7 +76,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private Drawable mBouncerFrame;
     private Resources res;
 
-    private boolean mGlowTorch;
+    private int mGlowTorch;
     private boolean mGlowTorchOn;
     private boolean mGlowPadLock;
     private boolean mBoolLongPress;
@@ -180,7 +180,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         public void onGrabbed(View v, int handle) {
             mCallback.userActivity(0);
             doTransition(mFadeView, 0.0f);
-            if (mGlowTorch) {
+            if (mGlowTorch == 1) {
                 mHandler.removeCallbacks(checkTorch);
                 mHandler.postDelayed(startTorch, TORCH_TIMEOUT);
             }
@@ -284,8 +284,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
                 Settings.System.RIBBON_ICON_COLORIZE[AokpRibbonHelper.LOCKSCREEN], true), 0));
         updateTargets();
 
-        mGlowTorch = Settings.System.getBoolean(cr,
-                Settings.System.LOCKSCREEN_GLOW_TORCH, false);
+        mGlowTorch = Settings.System.getInt(cr,
+                Settings.System.LOCKSCREEN_GLOW_TORCH, 0);
         mGlowTorchOn = false;
 
         mSecurityMessageDisplay = new KeyguardMessageArea.Helper(this);
@@ -318,7 +318,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
     private void fireTorch() {
         mHandler.removeCallbacks(startTorch);
-        if (mGlowTorch && mGlowTorchOn) {
+        if (mGlowTorch == 1 && mGlowTorchOn) {
             mGlowTorchOn = false;
             vibrate();
             torchOff();

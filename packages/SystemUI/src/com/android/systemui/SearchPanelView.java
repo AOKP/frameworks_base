@@ -101,6 +101,9 @@ public class SearchPanelView extends FrameLayout implements
     static final String TAG = "SearchPanelView";
     static final boolean DEBUG = TabletStatusBar.DEBUG || PhoneStatusBar.DEBUG || false;
 
+    private final int TORCH_TIMEOUT = ViewConfiguration.getLongPressTimeout(); //longpress glowpad torch
+    private final int TORCH_CHECK = 2000; //make sure torch turned off
+
     private final Context mContext;
     private BaseStatusBar mBar;
     private StatusBarTouchProxy mStatusBarTouchProxy;
@@ -109,6 +112,7 @@ public class SearchPanelView extends FrameLayout implements
     private View mSearchTargetsContainer;
     private GlowPadView mGlowPadView;
     private IWindowManager mWm;
+    private KeyguardManager mKeyguardManager;
 
     private PackageManager mPackageManager;
     private Resources mResources;
@@ -122,6 +126,8 @@ public class SearchPanelView extends FrameLayout implements
 
     private int mNavRingAmount;
     private int mCurrentUIMode;
+    private int mGlowTorch;
+    private boolean mGlowTorchOn;
     private boolean mLefty;
     private boolean mBoolLongPress;
     private boolean mSearchPanelLock;
@@ -143,9 +149,13 @@ public class SearchPanelView extends FrameLayout implements
         mWm = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
         mPackageManager = mContext.getPackageManager();
         mResources = mContext.getResources();
+        mKeyguardManager =
+                (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
 
         mContentResolver = mContext.getContentResolver();
         mSettingsObserver = new SettingsObserver(new Handler());
+
+        mGlowTorchOn = false;
         updateSettings();
     }
 
@@ -230,10 +240,19 @@ public class SearchPanelView extends FrameLayout implements
         };
 
         public void onGrabbed(View v, int handle) {
+            boolean screenLocked =
+                    mKeyguardManager != null && mKeyguardManager.isKeyguardLocked();
+
             mSearchPanelLock = false;
+
+            if (mGlowTorch == 2 && screenLocked) {
+                mHandler.removeCallbacks(checkTorch);
+                mHandler.postDelayed(startTorch, TORCH_TIMEOUT);
+            }
         }
 
         public void onReleased(View v, int handle) {
+            fireTorch();
         }
 
         public void onTargetChange(View v, final int target) {
@@ -241,6 +260,7 @@ public class SearchPanelView extends FrameLayout implements
                 mHandler.removeCallbacks(SetLongPress);
                 mLongPress = false;
             } else {
+                fireTorch();
                 if (mBoolLongPress && !TextUtils.isEmpty(longList.get(target)) && !longList.get(target).equals(AwesomeConstant.ACTION_NULL.value())) {
                     mTarget = target;
                     mHandler.postDelayed(SetLongPress, ViewConfiguration.getLongPressTimeout());
@@ -319,6 +339,53 @@ public class SearchPanelView extends FrameLayout implements
         u.setAction("com.android.lockscreen.ACTION_UNLOCK_RECEIVER");
         mContext.sendBroadcastAsUser(u, UserHandle.ALL);
     }
+
+    private void fireTorch() {
+        mHandler.removeCallbacks(startTorch);
+        if (mGlowTorch == 2 && mGlowTorchOn) {
+            mGlowTorchOn = false;
+            vibrate();
+            torchOff();
+            mHandler.postDelayed(checkTorch, TORCH_CHECK);
+        }
+    }
+
+    private void torchOff() {
+        Intent intent = new Intent("com.aokp.torch.INTENT_TORCH_OFF");
+        intent.setComponent(ComponentName.unflattenFromString
+                ("com.aokp.Torch/.TorchReceiver"));
+        intent.setAction("com.aokp.torch.INTENT_TORCH_OFF");
+        intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        mContext.sendBroadcast(intent);
+    }
+
+    final Runnable checkTorch = new Runnable () {
+        public void run() {
+            boolean torchActive = Settings.System.getBoolean(mContext.getContentResolver(),
+                    Settings.System.TORCH_STATE, false);
+            if (torchActive) {
+                Log.w(TAG, "Second Torch Temination Required");
+                torchOff();
+            }
+        }
+    };
+
+    final Runnable startTorch = new Runnable () {
+        public void run() {
+            boolean torchActive = Settings.System.getBoolean(mContext.getContentResolver(),
+                    Settings.System.TORCH_STATE, false);
+            if (!torchActive && !mGlowTorchOn) {
+                mGlowTorchOn = true;
+                vibrate();
+                Intent intent = new Intent("com.aokp.torch.INTENT_TORCH_ON");
+                intent.setComponent(ComponentName.unflattenFromString
+                        ("com.aokp.Torch/.TorchReceiver"));
+                intent.setAction("com.aokp.torch.INTENT_TORCH_ON");
+                mContext.sendBroadcast(intent);
+            }
+        }
+    };
+
 
     private void setDrawables() {
         mLongPress = false;
@@ -609,6 +676,8 @@ public class SearchPanelView extends FrameLayout implements
                     Settings.System.SYSTEMUI_NAVRING_AMOUNT), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.SYSTEMUI_NAVRING_LONG_ENABLE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.LOCKSCREEN_GLOW_TORCH), false, this);
 
             for (int i = 0; i < 5; i++) {
 	            resolver.registerContentObserver(
@@ -643,6 +712,9 @@ public class SearchPanelView extends FrameLayout implements
 
         mBoolLongPress = (Settings.System.getBoolean(mContext.getContentResolver(),
                 Settings.System.SYSTEMUI_NAVRING_LONG_ENABLE, false));
+
+        mGlowTorch = (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.LOCKSCREEN_GLOW_TORCH, 0));
 
         mNavRingAmount = Settings.System.getInt(mContext.getContentResolver(),
                          Settings.System.SYSTEMUI_NAVRING_AMOUNT, 1);
