@@ -2636,6 +2636,13 @@ public final class Settings {
         */
         public static final String SYSTEMUI_NAVRING_LONG_ENABLE = "systemui_navring_long_enable";
 
+       /**
+        * Navigation Ring Longpress LockTorch
+        *
+        * @hide
+        */
+        public static final String SYSTEMUI_NAVRING_GLOW_TORCH = "systemui_navring_glow_torch";
+
         /**
          * Custom navring actions
          *
