@@ -43,6 +43,7 @@ import android.widget.LinearLayout;
 
 import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.internal.util.aokp.AokpRibbonHelper;
+import com.android.internal.util.aokp.GlowPadTorchHelper;
 import com.android.internal.util.aokp.LockScreenHelpers;
 import com.android.internal.telephony.IccCardConstants.State;
 import com.android.internal.widget.LockPatternUtils;
@@ -72,7 +73,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private Drawable mBouncerFrame;
     private Resources res;
 
-    private boolean mGlowTorch;
+    private int mGlowTorch;
     private boolean mGlowTorchOn;
     private boolean mGlowPadLock;
     private boolean mBoolLongPress;
@@ -136,7 +137,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
        final Runnable SetLongPress = new Runnable () {
             public void run() {
                 if (!mLongPress) {
-                    vibrate();
+                    GlowPadTorchHelper.vibrate(mContext);
                     mLongPress = true;
                 }
             }
@@ -176,7 +177,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         public void onGrabbed(View v, int handle) {
             mCallback.userActivity(0);
             doTransition(mFadeView, 0.0f);
-            if (mGlowTorch) {
+            if (mGlowTorch == 1) {
                 mHandler.removeCallbacks(checkTorch);
                 mHandler.postDelayed(startTorch, TORCH_TIMEOUT);
             }
@@ -280,8 +281,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
                 Settings.System.RIBBON_ICON_COLORIZE[AokpRibbonHelper.LOCKSCREEN], true), 0));
         updateTargets();
 
-        mGlowTorch = Settings.System.getBoolean(cr,
-                Settings.System.LOCKSCREEN_GLOW_TORCH, false);
+        mGlowTorch = Settings.System.getInt(cr,
+                Settings.System.LOCKSCREEN_GLOW_TORCH, 0);
         mGlowTorchOn = false;
 
         mSecurityMessageDisplay = new KeyguardMessageArea.Helper(this);
@@ -316,57 +317,27 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
     private void fireTorch() {
         mHandler.removeCallbacks(startTorch);
-        if (mGlowTorch && mGlowTorchOn) {
+        if (mGlowTorch == 1 && mGlowTorchOn) {
             mGlowTorchOn = false;
-            vibrate();
-            torchOff();
+            GlowPadTorchHelper.killTorch(mContext);
             mHandler.postDelayed(checkTorch, TORCH_CHECK);
         }
     }
 
-    private void torchOff() {
-        Intent intent = new Intent("com.aokp.torch.INTENT_TORCH_OFF");
-        intent.setComponent(ComponentName.unflattenFromString
-                ("com.aokp.Torch/.TorchReceiver"));
-        intent.setAction("com.aokp.torch.INTENT_TORCH_OFF");
-        intent.setFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        mContext.sendBroadcast(intent);
-    }
-
-    private void vibrate() {
-        if (Settings.System.getIntForUser(mContext.getContentResolver(),
-                Settings.System.HAPTIC_FEEDBACK_ENABLED, 1, UserHandle.USER_CURRENT) != 0) {
-            android.os.Vibrator vib = (android.os.Vibrator)mContext.getSystemService(
-                    Context.VIBRATOR_SERVICE);
-            if (vib != null) {
-                vib.vibrate(25);
+    final Runnable startTorch = new Runnable () {
+        public void run() {
+            if (!mGlowTorchOn) {
+                mGlowTorchOn = GlowPadTorchHelper.startTorch(mContext);
             }
         }
-    }
+    };
 
     final Runnable checkTorch = new Runnable () {
         public void run() {
             boolean torchActive = Settings.System.getBoolean(mContext.getContentResolver(),
                     Settings.System.TORCH_STATE, false);
             if (torchActive) {
-                Log.w(TAG, "Second Torch Temination Required");
-                torchOff();
-            }
-        }
-    };
-
-    final Runnable startTorch = new Runnable () {
-        public void run() {
-            boolean torchActive = Settings.System.getBoolean(mContext.getContentResolver(),
-                    Settings.System.TORCH_STATE, false);
-            if (!torchActive && !mGlowTorchOn) {
-                mGlowTorchOn = true;
-                vibrate();
-                Intent intent = new Intent("com.aokp.torch.INTENT_TORCH_ON");
-                intent.setComponent(ComponentName.unflattenFromString
-                        ("com.aokp.Torch/.TorchReceiver"));
-                intent.setAction("com.aokp.torch.INTENT_TORCH_ON");
-                mContext.sendBroadcast(intent);
+                GlowPadTorchHelper.torchOff(mContext, true);
             }
         }
     };
