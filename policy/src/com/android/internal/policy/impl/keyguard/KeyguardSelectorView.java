@@ -523,6 +523,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     @Override
     public void onPause() {
         KeyguardUpdateMonitor.getInstance(getContext()).removeCallback(mInfoCallback);
+        mContext.unregisterReceiver(receiver);
     }
 
     @Override
