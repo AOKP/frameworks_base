@@ -26,10 +26,12 @@ import android.appwidget.AppWidgetHost;
 import android.appwidget.AppWidgetHostView;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProviderInfo;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.IntentSender;
 import android.content.pm.UserInfo;
 import android.content.res.Resources;
@@ -109,6 +111,10 @@ public class KeyguardHostView extends KeyguardViewBase {
     private boolean mUserSetupCompleted;
     // User for whom this host view was created
     private int mUserId;
+
+    private UnlockReceiver mUnlockReceiver;
+    private IntentFilter filter;
+    private boolean mUnlockReceiverRegistered = false;
 
     /*package*/ interface TransportCallback {
         void onListenerDetached();
@@ -311,6 +317,14 @@ public class KeyguardHostView extends KeyguardViewBase {
         }
 
         minimizeChallengeIfNeeded();
+
+        filter = new IntentFilter();
+        filter.addAction(UnlockReceiver.ACTION_UNLOCK_RECEIVER);
+        if (mUnlockReceiver == null) {
+            mUnlockReceiver = new UnlockReceiver();
+        }
+        mContext.registerReceiver(mUnlockReceiver, filter);
+        mUnlockReceiverRegistered = true;
     }
 
     private boolean shouldEnableAddWidget() {
@@ -388,6 +402,13 @@ public class KeyguardHostView extends KeyguardViewBase {
         super.onAttachedToWindow();
         mAppWidgetHost.startListeningAsUser(mUserId);
         KeyguardUpdateMonitor.getInstance(mContext).registerCallback(mUpdateMonitorCallbacks);
+        if (!mUnlockReceiverRegistered) {
+            if (mUnlockReceiver == null) {
+               mUnlockReceiver = new UnlockReceiver();
+            }
+            mContext.registerReceiver(mUnlockReceiver, filter);
+            mUnlockReceiverRegistered = true;
+        }
     }
 
     @Override
@@ -395,6 +416,10 @@ public class KeyguardHostView extends KeyguardViewBase {
         super.onDetachedFromWindow();
         mAppWidgetHost.stopListeningAsUser(mUserId);
         KeyguardUpdateMonitor.getInstance(mContext).removeCallback(mUpdateMonitorCallbacks);
+        if (mUnlockReceiverRegistered) {
+            mContext.unregisterReceiver(mUnlockReceiver);
+            mUnlockReceiverRegistered = false;
+        }
     }
 
     private AppWidgetHost getAppWidgetHost() {
@@ -1618,5 +1643,17 @@ public class KeyguardHostView extends KeyguardViewBase {
 
         mActivityLauncher.launchActivityWithAnimation(
                 intent, false, opts.toBundle(), null, null);
+    }
+
+    public class UnlockReceiver extends BroadcastReceiver {
+        public static final String ACTION_UNLOCK_RECEIVER = "com.android.lockscreen.ACTION_UNLOCK_RECEIVER";
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            if (action.equals(ACTION_UNLOCK_RECEIVER)) {
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+            }
+        }
     }
 }

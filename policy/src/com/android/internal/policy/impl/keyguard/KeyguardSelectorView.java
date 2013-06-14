@@ -17,12 +17,10 @@ package com.android.internal.policy.impl.keyguard;
 
 import android.animation.ObjectAnimator;
 import android.app.SearchManager;
-import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -78,15 +76,11 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private boolean mBoolLongPress;
     private int mTarget;
     private boolean mLongPress = false;
-    private boolean mUnlockBroadcasted = false;
     private boolean mUsesCustomTargets;
     private int mUnlockPos;
     private String[] targetActivities = new String[8];
     private String[] longActivities = new String[8];
     private String[] customIcons = new String[8];
-    private UnlockReceiver mUnlockReceiver;
-    private IntentFilter filter;
-    private boolean mReceiverRegistered = false;
 
     private class H extends Handler {
         public void handleMessage(Message m) {
@@ -143,10 +137,6 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         };
 
         public void onTrigger(View v, int target) {
-            if (mReceiverRegistered) {
-                mContext.unregisterReceiver(mUnlockReceiver);
-                mReceiverRegistered = false;
-            }
             if ((!mUsesCustomTargets) || (mTargetCounter() == 0 && mUnlockCounter() < 2)) {
                 mCallback.userActivity(0);
                 mCallback.dismiss(false);
@@ -165,10 +155,6 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
             }
             if (!mGlowPadLock && mLongPress) {
                 mGlowPadLock = true;
-                if (mReceiverRegistered) {
-                    mContext.unregisterReceiver(mUnlockReceiver);
-                    mReceiverRegistered = false;
-                }
                 launchAction(longActivities[mTarget]);
             }
         }
@@ -287,14 +273,6 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         mSecurityMessageDisplay = new KeyguardMessageArea.Helper(this);
         View bouncerFrameView = findViewById(R.id.keyguard_selector_view_frame);
         mBouncerFrame = bouncerFrameView.getBackground();
-        mUnlockBroadcasted = false;
-        filter = new IntentFilter();
-        filter.addAction(UnlockReceiver.ACTION_UNLOCK_RECEIVER);
-        if (mUnlockReceiver == null) {
-            mUnlockReceiver = new UnlockReceiver();
-        }
-        mContext.registerReceiver(mUnlockReceiver, filter);
-        mReceiverRegistered = true;
     }
 
     public void setCarrierArea(View carrierArea) {
@@ -523,22 +501,11 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     @Override
     public void onPause() {
         KeyguardUpdateMonitor.getInstance(getContext()).removeCallback(mInfoCallback);
-        if (mReceiverRegistered) {
-            mContext.unregisterReceiver(mUnlockReceiver);
-            mReceiverRegistered = false;
-        }
     }
 
     @Override
     public void onResume(int reason) {
         KeyguardUpdateMonitor.getInstance(getContext()).registerCallback(mInfoCallback);
-        if (!mReceiverRegistered) {
-            if (mUnlockReceiver == null) {
-               mUnlockReceiver = new UnlockReceiver();
-            }
-            mContext.registerReceiver(mUnlockReceiver, filter);
-            mReceiverRegistered = true;
-        }
     }
 
     @Override
@@ -558,24 +525,5 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         mIsBouncing = false;
         KeyguardSecurityViewHelper.
                 hideBouncer(mSecurityMessageDisplay, mFadeView, mBouncerFrame, duration);
-    }
-
-    public class UnlockReceiver extends BroadcastReceiver {
-        public static final String ACTION_UNLOCK_RECEIVER = "com.android.lockscreen.ACTION_UNLOCK_RECEIVER";
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(ACTION_UNLOCK_RECEIVER)) {
-                if (!mUnlockBroadcasted) {
-                    mUnlockBroadcasted = true;
-                    mCallback.userActivity(0);
-                    mCallback.dismiss(false);
-                }
-            }
-            if (mReceiverRegistered) {
-                mContext.unregisterReceiver(mUnlockReceiver);
-                mReceiverRegistered = false;
-            }
-        }
     }
 }
