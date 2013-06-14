@@ -1,4 +1,3 @@
-
 package com.android.systemui.statusbar;
 
 import android.appwidget.AppWidgetHost;
@@ -10,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 
 public class WidgetPagerAdapter extends PagerAdapter {
@@ -24,11 +22,11 @@ public class WidgetPagerAdapter extends PagerAdapter {
     AppWidgetManager mAppWidgetManager;
 
     public WidgetPagerAdapter(Context c, int[] ids) {
-    	if (ids != null) {
-    		widgetIds = ids;
-    	} else { // got passed null id set .. create a fake one
-    		widgetIds[0] = -1;
-    	}
+        if (ids != null) {
+            widgetIds = ids;
+        } else { // got passed null id set .. create a fake one
+            widgetIds[0] = -1;
+        }
         mContext = c;
         hostViews = new AppWidgetHostView[widgetIds.length];
         mAppWidgetManager = AppWidgetManager.getInstance(c);
@@ -48,18 +46,20 @@ public class WidgetPagerAdapter extends PagerAdapter {
             } else {
                 height = 100;  // default size
             }
-            setSavedHeight(pos, height);    
+            setSavedHeight(pos, height);
         }
         return height;
     }
 
     public String getLabel(int pos) {
-    	if (hostViews[pos] != null && hostViews[pos].getAppWidgetInfo() != null) {
-    		return hostViews[pos].getAppWidgetInfo().label;
-    	} else 
-    		return "Widget";
-    	
+        if (hostViews[pos] != null && hostViews[pos].getAppWidgetInfo() != null) {
+            return hostViews[pos].getAppWidgetInfo().label;
+        } else {
+            return "Widget";
+        }
+
     }
+
     private int getSavedHeight(int pos) {
         SharedPreferences prefs = mContext.getSharedPreferences("widget_adapter",
                 Context.MODE_WORLD_WRITEABLE);
@@ -76,9 +76,9 @@ public class WidgetPagerAdapter extends PagerAdapter {
      * Create the page for the given position. The adapter is responsible for
      * adding the view to the container given here, although it only must ensure
      * this is done by the time it returns from {@link #finishUpdate()}.
-     * 
+     *
      * @param container The containing View in which the page will be shown.
-     * @param position The page position to be instantiated.
+     * @param position  The page position to be instantiated.
      * @return Returns an Object representing the new page. This does not need
      *         to be a View, but can be some other container of the page.
      */
@@ -99,11 +99,11 @@ public class WidgetPagerAdapter extends PagerAdapter {
      * Remove a page for the given position. The adapter is responsible for
      * removing the view from its container, although it only must ensure this
      * is done by the time it returns from {@link #finishUpdate()}.
-     * 
+     *
      * @param container The containing View from which the page will be removed.
-     * @param position The page position to be removed.
-     * @param object The same object that was returned by
-     *            {@link #instantiateItem(View, int)}.
+     * @param position  The page position to be removed.
+     * @param object    The same object that was returned by
+     *                  {@link #instantiateItem(View, int)}.
      */
     @Override
     public void destroyItem(View collection, int position, Object view) {
@@ -119,9 +119,9 @@ public class WidgetPagerAdapter extends PagerAdapter {
      * Called when the a change in the shown pages has been completed. At this
      * point you must ensure that all of the pages have actually been added or
      * removed from the container as appropriate.
-     * 
+     *
      * @param container The containing View which is displaying this adapter's
-     *            page views.
+     *                  page views.
      */
     @Override
     public void finishUpdate(View arg0) {

@@ -24,24 +24,26 @@ import android.provider.Settings;
  * Toggle the NavBar
  */
 
-public class NavbarToggle extends Activity  {
-  public NavbarToggle() {
-    super();
-  }
+public class NavbarToggle extends Activity {
+    public NavbarToggle() {
+        super();
+    }
 
-  /** Called when the activity is first created. */
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-  }
+    /**
+     * Called when the activity is first created.
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
-  @Override
-  public void onResume() {
-    super.onResume();
-    final boolean NavOn = Settings.System.getInt(getContentResolver(),
-      Settings.System.NAVIGATION_BAR_SHOW_NOW, 1) == 1;
-    Settings.System.putInt(getContentResolver(),
-      Settings.System.NAVIGATION_BAR_SHOW_NOW,(!NavOn) ? 1 : 0);
-    this.finish();
-  }
+    @Override
+    public void onResume() {
+        super.onResume();
+        final boolean NavOn = Settings.System.getInt(getContentResolver(),
+                Settings.System.NAVIGATION_BAR_SHOW_NOW, 1) == 1;
+        Settings.System.putInt(getContentResolver(),
+                Settings.System.NAVIGATION_BAR_SHOW_NOW, (!NavOn) ? 1 : 0);
+        this.finish();
+    }
 }

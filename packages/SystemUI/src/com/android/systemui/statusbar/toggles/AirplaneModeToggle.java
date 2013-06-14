@@ -4,7 +4,6 @@ package com.android.systemui.statusbar.toggles;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.NetworkController.NetworkSignalChangedCallback;
 
@@ -49,13 +48,14 @@ public class AirplaneModeToggle extends StatefulToggle implements NetworkSignalC
 
     @Override
     public void onWifiSignalChanged(boolean enabled, int wifiSignalIconId,
-            String wifitSignalContentDescriptionId, String description) {
+                                    String wifitSignalContentDescriptionId, String description) {
     }
 
     @Override
     public void onMobileDataSignalChanged(boolean enabled, int mobileSignalIconId,
-            String mobileSignalContentDescriptionId, int dataTypeIconId,
-            String dataTypeContentDescriptionId, String description) {
+                                          String mobileSignalContentDescriptionId,
+                                          int dataTypeIconId,
+                                          String dataTypeContentDescriptionId, String description) {
     }
 
     @Override

@@ -18,7 +18,7 @@
 */
 -->
 
-<com.android.systemui.statusbar.phone.NotificationPanelView 
+<com.android.systemui.statusbar.phone.NotificationPanelView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
     android:id="@+id/notification_panel"
@@ -58,7 +58,8 @@
         android:animateLayoutChanges="false"
         >
 
-        <include layout="@layout/status_bar_expanded_header"
+        <include
+            layout="@layout/status_bar_expanded_header"
             android:layout_width="match_parent"
             android:layout_height="@dimen/notification_panel_header_height"
             />
@@ -108,12 +109,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             >
-            <ViewStub android:id="@+id/flip_settings_stub"
+
+            <ViewStub
+                android:id="@+id/flip_settings_stub"
                 android:layout="@layout/flip_settings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
-    
+
             <ScrollView
                 android:id="@+id/scroll"
                 android:layout_width="match_parent"
@@ -121,6 +124,7 @@
                 android:fadingEdge="none"
                 android:overScrollMode="ifContentScrolls"
                 >
+
                 <com.android.systemui.statusbar.policy.NotificationRowLayout
                     android:id="@+id/latestItems"
                     android:layout_width="match_parent"

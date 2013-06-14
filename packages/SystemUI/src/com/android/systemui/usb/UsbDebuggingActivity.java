@@ -23,9 +23,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Typeface;
 import android.hardware.usb.IUsbManager;
-import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -34,16 +32,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-
 import com.android.systemui.R;
 
 public class UsbDebuggingActivity extends AlertActivity
-                                  implements DialogInterface.OnClickListener {
+        implements DialogInterface.OnClickListener {
     private static final String TAG = "UsbDebuggingActivity";
 
     private CheckBox mAlwaysAllow;
@@ -76,7 +70,7 @@ public class UsbDebuggingActivity extends AlertActivity
         // add "always allow" checkbox
         LayoutInflater inflater = LayoutInflater.from(ap.mContext);
         View checkbox = inflater.inflate(com.android.internal.R.layout.always_use_checkbox, null);
-        mAlwaysAllow = (CheckBox)checkbox.findViewById(com.android.internal.R.id.alwaysUse);
+        mAlwaysAllow = (CheckBox) checkbox.findViewById(com.android.internal.R.id.alwaysUse);
         mAlwaysAllow.setText(getString(R.string.usb_debugging_always));
         ap.mView = checkbox;
 
@@ -85,6 +79,7 @@ public class UsbDebuggingActivity extends AlertActivity
 
     private class UsbDisconnectedReceiver extends BroadcastReceiver {
         private final Activity mActivity;
+
         public UsbDisconnectedReceiver(Activity activity) {
             mActivity = activity;
         }

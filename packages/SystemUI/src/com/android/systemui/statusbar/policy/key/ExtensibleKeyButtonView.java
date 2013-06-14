@@ -1,4 +1,3 @@
-
 package com.android.systemui.statusbar.policy.key;
 
 import android.content.Context;
@@ -8,20 +7,21 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.systemui.R;
 import com.android.systemui.aokp.AwesomeAction;
 import com.android.systemui.recent.RecentTasksLoader;
 import com.android.systemui.recent.RecentsActivity;
 import com.android.systemui.statusbar.policy.KeyButtonView;
 
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
+import static com.android.internal.util.aokp.AwesomeConstants.fromString;
+
 public class ExtensibleKeyButtonView extends KeyButtonView {
 
     public String mClickAction, mLongpress;
 
     public ExtensibleKeyButtonView(Context context, AttributeSet attrs, String clickAction,
-            String longPress) {
+                                   String longPress) {
         super(context, attrs);
         mClickAction = clickAction;
         mLongpress = longPress;
@@ -33,48 +33,48 @@ public class ExtensibleKeyButtonView extends KeyButtonView {
         if (clickAction != null) {
             AwesomeConstant clickEnum = fromString(clickAction);
             switch (clickEnum) {
-            case ACTION_HOME:
-                setCode(KeyEvent.KEYCODE_HOME);
-                setId(R.id.home);
-                break;
-            case ACTION_BACK:
-                setCode(KeyEvent.KEYCODE_BACK);
-                setId(R.id.back);
-                break;
-            case ACTION_MENU:
-                setCode(KeyEvent.KEYCODE_MENU);
-                setId(R.id.navbar_menu_big);
-                break;
-            case ACTION_POWER:
-                setCode(KeyEvent.KEYCODE_POWER);
-                break;
-            case ACTION_SEARCH:
-                setCode(KeyEvent.KEYCODE_SEARCH);
-                break;
-            case ACTION_RECENTS:
-                setId(R.id.recent_apps);
-                setOnClickListener(mClickListener);
-                setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        int action = event.getAction() & MotionEvent.ACTION_MASK;
-                        if (action == MotionEvent.ACTION_DOWN) {
-                            preloadRecentTasksList();
-                        } else if (action == MotionEvent.ACTION_CANCEL) {
-                            cancelPreloadingRecentTasksList();
-                        } else if (action == MotionEvent.ACTION_UP) {
-                            if (!v.isPressed()) {
+                case ACTION_HOME:
+                    setCode(KeyEvent.KEYCODE_HOME);
+                    setId(R.id.home);
+                    break;
+                case ACTION_BACK:
+                    setCode(KeyEvent.KEYCODE_BACK);
+                    setId(R.id.back);
+                    break;
+                case ACTION_MENU:
+                    setCode(KeyEvent.KEYCODE_MENU);
+                    setId(R.id.navbar_menu_big);
+                    break;
+                case ACTION_POWER:
+                    setCode(KeyEvent.KEYCODE_POWER);
+                    break;
+                case ACTION_SEARCH:
+                    setCode(KeyEvent.KEYCODE_SEARCH);
+                    break;
+                case ACTION_RECENTS:
+                    setId(R.id.recent_apps);
+                    setOnClickListener(mClickListener);
+                    setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            int action = event.getAction() & MotionEvent.ACTION_MASK;
+                            if (action == MotionEvent.ACTION_DOWN) {
+                                preloadRecentTasksList();
+                            } else if (action == MotionEvent.ACTION_CANCEL) {
                                 cancelPreloadingRecentTasksList();
-                            }
+                            } else if (action == MotionEvent.ACTION_UP) {
+                                if (!v.isPressed()) {
+                                    cancelPreloadingRecentTasksList();
+                                }
 
+                            }
+                            return false;
                         }
-                        return false;
-                    }
-                });
-                break;
-            default:
-                setOnClickListener(mClickListener);
-                break;
+                    });
+                    break;
+                default:
+                    setOnClickListener(mClickListener);
+                    break;
             }
         }
     }

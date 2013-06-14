@@ -13,7 +13,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.widget.ImageView;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.BrightnessController;
 import com.android.systemui.statusbar.policy.BrightnessController.BrightnessStateChangeCallback;
@@ -72,7 +71,7 @@ public class BrightnessToggle extends BaseToggle implements BrightnessStateChang
             mBrightnessController = new BrightnessController(mContext,
                     (ImageView) mBrightnessDialog.findViewById(R.id.brightness_icon),
                     (ToggleSlider)
-                    mBrightnessDialog.findViewById(R.id.brightness_slider));
+                            mBrightnessDialog.findViewById(R.id.brightness_slider));
             mBrightnessController.addStateChangedCallback(BrightnessToggle.this);
             mBrightnessDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -107,7 +106,9 @@ public class BrightnessToggle extends BaseToggle implements BrightnessStateChang
                 mBrightnessDialog.dismiss();
             }
             removeAllBrightnessDialogCallbacks();
-        };
+        }
+
+        ;
     };
 
     private void dismissBrightnessDialog(int timeout) {

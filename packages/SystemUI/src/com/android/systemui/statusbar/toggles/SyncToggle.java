@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SyncStatusObserver;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public class SyncToggle extends StatefulToggle implements SyncStatusObserver {

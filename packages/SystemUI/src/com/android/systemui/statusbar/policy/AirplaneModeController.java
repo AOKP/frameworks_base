@@ -22,11 +22,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
-import android.os.RemoteException;
-import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.provider.Settings;
-import android.util.Slog;
 import android.widget.CompoundButton;
 
 public class AirplaneModeController extends BroadcastReceiver
@@ -81,17 +78,17 @@ public class AirplaneModeController extends BroadcastReceiver
     // ConnectivityService.
     private void unsafe(final boolean enabled) {
         AsyncTask.execute(new Runnable() {
-                public void run() {
-                    Settings.Global.putInt(
-                            mContext.getContentResolver(),
-                            Settings.Global.AIRPLANE_MODE_ON,
-                            enabled ? 1 : 0);
-                    Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-                    intent.addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
-                    intent.putExtra("state", enabled);
-                    mContext.sendBroadcastAsUser(intent, UserHandle.ALL);
-                }
-            });
+            public void run() {
+                Settings.Global.putInt(
+                        mContext.getContentResolver(),
+                        Settings.Global.AIRPLANE_MODE_ON,
+                        enabled ? 1 : 0);
+                Intent intent = new Intent(Intent.ACTION_AIRPLANE_MODE_CHANGED);
+                intent.addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING);
+                intent.putExtra("state", enabled);
+                mContext.sendBroadcastAsUser(intent, UserHandle.ALL);
+            }
+        });
     }
 }
 

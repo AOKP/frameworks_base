@@ -16,54 +16,43 @@
 
 package com.android.systemui.aokp;
 
-import com.android.systemui.R;
-
-import java.lang.IllegalArgumentException;
-import java.io.File;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
-import android.content.pm.ResolveInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
+import android.content.pm.ResolveInfo;
 import android.database.ContentObserver;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Button;
-
 import com.android.internal.util.aokp.AokpRibbonHelper;
 import com.android.internal.util.aokp.AwesomeAnimationHelper;
-import com.android.internal.util.aokp.BackgroundAlphaColorDrawable;
 import com.android.internal.util.aokp.NavBarHelpers;
-import com.android.systemui.aokp.RibbonGestureCatcherView;
+import com.android.systemui.R;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AppWindow extends LinearLayout {
     public static final String TAG = "APP WINDOW";
@@ -83,7 +72,8 @@ public class AppWindow extends LinearLayout {
     private boolean mNavBarShowing;
     private boolean showing = false;
     private boolean animating = false;
-    private int mColor, mColumns, mTextColor, mOpacity, mAnimDur, animationIn, animationOut, mAnim, mPad;
+    private int mColor, mColumns, mTextColor, mOpacity, mAnimDur, animationIn, animationOut, mAnim,
+            mPad;
     private ArrayList<String> mApps = new ArrayList<String>();
     private ArrayList<String> mAppInfo = new ArrayList<String>();
     private Handler mHandler;
@@ -169,14 +159,14 @@ public class AppWindow extends LinearLayout {
         mContainerFrame.removeAllViews();
         if (mNavBarShowing) {
             int adjustment = mContext.getResources().getDimensionPixelSize(
-                        com.android.internal.R.dimen.status_bar_height);
+                    com.android.internal.R.dimen.status_bar_height);
             mPopupView.setPadding(0, adjustment, 0, 0);
         }
         mBackGround = new Button(mContext);
         mBackGround.setClickable(false);
         mBackGround.setBackgroundColor(mColor);
         float opacity = (255f * (mOpacity * 0.01f));
-        mBackGround.getBackground().setAlpha((int)opacity);
+        mBackGround.getBackground().setAlpha((int) opacity);
         View windowView = View.inflate(mContext, R.layout.aokp_app_window, null);
         mWindowMain = (LinearLayout) windowView.findViewById(R.id.window_main);
         mWindowLabel = (TextView) windowView.findViewById(R.id.window_label);
@@ -197,13 +187,14 @@ public class AppWindow extends LinearLayout {
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
                 switch (action) {
-                case  MotionEvent.ACTION_DOWN :
-                    mCloseButton.setBackgroundColor((mTextColor != -1) ? mTextColor : Color.CYAN);
-                    break;
-                case MotionEvent.ACTION_CANCEL :
-                case MotionEvent.ACTION_UP:
-                    mCloseButton.setBackgroundColor(Color.TRANSPARENT);
-                    break;
+                    case MotionEvent.ACTION_DOWN:
+                        mCloseButton
+                                .setBackgroundColor((mTextColor != -1) ? mTextColor : Color.CYAN);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                        mCloseButton.setBackgroundColor(Color.TRANSPARENT);
+                        break;
                 }
                 return false;
             }
@@ -291,11 +282,13 @@ public class AppWindow extends LinearLayout {
         for (int i = 0; i < packs.size(); i++) {
             ResolveInfo p = packs.get(i);
             ActivityInfo activity = p.activityInfo;
-            ComponentName name = new ComponentName(activity.applicationInfo.packageName, activity.name);
+            ComponentName name =
+                    new ComponentName(activity.applicationInfo.packageName, activity.name);
             Intent intent = new Intent(Intent.ACTION_MAIN);
 
             intent.addCategory(Intent.CATEGORY_LAUNCHER);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+            intent.setFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
             intent.setComponent(name);
             if (intent != null) {
                 mApps.add(intent.toUri(0));
@@ -309,7 +302,7 @@ public class AppWindow extends LinearLayout {
         mWindow.addView(gv, scrollParams);
     }
 
-    private  ArrayList<String> sortApps(ArrayList<String> apps) {
+    private ArrayList<String> sortApps(ArrayList<String> apps) {
         ArrayList<String> mGoodName = new ArrayList<String>();
         ArrayList<String> mTemp = new ArrayList<String>();
         for (int i = 0; i < apps.size(); i++) {
@@ -335,7 +328,7 @@ public class AppWindow extends LinearLayout {
         return mTemp;
     }
 
-    private  ArrayList<String> infoApps(ArrayList<String> apps) {
+    private ArrayList<String> infoApps(ArrayList<String> apps) {
         ArrayList<String> mTemp = new ArrayList<String>();
         for (String s : apps) {
             try {
@@ -343,8 +336,8 @@ public class AppWindow extends LinearLayout {
                 ComponentName cName = i.getComponent();
                 String name = cName.getPackageName();
                 Intent intent = new Intent(
-                    android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.parse("package:" + name));
+                        android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + name));
                 mTemp.add(intent.toUri(0));
             } catch (URISyntaxException e) {
                 mTemp.add("**null**");
@@ -357,6 +350,7 @@ public class AppWindow extends LinearLayout {
         SettingsObserver(Handler handler) {
             super(handler);
         }
+
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -382,44 +376,59 @@ public class AppWindow extends LinearLayout {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAV_HIDE_ENABLE), false, this);
         }
-         @Override
+
+        @Override
         public void onChange(boolean selfChange) {
             updateSettings();
         }
     }
+
     protected void updateSettings() {
         ContentResolver cr = mContext.getContentResolver();
         mTextColor = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_COLOR_TEXT, -1);
+                Settings.System.APP_WINDOW_COLOR_TEXT, -1);
         mColor = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_COLOR_BG, Color.BLACK);
+                Settings.System.APP_WINDOW_COLOR_BG, Color.BLACK);
         mColumns = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_COLUMNS, 5);
+                Settings.System.APP_WINDOW_COLUMNS, 5);
         mOpacity = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_OPACITY, 100);
+                Settings.System.APP_WINDOW_OPACITY, 100);
         mAnimDur = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_ANIMATION_DURATION, 75);
+                Settings.System.APP_WINDOW_ANIMATION_DURATION, 75);
         mAnim = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_ANIMATION_TYPE, 0);
+                Settings.System.APP_WINDOW_ANIMATION_TYPE, 0);
         mPad = Settings.System.getInt(cr,
-                 Settings.System.APP_WINDOW_SPACING, 5);
+                Settings.System.APP_WINDOW_SPACING, 5);
         mHiddenApps = Settings.System.getArrayList(cr,
-                 Settings.System.APP_WINDOW_HIDDEN_APPS);
+                Settings.System.APP_WINDOW_HIDDEN_APPS);
 
-        boolean manualNavBarHide = Settings.System.getBoolean(mContext.getContentResolver(), Settings.System.NAVIGATION_BAR_SHOW_NOW, true);
-        boolean navHeightZero = Settings.System.getInt(mContext.getContentResolver(), Settings.System.NAVIGATION_BAR_HEIGHT, 10) < 5;
-        boolean navAutoHide = Settings.System.getBoolean(cr, Settings.System.NAV_HIDE_ENABLE, false);
-        boolean NavBarEnabled = Settings.System.getBoolean(cr, Settings.System.NAVIGATION_BAR_SHOW, false);
-        boolean hasNavBarByDefault = mContext.getResources().getBoolean(com.android.internal.R.bool.config_showNavigationBar);
-        mNavBarShowing = (NavBarEnabled || hasNavBarByDefault) && manualNavBarHide && !navHeightZero && !navAutoHide;
+        boolean manualNavBarHide = Settings.System
+                .getBoolean(mContext.getContentResolver(), Settings.System.NAVIGATION_BAR_SHOW_NOW,
+                        true);
+        boolean navHeightZero = Settings.System
+                .getInt(mContext.getContentResolver(), Settings.System.NAVIGATION_BAR_HEIGHT, 10) <
+                5;
+        boolean navAutoHide =
+                Settings.System.getBoolean(cr, Settings.System.NAV_HIDE_ENABLE, false);
+        boolean NavBarEnabled =
+                Settings.System.getBoolean(cr, Settings.System.NAVIGATION_BAR_SHOW, false);
+        boolean hasNavBarByDefault = mContext.getResources()
+                .getBoolean(com.android.internal.R.bool.config_showNavigationBar);
+        mNavBarShowing =
+                (NavBarEnabled || hasNavBarByDefault) && manualNavBarHide && !navHeightZero &&
+                        !navAutoHide;
         setAnimation();
         createWindowView();
     }
 
     public class WindowReceiver extends BroadcastReceiver {
-        public static final String ACTION_TOGGLE_APP_WINDOW = "com.android.systemui.ACTION_TOGGLE_APP_WINDOW";
-        public static final String ACTION_SHOW_APP_WINDOW = "com.android.systemui.ACTION_SHOW_APP_WINDOW";
-        public static final String ACTION_HIDE_APP_WINDOW = "com.android.systemui.ACTION_HIDE_APP_WINDOW";
+        public static final String ACTION_TOGGLE_APP_WINDOW =
+                "com.android.systemui.ACTION_TOGGLE_APP_WINDOW";
+        public static final String ACTION_SHOW_APP_WINDOW =
+                "com.android.systemui.ACTION_SHOW_APP_WINDOW";
+        public static final String ACTION_HIDE_APP_WINDOW =
+                "com.android.systemui.ACTION_HIDE_APP_WINDOW";
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -433,9 +442,11 @@ public class AppWindow extends LinearLayout {
                 if (showing) {
                     hideWindowView();
                 }
-            } else if (Intent.ACTION_PACKAGE_ADDED.equals(action) || Intent.ACTION_PACKAGE_CHANGED.equals(action) ||
-                       Intent.ACTION_PACKAGE_REMOVED.equals(action) || Intent.ACTION_PACKAGE_FULLY_REMOVED.equals(action) ||
-                       Intent.ACTION_PACKAGE_REPLACED.equals(action)) {
+            } else if (Intent.ACTION_PACKAGE_ADDED.equals(action) ||
+                    Intent.ACTION_PACKAGE_CHANGED.equals(action) ||
+                    Intent.ACTION_PACKAGE_REMOVED.equals(action) ||
+                    Intent.ACTION_PACKAGE_FULLY_REMOVED.equals(action) ||
+                    Intent.ACTION_PACKAGE_REPLACED.equals(action)) {
                 updateSettings();
             }
         }

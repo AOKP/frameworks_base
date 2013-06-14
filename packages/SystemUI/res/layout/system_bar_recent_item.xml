@@ -18,12 +18,14 @@
 */
 -->
 
-<RelativeLayout android:id="@+id/recent_item"
+<RelativeLayout
+    android:id="@+id/recent_item"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content">
 
-    <TextView android:id="@+id/app_label"
+    <TextView
+        android:id="@+id/app_label"
         android:layout_width="@dimen/status_bar_recents_app_label_width"
         android:layout_height="wrap_content"
         android:textSize="@dimen/status_bar_recents_app_label_text_size"
@@ -38,9 +40,10 @@
         android:ellipsize="marquee"
         android:textColor="@color/status_bar_recents_app_label_color"
         android:importantForAccessibility="no"
-    />
+        />
 
-    <FrameLayout android:id="@+id/app_thumbnail"
+    <FrameLayout
+        android:id="@+id/app_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/app_label"
@@ -49,14 +52,17 @@
         android:background="@drawable/recents_thumbnail_bg"
         android:foreground="@drawable/recents_thumbnail_fg"
         android:visibility="invisible">
-        <ImageView android:id="@+id/app_thumbnail_image"
+
+        <ImageView
+            android:id="@+id/app_thumbnail_image"
             android:layout_width="@dimen/status_bar_recents_thumbnail_width"
             android:layout_height="@dimen/status_bar_recents_thumbnail_height"
-        />
+            />
     </FrameLayout>
 
 
-    <ImageView android:id="@+id/app_icon"
+    <ImageView
+        android:id="@+id/app_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/app_label"
@@ -67,10 +73,11 @@
         android:scaleType="centerInside"
         android:adjustViewBounds="true"
         android:visibility="invisible"
-    />
+        />
 
 
-    <View android:id="@+id/recents_callout_line"
+    <View
+        android:id="@+id/recents_callout_line"
         android:layout_width="@dimen/status_bar_recents_app_label_width"
         android:layout_height="1dip"
         android:layout_below="@id/app_label"
@@ -80,9 +87,10 @@
         android:layout_toLeftOf="@id/app_thumbnail"
         android:layout_marginRight="3dip"
         android:background="@drawable/recents_callout_line"
-    />
+        />
 
-    <TextView android:id="@+id/app_description"
+    <TextView
+        android:id="@+id/app_description"
         android:layout_width="@dimen/status_bar_recents_app_label_width"
         android:layout_height="wrap_content"
         android:textSize="@dimen/status_bar_recents_app_description_text_size"
@@ -95,6 +103,6 @@
         android:layout_marginTop="3dip"
         android:singleLine="true"
         android:ellipsize="marquee"
-    />
+        />
 
 </RelativeLayout>

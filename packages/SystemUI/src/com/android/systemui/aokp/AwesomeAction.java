@@ -20,24 +20,16 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.hardware.input.InputManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
@@ -45,7 +37,6 @@ import android.os.Vibrator;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
-import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.Log;
@@ -53,15 +44,15 @@ import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
 import android.widget.Toast;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
-import com.android.systemui.statusbar.WidgetView;
-import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.R;
+import com.android.internal.statusbar.IStatusBarService;
+import com.android.systemui.statusbar.WidgetView;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
+
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
+import static com.android.internal.util.aokp.AwesomeConstants.fromString;
 
 public class AwesomeAction {
 
@@ -76,13 +67,14 @@ public class AwesomeAction {
             return false;
         }
 
-            AwesomeConstant AwesomeEnum = fromString(action);
-            AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
-            switch(AwesomeEnum) {
+        AwesomeConstant AwesomeEnum = fromString(action);
+        AudioManager am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        switch (AwesomeEnum) {
             case ACTION_RECENTS:
                 try {
                     IStatusBarService.Stub.asInterface(
-                            ServiceManager.getService(mContext.STATUS_BAR_SERVICE)).toggleRecentApps();
+                            ServiceManager.getService(mContext.STATUS_BAR_SERVICE))
+                            .toggleRecentApps();
                 } catch (RemoteException e) {
                     // let it go.
                 }
@@ -116,7 +108,7 @@ public class AwesomeAction {
                 break;
             case ACTION_WIDGETS:
                 Intent toggleWidgets = new Intent(
-                    WidgetView.WidgetReceiver.ACTION_TOGGLE_WIDGETS);
+                        WidgetView.WidgetReceiver.ACTION_TOGGLE_WIDGETS);
                 mContext.sendBroadcast(toggleWidgets);
                 break;
             case ACTION_APP_WINDOW:
@@ -125,49 +117,54 @@ public class AwesomeAction {
                 mContext.sendBroadcast(appWindow);
                 break;
             case ACTION_VIB:
-                if(am != null){
-                    if(am.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE) {
+                if (am != null) {
+                    if (am.getRingerMode() != AudioManager.RINGER_MODE_VIBRATE) {
                         am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                        Vibrator vib = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                        if(vib != null){
+                        Vibrator vib =
+                                (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        if (vib != null) {
                             vib.vibrate(50);
                         }
-                    }else{
+                    } else {
                         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, (int)(ToneGenerator.MAX_VOLUME * 0.85));
-                        if(tg != null){
+                        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION,
+                                (int) (ToneGenerator.MAX_VOLUME * 0.85));
+                        if (tg != null) {
                             tg.startTone(ToneGenerator.TONE_PROP_BEEP);
                         }
                     }
                 }
                 break;
             case ACTION_SILENT:
-                if(am != null){
-                    if(am.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+                if (am != null) {
+                    if (am.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
                         am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
-                    }else{
+                    } else {
                         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, (int)(ToneGenerator.MAX_VOLUME * 0.85));
-                        if(tg != null){
+                        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION,
+                                (int) (ToneGenerator.MAX_VOLUME * 0.85));
+                        if (tg != null) {
                             tg.startTone(ToneGenerator.TONE_PROP_BEEP);
                         }
                     }
                 }
                 break;
             case ACTION_SILENT_VIB:
-                if(am != null){
-                    if(am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
+                if (am != null) {
+                    if (am.getRingerMode() == AudioManager.RINGER_MODE_NORMAL) {
                         am.setRingerMode(AudioManager.RINGER_MODE_VIBRATE);
-                        Vibrator vib = (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
-                        if(vib != null){
+                        Vibrator vib =
+                                (Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE);
+                        if (vib != null) {
                             vib.vibrate(50);
                         }
-                    } else if(am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
+                    } else if (am.getRingerMode() == AudioManager.RINGER_MODE_VIBRATE) {
                         am.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                     } else {
                         am.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
-                        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, (int)(ToneGenerator.MAX_VOLUME * 0.85));
-                        if(tg != null){
+                        ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION,
+                                (int) (ToneGenerator.MAX_VOLUME * 0.85));
+                        if (tg != null) {
                             tg.startTone(ToneGenerator.TONE_PROP_BEEP);
                         }
                     }
@@ -181,7 +178,8 @@ public class AwesomeAction {
                 break;
             case ACTION_TORCH:
                 Intent intentTorch = new Intent("android.intent.action.MAIN");
-                intentTorch.setComponent(ComponentName.unflattenFromString("com.aokp.Torch/.TorchActivity"));
+                intentTorch.setComponent(
+                        ComponentName.unflattenFromString("com.aokp.Torch/.TorchActivity"));
                 intentTorch.addCategory("android.intent.category.LAUNCHER");
                 intentTorch.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intentTorch);
@@ -192,7 +190,7 @@ public class AwesomeAction {
                 builder.appendPath("time");
                 ContentUris.appendId(builder, startMillis);
                 Intent intentToday = new Intent(Intent.ACTION_VIEW)
-                    .setData(builder.build());
+                        .setData(builder.build());
                 intentToday.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intentToday);
                 break;
@@ -203,7 +201,7 @@ public class AwesomeAction {
                 break;
             case ACTION_EVENT:
                 Intent intentEvent = new Intent(Intent.ACTION_INSERT)
-                    .setData(Events.CONTENT_URI);
+                        .setData(Events.CONTENT_URI);
                 intentEvent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intentEvent);
                 break;
@@ -223,7 +221,8 @@ public class AwesomeAction {
             case ACTION_NOTIFICATIONS:
                 try {
                     IStatusBarService.Stub.asInterface(
-                            ServiceManager.getService(mContext.STATUS_BAR_SERVICE)).expandNotificationsPanel();
+                            ServiceManager.getService(mContext.STATUS_BAR_SERVICE))
+                            .expandNotificationsPanel();
                 } catch (RemoteException e) {
                     // A RemoteException is like a cold
                     // Let's hope we don't catch one!
@@ -236,12 +235,12 @@ public class AwesomeAction {
                     mContext.startActivity(intentapp);
                 } catch (URISyntaxException e) {
                     Log.e(TAG, "URISyntaxException: [" + action + "]");
-                } catch (ActivityNotFoundException e){
+                } catch (ActivityNotFoundException e) {
                     Log.e(TAG, "ActivityNotFound: [" + action + "]");
                 }
                 break;
-            }
-            return true;
+        }
+        return true;
     }
 
     private static void injectKeyDelayed(int keycode) {
@@ -253,42 +252,50 @@ public class AwesomeAction {
         mHandler.postDelayed(onInjectKey_Up, 10);
     }
 
-     public static class KeyDown implements Runnable {
+    public static class KeyDown implements Runnable {
         private int mInjectKeyCode;
+
         public KeyDown(int keycode) {
             this.mInjectKeyCode = keycode;
         }
+
         public void run() {
             final KeyEvent ev = new KeyEvent(SystemClock.uptimeMillis(),
                     SystemClock.uptimeMillis(),
                     KeyEvent.ACTION_DOWN, mInjectKeyCode, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
-                        KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY, InputDevice.SOURCE_KEYBOARD);
-                    InputManager.getInstance().injectInputEvent(ev,
-                        InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+                    KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
+                    InputDevice.SOURCE_KEYBOARD);
+            InputManager.getInstance().injectInputEvent(ev,
+                    InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
         }
     }
 
-     public static class KeyUp implements Runnable {
+    public static class KeyUp implements Runnable {
         private int mInjectKeyCode;
+
         public KeyUp(int keycode) {
             this.mInjectKeyCode = keycode;
         }
+
         public void run() {
             final KeyEvent ev = new KeyEvent(SystemClock.uptimeMillis(),
                     SystemClock.uptimeMillis(),
                     KeyEvent.ACTION_UP, mInjectKeyCode, 0, 0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
-                    KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY, InputDevice.SOURCE_KEYBOARD);
-                    InputManager.getInstance().injectInputEvent(ev,
-                        InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
+                    KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
+                    InputDevice.SOURCE_KEYBOARD);
+            InputManager.getInstance().injectInputEvent(ev,
+                    InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
         }
     }
 
     public static class KillTask implements Runnable {
-         private Context mContext;
-         public KillTask(Context context) {
-             this.mContext = context;
-         }
-         public void run() {
+        private Context mContext;
+
+        public KillTask(Context context) {
+            this.mContext = context;
+        }
+
+        public void run() {
             final Intent intent = new Intent(Intent.ACTION_MAIN);
             final ActivityManager am = (ActivityManager) mContext
                     .getSystemService(Activity.ACTIVITY_SERVICE);
@@ -299,14 +306,15 @@ public class AwesomeAction {
                 defaultHomePackage = res.activityInfo.packageName;
             }
             String packageName = am.getRunningTasks(1).get(0).topActivity.getPackageName();
-            if (SysUIPackage.equals(packageName))
+            if (SysUIPackage.equals(packageName)) {
                 return; // don't kill SystemUI
+            }
             if (!defaultHomePackage.equals(packageName)) {
                 am.forceStopPackage(packageName);
                 Toast.makeText(mContext, R.string.app_killed_message, Toast.LENGTH_SHORT).show();
             }
         }
-     }
+    }
 
     private static void toggleLastApp(Context mContext) {
         int lastAppId = 0;
@@ -321,12 +329,13 @@ public class AwesomeAction {
         if (res.activityInfo != null && !res.activityInfo.packageName.equals("android")) {
             defaultHomePackage = res.activityInfo.packageName;
         }
-        List <ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(5);
+        List<ActivityManager.RunningTaskInfo> tasks = am.getRunningTasks(5);
         // lets get enough tasks to find something to switch to
         // Note, we'll only get as many as the system currently has - up to 5
         while ((lastAppId == 0) && (looper < tasks.size())) {
             packageName = tasks.get(looper).topActivity.getPackageName();
-            if (!packageName.equals(defaultHomePackage) && !packageName.equals("com.android.systemui")) {
+            if (!packageName.equals(defaultHomePackage) &&
+                    !packageName.equals("com.android.systemui")) {
                 lastAppId = tasks.get(looper).id;
             }
             looper++;

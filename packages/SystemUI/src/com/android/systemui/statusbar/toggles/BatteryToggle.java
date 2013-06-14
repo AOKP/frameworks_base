@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
 import android.view.View;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback;
 
@@ -55,7 +54,7 @@ public class BatteryToggle extends BaseToggle implements BatteryStateChangeCallb
                     mContext.getString(R.string.quick_settings_battery_charging_label,
                             level)
                     : mContext.getString(R.string.status_bar_settings_battery_meter_format,
-                            level));
+                    level));
         }
         scheduleViewUpdate();
     }

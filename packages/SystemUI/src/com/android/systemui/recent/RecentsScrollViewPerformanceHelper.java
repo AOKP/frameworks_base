@@ -27,7 +27,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
-
 import com.android.systemui.R;
 
 public class RecentsScrollViewPerformanceHelper {
@@ -40,7 +39,8 @@ public class RecentsScrollViewPerformanceHelper {
     private boolean mSoftwareRendered = false;
 
     public static RecentsScrollViewPerformanceHelper create(Context context,
-            AttributeSet attrs, View scrollView, boolean isVertical) {
+                                                            AttributeSet attrs, View scrollView,
+                                                            boolean isVertical) {
         boolean isTablet = context.getResources().
                 getBoolean(R.bool.config_recents_interface_for_tablets);
         if (!isTablet && (OPTIMIZE_SW_RENDERED_RECENTS || USE_DARK_FADE_IN_HW_ACCELERATED_MODE)) {
@@ -51,7 +51,8 @@ public class RecentsScrollViewPerformanceHelper {
     }
 
     public RecentsScrollViewPerformanceHelper(Context context,
-            AttributeSet attrs, View scrollView, boolean isVertical) {
+                                              AttributeSet attrs, View scrollView,
+                                              boolean isVertical) {
         mScrollView = scrollView;
         TypedArray a = context.obtainStyledAttributes(attrs, com.android.internal.R.styleable.View);
         mFadingEdgeLength = a.getDimensionPixelSize(android.R.styleable.View_fadingEdgeLength,
@@ -79,9 +80,9 @@ public class RecentsScrollViewPerformanceHelper {
     }
 
     public void drawCallback(Canvas canvas,
-            int left, int right, int top, int bottom, int scrollX, int scrollY,
-            float topFadingEdgeStrength, float bottomFadingEdgeStrength,
-            float leftFadingEdgeStrength, float rightFadingEdgeStrength) {
+                             int left, int right, int top, int bottom, int scrollX, int scrollY,
+                             float topFadingEdgeStrength, float bottomFadingEdgeStrength,
+                             float leftFadingEdgeStrength, float rightFadingEdgeStrength) {
 
         if ((mSoftwareRendered && OPTIMIZE_SW_RENDERED_RECENTS)
                 || USE_DARK_FADE_IN_HW_ACCELERATED_MODE) {

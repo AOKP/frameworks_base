@@ -40,7 +40,7 @@ import android.widget.FrameLayout;
  * reset the state of your view.  Use the {@link KeyguardViewCallback} via
  * {@link #getCallback()} to send information back (such as poking the wake lock,
  * or finishing the keyguard).
- *
+ * <p/>
  * Handles intercepting of media keys that still work when the keyguard is
  * showing.
  */
@@ -60,7 +60,7 @@ public abstract class KeyguardViewBase extends FrameLayout {
     private static final Drawable mBackgroundDrawable = new Drawable() {
         @Override
         public void draw(Canvas canvas) {
-            canvas.drawColor(BACKGROUND_COLOR<<24, PorterDuff.Mode.SRC);
+            canvas.drawColor(BACKGROUND_COLOR << 24, PorterDuff.Mode.SRC);
         }
 
         @Override
@@ -116,14 +116,14 @@ public abstract class KeyguardViewBase extends FrameLayout {
      * Called when a key has woken the device to give us a chance to adjust our
      * state according the the key.  We are responsible for waking the device
      * (by poking the wake lock) once we are ready.
-     *
+     * <p/>
      * The 'Tq' suffix is per the documentation in {@link android.view.WindowManagerPolicy}.
      * Be sure not to take any action that takes a long time; any significant
      * action should be posted to a handler.
      *
      * @param keyCode The wake key, which may be relevant for configuring the
-     *   keyguard.  May be {@link KeyEvent#KEYCODE_UNKNOWN} if waking for a reason
-     *   other than a key press.
+     *                keyguard.  May be {@link KeyEvent#KEYCODE_UNKNOWN} if waking for a reason
+     *                other than a key press.
      */
     abstract public void wakeWhenReadyTq(int keyCode);
 
@@ -131,7 +131,7 @@ public abstract class KeyguardViewBase extends FrameLayout {
      * Verify that the user can get past the keyguard securely.  This is called,
      * for example, when the phone disables the keyguard but then wants to launch
      * something else that requires secure access.
-     *
+     * <p/>
      * The result will be propogated back via {@link KeyguardViewCallback#keyguardDone(boolean)}
      */
     abstract public void verifyUnlock();
@@ -159,6 +159,7 @@ public abstract class KeyguardViewBase extends FrameLayout {
      * Allows the media keys to work when the keyguard is showing.
      * The media keys should be of no interest to the actual keyguard view(s),
      * so intercepting them here should not be of any harm.
+     *
      * @param event The key event
      * @return whether the event was consumed as a media key.
      */

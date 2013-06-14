@@ -16,11 +16,10 @@
 
 package com.android.systemui.statusbar.policy;
 
-import android.graphics.drawable.Drawable;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Rect;
-import android.util.Slog;
+import android.graphics.drawable.Drawable;
 
 public class FixedSizeDrawable extends Drawable {
     Drawable mDrawable;

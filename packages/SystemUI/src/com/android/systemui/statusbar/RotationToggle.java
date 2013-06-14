@@ -19,7 +19,6 @@ package com.android.systemui.statusbar;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.CompoundButton;
-
 import com.android.systemui.statusbar.policy.AutoRotateController;
 
 public class RotationToggle extends CompoundButton

@@ -24,9 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-
 import com.android.internal.R;
-
 import com.android.internal.widget.LockPatternUtils;
 
 public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecurityView {
@@ -71,7 +69,7 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
     public void setKeyguardCallback(KeyguardSecurityCallback callback) {
         mKeyguardSecurityCallback = callback;
         // TODO: formalize this in the interface or factor it out
-        ((FaceUnlock)mBiometricUnlock).setKeyguardCallback(callback);
+        ((FaceUnlock) mBiometricUnlock).setKeyguardCallback(callback);
     }
 
     @Override
@@ -86,7 +84,9 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
 
     @Override
     public void onDetachedFromWindow() {
-        if (DEBUG) Log.d(TAG, "onDetachedFromWindow()");
+        if (DEBUG) {
+            Log.d(TAG, "onDetachedFromWindow()");
+        }
         if (mBiometricUnlock != null) {
             mBiometricUnlock.stop();
         }
@@ -95,7 +95,9 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
 
     @Override
     public void onPause() {
-        if (DEBUG) Log.d(TAG, "onPause()");
+        if (DEBUG) {
+            Log.d(TAG, "onPause()");
+        }
         if (mBiometricUnlock != null) {
             mBiometricUnlock.stop();
         }
@@ -104,7 +106,9 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
 
     @Override
     public void onResume(int reason) {
-        if (DEBUG) Log.d(TAG, "onResume()");
+        if (DEBUG) {
+            Log.d(TAG, "onResume()");
+        }
         mIsShowing = KeyguardUpdateMonitor.getInstance(mContext).isKeyguardVisible();
         maybeStartBiometricUnlock();
         KeyguardUpdateMonitor.getInstance(mContext).registerCallback(mUpdateCallback);
@@ -127,7 +131,9 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
     }
 
     private void initializeBiometricUnlockView() {
-        if (DEBUG) Log.d(TAG, "initializeBiometricUnlockView()");
+        if (DEBUG) {
+            Log.d(TAG, "initializeBiometricUnlockView()");
+        }
         mFaceUnlockAreaView = findViewById(R.id.face_unlock_area_view);
         if (mFaceUnlockAreaView != null) {
             mBiometricUnlock = new FaceUnlock(mContext);
@@ -150,17 +156,19 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
      * it being started later.
      */
     private void maybeStartBiometricUnlock() {
-        if (DEBUG) Log.d(TAG, "maybeStartBiometricUnlock()");
+        if (DEBUG) {
+            Log.d(TAG, "maybeStartBiometricUnlock()");
+        }
         if (mBiometricUnlock != null) {
             KeyguardUpdateMonitor monitor = KeyguardUpdateMonitor.getInstance(mContext);
             final boolean backupIsTimedOut = (
                     monitor.getFailedUnlockAttempts() >=
-                    LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT);
+                            LockPatternUtils.FAILED_ATTEMPTS_BEFORE_TIMEOUT);
             PowerManager powerManager = (PowerManager) mContext.getSystemService(
                     Context.POWER_SERVICE);
 
             boolean isShowing;
-            synchronized(mIsShowingLock) {
+            synchronized (mIsShowingLock) {
                 isShowing = mIsShowing;
             }
 
@@ -188,7 +196,9 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
         // We need to stop the biometric unlock when a phone call comes in
         @Override
         public void onPhoneStateChanged(int phoneState) {
-            if (DEBUG) Log.d(TAG, "onPhoneStateChanged(" + phoneState + ")");
+            if (DEBUG) {
+                Log.d(TAG, "onPhoneStateChanged(" + phoneState + ")");
+            }
             if (phoneState == TelephonyManager.CALL_STATE_RINGING) {
                 if (mBiometricUnlock != null) {
                     mBiometricUnlock.stopAndShowBackup();
@@ -198,7 +208,9 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
 
         @Override
         public void onUserSwitched(int userId) {
-            if (DEBUG) Log.d(TAG, "onUserSwitched(" + userId + ")");
+            if (DEBUG) {
+                Log.d(TAG, "onUserSwitched(" + userId + ")");
+            }
             if (mBiometricUnlock != null) {
                 mBiometricUnlock.stop();
             }
@@ -208,9 +220,11 @@ public class KeyguardFaceUnlockView extends LinearLayout implements KeyguardSecu
 
         @Override
         public void onKeyguardVisibilityChanged(boolean showing) {
-            if (DEBUG) Log.d(TAG, "onKeyguardVisibilityChanged(" + showing + ")");
+            if (DEBUG) {
+                Log.d(TAG, "onKeyguardVisibilityChanged(" + showing + ")");
+            }
             boolean wasShowing = false;
-            synchronized(mIsShowingLock) {
+            synchronized (mIsShowingLock) {
                 wasShowing = mIsShowing;
                 mIsShowing = showing;
             }

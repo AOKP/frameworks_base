@@ -28,20 +28,23 @@ import android.os.UserHandle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.tablet.StatusBarPanel;
 
 import java.util.List;
 
 public class RecentsActivity extends Activity {
-    public static final String TOGGLE_RECENTS_INTENT = "com.android.systemui.recent.action.TOGGLE_RECENTS";
+    public static final String TOGGLE_RECENTS_INTENT =
+            "com.android.systemui.recent.action.TOGGLE_RECENTS";
     public static final String PRELOAD_INTENT = "com.android.systemui.recent.action.PRELOAD";
     public static final String CANCEL_PRELOAD_INTENT = "com.android.systemui.recent.CANCEL_PRELOAD";
     public static final String CLOSE_RECENTS_INTENT = "com.android.systemui.recent.action.CLOSE";
-    public static final String WINDOW_ANIMATION_START_INTENT = "com.android.systemui.recent.action.WINDOW_ANIMATION_START";
-    public static final String PRELOAD_PERMISSION = "com.android.systemui.recent.permission.PRELOAD";
-    public static final String WAITING_FOR_WINDOW_ANIMATION_PARAM = "com.android.systemui.recent.WAITING_FOR_WINDOW_ANIMATION";
+    public static final String WINDOW_ANIMATION_START_INTENT =
+            "com.android.systemui.recent.action.WINDOW_ANIMATION_START";
+    public static final String PRELOAD_PERMISSION =
+            "com.android.systemui.recent.permission.PRELOAD";
+    public static final String WAITING_FOR_WINDOW_ANIMATION_PARAM =
+            "com.android.systemui.recent.WAITING_FOR_WINDOW_ANIMATION";
     private static final String WAS_SHOWING = "was_showing";
 
     private RecentsPanelView mRecentsPanel;
@@ -161,7 +164,7 @@ public class RecentsActivity extends Activity {
             final List<ActivityManager.RecentTaskInfo> recentTasks =
                     am.getRecentTasks(2,
                             ActivityManager.RECENT_WITH_EXCLUDED |
-                            ActivityManager.RECENT_IGNORE_UNAVAILABLE);
+                                    ActivityManager.RECENT_IGNORE_UNAVAILABLE);
             if (recentTasks.size() > 1 &&
                     mRecentsPanel.simulateClick(recentTasks.get(1).persistentId)) {
                 // recents panel will take care of calling show(false) through simulateClick
@@ -234,6 +237,6 @@ public class RecentsActivity extends Activity {
     }
 
     boolean isActivityShowing() {
-         return mShowing;
+        return mShowing;
     }
 }

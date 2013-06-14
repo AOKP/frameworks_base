@@ -17,16 +17,10 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Slog;
 import android.view.View;
 import android.widget.LinearLayout;
-
-import com.android.internal.statusbar.StatusBarIcon;
-
 import com.android.systemui.R;
-import com.android.systemui.statusbar.StatusBarIconView;
 
 public class IconMerger extends LinearLayout {
     private static final String TAG = "IconMerger";
@@ -65,16 +59,22 @@ public class IconMerger extends LinearLayout {
     }
 
     private void checkOverflow(int width) {
-        if (mMoreView == null) return;
+        if (mMoreView == null) {
+            return;
+        }
 
         final int N = getChildCount();
         int visibleChildren = 0;
-        for (int i=0; i<N; i++) {
-            if (getChildAt(i).getVisibility() != GONE) visibleChildren++;
+        for (int i = 0; i < N; i++) {
+            if (getChildAt(i).getVisibility() != GONE) {
+                visibleChildren++;
+            }
         }
         final boolean overflowShown = (mMoreView.getVisibility() == View.VISIBLE);
         // let's assume we have one more slot if the more icon is already showing
-        if (overflowShown) visibleChildren --;
+        if (overflowShown) {
+            visibleChildren--;
+        }
         final boolean moreRequired = visibleChildren * mIconSize > width;
         if (moreRequired != overflowShown) {
             post(new Runnable() {

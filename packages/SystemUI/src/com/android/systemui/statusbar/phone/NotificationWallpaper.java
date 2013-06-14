@@ -1,8 +1,5 @@
 package com.android.systemui.statusbar.phone;
 
-import java.io.File;
-import java.io.IOException;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,11 +11,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
+import java.io.File;
+
 class NotificationWallpaper extends FrameLayout {
 
     private final String TAG = "NotificationWallpaperUpdater";
 
-    private final String NOTIF_WALLPAPER_IMAGE_PATH = "/data/data/com.aokp.romcontrol/files/notification_wallpaper.jpg";
+    private final String NOTIF_WALLPAPER_IMAGE_PATH =
+            "/data/data/com.aokp.romcontrol/files/notification_wallpaper.jpg";
 
     private ImageView mNotificationWallpaperImage;
 
@@ -51,8 +51,9 @@ class NotificationWallpaper extends FrameLayout {
 
     @Override
     protected void onDetachedFromWindow() {
-        if (bitmapWallpaper != null)
+        if (bitmapWallpaper != null) {
             bitmapWallpaper.recycle();
+        }
 
         System.gc();
         super.onDetachedFromWindow();

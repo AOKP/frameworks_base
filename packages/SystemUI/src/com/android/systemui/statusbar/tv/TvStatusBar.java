@@ -16,15 +16,14 @@
 
 package com.android.systemui.statusbar.tv;
 
-import com.android.internal.statusbar.StatusBarIcon;
-import com.android.internal.statusbar.StatusBarNotification;
-import com.android.systemui.statusbar.BaseStatusBar;
-
 import android.os.IBinder;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
+import com.android.internal.statusbar.StatusBarIcon;
+import com.android.internal.statusbar.StatusBarNotification;
+import com.android.systemui.statusbar.BaseStatusBar;
 
 /*
  * Status bar implementation for "large screen" products that mostly present no on-screen nav
@@ -38,7 +37,7 @@ public class TvStatusBar extends BaseStatusBar {
 
     @Override
     public void updateIcon(String slot, int index, int viewIndex, StatusBarIcon old,
-            StatusBarIcon icon) {
+                           StatusBarIcon icon) {
     }
 
     @Override
@@ -98,11 +97,11 @@ public class TvStatusBar extends BaseStatusBar {
     }
 
     @Override
-    protected void showBar(boolean showSearch){
+    protected void showBar(boolean showSearch) {
     }
 
     @Override
-    protected void setSearchLightOn(boolean on){
+    protected void setSearchLightOn(boolean on) {
     }
 
     @Override

@@ -4,13 +4,14 @@ package com.android.systemui.statusbar.toggles;
 import android.content.Context;
 import android.media.AudioManager;
 import android.view.View;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.systemui.R;
 import com.android.systemui.aokp.AwesomeAction;
 
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
+
 public class SilentToggle extends StatefulToggle {
     private AudioManager mAudioManager;
+
     @Override
     public void init(Context c, int style) {
         super.init(c, style);

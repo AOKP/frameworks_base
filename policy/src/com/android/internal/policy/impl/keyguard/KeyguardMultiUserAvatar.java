@@ -18,8 +18,8 @@ package com.android.internal.policy.impl.keyguard;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.Context;
 import android.content.pm.UserInfo;
 import android.content.res.Resources;
@@ -33,7 +33,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.internal.R;
 
 class KeyguardMultiUserAvatar extends FrameLayout {
@@ -71,7 +70,8 @@ class KeyguardMultiUserAvatar extends FrameLayout {
     private KeyguardCircleFramedDrawable mFramed;
 
     public static KeyguardMultiUserAvatar fromXml(int resId, Context context,
-            KeyguardMultiUserSelectorView userSelector, UserInfo info) {
+                                                  KeyguardMultiUserSelectorView userSelector,
+                                                  UserInfo info) {
         KeyguardMultiUserAvatar icon = (KeyguardMultiUserAvatar)
                 LayoutInflater.from(context).inflate(resId, userSelector, false);
 
@@ -123,11 +123,13 @@ class KeyguardMultiUserAvatar extends FrameLayout {
         mUserImage = (ImageView) findViewById(R.id.keyguard_user_avatar);
         mUserName = (TextView) findViewById(R.id.keyguard_user_name);
 
-        Bitmap icon = null; 
+        Bitmap icon = null;
         try {
             icon = BitmapFactory.decodeFile(rewriteIconPath(user.iconPath));
         } catch (Exception e) {
-            if (DEBUG) Log.d(TAG, "failed to open profile icon " + user.iconPath, e);
+            if (DEBUG) {
+                Log.d(TAG, "failed to open profile icon " + user.iconPath, e);
+            }
         }
 
         if (icon == null) {
@@ -161,7 +163,7 @@ class KeyguardMultiUserAvatar extends FrameLayout {
     }
 
     void updateVisualsForActive(boolean active, boolean animate, int duration,
-            final Runnable onComplete) {
+                                final Runnable onComplete) {
         final float finalAlpha = active ? mActiveAlpha : mInactiveAlpha;
         final float initAlpha = active ? mInactiveAlpha : mActiveAlpha;
         final float finalScale = active ? 1f : 1f / mActiveScale;

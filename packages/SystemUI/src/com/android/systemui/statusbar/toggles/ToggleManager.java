@@ -10,8 +10,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.database.ContentObserver;
-import android.location.LocationManager;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -28,7 +26,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-
 import com.android.internal.telephony.PhoneConstants;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsContainerView;
@@ -56,8 +53,10 @@ public class ToggleManager {
 
     private static final String TAG = ToggleManager.class.getSimpleName();
 
-    public static final String ACTION_BROADCAST_TOGGLES = "com.android.systemui.statusbar.toggles.ACTION_BROADCAST_TOGGLES";
-    public static final String ACTION_REQUEST_TOGGLES = "com.android.systemui.statusbar.toggles.ACTION_REQUEST_TOGGLES";
+    public static final String ACTION_BROADCAST_TOGGLES =
+            "com.android.systemui.statusbar.toggles.ACTION_BROADCAST_TOGGLES";
+    public static final String ACTION_REQUEST_TOGGLES =
+            "com.android.systemui.statusbar.toggles.ACTION_REQUEST_TOGGLES";
 
     static final boolean DEBUG = false;
 
@@ -137,7 +136,7 @@ public class ToggleManager {
                 toggleMap.put(BLUETOOTH_TOGGLE, BluetoothToggle.class);
             }
             toggleMap.put(SWAGGER_TOGGLE, SwaggerToggle.class);
-            if (((Vibrator)mContext.getSystemService(Context.VIBRATOR_SERVICE)).hasVibrator()) {
+            if (((Vibrator) mContext.getSystemService(Context.VIBRATOR_SERVICE)).hasVibrator()) {
                 toggleMap.put(VIBRATE_TOGGLE, VibrateToggle.class);
                 toggleMap.put(SOUND_STATE_TOGGLE, SoundStateToggle.class);
             }
@@ -149,7 +148,7 @@ public class ToggleManager {
             }
             toggleMap.put(TORCH_TOGGLE, TorchToggle.class);
             toggleMap.put(USB_TETHER_TOGGLE, UsbTetherToggle.class);
-            if (((TelephonyManager)mContext.getSystemService(Context.TELEPHONY_SERVICE))
+            if (((TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE))
                     .getPhoneType() == PhoneConstants.PHONE_TYPE_GSM) {
                 toggleMap.put(TWOG_TOGGLE, TwoGToggle.class);
             }
@@ -202,7 +201,8 @@ public class ToggleManager {
     private BrightnessController brightnessController;
 
     public void setControllers(BluetoothController bt, NetworkController net,
-            BatteryController batt, LocationController loc, BrightnessController screen) {
+                               BatteryController batt, LocationController loc,
+                               BrightnessController screen) {
         bluetoothController = bt;
         networkController = net;
         batteryController = batt;
@@ -262,7 +262,7 @@ public class ToggleManager {
                         spacer_front.setBackgroundResource(R.drawable.qs_tile_background);
                         spacer_end.setBackgroundResource(R.drawable.qs_tile_background);
                         params.weight = 2f; // change weight so spacers grow
-                        row.addView(spacer_front,0, params);
+                        row.addView(spacer_front, 0, params);
                         row.addView(spacer_end, params);
                     }
                 }
@@ -294,12 +294,12 @@ public class ToggleManager {
             togglesRowLayout = rows.get(rows.size() - 1);
             togglesRowLayout.setGravity(Gravity.CENTER_HORIZONTAL);
             toggleScrollView.setHorizontalFadingEdgeEnabled(true);
-            toggleScrollView.addView(togglesRowLayout,new LinearLayout.LayoutParams(
+            toggleScrollView.addView(togglesRowLayout, new LinearLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
             LinearLayout ll = new LinearLayout(mContext);
             ll.setOrientation(LinearLayout.VERTICAL);
             ll.setGravity(Gravity.CENTER_HORIZONTAL);
-            ll.addView(toggleScrollView,new LinearLayout.LayoutParams(
+            ll.addView(toggleScrollView, new LinearLayout.LayoutParams(
                     LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
             mContainers[STYLE_SCROLLABLE].addView(ll);
 
@@ -338,12 +338,14 @@ public class ToggleManager {
                     batteryController.updateCallback((BatteryStateChangeCallback) toggle);
                 }
 
-                if (locationController != null && toggle instanceof LocationGpsStateChangeCallback) {
+                if (locationController != null &&
+                        toggle instanceof LocationGpsStateChangeCallback) {
                     locationController
                             .addStateChangedCallback((LocationGpsStateChangeCallback) toggle);
                 }
 
-                if (brightnessController != null && toggle instanceof BrightnessStateChangeCallback) {
+                if (brightnessController != null &&
+                        toggle instanceof BrightnessStateChangeCallback) {
                     brightnessController.addStateChangedCallback((BrightnessStateChangeCallback)
                             toggle);
                 }
@@ -390,7 +392,7 @@ public class ToggleManager {
     public void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
         mUserToggles = Settings.System.getString(resolver, Settings.System.QUICK_TOGGLES);
-        if(mUserToggles == null) {
+        if (mUserToggles == null) {
             mUserToggles = "";
         }
         int columnCount = Settings.System.getInt(resolver, Settings.System.QUICK_TOGGLES_PER_ROW,
@@ -542,7 +544,7 @@ public class ToggleManager {
     private static LinearLayout.LayoutParams getTraditionalToggleParams(Context c) {
         return new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, c.getResources().getDimensionPixelSize(
-                        R.dimen.toggle_row_height), 1f);
+                R.dimen.toggle_row_height), 1f);
     }
 
     private static LinearLayout.LayoutParams getScrollableToggleParams(Context c) {
@@ -554,7 +556,7 @@ public class ToggleManager {
     private static FrameLayout.LayoutParams getTileParams(Context c) {
         return new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.WRAP_CONTENT, c.getResources().getDimensionPixelSize(
-                        R.dimen.quick_settings_cell_height));
+                R.dimen.quick_settings_cell_height));
     }
 
     public int getStyle() {
@@ -661,13 +663,15 @@ public class ToggleManager {
         return mStyle == STYLE_TILE;
     }
 
-    /* package */static void log(String msg) {
+    /* package */
+    static void log(String msg) {
         if (DEBUG) {
             Log.d(TAG, msg);
         }
     }
 
-    /* package */static void log(String msg, Exception e) {
+    /* package */
+    static void log(String msg, Exception e) {
         if (DEBUG) {
             Log.d(TAG, msg, e);
         }

@@ -16,41 +16,34 @@
 
 package com.android.internal.util.aokp;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Xfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.InsetDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
-import android.media.AudioManager;
-import android.os.UserHandle;
-import android.provider.Settings;
 import android.text.TextUtils;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
-import com.android.internal.widget.multiwaveview.GlowPadView;
 import com.android.internal.widget.multiwaveview.TargetDrawable;
 
 import java.io.File;
 import java.net.URISyntaxException;
+
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
+import static com.android.internal.util.aokp.AwesomeConstants.fromString;
 
 public class LockScreenHelpers {
 
@@ -62,13 +55,15 @@ public class LockScreenHelpers {
         final Resources res = context.getResources();
 
         if (TextUtils.isEmpty(action) || action.equals(AwesomeConstant.ACTION_NULL.value())) {
-            TargetDrawable drawable = new TargetDrawable(res, stateDrawable(res.getDrawable(com.android.internal.R.drawable.ic_empty), context));
+            TargetDrawable drawable = new TargetDrawable(res,
+                    stateDrawable(res.getDrawable(com.android.internal.R.drawable.ic_empty),
+                            context));
             drawable.setEnabled(false);
             return drawable;
         }
 
         AwesomeConstant IconEnum = fromString(action);
-            switch (IconEnum) {
+        switch (IconEnum) {
             case ACTION_UNLOCK:
                 resourceId = com.android.internal.R.drawable.ic_lockscreen_unlock;
                 break;
@@ -83,9 +78,12 @@ public class LockScreenHelpers {
                 try {
                     Intent intent = Intent.parseUri(action, 0);
                     PackageManager pm = context.getPackageManager();
-                    ActivityInfo info = intent.resolveActivityInfo(pm, PackageManager.GET_ACTIVITIES);
+                    ActivityInfo info =
+                            intent.resolveActivityInfo(pm, PackageManager.GET_ACTIVITIES);
                     if (info == null) {
-                        TargetDrawable drawable = new TargetDrawable(res, stateDrawable(res.getDrawable(com.android.internal.R.drawable.ic_empty), context));
+                        TargetDrawable drawable = new TargetDrawable(res, stateDrawable(
+                                res.getDrawable(com.android.internal.R.drawable.ic_empty),
+                                context));
                         drawable.setEnabled(false);
                         return drawable;
                     }
@@ -95,7 +93,7 @@ public class LockScreenHelpers {
                     resourceId = com.android.internal.R.drawable.ic_empty;
                 }
                 break;
-            }
+        }
         TargetDrawable drawable = new TargetDrawable(res, resourceId);
         if (resourceId == com.android.internal.R.drawable.ic_empty) {
             drawable.setEnabled(false);
@@ -106,16 +104,17 @@ public class LockScreenHelpers {
     public static StateListDrawable stateDrawable(Drawable front, Context context) {
         final Resources res = context.getResources();
         Drawable iconBg = res.getDrawable(
-            com.android.internal.R.drawable.ic_navbar_blank_activated);
-        int inset = (int)(iconBg.getIntrinsicHeight() / 3);
+                com.android.internal.R.drawable.ic_navbar_blank_activated);
+        int inset = (int) (iconBg.getIntrinsicHeight() / 3);
         final Drawable blankActiveDrawable = res.getDrawable(
-            com.android.internal.R.drawable.ic_lockscreen_target_activated);
+                com.android.internal.R.drawable.ic_lockscreen_target_activated);
         final InsetDrawable activeBack = new InsetDrawable(blankActiveDrawable, 0, 0, 0, 0);
         Drawable back = activeBack;
         InsetDrawable[] inactivelayer = new InsetDrawable[2];
         InsetDrawable[] activelayer = new InsetDrawable[2];
         inactivelayer[0] = new InsetDrawable(
-            res.getDrawable(com.android.internal.R.drawable.ic_lockscreen_lock_pressed), 0, 0,0, 0);
+                res.getDrawable(com.android.internal.R.drawable.ic_lockscreen_lock_pressed), 0, 0,
+                0, 0);
         inactivelayer[1] = new InsetDrawable(front, inset, inset, inset, inset);
         activelayer[0] = new InsetDrawable(back, 0, 0, 0, 0);
         activelayer[1] = new InsetDrawable(front, inset, inset, inset, inset);
@@ -137,18 +136,19 @@ public class LockScreenHelpers {
 
         File f = new File(Uri.parse(action).getPath());
         Drawable front = new BitmapDrawable(res,
-                         getRoundedCornerBitmap(BitmapFactory.decodeFile(f.getAbsolutePath())));
+                getRoundedCornerBitmap(BitmapFactory.decodeFile(f.getAbsolutePath())));
         final Drawable blankActiveDrawable = res.getDrawable(
-            com.android.internal.R.drawable.ic_lockscreen_target_activated);
+                com.android.internal.R.drawable.ic_lockscreen_target_activated);
         final InsetDrawable activeBack = new InsetDrawable(blankActiveDrawable, 0, 0, 0, 0);
         Drawable back = activeBack;
         Drawable iconBg = res.getDrawable(
-            com.android.internal.R.drawable.ic_navbar_blank_activated);
-        int inset = (int)(iconBg.getIntrinsicHeight() / 3);
+                com.android.internal.R.drawable.ic_navbar_blank_activated);
+        int inset = (int) (iconBg.getIntrinsicHeight() / 3);
         InsetDrawable[] inactivelayer = new InsetDrawable[2];
         InsetDrawable[] activelayer = new InsetDrawable[2];
         inactivelayer[0] = new InsetDrawable(
-            res.getDrawable(com.android.internal.R.drawable.ic_lockscreen_lock_pressed), 0, 0,0, 0);
+                res.getDrawable(com.android.internal.R.drawable.ic_lockscreen_lock_pressed), 0, 0,
+                0, 0);
         inactivelayer[1] = new InsetDrawable(front, inset, inset, inset, inset);
         activelayer[0] = new InsetDrawable(back, 0, 0, 0, 0);
         activelayer[1] = new InsetDrawable(front, inset, inset, inset, inset);
@@ -167,7 +167,7 @@ public class LockScreenHelpers {
 
     public static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-            bitmap.getHeight(), Config.ARGB_8888);
+                bitmap.getHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;

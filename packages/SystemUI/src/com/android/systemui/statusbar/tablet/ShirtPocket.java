@@ -20,29 +20,21 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.ClipData;
-import android.content.ClipDescription;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.DragEvent;
-import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.android.systemui.R;
 
 public class ShirtPocket extends ImageView {
     private static final boolean DEBUG = false;
-    private static final String  TAG = "StatusBar/ShirtPocket";
+    private static final String TAG = "StatusBar/ShirtPocket";
 
     private ClipData mClipping = null;
 
@@ -50,9 +42,11 @@ public class ShirtPocket extends ImageView {
 
     public static class DropZone extends View {
         ShirtPocket mPocket;
+
         public DropZone(Context context, AttributeSet attrs) {
             super(context, attrs);
         }
+
         public void setPocket(ShirtPocket p) {
             mPocket = p;
         }
@@ -96,21 +90,29 @@ public class ShirtPocket extends ImageView {
 
         @Override
         public boolean onDragEvent(DragEvent event) {
-            if (DEBUG) Slog.d(TAG, "onDragEvent: " + event);
+            if (DEBUG) {
+                Slog.d(TAG, "onDragEvent: " + event);
+            }
             switch (event.getAction()) {
                 // We want to appear whenever a potential drag takes off from anywhere in the UI.
                 case DragEvent.ACTION_DRAG_STARTED:
                     show(true);
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
-                    if (DEBUG) Slog.d(TAG, "entered!");
+                    if (DEBUG) {
+                        Slog.d(TAG, "entered!");
+                    }
                     // XXX: TODO
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    if (DEBUG) Slog.d(TAG, "exited!");
+                    if (DEBUG) {
+                        Slog.d(TAG, "exited!");
+                    }
                     break;
                 case DragEvent.ACTION_DROP:
-                    if (DEBUG) Slog.d(TAG, "dropped!");
+                    if (DEBUG) {
+                        Slog.d(TAG, "dropped!");
+                    }
                     mPocket.stash(event.getClipData());
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
@@ -127,7 +129,7 @@ public class ShirtPocket extends ImageView {
 
     // TODO: "pin area" panel, dragging things out
     ObjectAnimator mAnimHide, mAnimShow;
-    
+
     protected void onAttachedToWindow() {
     }
 
@@ -164,10 +166,12 @@ public class ShirtPocket extends ImageView {
                 DragShadowBuilder shadow;
                 if (icon != null) {
                     shadow = new DragShadowBuilder(this) {
-                        public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) {
+                        public void onProvideShadowMetrics(Point shadowSize,
+                                                           Point shadowTouchPoint) {
                             shadowSize.set(icon.getWidth(), icon.getHeight());
                             shadowTouchPoint.set(shadowSize.x / 2, shadowSize.y / 2);
                         }
+
                         public void onDrawShadow(Canvas canvas) {
                             canvas.drawBitmap(icon, 0, 0, new Paint());
                         }
@@ -212,7 +216,8 @@ public class ShirtPocket extends ImageView {
                     DragShadowBuilder shadow;
                     if (icon != null) {
                         shadow = new DragShadowBuilder(v) {
-                            public void onProvideShadowMetrics(Point shadowSize, Point shadowTouchPoint) {
+                            public void onProvideShadowMetrics(Point shadowSize,
+                            Point shadowTouchPoint) {
                                 shadowSize.set(icon.getWidth(), icon.getHeight());
                                 shadowTouchPoint.set(shadowSize.x / 2, shadowSize.y / 2);
                             }

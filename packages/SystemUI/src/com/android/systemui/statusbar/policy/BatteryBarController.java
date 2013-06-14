@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -44,7 +43,8 @@ public class BatteryBarController extends LinearLayout {
 
     static class GlobalSettingsObserver extends ContentObserver {
         private static GlobalSettingsObserver sInstance;
-        private ArrayList<BatteryBarController> mBatteryBarControllers = new ArrayList<BatteryBarController>();
+        private ArrayList<BatteryBarController> mBatteryBarControllers =
+                new ArrayList<BatteryBarController>();
         private Context mContext;
 
         public GlobalSettingsObserver(Handler handler, Context context) {
@@ -146,7 +146,8 @@ public class BatteryBarController extends LinearLayout {
 
             if (Intent.ACTION_BATTERY_CHANGED.equals(action)) {
                 mBatteryLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-                mBatteryCharging = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0) == BatteryManager.BATTERY_STATUS_CHARGING;
+                mBatteryCharging = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0) ==
+                        BatteryManager.BATTERY_STATUS_CHARGING;
                 Prefs.setLastBatteryLevel(context, mBatteryLevel);
             }
         }
@@ -185,16 +186,18 @@ public class BatteryBarController extends LinearLayout {
 
         ViewGroup.LayoutParams params = (ViewGroup.LayoutParams) getLayoutParams();
 
-        if (isVertical)
+        if (isVertical) {
             params.width = pixels;
-        else
+        } else {
             params.height = pixels;
+        }
         setLayoutParams(params);
 
-        if (isVertical)
+        if (isVertical) {
             params.width = pixels;
-        else
+        } else {
             params.height = pixels;
+        }
         setLayoutParams(params);
         mBatteryLevel = Prefs.getLastBatteryLevel(getContext());
         if (mStyle == STYLE_REGULAR) {

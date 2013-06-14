@@ -61,6 +61,7 @@
             android:layout_height="match_parent"
             android:gravity="center_vertical"
             >
+
             <view
                 class="com.android.systemui.statusbar.tablet.NotificationIconArea$IconLayout"
                 android:id="@+id/icons"
@@ -79,6 +80,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         >
+
         <com.android.systemui.statusbar.policy.Clock
             android:id="@+id/clock"
             android:textAppearance="@style/TextAppearance.StatusBar.Clock"
@@ -89,6 +91,7 @@
             android:layout_marginRight="8dip"
             android:gravity="center_vertical|left"
             />
+
         <com.android.systemui.statusbar.policy.ClockCenter
             android:id="@+id/clock"
             android:textAppearance="@style/TextAppearance.StatusBar.Clock"
@@ -121,18 +124,23 @@
             android:orientation="horizontal"
             android:gravity="center"
             >
-            <include layout="@layout/signal_cluster_view" 
+
+            <include
+                layout="@layout/signal_cluster_view"
                 android:id="@+id/signal_cluster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android.visibility="gone"
                 />
-            <include layout="@layout/signal_cluster_view_alt"
+
+            <include
+                layout="@layout/signal_cluster_view_alt"
                 android:id="@+id/signal_cluster_alt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android.visibility="gone"
                 />
+
             <ImageView
                 android:id="@+id/bluetooth"
                 android:layout_height="wrap_content"
@@ -140,11 +148,13 @@
                 android:paddingLeft="4dip"
                 android:visibility="gone"
                 />
-            <include layout="@layout/battery_cluster_view"
+
+            <include
+                layout="@layout/battery_cluster_view"
                 android:id="@+id/battery_cluster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-            />
+                />
         </LinearLayout>
     </LinearLayout>
 </com.android.systemui.statusbar.tablet.NotificationArea>

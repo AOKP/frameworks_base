@@ -25,7 +25,6 @@ import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public class DeadZone extends View {
@@ -74,9 +73,10 @@ public class DeadZone extends View {
         int index = a.getInt(R.styleable.DeadZone_orientation, -1);
         mVertical = (index == VERTICAL);
 
-        if (DEBUG)
+        if (DEBUG) {
             Slog.v(TAG, this + " size=[" + mSizeMin + "-" + mSizeMax + "] hold=" + mHold
                     + (mVertical ? " vertical" : " horizontal"));
+        }
 
         setFlashOnTouchCapture(context.getResources().getBoolean(R.bool.config_dead_zone_flash));
     }
@@ -86,13 +86,16 @@ public class DeadZone extends View {
     }
 
     private float getSize(long now) {
-        if (mSizeMax == 0)
+        if (mSizeMax == 0) {
             return 0;
+        }
         long dt = (now - mLastPokeTime);
-        if (dt > mHold + mDecay)
+        if (dt > mHold + mDecay) {
             return mSizeMin;
-        if (dt < mHold)
+        }
+        if (dt < mHold) {
             return mSizeMax;
+        }
         return (int) lerp(mSizeMax, mSizeMin, (float) (dt - mHold) / mDecay);
     }
 
@@ -119,7 +122,8 @@ public class DeadZone extends View {
             int size = (int) getSize(event.getEventTime());
             if ((mVertical && event.getX() < size) || event.getY() < size) {
                 if (CHATTY) {
-                    Slog.v(TAG, "consuming errant click: (" + event.getX() + "," + event.getY() + ")");
+                    Slog.v(TAG,
+                            "consuming errant click: (" + event.getX() + "," + event.getY() + ")");
                 }
                 if (mShouldFlash) {
                     post(mDebugFlash);
@@ -133,8 +137,9 @@ public class DeadZone extends View {
 
     public void poke(MotionEvent event) {
         mLastPokeTime = event.getEventTime();
-        if (DEBUG)
+        if (DEBUG) {
             Slog.v(TAG, "poked! size=" + getSize(mLastPokeTime));
+        }
         postInvalidate();
     }
 
@@ -159,7 +164,9 @@ public class DeadZone extends View {
         can.drawARGB((int) (frac * 0xFF), 0xDD, 0xEE, 0xAA);
 
         if (DEBUG && size > mSizeMin)
-            // crazy aggressive redrawing here, for debugging only
+        // crazy aggressive redrawing here, for debugging only
+        {
             postInvalidateDelayed(100);
+        }
     }
 }

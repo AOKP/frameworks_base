@@ -39,7 +39,8 @@ public class TakeScreenshotService extends Service {
                         mScreenshot = new GlobalScreenshot(TakeScreenshotService.this);
                     }
                     mScreenshot.takeScreenshot(new Runnable() {
-                        @Override public void run() {
+                        @Override
+                        public void run() {
                             Message reply = Message.obtain(null, 1);
                             try {
                                 callback.send(reply);

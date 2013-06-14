@@ -25,9 +25,13 @@ import android.os.UserManager;
 
 public class UserUtils {
     public static Drawable getUserIcon(UserManager um, UserInfo user, Resources res) {
-        if (user.iconPath == null) return null;
+        if (user.iconPath == null) {
+            return null;
+        }
         Bitmap icon = um.getUserIcon(user.id);
-        if (icon == null) return null;
+        if (icon == null) {
+            return null;
+        }
         return new BitmapDrawable(res, icon);
     }
 }

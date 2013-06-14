@@ -16,14 +16,8 @@
 
 package com.android.systemui.statusbar.policy;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.provider.Settings;
-import android.util.Slog;
-import android.view.IWindowManager;
 import android.widget.CompoundButton;
 
 public class DoNotDisturbController implements CompoundButton.OnCheckedChangeListener,
@@ -60,7 +54,7 @@ public class DoNotDisturbController implements CompoundButton.OnCheckedChangeLis
             editor.apply();
         }
     }
-    
+
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         final boolean val = prefs.getBoolean(Prefs.DO_NOT_DISTURB_PREF,
                 Prefs.DO_NOT_DISTURB_DEFAULT);

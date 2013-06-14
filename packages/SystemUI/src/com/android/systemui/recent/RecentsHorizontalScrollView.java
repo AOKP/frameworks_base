@@ -32,7 +32,6 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-
 import com.android.systemui.R;
 import com.android.systemui.SwipeHelper;
 import com.android.systemui.recent.RecentsPanelView.TaskDescriptionAdapter;
@@ -159,15 +158,15 @@ public class RecentsHorizontalScrollView extends HorizontalScrollView
         // Scroll to end after initial layout.
 
         final OnGlobalLayoutListener updateScroll = new OnGlobalLayoutListener() {
-                public void onGlobalLayout() {
-                    mLastScrollPosition = scrollPositionOfMostRecent();
-                    scrollTo(mLastScrollPosition, 0);
-                    final ViewTreeObserver observer = getViewTreeObserver();
-                    if (observer.isAlive()) {
-                        observer.removeOnGlobalLayoutListener(this);
-                    }
+            public void onGlobalLayout() {
+                mLastScrollPosition = scrollPositionOfMostRecent();
+                scrollTo(mLastScrollPosition, 0);
+                final ViewTreeObserver observer = getViewTreeObserver();
+                if (observer.isAlive()) {
+                    observer.removeOnGlobalLayoutListener(this);
                 }
-            };
+            }
+        };
         getViewTreeObserver().addOnGlobalLayoutListener(updateScroll);
     }
 
@@ -177,15 +176,17 @@ public class RecentsHorizontalScrollView extends HorizontalScrollView
     }
 
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (DEBUG) Log.v(TAG, "onInterceptTouchEvent()");
+        if (DEBUG) {
+            Log.v(TAG, "onInterceptTouchEvent()");
+        }
         return mSwipeHelper.onInterceptTouchEvent(ev) ||
-            super.onInterceptTouchEvent(ev);
+                super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return mSwipeHelper.onTouchEvent(ev) ||
-            super.onTouchEvent(ev);
+                super.onTouchEvent(ev);
     }
 
     public boolean canChildBeDismissed(View v) {
@@ -222,7 +223,7 @@ public class RecentsHorizontalScrollView extends HorizontalScrollView
         for (int i = 0; i < mLinearLayout.getChildCount(); i++) {
             View item = mLinearLayout.getChildAt(i);
             if (x >= item.getLeft() && x < item.getRight()
-                && y >= item.getTop() && y < item.getBottom()) {
+                    && y >= item.getTop() && y < item.getBottom()) {
                 return item;
             }
         }
@@ -284,7 +285,7 @@ public class RecentsHorizontalScrollView extends HorizontalScrollView
         setScrollbarFadingEnabled(true);
         mLinearLayout = (LinearLayout) findViewById(R.id.recents_linear_layout);
         final int leftPadding = mContext.getResources()
-            .getDimensionPixelOffset(R.dimen.status_bar_recents_thumbnail_left_margin);
+                .getDimensionPixelOffset(R.dimen.status_bar_recents_thumbnail_left_margin);
         setOverScrollEffectPadding(leftPadding, 0);
     }
 

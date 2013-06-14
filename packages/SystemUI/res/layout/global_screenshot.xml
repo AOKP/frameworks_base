@@ -14,21 +14,27 @@
      limitations under the License.
 -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <ImageView android:id="@+id/global_screenshot_background"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/global_screenshot_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@android:color/black"
         android:visibility="gone" />
-    <ImageView android:id="@+id/global_screenshot"
+
+    <ImageView
+        android:id="@+id/global_screenshot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/screenshot_panel"
         android:visibility="gone"
         android:adjustViewBounds="true" />
-    <ImageView android:id="@+id/global_screenshot_flash"
+
+    <ImageView
+        android:id="@+id/global_screenshot_flash"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:src="@android:color/white"

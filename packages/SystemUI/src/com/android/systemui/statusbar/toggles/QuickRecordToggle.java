@@ -8,7 +8,6 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.view.View;
-
 import com.android.systemui.R;
 
 import java.io.File;
@@ -58,6 +57,7 @@ public class QuickRecordToggle extends BaseToggle {
                 break;
         }
     }
+
     @Override
     public boolean onLongClick(View v) {
         switch (mRecordingState) {
@@ -106,11 +106,13 @@ public class QuickRecordToggle extends BaseToggle {
                 playStateIcon = R.drawable.ic_qs_quickrecord;
                 break;
         }
-    setInfo(playStateName, playStateIcon);
-    scheduleViewUpdate();
-    };
+        setInfo(playStateName, playStateIcon);
+        scheduleViewUpdate();
+    }
 
-    final Runnable delayTileRevert = new Runnable () {
+    ;
+
+    final Runnable delayTileRevert = new Runnable() {
         public void run() {
             if (mRecordingState == STATE_JUST_RECORDED) {
                 mRecordingState = STATE_IDLE;
@@ -127,7 +129,7 @@ public class QuickRecordToggle extends BaseToggle {
         }
     };
 
-    final OnCompletionListener stoppedPlaying = new OnCompletionListener(){
+    final OnCompletionListener stoppedPlaying = new OnCompletionListener() {
         public void onCompletion(MediaPlayer mp) {
             mRecordingState = STATE_IDLE;
             queryRecordingInformation();

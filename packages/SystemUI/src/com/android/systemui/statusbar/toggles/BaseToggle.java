@@ -17,7 +17,6 @@ import android.view.View.OnLongClickListener;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsTileView;
@@ -43,7 +42,8 @@ public abstract class BaseToggle
     protected ImageView mIcon = null;
     private int mIconId = -1;
 
-    protected ArrayList<BroadcastReceiver> mRegisteredReceivers = new ArrayList<BroadcastReceiver>();
+    protected ArrayList<BroadcastReceiver> mRegisteredReceivers =
+            new ArrayList<BroadcastReceiver>();
 
     protected Handler mHandler;
     private Runnable mUpdateViewRunnable = new Runnable() {
@@ -155,7 +155,7 @@ public abstract class BaseToggle
         mIcon = (ImageView) view.findViewById(R.id.icon);
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
-        view.setPadding(0,0,
+        view.setPadding(0, 0,
                 mContext.getResources().getDimensionPixelSize(R.dimen.toggle_traditional_padding),
                 mContext.getResources().getDimensionPixelSize(R.dimen.quick_settings_cell_gap));
         return view;
@@ -164,8 +164,9 @@ public abstract class BaseToggle
 
     protected final void scheduleViewUpdate() {
         // mHandler.removeCallbacks(mUpdateViewRunnable);
-        if (!mHandler.hasCallbacks(mUpdateViewRunnable))
+        if (!mHandler.hasCallbacks(mUpdateViewRunnable)) {
             mHandler.postDelayed(mUpdateViewRunnable, 100);
+        }
     }
 
     protected final void startActivity(String a) {
@@ -232,8 +233,9 @@ public abstract class BaseToggle
 
     // Remove the double quotes that the SSID may contain
     public static String removeDoubleQuotes(String string) {
-        if (string == null)
+        if (string == null) {
             return null;
+        }
         final int length = string.length();
         if ((length > 1) && (string.charAt(0) == '"') && (string.charAt(length - 1) == '"')) {
             return string.substring(1, length - 1);
@@ -243,8 +245,9 @@ public abstract class BaseToggle
 
     // Remove the period from the network name
     public static String removeTrailingPeriod(String string) {
-        if (string == null)
+        if (string == null) {
             return null;
+        }
         final int length = string.length();
         if (string.endsWith(".")) {
             string.substring(0, length - 1);

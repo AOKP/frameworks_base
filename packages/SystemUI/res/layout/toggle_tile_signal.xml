@@ -15,17 +15,17 @@
      limitations under the License.
 -->
 <com.android.systemui.statusbar.phone.QuickSettingsTileView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/qs_tile_background"
-    android:gravity="center" >
+                                                            android:layout_width="match_parent"
+                                                            android:layout_height="match_parent"
+                                                            android:background="@drawable/qs_tile_background"
+                                                            android:gravity="center">
 
     <FrameLayout
         android:id="@+id/rssi_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:paddingBottom="10dp" >
+        android:paddingBottom="10dp">
 
         <ImageView
             android:id="@+id/rssi_image"

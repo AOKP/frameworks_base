@@ -16,8 +16,7 @@
 
 package com.android.systemui.statusbar.policy;
 
-import java.util.ArrayList;
-
+import android.app.INotificationManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -30,21 +29,16 @@ import android.location.LocationManager;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
-import android.util.Slog;
-import android.view.View;
-import android.widget.ImageView;
+import com.android.systemui.R;
+
+import java.util.ArrayList;
 
 // private NM API
-import android.app.INotificationManager;
-import com.android.internal.statusbar.StatusBarNotification;
-
-import com.android.systemui.R;
-import com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback;
 
 public class LocationController extends BroadcastReceiver {
     private static final String TAG = "StatusBar.LocationController";
 
-    private static final int GPS_NOTIFICATION_ID = 374203-122084;
+    private static final int GPS_NOTIFICATION_ID = 374203 - 122084;
 
     private Context mContext;
 
@@ -67,7 +61,7 @@ public class LocationController extends BroadcastReceiver {
         filter.addAction(LocationManager.GPS_FIX_CHANGE_ACTION);
         context.registerReceiver(this, filter);
 
-        NotificationManager nm = (NotificationManager)context.getSystemService(
+        NotificationManager nm = (NotificationManager) context.getSystemService(
                 Context.NOTIFICATION_SERVICE);
         mNotificationService = nm.getService();
 
@@ -82,7 +76,8 @@ public class LocationController extends BroadcastReceiver {
             }
         };
         mContext.getContentResolver().registerContentObserver(
-                Settings.System.getUriFor(Settings.Secure.LOCATION_PROVIDERS_ALLOWED), false, mGpsSettingObserver);
+                Settings.System.getUriFor(Settings.Secure.LOCATION_PROVIDERS_ALLOWED), false,
+                mGpsSettingObserver);
     }
 
     public void addStateChangedCallback(LocationGpsStateChangeCallback cb) {
@@ -94,7 +89,8 @@ public class LocationController extends BroadcastReceiver {
         final String action = intent.getAction();
         final boolean enabled = intent.getBooleanExtra(LocationManager.EXTRA_GPS_ENABLED, false);
 
-        boolean visible, hasFix;;
+        boolean visible, hasFix;
+        ;
         int iconId, textResId;
 
         if (action.equals(LocationManager.GPS_FIX_CHANGE_ACTION) && enabled) {
@@ -126,11 +122,11 @@ public class LocationController extends BroadcastReceiver {
                 String text = mContext.getText(textResId).toString();
 
                 Notification n = new Notification.Builder(mContext)
-                    .setSmallIcon(iconId)
-                    .setContentTitle(text)
-                    .setOngoing(true)
-                    .setContentIntent(pendingIntent)
-                    .getNotification();
+                        .setSmallIcon(iconId)
+                        .setContentTitle(text)
+                        .setOngoing(true)
+                        .setContentIntent(pendingIntent)
+                        .getNotification();
 
                 // Notification.Builder will helpfully fill these out for you no matter what you do
                 n.tickerView = null;
@@ -141,8 +137,8 @@ public class LocationController extends BroadcastReceiver {
                 int[] idOut = new int[1];
                 mNotificationService.enqueueNotificationWithTag(
                         mContext.getPackageName(),
-                        null, 
-                        GPS_NOTIFICATION_ID, 
+                        null,
+                        GPS_NOTIFICATION_ID,
                         n,
                         idOut,
                         UserHandle.USER_ALL);

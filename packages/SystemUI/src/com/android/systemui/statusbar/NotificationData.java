@@ -16,16 +16,14 @@
 
 package com.android.systemui.statusbar;
 
-import android.app.Notification;
 import android.os.IBinder;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.android.internal.statusbar.StatusBarNotification;
 import com.android.systemui.R;
 
-import java.util.Comparator;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * The list of currently displaying notifications.
@@ -40,43 +38,53 @@ public class NotificationData {
         public View expanded; // the inflated RemoteViews
         public ImageView largeIcon;
         protected View expandedLarge;
-        public Entry() {}
+
+        public Entry() {
+        }
+
         public Entry(IBinder key, StatusBarNotification n, StatusBarIconView ic) {
             this.key = key;
             this.notification = n;
             this.icon = ic;
         }
+
         public void setLargeView(View expandedLarge) {
             this.expandedLarge = expandedLarge;
             writeBooleanTag(row, R.id.expandable_tag, expandedLarge != null);
         }
+
         public View getLargeView() {
             return expandedLarge;
         }
+
         /**
          * Return whether the entry can be expanded.
          */
         public boolean expandable() {
             return NotificationData.getIsExpandable(row);
         }
+
         /**
          * Return whether the entry has been manually expanded by the user.
          */
         public boolean userExpanded() {
             return NotificationData.getUserExpanded(row);
         }
+
         /**
          * Set the flag indicating that this was manually expanded by the user.
          */
         public boolean setUserExpanded(boolean userExpanded) {
             return NotificationData.setUserExpanded(row, userExpanded);
         }
+
         /**
          * Return whether the entry is being touched by the user.
          */
         public boolean userLocked() {
             return NotificationData.getUserLocked(row);
         }
+
         /**
          * Set the flag indicating that this is being touched by the user.
          */
@@ -84,6 +92,7 @@ public class NotificationData {
             return NotificationData.setUserLocked(row, userLocked);
         }
     }
+
     private final ArrayList<Entry> mEntries = new ArrayList<Entry>();
     private final Comparator<Entry> mEntryCmp = new Comparator<Entry>() {
         // sort first by score, then by when
@@ -92,8 +101,8 @@ public class NotificationData {
             final StatusBarNotification nb = b.notification;
             int d = na.score - nb.score;
             return (d != 0)
-                ? d
-                : (int)(na.notification.when - nb.notification.when);
+                    ? d
+                    : (int) (na.notification.when - nb.notification.when);
         }
     };
 
@@ -117,7 +126,7 @@ public class NotificationData {
     public int add(Entry entry) {
         int i;
         int N = mEntries.size();
-        for (i=0; i<N; i++) {
+        for (i = 0; i < N; i++) {
             if (mEntryCmp.compare(mEntries.get(i), entry) > 0) {
                 break;
             }
@@ -127,7 +136,7 @@ public class NotificationData {
     }
 
     public int add(IBinder key, StatusBarNotification notification, View row, View content,
-            View expanded, StatusBarIconView icon) {
+                   View expanded, StatusBarIconView icon) {
         Entry entry = new Entry();
         entry.key = key;
         entry.notification = notification;
@@ -177,7 +186,7 @@ public class NotificationData {
         return false;
     }
 
-    protected static boolean readBooleanTag(View view, int id)  {
+    protected static boolean readBooleanTag(View view, int id) {
         if (view != null) {
             Object value = view.getTag(id);
             return value != null && value instanceof Boolean && ((Boolean) value).booleanValue();
@@ -185,7 +194,7 @@ public class NotificationData {
         return false;
     }
 
-    protected static boolean writeBooleanTag(View view, int id, boolean value)  {
+    protected static boolean writeBooleanTag(View view, int id, boolean value) {
         if (view != null) {
             view.setTag(id, Boolean.valueOf(value));
             return value;

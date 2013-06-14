@@ -3,10 +3,8 @@ package com.android.systemui.statusbar.toggles;
 
 import android.content.Context;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.provider.Settings;
 import android.view.View;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.LocationController.LocationGpsStateChangeCallback;
 
@@ -47,7 +45,7 @@ public class GpsToggle extends StatefulToggle implements LocationGpsStateChangeC
         setLabel(gpsEnabled ? R.string.quick_settings_gps_on_label
                 : R.string.quick_settings_gps_off_label);
 
-       if (gpsEnabled && mGpsFix) {
+        if (gpsEnabled && mGpsFix) {
             setIcon(R.drawable.ic_qs_gps_locked);
         } else if (gpsEnabled) {
             setIcon(R.drawable.ic_qs_gps_on);

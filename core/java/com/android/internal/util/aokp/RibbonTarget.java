@@ -16,52 +16,42 @@
 
 package com.android.internal.util.aokp;
 
-import android.app.ActivityManagerNative;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.BlurMaskFilter;
 import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Xfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.os.Vibrator;
-import android.provider.Settings;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.IWindowManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
-import android.widget.ImageView;
-import android.widget.Button;
-import android.widget.TextView;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-
-import com.android.internal.statusbar.IStatusBarService;
+import android.widget.TextView;
 import com.android.internal.R;
+import com.android.internal.statusbar.IStatusBarService;
 
 import java.io.File;
 
@@ -93,11 +83,13 @@ public class RibbonTarget {
      * color = text color
      * touchVib = vibrate on touch
      * size = size used to resize icons 0 is default and will not resize the icons at all.
-     * dismiss = weither or not to dismiss a swipe ribbon, 0 == never, 1 == always, 2 == dont dismiss navbar actions
+     * dismiss = weither or not to dismiss a swipe ribbon, 0 == never, 1 == always,
+     * 2 == dont dismiss navbar actions
      */
 
     public RibbonTarget(Context context, final String sClick, final String lClick,
-            final String cIcon, final boolean text, final int color, final int size, final boolean touchVib, final boolean colorize, final int dismiss) {
+                        final String cIcon, final boolean text, final int color, final int size,
+                        final boolean touchVib, final boolean colorize, final int dismiss) {
         mContext = context;
         u = new Intent();
         u.setAction("com.android.lockscreen.ACTION_UNLOCK_RECEIVER");
@@ -106,10 +98,11 @@ public class RibbonTarget {
         a = new Intent();
         a.setAction("com.android.systemui.ACTION_HIDE_APP_WINDOW");
         mWm = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
-	    DisplayMetrics metrics = new DisplayMetrics();
+        DisplayMetrics metrics = new DisplayMetrics();
         WindowManager wm = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
         wm.getDefaultDisplay().getMetrics(metrics);
-        mDismiss = ((dismiss == 1) || ((dismiss == 2) && (sClick.equals("**null**") ? !lClick.startsWith("**") : !sClick.startsWith("**"))));
+        mDismiss = ((dismiss == 1) || ((dismiss == 2) &&
+                (sClick.equals("**null**") ? !lClick.startsWith("**") : !sClick.startsWith("**"))));
         vib = (Vibrator) mContext.getSystemService(mContext.VIBRATOR_SERVICE);
         mView = View.inflate(mContext, R.layout.target_button, null);
         mView.setDrawingCacheEnabled(true);
@@ -122,14 +115,15 @@ public class RibbonTarget {
         if (!text) {
             mText.setVisibility(View.GONE);
         }
-        mText.setText(NavBarHelpers.getProperSummary(mContext, sClick.equals("**null**") ? lClick : sClick));
+        mText.setText(NavBarHelpers.getProperSummary(mContext,
+                sClick.equals("**null**") ? lClick : sClick));
         if (color != -1) {
             mText.setTextColor(color);
         }
         mText.setOnClickListener(new OnClickListener() {
             @Override
             public final void onClick(View v) {
-                if(vib != null && touchVib) {
+                if (vib != null && touchVib) {
                     vib.vibrate(10);
                 }
                 collapseStatusBar();
@@ -151,13 +145,13 @@ public class RibbonTarget {
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
                 switch (action) {
-                case  MotionEvent.ACTION_DOWN :
-                    mIcon.setImageDrawable(mIconGlow);
-                    break;
-                case MotionEvent.ACTION_CANCEL :
-                case MotionEvent.ACTION_UP:
-                    mIcon.setImageDrawable(mIconBase);
-                    break;
+                    case MotionEvent.ACTION_DOWN:
+                        mIcon.setImageDrawable(mIconGlow);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                        mIcon.setImageDrawable(mIconBase);
+                        break;
                 }
                 return false;
             }
@@ -173,21 +167,25 @@ public class RibbonTarget {
             }
         } else {
             if (size > 0) {
-                mIconBase = resize(NavBarHelpers.getIconImage(mContext, sClick.equals("**null**") ? lClick : sClick), mapChosenDpToPixels(size));
+                mIconBase = resize(NavBarHelpers.getIconImage(mContext,
+                        sClick.equals("**null**") ? lClick : sClick), mapChosenDpToPixels(size));
             } else {
-                mIconBase = NavBarHelpers.getIconImage(mContext, sClick.equals("**null**") ? lClick : sClick);
+                mIconBase = NavBarHelpers.getIconImage(mContext,
+                        sClick.equals("**null**") ? lClick : sClick);
                 int desiredSize = (int) (48 * metrics.density);
                 int width = mIconBase.getIntrinsicWidth();
                 if (width > desiredSize) {
                     Bitmap bm = ((BitmapDrawable) mIconBase).getBitmap();
                     if (bm != null) {
-                        Bitmap bitmapOrig = Bitmap.createScaledBitmap(bm, desiredSize, desiredSize, true);
+                        Bitmap bitmapOrig =
+                                Bitmap.createScaledBitmap(bm, desiredSize, desiredSize, true);
                         mIconBase = new BitmapDrawable(mContext.getResources(), bitmapOrig);
                     }
                 }
             }
         }
-        if ((sClick.equals("**null**") ? lClick.startsWith("**") : sClick.startsWith("**")) && colorize) {
+        if ((sClick.equals("**null**") ? lClick.startsWith("**") : sClick.startsWith("**")) &&
+                colorize) {
             mIcon.setColorFilter(color);
         }
         mIconGlow = getGlowDrawable(mContext, mIconBase, (color != -1) ? color : Color.CYAN);
@@ -196,7 +194,7 @@ public class RibbonTarget {
             mIcon.setOnClickListener(new OnClickListener() {
                 @Override
                 public final void onClick(View v) {
-                    if(vib != null && touchVib) {
+                    if (vib != null && touchVib) {
                         vib.vibrate(10);
                     }
                     collapseStatusBar();
@@ -219,13 +217,13 @@ public class RibbonTarget {
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
                 switch (action) {
-                case  MotionEvent.ACTION_DOWN :
-                    mIcon.setImageDrawable(mIconGlow);
-                    break;
-                case MotionEvent.ACTION_CANCEL :
-                case MotionEvent.ACTION_UP:
-                    mIcon.setImageDrawable(mIconBase);
-                    break;
+                    case MotionEvent.ACTION_DOWN:
+                        mIcon.setImageDrawable(mIconGlow);
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                    case MotionEvent.ACTION_UP:
+                        mIcon.setImageDrawable(mIconBase);
+                        break;
                 }
                 return false;
             }
@@ -261,8 +259,8 @@ public class RibbonTarget {
 
     private boolean shouldUnlock(String action) {
         if (action.equals(AwesomeConstants.AwesomeConstant.ACTION_TORCH.value()) ||
-            action.equals(AwesomeConstants.AwesomeConstant.ACTION_NOTIFICATIONS.value()) ||
-            action.equals(AwesomeConstants.AwesomeConstant.ACTION_POWER.value())) {
+                action.equals(AwesomeConstants.AwesomeConstant.ACTION_NOTIFICATIONS.value()) ||
+                action.equals(AwesomeConstants.AwesomeConstant.ACTION_POWER.value())) {
             return false;
         }
 
@@ -308,7 +306,7 @@ public class RibbonTarget {
 
         File f = new File(Uri.parse(action).getPath());
         Drawable front = new BitmapDrawable(res,
-                         getRoundedCornerBitmap(BitmapFactory.decodeFile(f.getAbsolutePath())));
+                getRoundedCornerBitmap(BitmapFactory.decodeFile(f.getAbsolutePath())));
         return front;
     }
 
@@ -349,7 +347,7 @@ public class RibbonTarget {
 
     private static Bitmap getRoundedCornerBitmap(Bitmap bitmap) {
         Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
-            bitmap.getHeight(), Config.ARGB_8888);
+                bitmap.getHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
         final int color = 0xff424242;

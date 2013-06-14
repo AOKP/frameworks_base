@@ -16,20 +16,17 @@
 
 package com.android.systemui.statusbar.phone;
 
-import android.content.Context;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.res.Resources;
+import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
-import android.util.Slog;
 import android.view.MotionEvent;
 import android.view.View;
-import android.database.ContentObserver;
-import android.net.Uri;
-import android.os.Handler;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.GestureRecorder;
 
@@ -123,8 +120,8 @@ public class NotificationPanelView extends PanelView {
                 ((PhoneStatusBarView) mBar).mBar.getGestureRecorder();
         if (gr != null) {
             gr.tag(
-                "fling " + ((vel > 0) ? "open" : "closed"),
-                "notifications,v=" + vel);
+                    "fling " + ((vel > 0) ? "open" : "closed"),
+                    "notifications,v=" + vel);
         }
         super.fling(vel, always);
     }
@@ -160,7 +157,7 @@ public class NotificationPanelView extends PanelView {
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
                     mOkToFlip = getExpandedHeight() == 0;
-                    if(mToggleStyle != 0) {
+                    if (mToggleStyle != 0) {
                         // don't allow settings panel with non-tile toggles
                         shouldFlip = false;
                         break;
@@ -169,7 +166,7 @@ public class NotificationPanelView extends PanelView {
                         if ((event.getX(0) > getWidth()
                                 * (1.0f - STATUS_BAR_SETTINGS_FLIP_PERCENTAGE_RIGHT)
                                 && mFastToggleEnabled)
-                            || (mStatusBar.skipToSettingsPanel())
+                                || (mStatusBar.skipToSettingsPanel())
                                 && !mFastToggleEnabled) {
                             shouldFlip = true;
                         }
@@ -177,7 +174,7 @@ public class NotificationPanelView extends PanelView {
                         if ((event.getX(0) < getWidth()
                                 * (1.0f - STATUS_BAR_SETTINGS_FLIP_PERCENTAGE_LEFT)
                                 && mFastToggleEnabled)
-                            || (mStatusBar.skipToSettingsPanel())
+                                || (mStatusBar.skipToSettingsPanel())
                                 && !mFastToggleEnabled) {
                             shouldFlip = true;
                         }
@@ -188,10 +185,14 @@ public class NotificationPanelView extends PanelView {
                     if (mOkToFlip) {
                         float miny = event.getY(0);
                         float maxy = miny;
-                        for (int i=1; i<event.getPointerCount(); i++) {
+                        for (int i = 1; i < event.getPointerCount(); i++) {
                             final float y = event.getY(i);
-                            if (y < miny) miny = y;
-                            if (y > maxy) maxy = y;
+                            if (y < miny) {
+                                miny = y;
+                            }
+                            if (y > maxy) {
+                                maxy = y;
+                            }
                         }
                         if (maxy - miny < mHandleBarHeight) {
                             shouldFlip = true;
@@ -199,7 +200,7 @@ public class NotificationPanelView extends PanelView {
                     }
                     break;
             }
-            if(mOkToFlip && shouldFlip) {
+            if (mOkToFlip && shouldFlip) {
                 if (getMeasuredHeight() < mHandleBarHeight) {
                     mStatusBar.switchToSettings();
                 } else {

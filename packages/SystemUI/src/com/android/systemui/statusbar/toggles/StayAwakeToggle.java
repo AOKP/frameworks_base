@@ -3,12 +3,10 @@ package com.android.systemui.statusbar.toggles;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public class StayAwakeToggle extends StatefulToggle {
@@ -45,8 +43,8 @@ public class StayAwakeToggle extends StatefulToggle {
 
     @Override
     public boolean onLongClick(View v) {
-       startActivity(android.provider.Settings.ACTION_DISPLAY_SETTINGS);
-       return super.onLongClick(v);
+        startActivity(android.provider.Settings.ACTION_DISPLAY_SETTINGS);
+        return super.onLongClick(v);
     }
 
     @Override

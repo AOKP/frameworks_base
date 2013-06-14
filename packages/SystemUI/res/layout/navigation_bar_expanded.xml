@@ -13,30 +13,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:focusable="true"
-	android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/status_bar_bg_tile"
     android:descendantFocusability="afterDescendants">
-	    	    
-	    <TextView
-	        android:id="@+id/widgetlabel"
-	        style="@style/TextAppearance.StatusBar.Clock"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:paddingTop="4dp"
-	        android:paddingBottom="2dp"
-	        android:gravity="center"
-	        android:layout_centerHorizontal="true"
-	        android:text="@string/widgets" />
 
-	    <ImageView
-	        android:layout_width="match_parent"
-	        android:layout_height="2dp"
-	        android:background="@drawable/status_bar_hr" />
+    <TextView
+        android:id="@+id/widgetlabel"
+        style="@style/TextAppearance.StatusBar.Clock"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:paddingBottom="2dp"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:text="@string/widgets" />
 
-   <android.support.v4.view.ViewPager
-		android:id="@+id/pager"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/status_bar_hr" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

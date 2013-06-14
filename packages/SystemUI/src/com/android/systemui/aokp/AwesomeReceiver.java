@@ -19,7 +19,6 @@ package com.android.systemui.aokp;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 public class AwesomeReceiver extends BroadcastReceiver {
 
@@ -29,8 +28,8 @@ public class AwesomeReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         // get extras from intent
-       String action = intent.getStringExtra("action");
-       //Get instance of awesome action and launch
-       AwesomeAction.launchAction(context, action);
+        String action = intent.getStringExtra("action");
+        //Get instance of awesome action and launch
+        AwesomeAction.launchAction(context, action);
     }
 }

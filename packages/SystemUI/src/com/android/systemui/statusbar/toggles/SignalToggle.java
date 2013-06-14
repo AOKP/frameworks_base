@@ -10,7 +10,6 @@ import android.provider.Settings.SettingNotFoundException;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsTileView;
 import com.android.systemui.statusbar.policy.NetworkController.NetworkSignalChangedCallback;
@@ -41,7 +40,7 @@ public class SignalToggle extends StatefulToggle implements NetworkSignalChanged
 
     @Override
     public void onWifiSignalChanged(boolean enabled, int wifiSignalIconId,
-            String wifiSignalContentDescription, String enabledDesc) {
+                                    String wifiSignalContentDescription, String enabledDesc) {
         boolean wifiConnected = enabled && (wifiSignalIconId > 0) && (enabledDesc != null);
         mWifiState.enabled = enabled;
         mWifiState.connected = wifiConnected;

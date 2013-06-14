@@ -28,7 +28,6 @@ import android.util.Slog;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.TextView;
-
 import com.android.internal.R;
 import com.android.internal.widget.LockPatternUtils;
 
@@ -60,10 +59,14 @@ public class KeyguardStatusView extends GridLayout {
         @Override
         void onKeyguardVisibilityChanged(boolean showing) {
             if (showing) {
-                if (DEBUG) Slog.v(TAG, "refresh statusview showing:" + showing);
+                if (DEBUG) {
+                    Slog.v(TAG, "refresh statusview showing:" + showing);
+                }
                 refresh();
             }
-        };
+        }
+
+        ;
     };
 
     public KeyguardStatusView(Context context) {
@@ -93,7 +96,7 @@ public class KeyguardStatusView extends GridLayout {
         mDateView.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
 
         // Required to get Marquee to work.
-        final View marqueeViews[] = { mDateView, mAlarmStatusView };
+        final View marqueeViews[] = {mDateView, mAlarmStatusView};
         for (int i = 0; i < marqueeViews.length; i++) {
             View v = marqueeViews[i];
             if (v == null) {

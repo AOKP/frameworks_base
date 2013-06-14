@@ -18,8 +18,8 @@
 <!--    android:background="@drawable/status_bar_closed_default_background" -->
 <merge
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
     >
+
     <CheckBox
         android:id="@+id/toggle"
         android:layout_width="48dp"
@@ -29,6 +29,7 @@
         android:layout_alignParentBottom="true"
         android:button="@null"
         />
+
     <SeekBar
         android:id="@+id/slider"
         android:layout_width="0dp"
@@ -39,6 +40,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         />
+
     <TextView
         android:id="@+id/label"
         android:layout_width="0dp"

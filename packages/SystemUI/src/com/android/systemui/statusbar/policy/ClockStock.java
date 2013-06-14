@@ -20,28 +20,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.DateFormat;
 import android.text.style.CharacterStyle;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.StyleSpan;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.TextView;
+import com.android.internal.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
-
-import com.android.internal.R;
 
 /**
  * This widget display an analogic clock with two hands for hours and
@@ -53,9 +43,9 @@ public class ClockStock extends TextView {
     private String mClockFormatString;
     private SimpleDateFormat mClockFormat;
 
-    private static final int AM_PM_STYLE_NORMAL  = 0;
-    private static final int AM_PM_STYLE_SMALL   = 1;
-    private static final int AM_PM_STYLE_GONE    = 2;
+    private static final int AM_PM_STYLE_NORMAL = 0;
+    private static final int AM_PM_STYLE_SMALL = 1;
+    private static final int AM_PM_STYLE_GONE = 2;
 
     private static final int AM_PM_STYLE = AM_PM_STYLE_GONE;
 
@@ -166,11 +156,11 @@ public class ClockStock extends TextView {
                 if (a >= 0) {
                     // Move a back so any whitespace before AM/PM is also in the alternate size.
                     final int b = a;
-                    while (a > 0 && Character.isWhitespace(format.charAt(a-1))) {
+                    while (a > 0 && Character.isWhitespace(format.charAt(a - 1))) {
                         a--;
                     }
                     format = format.substring(0, a) + MAGIC1 + format.substring(a, b)
-                        + "a" + MAGIC2 + format.substring(b + 1);
+                            + "a" + MAGIC2 + format.substring(b + 1);
                 }
             }
 
@@ -187,12 +177,12 @@ public class ClockStock extends TextView {
             if (magic1 >= 0 && magic2 > magic1) {
                 SpannableStringBuilder formatted = new SpannableStringBuilder(result);
                 if (AM_PM_STYLE == AM_PM_STYLE_GONE) {
-                    formatted.delete(magic1, magic2+1);
+                    formatted.delete(magic1, magic2 + 1);
                 } else {
                     if (AM_PM_STYLE == AM_PM_STYLE_SMALL) {
                         CharacterStyle style = new RelativeSizeSpan(0.7f);
                         formatted.setSpan(style, magic1, magic2,
-                                          Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                                Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                     }
                     formatted.delete(magic2, magic2 + 1);
                     formatted.delete(magic1, magic1 + 1);
@@ -200,7 +190,7 @@ public class ClockStock extends TextView {
                 return formatted;
             }
         }
- 
+
         return result;
 
     }

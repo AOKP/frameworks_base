@@ -22,28 +22,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.location.LocationManager;
 import android.media.AudioManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.os.Binder;
 import android.os.Handler;
-import android.os.RemoteException;
 import android.os.storage.StorageManager;
-import android.provider.Settings;
-import android.telephony.PhoneStateListener;
-import android.telephony.ServiceState;
-import android.telephony.SignalStrength;
-import android.telephony.TelephonyManager;
 import android.util.Slog;
-
-import com.android.internal.telephony.IccCard;
 import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.telephony.TelephonyIntents;
-import com.android.internal.telephony.cdma.EriInfo;
 import com.android.internal.telephony.cdma.TtyIntent;
-import com.android.server.am.BatteryStatsService;
 import com.android.systemui.R;
 
 /**
@@ -57,9 +42,9 @@ public class PhoneStatusBarPolicy {
     // message codes for the handler
     private static final int EVENT_BATTERY_CLOSE = 4;
 
-    private static final int AM_PM_STYLE_NORMAL  = 0;
-    private static final int AM_PM_STYLE_SMALL   = 1;
-    private static final int AM_PM_STYLE_GONE    = 2;
+    private static final int AM_PM_STYLE_NORMAL = 0;
+    private static final int AM_PM_STYLE_SMALL = 1;
+    private static final int AM_PM_STYLE_GONE = 2;
 
     private static final int AM_PM_STYLE = AM_PM_STYLE_GONE;
 
@@ -87,15 +72,15 @@ public class PhoneStatusBarPolicy {
 
     // wifi
     private static final int[][] sWifiSignalImages = {
-            { R.drawable.stat_sys_wifi_signal_1,
-              R.drawable.stat_sys_wifi_signal_2,
-              R.drawable.stat_sys_wifi_signal_3,
-              R.drawable.stat_sys_wifi_signal_4 },
-            { R.drawable.stat_sys_wifi_signal_1_fully,
-              R.drawable.stat_sys_wifi_signal_2_fully,
-              R.drawable.stat_sys_wifi_signal_3_fully,
-              R.drawable.stat_sys_wifi_signal_4_fully }
-        };
+            {R.drawable.stat_sys_wifi_signal_1,
+                    R.drawable.stat_sys_wifi_signal_2,
+                    R.drawable.stat_sys_wifi_signal_3,
+                    R.drawable.stat_sys_wifi_signal_4},
+            {R.drawable.stat_sys_wifi_signal_1_fully,
+                    R.drawable.stat_sys_wifi_signal_2_fully,
+                    R.drawable.stat_sys_wifi_signal_3_fully,
+                    R.drawable.stat_sys_wifi_signal_4_fully}
+    };
     private static final int sWifiTemporarilyNotConnectedImage =
             R.drawable.stat_sys_wifi_signal_0;
 
@@ -115,21 +100,16 @@ public class PhoneStatusBarPolicy {
             String action = intent.getAction();
             if (action.equals(Intent.ACTION_ALARM_CHANGED)) {
                 updateAlarm(intent);
-            }
-            else if (action.equals(Intent.ACTION_SYNC_STATE_CHANGED)) {
+            } else if (action.equals(Intent.ACTION_SYNC_STATE_CHANGED)) {
                 updateSyncState(intent);
-            }
-            else if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED) ||
+            } else if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED) ||
                     action.equals(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)) {
                 updateBluetooth(intent);
-            }
-            else if (action.equals(AudioManager.RINGER_MODE_CHANGED_ACTION)) {
+            } else if (action.equals(AudioManager.RINGER_MODE_CHANGED_ACTION)) {
                 updateVolume();
-            }
-            else if (action.equals(TelephonyIntents.ACTION_SIM_STATE_CHANGED)) {
+            } else if (action.equals(TelephonyIntents.ACTION_SIM_STATE_CHANGED)) {
                 updateSimState(intent);
-            }
-            else if (action.equals(TtyIntent.TTY_ENABLED_CHANGE_ACTION)) {
+            } else if (action.equals(TtyIntent.TTY_ENABLED_CHANGE_ACTION)) {
                 updateTTY(intent);
             }
         }
@@ -137,7 +117,7 @@ public class PhoneStatusBarPolicy {
 
     public PhoneStatusBarPolicy(Context context) {
         mContext = context;
-        mService = (StatusBarManager)context.getSystemService(Context.STATUS_BAR_SERVICE);
+        mService = (StatusBarManager) context.getSystemService(Context.STATUS_BAR_SERVICE);
 
         // listen for broadcasts
         IntentFilter filter = new IntentFilter();
@@ -156,7 +136,7 @@ public class PhoneStatusBarPolicy {
                 new com.android.systemui.usb.StorageNotification(context));
 
         // TTY status
-        mService.setIcon("tty",  R.drawable.stat_sys_tty_mode, 0, null);
+        mService.setIcon("tty", R.drawable.stat_sys_tty_mode, 0, null);
         mService.setIconVisibility("tty", false);
 
         // Cdma Roaming Indicator, ERI
@@ -197,7 +177,9 @@ public class PhoneStatusBarPolicy {
     }
 
     private final void updateSyncState(Intent intent) {
-        if (!SHOW_SYNC_ICON) return;
+        if (!SHOW_SYNC_ICON) {
+            return;
+        }
         boolean isActive = intent.getBooleanExtra("active", false);
         boolean isFailing = intent.getBooleanExtra("failing", false);
         mService.setIconVisibility("sync_active", isActive);
@@ -209,20 +191,16 @@ public class PhoneStatusBarPolicy {
         String stateExtra = intent.getStringExtra(IccCardConstants.INTENT_KEY_ICC_STATE);
         if (IccCardConstants.INTENT_VALUE_ICC_ABSENT.equals(stateExtra)) {
             mSimState = IccCardConstants.State.ABSENT;
-        }
-        else if (IccCardConstants.INTENT_VALUE_ICC_READY.equals(stateExtra)) {
+        } else if (IccCardConstants.INTENT_VALUE_ICC_READY.equals(stateExtra)) {
             mSimState = IccCardConstants.State.READY;
-        }
-        else if (IccCardConstants.INTENT_VALUE_ICC_LOCKED.equals(stateExtra)) {
+        } else if (IccCardConstants.INTENT_VALUE_ICC_LOCKED.equals(stateExtra)) {
             final String lockedReason =
                     intent.getStringExtra(IccCardConstants.INTENT_KEY_LOCKED_REASON);
             if (IccCardConstants.INTENT_VALUE_LOCKED_ON_PIN.equals(lockedReason)) {
                 mSimState = IccCardConstants.State.PIN_REQUIRED;
-            }
-            else if (IccCardConstants.INTENT_VALUE_LOCKED_ON_PUK.equals(lockedReason)) {
+            } else if (IccCardConstants.INTENT_VALUE_LOCKED_ON_PUK.equals(lockedReason)) {
                 mSimState = IccCardConstants.State.PUK_REQUIRED;
-            }
-            else {
+            } else {
                 mSimState = IccCardConstants.State.NETWORK_LOCKED;
             }
         } else {
@@ -242,7 +220,7 @@ public class PhoneStatusBarPolicy {
             iconId = R.drawable.stat_sys_ringer_vibrate;
             contentDescription = mContext.getString(R.string.accessibility_ringer_vibrate);
         } else {
-            iconId =  R.drawable.stat_sys_ringer_silent;
+            iconId = R.drawable.stat_sys_ringer_silent;
             contentDescription = mContext.getString(R.string.accessibility_ringer_silent);
         }
 
@@ -264,7 +242,7 @@ public class PhoneStatusBarPolicy {
             mBluetoothEnabled = state == BluetoothAdapter.STATE_ON;
         } else if (action.equals(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)) {
             int state = intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE,
-                BluetoothAdapter.STATE_DISCONNECTED);
+                    BluetoothAdapter.STATE_DISCONNECTED);
             if (state == BluetoothAdapter.STATE_CONNECTED) {
                 iconId = R.drawable.stat_sys_data_bluetooth_connected;
                 contentDescription = mContext.getString(R.string.accessibility_bluetooth_connected);
@@ -284,17 +262,23 @@ public class PhoneStatusBarPolicy {
         final String action = intent.getAction();
         final boolean enabled = intent.getBooleanExtra(TtyIntent.TTY_ENABLED, false);
 
-        if (false) Slog.v(TAG, "updateTTY: enabled: " + enabled);
+        if (false) {
+            Slog.v(TAG, "updateTTY: enabled: " + enabled);
+        }
 
         if (enabled) {
             // TTY is on
-            if (false) Slog.v(TAG, "updateTTY: set TTY on");
+            if (false) {
+                Slog.v(TAG, "updateTTY: set TTY on");
+            }
             mService.setIcon("tty", R.drawable.stat_sys_tty_mode, 0,
                     mContext.getString(R.string.accessibility_tty_enabled));
             mService.setIconVisibility("tty", true);
         } else {
             // TTY is off
-            if (false) Slog.v(TAG, "updateTTY: set TTY off");
+            if (false) {
+                Slog.v(TAG, "updateTTY: set TTY off");
+            }
             mService.setIconVisibility("tty", false);
         }
     }

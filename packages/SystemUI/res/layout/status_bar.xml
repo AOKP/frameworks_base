@@ -42,7 +42,8 @@
         android:visibility="gone"
         />
 
-    <LinearLayout android:id="@+id/status_bar_contents"
+    <LinearLayout
+        android:id="@+id/status_bar_contents"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="6dip"
@@ -57,31 +58,36 @@
             android:layout_weight="1"
             android:orientation="horizontal"
             >
-            <com.android.systemui.statusbar.StatusBarIconView android:id="@+id/moreIcon"
+
+            <com.android.systemui.statusbar.StatusBarIconView
+                android:id="@+id/moreIcon"
                 android:layout_width="@dimen/status_bar_icon_size"
                 android:layout_height="match_parent"
                 android:src="@drawable/stat_notify_more"
                 android:visibility="gone"
                 />
 
-            <com.android.systemui.statusbar.phone.IconMerger android:id="@+id/notificationIcons"
+            <com.android.systemui.statusbar.phone.IconMerger
+                android:id="@+id/notificationIcons"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"/> 
+                android:orientation="horizontal" />
         </LinearLayout>
 
-        <LinearLayout android:id="@+id/system_icon_area"
+        <LinearLayout
+            android:id="@+id/system_icon_area"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <LinearLayout android:id="@+id/statusIcons"
+            <LinearLayout
+                android:id="@+id/statusIcons"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"/>
+                android:orientation="horizontal" />
 
             <LinearLayout
                 android:id="@+id/signal_battery_cluster"
@@ -91,18 +97,24 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 >
-                <include layout="@layout/signal_cluster_view" 
+
+                <include
+                    layout="@layout/signal_cluster_view"
                     android:id="@+id/signal_cluster"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
-                <include layout="@layout/signal_cluster_view_alt"
+
+                <include
+                    layout="@layout/signal_cluster_view_alt"
                     android:id="@+id/signal_cluster_alt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:visibility="gone"
-                />
-                <include layout="@layout/battery_cluster_view"
+                    />
+
+                <include
+                    layout="@layout/battery_cluster_view"
                     android:id="@+id/battery_cluster"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
@@ -126,7 +138,7 @@
         android:gravity="center"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <com.android.systemui.statusbar.policy.ClockCenter
             android:textAppearance="@style/TextAppearance.StatusBar.Clock"
@@ -138,40 +150,49 @@
             android:singleLine="true" />
     </LinearLayout>
 
-    <LinearLayout android:id="@+id/ticker"
+    <LinearLayout
+        android:id="@+id/ticker"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="6dip"
         android:animationCache="false"
-        android:orientation="horizontal" >
-        <ImageSwitcher android:id="@+id/tickerIcon"
+        android:orientation="horizontal">
+
+        <ImageSwitcher
+            android:id="@+id/tickerIcon"
             android:layout_width="@dimen/status_bar_icon_size"
             android:layout_height="@dimen/status_bar_icon_size"
             android:layout_marginRight="4dip"
             >
+
             <com.android.systemui.statusbar.AnimatedImageView
                 android:layout_width="@dimen/status_bar_icon_size"
                 android:layout_height="@dimen/status_bar_icon_size"
                 android:scaleType="center"
                 />
+
             <com.android.systemui.statusbar.AnimatedImageView
                 android:layout_width="@dimen/status_bar_icon_size"
                 android:layout_height="@dimen/status_bar_icon_size"
                 android:scaleType="center"
                 />
         </ImageSwitcher>
-        <com.android.systemui.statusbar.phone.TickerView android:id="@+id/tickerText"
+
+        <com.android.systemui.statusbar.phone.TickerView
+            android:id="@+id/tickerText"
             android:layout_width="0dip"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:paddingTop="2dip"
             android:paddingRight="10dip">
+
             <TextView
                 android:textAppearance="@style/TextAppearance.StatusBar.PhoneTicker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 />
+
             <TextView
                 android:textAppearance="@style/TextAppearance.StatusBar.PhoneTicker"
                 android:layout_width="match_parent"
@@ -180,6 +201,7 @@
                 />
         </com.android.systemui.statusbar.phone.TickerView>
     </LinearLayout>
+
     <com.android.systemui.statusbar.policy.BatteryBarController
         android:layout_width="match_parent"
         android:layout_height="1dp"

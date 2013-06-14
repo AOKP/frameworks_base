@@ -15,7 +15,6 @@
  */
 package com.android.internal.policy.impl.keyguard;
 
-import android.appwidget.AppWidgetManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -155,7 +154,9 @@ public class KeyguardViewStateManager implements
         // This prevents conflicts.
 
         // If the page hasn't switched, don't bother with any of this
-        if (mCurrentPage == newPageIndex) return;
+        if (mCurrentPage == newPageIndex) {
+            return;
+        }
 
         if (mKeyguardWidgetPager != null && mChallengeLayout != null) {
             KeyguardWidgetFrame prevPage = mKeyguardWidgetPager.getWidgetPageAt(mCurrentPage);
@@ -187,8 +188,8 @@ public class KeyguardViewStateManager implements
      * doesn't account for transforms, so if the views will be transformed, this should not be used.
      *
      * @param fromView The view to which the point is relative
-     * @param toView The view into which the point should be mapped
-     * @param pt The point
+     * @param toView   The view into which the point should be mapped
+     * @param pt       The point
      */
     private void mapPoint(View fromView, View toView, int pt[]) {
         fromView.getLocationInWindow(mTmpLoc);
@@ -213,13 +214,18 @@ public class KeyguardViewStateManager implements
 
     @Override
     public void onScrollStateChanged(int scrollState) {
-        if (mKeyguardWidgetPager == null || mChallengeLayout == null) return;
+        if (mKeyguardWidgetPager == null || mChallengeLayout == null) {
+            return;
+        }
 
         boolean challengeOverlapping = mChallengeLayout.isChallengeOverlapping();
 
         if (scrollState == SlidingChallengeLayout.SCROLL_STATE_IDLE) {
-            KeyguardWidgetFrame frame = mKeyguardWidgetPager.getWidgetPageAt(mPageListeningToSlider);
-            if (frame == null) return;
+            KeyguardWidgetFrame frame =
+                    mKeyguardWidgetPager.getWidgetPageAt(mPageListeningToSlider);
+            if (frame == null) {
+                return;
+            }
 
             if (!challengeOverlapping) {
                 if (!mKeyguardWidgetPager.isPageMoving()) {
@@ -250,8 +256,11 @@ public class KeyguardViewStateManager implements
             // to update the current page who will receive events from the sliding challenge.
             // We resize the frame as appropriate.
             mPageListeningToSlider = mKeyguardWidgetPager.getNextPage();
-            KeyguardWidgetFrame frame = mKeyguardWidgetPager.getWidgetPageAt(mPageListeningToSlider);
-            if (frame == null) return;
+            KeyguardWidgetFrame frame =
+                    mKeyguardWidgetPager.getWidgetPageAt(mPageListeningToSlider);
+            if (frame == null) {
+                return;
+            }
 
             // Skip showing the frame and shrinking the widget if we are
             if (!mChallengeLayout.isBouncing()) {
@@ -298,12 +307,12 @@ public class KeyguardViewStateManager implements
     };
 
     public void showUsabilityHints() {
-        mMainQueue.postDelayed( new Runnable() {
+        mMainQueue.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mKeyguardSecurityContainer.showUsabilityHint();
             }
-        } , SCREEN_ON_RING_HINT_DELAY);
+        }, SCREEN_ON_RING_HINT_DELAY);
         mKeyguardWidgetPager.showInitialPageHints();
         if (mHideHintsRunnable != null) {
             mMainQueue.postDelayed(mHideHintsRunnable, SCREEN_ON_HINT_DURATION);

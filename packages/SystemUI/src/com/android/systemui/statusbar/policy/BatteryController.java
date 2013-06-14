@@ -23,7 +23,6 @@ import android.content.IntentFilter;
 import android.os.BatteryManager;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.systemui.R;
 
 import java.util.ArrayList;

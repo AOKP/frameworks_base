@@ -9,7 +9,6 @@ import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
 import android.view.View;
-
 import com.android.internal.telephony.PhoneConstants;
 import com.android.systemui.R;
 

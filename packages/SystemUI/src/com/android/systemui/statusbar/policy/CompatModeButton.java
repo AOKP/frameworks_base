@@ -17,19 +17,15 @@
 package com.android.systemui.statusbar.policy;
 
 import android.app.ActivityManager;
-import android.content.Context;
 import android.content.ContentResolver;
-import android.content.res.TypedArray;
+import android.content.Context;
 import android.database.ContentObserver;
-import android.provider.Settings;
 import android.os.Handler;
-import android.os.RemoteException;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.View;
 import android.widget.ImageView;
-
-import com.android.systemui.R;
 
 public class CompatModeButton extends ImageView {
     private static final boolean DEBUG = false;
@@ -89,8 +85,10 @@ public class CompatModeButton extends ImageView {
             return;
         }
         final boolean vis = (mode != ActivityManager.COMPAT_MODE_NEVER
-                          && mode != ActivityManager.COMPAT_MODE_ALWAYS && !mHideExtras);
-        if (DEBUG) Slog.d(TAG, "compat mode is " + mode + "; icon will " + (vis ? "show" : "hide"));
+                && mode != ActivityManager.COMPAT_MODE_ALWAYS && !mHideExtras);
+        if (DEBUG) {
+            Slog.d(TAG, "compat mode is " + mode + "; icon will " + (vis ? "show" : "hide"));
+        }
         setVisibility(vis ? View.VISIBLE : View.GONE);
     }
 
@@ -112,6 +110,7 @@ public class CompatModeButton extends ImageView {
     }
 
     public void updateSettings() {
-        mHideExtras = Settings.System.getBoolean(resolver, Settings.System.HIDE_EXTRAS_SYSTEM_BAR, false);
+        mHideExtras =
+                Settings.System.getBoolean(resolver, Settings.System.HIDE_EXTRAS_SYSTEM_BAR, false);
     }
 }

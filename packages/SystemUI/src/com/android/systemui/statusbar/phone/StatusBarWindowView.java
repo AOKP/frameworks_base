@@ -20,22 +20,18 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ScrollView;
-import android.widget.TextSwitcher;
-
 import com.android.systemui.ExpandHelper;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.policy.NotificationRowLayout;
 
 
-public class StatusBarWindowView extends FrameLayout
-{
+public class StatusBarWindowView extends FrameLayout {
     public static final String TAG = "StatusBarWindowView";
     public static final boolean DEBUG = BaseStatusBar.DEBUG;
 
@@ -53,7 +49,7 @@ public class StatusBarWindowView extends FrameLayout
     }
 
     @Override
-    protected void onAttachedToWindow () {
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         latestItems = (NotificationRowLayout) findViewById(R.id.latestItems);
         mScrollView = (ScrollView) findViewById(R.id.scroll);
@@ -69,11 +65,11 @@ public class StatusBarWindowView extends FrameLayout
     public boolean dispatchKeyEvent(KeyEvent event) {
         boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         switch (event.getKeyCode()) {
-        case KeyEvent.KEYCODE_BACK:
-            if (!down) {
-                mService.animateCollapsePanels();
-            }
-            return true;
+            case KeyEvent.KEYCODE_BACK:
+                if (!down) {
+                    mService.animateCollapsePanels();
+                }
+                return true;
         }
         return super.dispatchKeyEvent(event);
     }

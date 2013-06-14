@@ -19,7 +19,7 @@
 -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/listview_footer_padding"
-    android:layout_height="24dip"
-    android:layout_width="match_parent">
+             android:id="@+id/listview_footer_padding"
+             android:layout_height="24dip"
+             android:layout_width="match_parent">
 </FrameLayout>

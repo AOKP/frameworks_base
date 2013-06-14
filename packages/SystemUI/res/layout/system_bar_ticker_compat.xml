@@ -37,15 +37,17 @@
         android:layout_weight="1"
         android:background="@drawable/system_bar_ticker_background"
         >
-        
-        <ImageView android:id="@+id/left_icon"
+
+        <ImageView
+            android:id="@+id/left_icon"
             android:layout_width="64dp"
             android:layout_height="match_parent"
             android:scaleType="center"
             android:visibility="gone"
             />
 
-        <TextView android:id="@+id/text"
+        <TextView
+            android:id="@+id/text"
             android:textAppearance="@*android:style/TextAppearance.StatusBar.Ticker"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -55,7 +57,8 @@
             android:maxLines="2"
             />
 
-        <ImageView android:id="@+id/right_icon"
+        <ImageView
+            android:id="@+id/right_icon"
             android:layout_width="64dp"
             android:layout_height="match_parent"
             android:scaleType="center"

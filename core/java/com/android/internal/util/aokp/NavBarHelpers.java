@@ -24,10 +24,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
-import static com.android.internal.util.aokp.AwesomeConstants.*;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
 
 public class NavBarHelpers {
 
@@ -61,7 +61,7 @@ public class NavBarHelpers {
             } catch (NameNotFoundException e) {
                 e.printStackTrace();
                 actionIcon = AwesomeConstants.getActionIcon(mContext,
-                       AwesomeConstants.AwesomeConstant.ACTION_NULL.value());
+                        AwesomeConstants.AwesomeConstant.ACTION_NULL.value());
             } catch (URISyntaxException e) {
                 e.printStackTrace();
                 actionIcon = AwesomeConstants.getActionIcon(mContext,
@@ -111,7 +111,8 @@ public class NavBarHelpers {
                 }
                 return getFriendlyShortcutName(mContext, intent);
             } catch (URISyntaxException e) {
-                return AwesomeConstants.getProperName(mContext, AwesomeConstants.AwesomeConstant.ACTION_NULL.value());
+                return AwesomeConstants.getProperName(mContext,
+                        AwesomeConstants.AwesomeConstant.ACTION_NULL.value());
             }
         }
     }

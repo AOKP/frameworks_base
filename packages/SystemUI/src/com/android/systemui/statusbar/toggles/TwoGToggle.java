@@ -9,10 +9,8 @@ import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.telephony.TelephonyManager;
 import android.view.View;
-
 import com.android.internal.telephony.Phone;
 import com.android.systemui.R;
-import com.android.systemui.statusbar.toggles.LteToggle.SettingsObserver;
 
 public class TwoGToggle extends StatefulToggle {
 

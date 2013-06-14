@@ -26,12 +26,10 @@ import android.os.RemoteException;
 import android.util.Log;
 import android.util.Slog;
 import android.view.Choreographer;
-import android.view.Display;
 import android.view.IWindowSession;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
-import android.view.ViewRootImpl;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.view.animation.Transformation;
@@ -55,7 +53,8 @@ public class UniverseBackground extends FrameLayout {
 
     // fling gesture tuning parameters, scaled to display density
     private float mSelfExpandVelocityPx; // classic value: 2000px/s
-    private float mSelfCollapseVelocityPx; // classic value: 2000px/s (will be negated to collapse "up")
+    private float mSelfCollapseVelocityPx;
+            // classic value: 2000px/s (will be negated to collapse "up")
     private float mFlingExpandMinVelocityPx; // classic value: 200px/s
     private float mFlingCollapseMinVelocityPx; // classic value: 200px/s
     private float mCollapseMinDisplayFraction; // classic value: 0.08 (25px/min(320px,480px) on G1)
@@ -101,7 +100,8 @@ public class UniverseBackground extends FrameLayout {
         mContent = View.inflate(context, R.layout.universe, null);
         addView(mContent);
         mContent.findViewById(R.id.close).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 animateCollapse();
             }
         });
@@ -135,7 +135,7 @@ public class UniverseBackground extends FrameLayout {
     private void computeAveragePos(MotionEvent event) {
         final int num = event.getPointerCount();
         float x = 0, y = 0;
-        for (int i=0; i<num; i++) {
+        for (int i = 0; i < num; i++) {
             x += event.getX(i);
             y += event.getY(i);
         }
@@ -160,10 +160,10 @@ public class UniverseBackground extends FrameLayout {
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT,
                 WindowManager.LayoutParams.TYPE_UNIVERSE_BACKGROUND,
-                    0
-                    | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
-                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                    | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
+                0
+                        | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
                 PixelFormat.OPAQUE);
         // this will allow the window to run in an overlay on devices that support this
         if (ActivityManager.isHighEndGfx()) {
@@ -199,31 +199,35 @@ public class UniverseBackground extends FrameLayout {
 
         int y;
         if (mAnimating) {
-            y = (int)mAnimY;
+            y = (int) mAnimY;
         } else {
-            y = getExpandedViewMaxHeight()-1;
+            y = getExpandedViewMaxHeight() - 1;
         }
         // Let the fling think that we're open so it goes in the right direction
         // and doesn't try to re-open the windowshade.
         mExpanded = true;
         prepareTracking(y, false);
-        performFling(y, -mSelfCollapseVelocityPx*velocityMultiplier, true);
+        performFling(y, -mSelfCollapseVelocityPx * velocityMultiplier, true);
     }
 
     private void updateUniverseScale() {
         if (mYDelta > 0) {
             int w = getWidth();
             int h = getHeight();
-            float scale = (h-mYDelta+.5f) / (float)h;
-            mUniverseTransform.getMatrix().setScale(scale, scale, w/2, h);
-            if (CHATTY) Log.i(TAG, "w=" + w + " h=" + h + " scale=" + scale
-                    + ": " + mUniverseTransform);
+            float scale = (h - mYDelta + .5f) / (float) h;
+            mUniverseTransform.getMatrix().setScale(scale, scale, w / 2, h);
+            if (CHATTY) {
+                Log.i(TAG, "w=" + w + " h=" + h + " scale=" + scale
+                        + ": " + mUniverseTransform);
+            }
             sendUniverseTransform();
             if (getVisibility() != VISIBLE) {
                 setVisibility(VISIBLE);
             }
         } else {
-            if (CHATTY) Log.i(TAG, "mYDelta=" + mYDelta);
+            if (CHATTY) {
+                Log.i(TAG, "mYDelta=" + mYDelta);
+            }
             mUniverseTransform.clear();
             sendUniverseTransform();
             if (getVisibility() == VISIBLE) {
@@ -243,15 +247,21 @@ public class UniverseBackground extends FrameLayout {
 
     void doAnimation(long frameTimeNanos) {
         if (mAnimating) {
-            if (SPEW) Slog.d(TAG, "doAnimation dt=" + (frameTimeNanos - mAnimLastTimeNanos));
-            if (SPEW) Slog.d(TAG, "doAnimation before mAnimY=" + mAnimY);
+            if (SPEW) {
+                Slog.d(TAG, "doAnimation dt=" + (frameTimeNanos - mAnimLastTimeNanos));
+            }
+            if (SPEW) {
+                Slog.d(TAG, "doAnimation before mAnimY=" + mAnimY);
+            }
             incrementAnim(frameTimeNanos);
             if (SPEW) {
                 Slog.d(TAG, "doAnimation after  mAnimY=" + mAnimY);
             }
 
-            if (mAnimY >= getExpandedViewMaxHeight()-1 && !mClosing) {
-                if (SPEW) Slog.d(TAG, "Animation completed to expanded state.");
+            if (mAnimY >= getExpandedViewMaxHeight() - 1 && !mClosing) {
+                if (SPEW) {
+                    Slog.d(TAG, "Animation completed to expanded state.");
+                }
                 mAnimating = false;
                 mYDelta = getExpandedViewMaxHeight();
                 updateUniverseScale();
@@ -261,7 +271,9 @@ public class UniverseBackground extends FrameLayout {
             }
 
             if (mAnimY <= 0 && mClosing) {
-                if (SPEW) Slog.d(TAG, "Animation completed to collapsed state.");
+                if (SPEW) {
+                    Slog.d(TAG, "Animation completed to collapsed state.");
+                }
                 mAnimating = false;
                 mYDelta = 0;
                 updateUniverseScale();
@@ -270,7 +282,7 @@ public class UniverseBackground extends FrameLayout {
                 return;
             }
 
-            mYDelta = (int)mAnimY;
+            mYDelta = (int) mAnimY;
             updateUniverseScale();
             mChoreographer.postCallback(Choreographer.CALLBACK_ANIMATION,
                     mAnimationCallback, null);
@@ -289,8 +301,8 @@ public class UniverseBackground extends FrameLayout {
         final float y = mAnimY;
         final float v = mAnimVel;                                   // px/s
         final float a = mAnimAccel;                                 // px/s/s
-        mAnimY = y + (v*t) + (0.5f*a*t*t);                          // px
-        mAnimVel = v + (a*t);                                       // px/s
+        mAnimY = y + (v * t) + (0.5f * a * t * t);                          // px
+        mAnimVel = v + (a * t);                                       // px/s
         mAnimLastTimeNanos = frameTimeNanos;                        // ns
         //Slog.d(TAG, "y=" + y + " v=" + v + " a=" + a + " t=" + t + " mAnimY=" + mAnimY
         //        + " mAnimAccel=" + mAnimAccel);
@@ -298,7 +310,8 @@ public class UniverseBackground extends FrameLayout {
 
     void prepareTracking(int y, boolean opening) {
         if (CHATTY) {
-            Slog.d(TAG, "panel: beginning to track the user's touch, y=" + y + " opening=" + opening);
+            Slog.d(TAG,
+                    "panel: beginning to track the user's touch, y=" + y + " opening=" + opening);
         }
 
         mTracking = true;
@@ -334,16 +347,16 @@ public class UniverseBackground extends FrameLayout {
         if (mExpanded) {
             if (!always && (
                     vel > mFlingCollapseMinVelocityPx
-                    || (y > (getExpandedViewMaxHeight()*(1f-mCollapseMinDisplayFraction)) &&
-                        vel > -mFlingExpandMinVelocityPx))) {
+                            || (y >
+                            (getExpandedViewMaxHeight() * (1f - mCollapseMinDisplayFraction)) &&
+                            vel > -mFlingExpandMinVelocityPx))) {
                 // We are expanded, but they didn't move sufficiently to cause
                 // us to retract.  Animate back to the expanded position.
                 mAnimAccel = mExpandAccelPx;
                 if (vel < 0) {
                     mAnimVel = 0;
                 }
-            }
-            else {
+            } else {
                 // We are expanded and are now going to animate away.
                 mAnimAccel = -mCollapseAccelPx;
                 if (vel > 0) {
@@ -353,16 +366,16 @@ public class UniverseBackground extends FrameLayout {
         } else {
             if (always || (
                     vel > mFlingExpandMinVelocityPx
-                    || (y > (getExpandedViewMaxHeight()*(1f-mExpandMinDisplayFraction)) &&
-                        vel > -mFlingCollapseMinVelocityPx))) {
+                            ||
+                            (y > (getExpandedViewMaxHeight() * (1f - mExpandMinDisplayFraction)) &&
+                                    vel > -mFlingCollapseMinVelocityPx))) {
                 // We are collapsed, and they moved enough to allow us to
                 // expand.  Animate in the notifications.
                 mAnimAccel = mExpandAccelPx;
                 if (vel < 0) {
                     mAnimVel = 0;
                 }
-            }
-            else {
+            } else {
                 // We are collapsed, but they didn't move sufficiently to cause
                 // us to retract.  Animate back to the collapsed position.
                 mAnimAccel = -mCollapseAccelPx;
@@ -401,7 +414,7 @@ public class UniverseBackground extends FrameLayout {
                 sendUniverseTransform();
                 setVisibility(VISIBLE);
                 mState = STATE_OPENING;
-                prepareTracking((int)mDragStartY, true);
+                prepareTracking((int) mDragStartY, true);
                 mVelocityTracker.clear();
                 trackMovement(event);
                 return true;
@@ -426,26 +439,26 @@ public class UniverseBackground extends FrameLayout {
                     xVel = mFlingGestureMaxXVelocityPx; // limit how much we care about the x axis
                 }
 
-                float vel = (float)Math.hypot(yVel, xVel);
+                float vel = (float) Math.hypot(yVel, xVel);
                 if (negative) {
                     vel = -vel;
                 }
 
                 if (CHATTY) {
                     Slog.d(TAG, String.format("gesture: vraw=(%f,%f) vnorm=(%f,%f) vlinear=%f",
-                        mVelocityTracker.getXVelocity(),
-                        mVelocityTracker.getYVelocity(),
-                        xVel, yVel,
-                        vel));
+                            mVelocityTracker.getXVelocity(),
+                            mVelocityTracker.getYVelocity(),
+                            xVel, yVel,
+                            vel));
                 }
 
-                performFling((int)mAverageY, vel, false);
+                performFling((int) mAverageY, vel, false);
                 mState = STATE_OPEN;
                 return true;
             }
 
             computeAveragePos(event);
-            mYDelta = (int)(mAverageY - mDragStartY);
+            mYDelta = (int) (mAverageY - mDragStartY);
             if (mYDelta > getExpandedViewMaxHeight()) {
                 mYDelta = getExpandedViewMaxHeight();
             }

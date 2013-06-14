@@ -3,15 +3,10 @@ package com.android.systemui.statusbar.toggles;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.ContentObserver;
-import android.content.Intent;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
-import android.os.SystemProperties;
 import android.provider.Settings;
-import android.view.View;
-
 import com.android.systemui.R;
 
 public class WirelessAdbToggle extends StatefulToggle {
@@ -60,7 +55,7 @@ public class WirelessAdbToggle extends StatefulToggle {
     @Override
     public void updateView() {
         mAdbEnabled = Settings.Global.getInt(mContext.getContentResolver(),
-                              Settings.Global.ADB_ENABLED, 0);
+                Settings.Global.ADB_ENABLED, 0);
 
         if (System.getProperty("service.adb.tcp.port") == PORT) {
             if (mWifiMgr.isWifiEnabled()) { // Check if port is open then check isWifiEnabled()
@@ -72,7 +67,7 @@ public class WirelessAdbToggle extends StatefulToggle {
         setEnabledState(enabled);
         setIcon(enabled ? R.drawable.ic_qs_adb_on : R.drawable.ic_qs_adb_off);
         setLabel(enabled ? mContext.getString(R.string.quick_settings_adb_on, getWifiIp())
-                 : mContext.getString(R.string.quick_settings_adb_off));
+                : mContext.getString(R.string.quick_settings_adb_off));
         super.updateView();
     }
 
@@ -83,9 +78,9 @@ public class WirelessAdbToggle extends StatefulToggle {
     protected String getWifiIp() {
         int ip = mWifiMgr.getConnectionInfo().getIpAddress();
         String wifiIp = (ip & 0xFF) + "." +
-                        ((ip >> 8) & 0xff) + "." +
-                        ((ip >> 16) & 0xff) + "." +
-                        ((ip >> 24) & 0xff);
+                ((ip >> 8) & 0xff) + "." +
+                ((ip >> 16) & 0xff) + "." +
+                ((ip >> 24) & 0xff);
         return wifiIp;
     }
 

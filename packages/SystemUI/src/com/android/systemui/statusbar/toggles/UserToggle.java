@@ -21,12 +21,11 @@ import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.Profile;
 import android.util.DisplayMetrics;
 import android.util.Pair;
-import android.view.WindowManager;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsTileView;
 
@@ -86,10 +85,10 @@ public class UserToggle extends BaseToggle {
             currentUserContext = mContext.createPackageContextAsUser("android", 0,
                     new UserHandle(userInfo.id));
         } catch (NameNotFoundException e) {
-           log("Couldn't create user context", e);
+            log("Couldn't create user context", e);
             throw new RuntimeException(e);
         } catch (RemoteException e) {
-           log("Couldn't get user info", e);
+            log("Couldn't get user info", e);
         }
         final int userId = userInfo.id;
         final String userName = userInfo.name;
@@ -109,12 +108,14 @@ public class UserToggle extends BaseToggle {
                 Bitmap rawAvatar = um.getUserIcon(userId);
                 if (rawAvatar != null) {
                     DisplayMetrics dm = new DisplayMetrics();
-                    WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+                    WindowManager wm =
+                            (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
                     wm.getDefaultDisplay().getMetrics(dm);
                     int desiredSize = (int) (sAvatarBaseSize * dm.density);
                     int width = rawAvatar.getWidth();
                     if (width > desiredSize) {
-                        rawAvatar = Bitmap.createScaledBitmap(rawAvatar, desiredSize, desiredSize, false);
+                        rawAvatar = Bitmap.createScaledBitmap(rawAvatar, desiredSize, desiredSize,
+                                false);
                     }
                     avatar = new BitmapDrawable(mContext.getResources(), rawAvatar);
                 } else {
@@ -127,9 +128,9 @@ public class UserToggle extends BaseToggle {
                 if (um.getUsers().size() <= 1) {
                     // Try and read the display name from the local profile
                     final Cursor cursor = context.getContentResolver().query(
-                            Profile.CONTENT_URI, new String[] {
-                                    Phone._ID, Phone.DISPLAY_NAME
-                            },
+                            Profile.CONTENT_URI, new String[]{
+                            Phone._ID, Phone.DISPLAY_NAME
+                    },
                             null, null, null);
                     if (cursor != null) {
                         try {
@@ -166,7 +167,7 @@ public class UserToggle extends BaseToggle {
         mIcon = (ImageView) quick.findViewById(R.id.user_imageview);
         return quick;
     }
-    
+
     @Override
     public View createTraditionalView() {
         View v = super.createTraditionalView();

@@ -16,14 +16,11 @@
 
 package com.android.internal.policy.impl.keyguard;
 
-import android.app.admin.DevicePolicyManager;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
 import android.text.method.TextKeyListener;
 import android.util.AttributeSet;
 import android.view.View;
@@ -31,12 +28,10 @@ import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
 import android.widget.TextView.OnEditorActionListener;
-
 import com.android.internal.R;
-import com.android.internal.widget.PasswordEntryKeyboardHelper;
-import com.android.internal.widget.PasswordEntryKeyboardView;
 
 import java.util.List;
+
 /**
  * Displays an alphanumeric (latin-1) key entry for the user to enter
  * an unlock password
@@ -133,7 +128,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView
                     String entry = mPasswordEntry.getText().toString();
                     if (entry.length() > MINIMUM_PASSWORD_LENGTH_BEFORE_REPORT &&
                             mLockPatternUtils.checkPassword(entry)) {
-                            verifyPasswordAndUnlock();
+                        verifyPasswordAndUnlock();
                     }
                 }
             }
@@ -169,12 +164,12 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView
     /**
      * Method adapted from com.android.inputmethod.latin.Utils
      *
-     * @param imm The input method manager
+     * @param imm                            The input method manager
      * @param shouldIncludeAuxiliarySubtypes
      * @return true if we have multiple IMEs to choose from
      */
     private boolean hasMultipleEnabledIMEsOrSubtypes(InputMethodManager imm,
-            final boolean shouldIncludeAuxiliarySubtypes) {
+                                                     final boolean shouldIncludeAuxiliarySubtypes) {
         final List<InputMethodInfo> enabledImis = imm.getEnabledInputMethodList();
 
         // Number of the filtered IMEs
@@ -182,7 +177,9 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView
 
         for (InputMethodInfo imi : enabledImis) {
             // We can return true immediately after we find two or more filtered IMEs.
-            if (filteredImisCount > 1) return true;
+            if (filteredImisCount > 1) {
+                return true;
+            }
             final List<InputMethodSubtype> subtypes =
                     imm.getEnabledInputMethodSubtypeList(imi, true);
             // IMEs that have no subtypes should be counted.
@@ -209,8 +206,9 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView
         }
 
         return filteredImisCount > 1
-        // imm.getEnabledInputMethodSubtypeList(null, false) will return the current IME's enabled
-        // input method subtype (The current IME should be LatinIME.)
+                // imm.getEnabledInputMethodSubtypeList(null, false) will return the current
+                // IME's enabled
+                // input method subtype (The current IME should be LatinIME.)
                 || imm.getEnabledInputMethodSubtypeList(null, false).size() > 1;
     }
 

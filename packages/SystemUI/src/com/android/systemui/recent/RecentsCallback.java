@@ -25,7 +25,10 @@ public interface RecentsCallback {
     static final int SWIPE_DOWN = 3;
 
     void handleOnClick(View selectedView);
+
     void handleSwipe(View selectedView);
+
     void handleLongPress(View selectedView, View anchorView, View thumbnailView);
+
     void dismiss();
 }

@@ -36,7 +36,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-
 import com.android.internal.R;
 
 public class KeyguardWidgetFrame extends FrameLayout {
@@ -136,14 +135,14 @@ public class KeyguardWidgetFrame extends FrameLayout {
 
     private KeyguardUpdateMonitorCallback mUpdateMonitorCallbacks =
             new KeyguardUpdateMonitorCallback() {
-        @Override
-        public void onBootCompleted() {
-            if (mPerformAppWidgetSizeUpdateOnBootComplete) {
-                performAppWidgetSizeCallbacksIfNecessary();
-                mPerformAppWidgetSizeUpdateOnBootComplete = false;
-            }
-        }
-    };
+                @Override
+                public void onBootCompleted() {
+                    if (mPerformAppWidgetSizeUpdateOnBootComplete) {
+                        performAppWidgetSizeCallbacksIfNecessary();
+                        mPerformAppWidgetSizeUpdateOnBootComplete = false;
+                    }
+                }
+            };
 
     void setIsHoveringOverDeleteDropTarget(boolean isHovering) {
         if (ENABLE_HOVER_OVER_DELETE_DROP_TARGET_OVERLAY) {
@@ -328,7 +327,7 @@ public class KeyguardWidgetFrame extends FrameLayout {
 
     /**
      * Depending on whether the security is up, the widget size needs to change
-     * 
+     *
      * @param height The height of the widget, -1 for full height
      */
     private void setWidgetHeight(int height) {
@@ -403,7 +402,7 @@ public class KeyguardWidgetFrame extends FrameLayout {
     public void setFrameHeight(int height) {
         mFrameHeight = height;
         mBackgroundRect.set(0, 0, getMeasuredWidth(), Math.min(mFrameHeight, getMeasuredHeight()));
-        mForegroundRect.set(mFrameStrokeAdjustment, mFrameStrokeAdjustment,getMeasuredWidth() -
+        mForegroundRect.set(mFrameStrokeAdjustment, mFrameStrokeAdjustment, getMeasuredWidth() -
                 mFrameStrokeAdjustment, Math.min(getMeasuredHeight(), mFrameHeight) -
                 mFrameStrokeAdjustment);
         updateGradient();
@@ -440,7 +439,7 @@ public class KeyguardWidgetFrame extends FrameLayout {
 
     private void updateGradient() {
         float x0 = mLeftToRight ? 0 : mForegroundRect.width();
-        float x1 = mLeftToRight ? mForegroundRect.width(): 0;
+        float x1 = mLeftToRight ? mForegroundRect.width() : 0;
         mLeftToRightGradient = new LinearGradient(x0, 0f, x1, 0f,
                 mGradientColor, 0, Shader.TileMode.CLAMP);
         mRightToLeftGradient = new LinearGradient(x1, 0f, x0, 0f,
@@ -472,7 +471,9 @@ public class KeyguardWidgetFrame extends FrameLayout {
 
     private void performAppWidgetSizeCallbacksIfNecessary() {
         View content = getContent();
-        if (!(content instanceof AppWidgetHostView)) return;
+        if (!(content instanceof AppWidgetHostView)) {
+            return;
+        }
 
         if (!KeyguardUpdateMonitor.getInstance(mContext).hasBootCompleted()) {
             mPerformAppWidgetSizeUpdateOnBootComplete = true;

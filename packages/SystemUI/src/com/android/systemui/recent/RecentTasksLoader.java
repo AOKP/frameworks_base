@@ -34,7 +34,6 @@ import android.os.UserHandle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.PhoneStatusBar;
 import com.android.systemui.statusbar.tablet.TabletStatusBar;
@@ -70,11 +69,14 @@ public class RecentTasksLoader implements View.OnTouchListener {
     private boolean mFirstScreenful;
     private ArrayList<TaskDescription> mLoadedTasks;
 
-    private enum State { LOADING, LOADED, CANCELLED };
+    private enum State {LOADING, LOADED, CANCELLED}
+
+    ;
     private State mState = State.CANCELLED;
 
 
     private static RecentTasksLoader sInstance;
+
     public static RecentTasksLoader getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new RecentTasksLoader(context);
@@ -150,22 +152,22 @@ public class RecentTasksLoader implements View.OnTouchListener {
         if (homeInfo == null) {
             final PackageManager pm = mContext.getPackageManager();
             homeInfo = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-                .resolveActivityInfo(pm, 0);
+                    .resolveActivityInfo(pm, 0);
         }
         return homeInfo != null
-            && homeInfo.packageName.equals(component.getPackageName())
-            && homeInfo.name.equals(component.getClassName());
+                && homeInfo.packageName.equals(component.getPackageName())
+                && homeInfo.name.equals(component.getClassName());
     }
 
     // Create an TaskDescription, returning null if the title or icon is null
     TaskDescription createTaskDescription(int taskId, int persistentTaskId, Intent baseIntent,
-            ComponentName origActivity, CharSequence description) {
+                                          ComponentName origActivity, CharSequence description) {
         Intent intent = new Intent(baseIntent);
         if (origActivity != null) {
             intent.setComponent(origActivity);
         }
         final PackageManager pm = mContext.getPackageManager();
-        intent.setFlags((intent.getFlags()&~Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+        intent.setFlags((intent.getFlags() & ~Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
                 | Intent.FLAG_ACTIVITY_NEW_TASK);
         final ResolveInfo resolveInfo = pm.resolveActivity(intent, 0);
         if (resolveInfo != null) {
@@ -173,8 +175,10 @@ public class RecentTasksLoader implements View.OnTouchListener {
             final String title = info.loadLabel(pm).toString();
 
             if (title != null && title.length() > 0) {
-                if (DEBUG) Log.v(TAG, "creating activity desc for id="
-                        + persistentTaskId + ", label=" + title);
+                if (DEBUG) {
+                    Log.v(TAG, "creating activity desc for id="
+                            + persistentTaskId + ", label=" + title);
+                }
 
                 TaskDescription item = new TaskDescription(taskId,
                         persistentTaskId, resolveInfo, baseIntent, info.packageName,
@@ -183,7 +187,9 @@ public class RecentTasksLoader implements View.OnTouchListener {
 
                 return item;
             } else {
-                if (DEBUG) Log.v(TAG, "SKIPPING item " + persistentTaskId);
+                if (DEBUG) {
+                    Log.v(TAG, "SKIPPING item " + persistentTaskId);
+                }
             }
         }
         return null;
@@ -196,8 +202,10 @@ public class RecentTasksLoader implements View.OnTouchListener {
         Bitmap thumbnail = am.getTaskTopThumbnail(td.persistentTaskId);
         Drawable icon = getFullResIcon(td.resolveInfo, pm);
 
-        if (DEBUG) Log.v(TAG, "Loaded bitmap for task "
-                + td + ": " + thumbnail);
+        if (DEBUG) {
+            Log.v(TAG, "Loaded bitmap for task "
+                    + td + ": " + thumbnail);
+        }
         synchronized (td) {
             if (thumbnail != null) {
                 td.setThumbnail(thumbnail);
@@ -242,10 +250,10 @@ public class RecentTasksLoader implements View.OnTouchListener {
     }
 
     Runnable mPreloadTasksRunnable = new Runnable() {
-            public void run() {
-                loadTasksInBackground();
-            }
-        };
+        public void run() {
+            loadTasksInBackground();
+        }
+    };
 
     // additional optimization when we have software system buttons - start loading the recent
     // tasks on touch down
@@ -313,7 +321,7 @@ public class RecentTasksLoader implements View.OnTouchListener {
         Thread bgLoad = new Thread() {
             public void run() {
                 TaskDescription first = loadFirstTask();
-                synchronized(mFirstTaskLock) {
+                synchronized (mFirstTaskLock) {
                     if (mCancelPreloadingFirstTask) {
                         clearFirstTask();
                     } else {
@@ -324,7 +332,7 @@ public class RecentTasksLoader implements View.OnTouchListener {
                 }
             }
         };
-        synchronized(mFirstTaskLock) {
+        synchronized (mFirstTaskLock) {
             if (!mPreloadingFirstTask) {
                 clearFirstTask();
                 mPreloadingFirstTask = true;
@@ -334,7 +342,7 @@ public class RecentTasksLoader implements View.OnTouchListener {
     }
 
     public void cancelPreloadingFirstTask() {
-        synchronized(mFirstTaskLock) {
+        synchronized (mFirstTaskLock) {
             if (mPreloadingFirstTask) {
                 mCancelPreloadingFirstTask = true;
             } else {
@@ -345,9 +353,10 @@ public class RecentTasksLoader implements View.OnTouchListener {
 
     boolean mPreloadingFirstTask;
     boolean mCancelPreloadingFirstTask;
+
     public TaskDescription getFirstTask() {
-        while(true) {
-            synchronized(mFirstTaskLock) {
+        while (true) {
+            synchronized (mFirstTaskLock) {
                 if (mFirstTaskLoaded) {
                     return mFirstTask;
                 } else if (!mFirstTaskLoaded && !mPreloadingFirstTask) {
@@ -364,7 +373,8 @@ public class RecentTasksLoader implements View.OnTouchListener {
     }
 
     public TaskDescription loadFirstTask() {
-        final ActivityManager am = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        final ActivityManager am =
+                (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
 
         final List<ActivityManager.RecentTaskInfo> recentTasks = am.getRecentTasksForUser(
                 1, ActivityManager.RECENT_IGNORE_UNAVAILABLE, UserHandle.CURRENT.getIdentifier());
@@ -401,6 +411,7 @@ public class RecentTasksLoader implements View.OnTouchListener {
     public void loadTasksInBackground() {
         loadTasksInBackground(false);
     }
+
     public void loadTasksInBackground(final boolean zeroeth) {
         if (mState != State.CANCELLED) {
             return;
@@ -427,6 +438,7 @@ public class RecentTasksLoader implements View.OnTouchListener {
                     mFirstScreenful = false;
                 }
             }
+
             @Override
             protected Void doInBackground(Void... params) {
                 // We load in two stages: first, we update progress with just the first screenful
@@ -435,7 +447,7 @@ public class RecentTasksLoader implements View.OnTouchListener {
                 Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
                 final PackageManager pm = mContext.getPackageManager();
                 final ActivityManager am = (ActivityManager)
-                mContext.getSystemService(Context.ACTIVITY_SERVICE);
+                        mContext.getSystemService(Context.ACTIVITY_SERVICE);
 
                 final List<ActivityManager.RecentTaskInfo> recentTasks =
                         am.getRecentTasks(MAX_TASKS, ActivityManager.RECENT_IGNORE_UNAVAILABLE);
@@ -535,6 +547,7 @@ public class RecentTasksLoader implements View.OnTouchListener {
                     }
                 }
             }
+
             @Override
             protected Void doInBackground(Void... params) {
                 final int origPri = Process.getThreadPriority(Process.myTid());

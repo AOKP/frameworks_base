@@ -21,7 +21,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
@@ -29,10 +28,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView.OnEditorActionListener;
-
-import com.android.internal.telephony.ITelephony;
-
 import com.android.internal.R;
+import com.android.internal.telephony.ITelephony;
 
 /**
  * Displays a PIN pad for entering a PUK (Pin Unlock Kode) provided by a carrier.
@@ -73,7 +70,8 @@ public class KeyguardSimPukView extends KeyguardAbsKeyInputView
                 if (confirmPin()) {
                     state = DONE;
                     msg =
-                        com.android.internal.R.string.lockscreen_sim_unlock_progress_dialog_message;
+                            com.android.internal.R.string
+                                    .lockscreen_sim_unlock_progress_dialog_message;
                     updateSim();
                 } else {
                     state = ENTER_PIN; // try again?
@@ -87,8 +85,8 @@ public class KeyguardSimPukView extends KeyguardAbsKeyInputView
         }
 
         void reset() {
-            mPinText="";
-            mPukText="";
+            mPinText = "";
+            mPukText = "";
             state = ENTER_PUK;
             mSecurityMessageDisplay.setMessage(R.string.kg_puk_enter_puk_hint, true);
             mPasswordEntry.requestFocus();
@@ -142,7 +140,7 @@ public class KeyguardSimPukView extends KeyguardAbsKeyInputView
                 public void onClick(View v) {
                     CharSequence str = mPasswordEntry.getText();
                     if (str.length() > 0) {
-                        mPasswordEntry.setText(str.subSequence(0, str.length()-1));
+                        mPasswordEntry.setText(str.subSequence(0, str.length() - 1));
                     }
                     doHapticKeyClick();
                 }

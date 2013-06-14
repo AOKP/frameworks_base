@@ -19,18 +19,17 @@ package com.android.systemui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.animation.Animator.AnimatorListener;
 import android.animation.ValueAnimator;
 import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.graphics.RectF;
 import android.os.Handler;
 import android.util.Log;
-import android.view.accessibility.AccessibilityEvent;
-import android.view.animation.LinearInterpolator;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.LinearInterpolator;
 
 public class SwipeHelper implements Gefingerpoken {
     static final String TAG = "com.android.systemui.SwipeHelper";
@@ -53,9 +52,9 @@ public class SwipeHelper implements Gefingerpoken {
     private static final int SNAP_ANIM_LEN = SLOW_ANIMATIONS ? 1000 : 150; // ms
 
     public static float ALPHA_FADE_START = 0f; // fraction of thumbnail width
-                                                 // where fade starts
+    // where fade starts
     static final float ALPHA_FADE_END = 0.5f; // fraction of thumbnail width
-                                              // beyond which alpha->0
+    // beyond which alpha->0
     private float mMinAlpha = 0f;
 
     private float mPagingTouchSlop;
@@ -77,7 +76,7 @@ public class SwipeHelper implements Gefingerpoken {
     private long mLongPressTimeout;
 
     public SwipeHelper(int swipeDirection, Callback callback, float densityScale,
-            float pagingTouchSlop) {
+                       float pagingTouchSlop) {
         mCallback = callback;
         mHandler = new Handler();
         mSwipeDirection = swipeDirection;
@@ -85,7 +84,8 @@ public class SwipeHelper implements Gefingerpoken {
         mDensityScale = densityScale;
         mPagingTouchSlop = pagingTouchSlop;
 
-        mLongPressTimeout = (long) (ViewConfiguration.getLongPressTimeout() * 1.5f); // extra long-press!
+        mLongPressTimeout =
+                (long) (ViewConfiguration.getLongPressTimeout() * 1.5f); // extra long-press!
     }
 
     public void setLongPressListener(View.OnLongClickListener listener) {
@@ -157,23 +157,24 @@ public class SwipeHelper implements Gefingerpoken {
     // invalidate the view's own bounds all the way up the view hierarchy
     public static void invalidateGlobalRegion(View view) {
         invalidateGlobalRegion(
-            view,
-            new RectF(view.getLeft(), view.getTop(), view.getRight(), view.getBottom()));
+                view,
+                new RectF(view.getLeft(), view.getTop(), view.getRight(), view.getBottom()));
     }
 
     // invalidate a rectangle relative to the view's coordinate system all the way up the view
     // hierarchy
     public static void invalidateGlobalRegion(View view, RectF childBounds) {
         //childBounds.offset(view.getTranslationX(), view.getTranslationY());
-        if (DEBUG_INVALIDATE)
+        if (DEBUG_INVALIDATE) {
             Log.v(TAG, "-------------");
+        }
         while (view.getParent() != null && view.getParent() instanceof View) {
             view = (View) view.getParent();
             view.getMatrix().mapRect(childBounds);
             view.invalidate((int) Math.floor(childBounds.left),
-                            (int) Math.floor(childBounds.top),
-                            (int) Math.ceil(childBounds.right),
-                            (int) Math.ceil(childBounds.bottom));
+                    (int) Math.floor(childBounds.top),
+                    (int) Math.ceil(childBounds.right),
+                    (int) Math.ceil(childBounds.bottom));
             if (DEBUG_INVALIDATE) {
                 Log.v(TAG, "INVALIDATE(" + (int) Math.floor(childBounds.left)
                         + "," + (int) Math.floor(childBounds.top)
@@ -212,7 +213,8 @@ public class SwipeHelper implements Gefingerpoken {
                                 public void run() {
                                     if (mCurrView != null && !mLongPressSent) {
                                         mLongPressSent = true;
-                                        mCurrView.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
+                                        mCurrView.sendAccessibilityEvent(
+                                                AccessibilityEvent.TYPE_VIEW_LONG_CLICKED);
                                         mLongPressListener.onLongClick(mCurrView);
                                     }
                                 }
@@ -253,7 +255,7 @@ public class SwipeHelper implements Gefingerpoken {
     }
 
     /**
-     * @param view The view to be dismissed
+     * @param view     The view to be dismissed
      * @param velocity The desired pixels/second speed at which the view should move
      */
     public void dismissChild(final View view, float velocity) {
@@ -272,8 +274,8 @@ public class SwipeHelper implements Gefingerpoken {
         int duration = MAX_ESCAPE_ANIMATION_DURATION;
         if (velocity != 0) {
             duration = Math.min(duration,
-                                (int) (Math.abs(newPos - getTranslation(animView)) * 1000f / Math
-                                        .abs(velocity)));
+                    (int) (Math.abs(newPos - getTranslation(animView)) * 1000f / Math
+                            .abs(velocity)));
         } else {
             duration = DEFAULT_ESCAPE_ANIMATION_DURATION;
         }
@@ -343,7 +345,8 @@ public class SwipeHelper implements Gefingerpoken {
                         if (Math.abs(delta) >= size) {
                             delta = delta > 0 ? maxScrollDistance : -maxScrollDistance;
                         } else {
-                            delta = maxScrollDistance * (float) Math.sin((delta/size)*(Math.PI/2));
+                            delta = maxScrollDistance *
+                                    (float) Math.sin((delta / size) * (Math.PI / 2));
                         }
                     }
                     setTranslation(mCurrAnimView, delta);

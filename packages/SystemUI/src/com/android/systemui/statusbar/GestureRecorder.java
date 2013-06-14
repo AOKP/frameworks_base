@@ -16,6 +16,12 @@
 
 package com.android.systemui.statusbar;
 
+import android.os.Handler;
+import android.os.Message;
+import android.os.SystemClock;
+import android.util.Slog;
+import android.view.MotionEvent;
+
 import java.io.BufferedWriter;
 import java.io.FileDescriptor;
 import java.io.FileWriter;
@@ -23,12 +29,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.LinkedList;
-
-import android.os.Handler;
-import android.os.Message;
-import android.os.SystemClock;
-import android.util.Slog;
-import android.view.MotionEvent;
 
 /**
  * Convenience class for capturing gestures for later analysis.
@@ -40,14 +40,18 @@ public class GestureRecorder {
     public class Gesture {
         public abstract class Record {
             long time;
+
             public abstract String toJson();
         }
+
         public class MotionEventRecord extends Record {
             public MotionEvent event;
+
             public MotionEventRecord(long when, MotionEvent event) {
                 this.time = when;
                 this.event = event.copy();
             }
+
             String actionName(int action) {
                 switch (action) {
                     case MotionEvent.ACTION_DOWN:
@@ -62,34 +66,40 @@ public class GestureRecorder {
                         return String.valueOf(action);
                 }
             }
+
             public String toJson() {
                 return String.format(
                         ("{\"type\":\"motion\", \"time\":%d, \"action\":\"%s\", "
-                            + "\"x\":%.2f, \"y\":%.2f, \"s\":%.2f, \"p\":%.2f}"),
+                                + "\"x\":%.2f, \"y\":%.2f, \"s\":%.2f, \"p\":%.2f}"),
                         this.time,
                         actionName(this.event.getAction()),
                         this.event.getRawX(),
                         this.event.getRawY(),
                         this.event.getSize(),
                         this.event.getPressure()
-                        );
+                );
             }
         }
+
         public class TagRecord extends Record {
             public String tag, info;
+
             public TagRecord(long when, String tag, String info) {
                 this.time = when;
                 this.tag = tag;
                 this.info = info;
             }
+
             public String toJson() {
-                return String.format("{\"type\":\"tag\", \"time\":%d, \"tag\":\"%s\", \"info\":\"%s\"}",
-                        this.time,
-                        this.tag,
-                        this.info
+                return String
+                        .format("{\"type\":\"tag\", \"time\":%d, \"tag\":\"%s\", \"info\":\"%s\"}",
+                                this.time,
+                                this.tag,
+                                this.info
                         );
             }
         }
+
         private LinkedList<Record> mRecords = new LinkedList<Record>();
         private HashSet<String> mTags = new HashSet<String>();
         long mDownTime = -1;
@@ -102,7 +112,8 @@ public class GestureRecorder {
             } else {
                 if (mDownTime != ev.getDownTime()) {
                     Slog.w(TAG, "Assertion failure in GestureRecorder: event downTime ("
-                            +ev.getDownTime()+") does not match gesture downTime ("+mDownTime+")");
+                            + ev.getDownTime() + ") does not match gesture downTime (" + mDownTime +
+                            ")");
                 }
             }
             switch (ev.getActionMasked()) {
@@ -111,19 +122,24 @@ public class GestureRecorder {
                     mComplete = true;
             }
         }
+
         public void tag(long when, String tag, String info) {
             mRecords.add(new TagRecord(when, tag, info));
             mTags.add(tag);
         }
+
         public boolean isComplete() {
             return mComplete;
         }
+
         public String toJson() {
             StringBuilder sb = new StringBuilder();
             boolean first = true;
             sb.append("[");
             for (Record r : mRecords) {
-                if (!first) sb.append(", ");
+                if (!first) {
+                    sb.append(", ");
+                }
                 first = false;
                 sb.append(r.toJson());
             }
@@ -201,8 +217,12 @@ public class GestureRecorder {
         sb.append("[");
         int count = 0;
         for (Gesture g : mGestures) {
-            if (!g.isComplete()) continue;
-            if (!first) sb.append("," );
+            if (!g.isComplete()) {
+                continue;
+            }
+            if (!first) {
+                sb.append(",");
+            }
             first = false;
             sb.append(g.toJson());
             count++;
@@ -237,7 +257,8 @@ public class GestureRecorder {
                     mGestures.add(mCurrentGesture);
                 }
                 if (DEBUG) {
-                    Slog.v(TAG, String.format("Wrote %d complete gestures to %s", mLastSaveLen, mLogfile));
+                    Slog.v(TAG, String.format("Wrote %d complete gestures to %s", mLastSaveLen,
+                            mLogfile));
                 }
             } catch (IOException e) {
                 Slog.e(TAG, String.format("Couldn't write gestures to %s", mLogfile), e);

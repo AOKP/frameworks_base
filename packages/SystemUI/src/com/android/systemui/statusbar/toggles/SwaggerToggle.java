@@ -9,11 +9,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.widget.Toast;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsTileView;
 
-import java.lang.Object;
 import java.util.Calendar;
 
 public class SwaggerToggle extends BaseToggle implements OnTouchListener {

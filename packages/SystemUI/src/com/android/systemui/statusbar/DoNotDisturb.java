@@ -17,13 +17,8 @@
 package com.android.systemui.statusbar;
 
 import android.app.StatusBarManager;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.util.Slog;
-
 import com.android.systemui.statusbar.policy.Prefs;
 
 public class DoNotDisturb implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -34,7 +29,7 @@ public class DoNotDisturb implements SharedPreferences.OnSharedPreferenceChangeL
 
     public DoNotDisturb(Context context) {
         mContext = context;
-        mStatusBar = (StatusBarManager)context.getSystemService(Context.STATUS_BAR_SERVICE);
+        mStatusBar = (StatusBarManager) context.getSystemService(Context.STATUS_BAR_SERVICE);
         mPrefs = Prefs.read(context);
         mPrefs.registerOnSharedPreferenceChangeListener(this);
         mDoNotDisturb = mPrefs.getBoolean(Prefs.DO_NOT_DISTURB_PREF, Prefs.DO_NOT_DISTURB_DEFAULT);

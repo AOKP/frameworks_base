@@ -16,8 +16,6 @@
 
 package com.android.internal.policy.impl.keyguard;
 
-import com.android.internal.R;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
@@ -31,6 +29,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import com.android.internal.R;
 
 public class MultiPaneChallengeLayout extends ViewGroup implements ChallengeLayout {
     private static final String TAG = "MultiPaneChallengeLayout";
@@ -103,7 +102,9 @@ public class MultiPaneChallengeLayout extends ViewGroup implements ChallengeLayo
 
     @Override
     public void showBouncer() {
-        if (mIsBouncing) return;
+        if (mIsBouncing) {
+            return;
+        }
         mIsBouncing = true;
         if (mScrimView != null) {
             if (mChallengeView != null) {
@@ -127,7 +128,9 @@ public class MultiPaneChallengeLayout extends ViewGroup implements ChallengeLayo
 
     @Override
     public void hideBouncer() {
-        if (!mIsBouncing) return;
+        if (!mIsBouncing) {
+            return;
+        }
         mIsBouncing = false;
         if (mScrimView != null) {
             if (mChallengeView != null) {
@@ -242,7 +245,9 @@ public class MultiPaneChallengeLayout extends ViewGroup implements ChallengeLayo
                 }
                 mUserSwitcherView = child;
 
-                if (child.getVisibility() == GONE) continue;
+                if (child.getVisibility() == GONE) {
+                    continue;
+                }
 
                 int adjustedWidthSpec = widthSpec;
                 int adjustedHeightSpec = heightSpec;
@@ -343,7 +348,9 @@ public class MultiPaneChallengeLayout extends ViewGroup implements ChallengeLayo
             LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
             // We did the user switcher above if we have one.
-            if (child == mUserSwitcherView || child.getVisibility() == GONE) continue;
+            if (child == mUserSwitcherView || child.getVisibility() == GONE) {
+                continue;
+            }
 
             if (child == mScrimView) {
                 child.layout(0, 0, width, height);
@@ -358,7 +365,7 @@ public class MultiPaneChallengeLayout extends ViewGroup implements ChallengeLayo
     }
 
     private void layoutWithGravity(int width, int height, View child, Rect padding,
-            boolean adjustPadding) {
+                                   boolean adjustPadding) {
         final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
         final int heightUsed = padding.top + padding.bottom - getPaddingTop() - getPaddingBottom();
@@ -457,7 +464,7 @@ public class MultiPaneChallengeLayout extends ViewGroup implements ChallengeLayo
     protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof LayoutParams ? new LayoutParams((LayoutParams) p) :
                 p instanceof MarginLayoutParams ? new LayoutParams((MarginLayoutParams) p) :
-                new LayoutParams(p);
+                        new LayoutParams(p);
     }
 
     @Override

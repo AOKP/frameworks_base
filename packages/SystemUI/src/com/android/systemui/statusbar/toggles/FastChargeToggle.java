@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.FileObserver;
 import android.view.View;
-
 import com.android.systemui.R;
 
 import java.io.BufferedReader;
@@ -36,7 +35,9 @@ public class FastChargeToggle extends StatefulToggle {
 
             protected void onPostExecute(Void result) {
                 scheduleViewUpdate();
-            };
+            }
+
+            ;
         }.execute();
         mObserver = new FileObserver(mFastChargePath, FileObserver.MODIFY) {
             @Override

@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public class SettingsToggle extends BaseToggle {

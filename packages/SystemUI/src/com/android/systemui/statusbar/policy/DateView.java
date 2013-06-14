@@ -25,7 +25,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.TextView;
-
 import com.android.systemui.R;
 
 import java.util.Date;
@@ -59,7 +58,7 @@ public class DateView extends TextView {
         mAttachedToWindow = true;
         setUpdates();
     }
-    
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
@@ -99,7 +98,7 @@ public class DateView extends TextView {
             }
             final ViewParent parent = v.getParent();
             if (parent instanceof View) {
-                v = (View)parent;
+                v = (View) parent;
             } else {
                 return true;
             }

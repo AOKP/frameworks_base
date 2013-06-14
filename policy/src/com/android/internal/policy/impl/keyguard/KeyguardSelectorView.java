@@ -19,8 +19,8 @@ import android.animation.ObjectAnimator;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -40,24 +40,25 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
+import com.android.internal.R;
+import com.android.internal.telephony.IccCardConstants.State;
 import com.android.internal.util.aokp.AokpRibbonHelper;
 import com.android.internal.util.aokp.LockScreenHelpers;
-import com.android.internal.telephony.IccCardConstants.State;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.multiwaveview.GlowPadView;
 import com.android.internal.widget.multiwaveview.GlowPadView.OnTriggerListener;
 import com.android.internal.widget.multiwaveview.TargetDrawable;
-import com.android.internal.R;
 
 import java.util.ArrayList;
+
+import static com.android.internal.util.aokp.AwesomeConstants.*;
 
 public class KeyguardSelectorView extends LinearLayout implements KeyguardSecurityView {
     private static final boolean DEBUG = KeyguardHostView.DEBUG;
     private static final String TAG = "SecuritySelectorView";
 
-    private final int TORCH_TIMEOUT = ViewConfiguration.getLongPressTimeout(); //longpress glowpad torch
+    private final int TORCH_TIMEOUT = ViewConfiguration.getLongPressTimeout();
+            //longpress glowpad torch
     private final int TORCH_CHECK = 2000; //make sure torch turned off
 
     private KeyguardSecurityCallback mCallback;
@@ -94,46 +95,47 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
             }
         }
     }
+
     private H mHandler = new H();
 
     private void launchAction(String action) {
         AwesomeConstant AwesomeEnum = fromString(action);
         switch (AwesomeEnum) {
-        case ACTION_UNLOCK:
-            mCallback.userActivity(0);
-            mCallback.dismiss(false);
-            break;
-        case ACTION_ASSIST:
-            mCallback.userActivity(0);
-            mCallback.dismiss(false);
-            Intent assistIntent =
-                ((SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE))
-                .getAssistIntent(mContext, UserHandle.USER_CURRENT);
+            case ACTION_UNLOCK:
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+                break;
+            case ACTION_ASSIST:
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+                Intent assistIntent =
+                        ((SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE))
+                                .getAssistIntent(mContext, UserHandle.USER_CURRENT);
                 if (assistIntent != null) {
                     mActivityLauncher.launchActivity(assistIntent, false, true, null, null);
                 } else {
                     Log.w(TAG, "Failed to get intent for assist activity");
                 }
                 break;
-        case ACTION_CAMERA:
-            mCallback.userActivity(0);
-            mCallback.dismiss(false);
-            mActivityLauncher.launchCamera(null, null);
-            break;
-        case ACTION_APP:
-            mCallback.userActivity(0);
-            mCallback.dismiss(false);
-            Intent i = new Intent();
-            i.setAction("com.android.systemui.aokp.LAUNCH_ACTION");
-            i.putExtra("action", action);
-            mContext.sendBroadcastAsUser(i, UserHandle.ALL);
-            break;
+            case ACTION_CAMERA:
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+                mActivityLauncher.launchCamera(null, null);
+                break;
+            case ACTION_APP:
+                mCallback.userActivity(0);
+                mCallback.dismiss(false);
+                Intent i = new Intent();
+                i.setAction("com.android.systemui.aokp.LAUNCH_ACTION");
+                i.putExtra("action", action);
+                mContext.sendBroadcastAsUser(i, UserHandle.ALL);
+                break;
         }
     }
 
     OnTriggerListener mOnTriggerListener = new OnTriggerListener() {
 
-       final Runnable SetLongPress = new Runnable () {
+        final Runnable SetLongPress = new Runnable() {
             public void run() {
                 if (!mLongPress) {
                     vibrate();
@@ -196,7 +198,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
                 }
             } else {
                 fireTorch();
-                if (mBoolLongPress && !TextUtils.isEmpty(longActivities[target]) && !longActivities[target].equals(AwesomeConstant.ACTION_NULL.value())) {
+                if (mBoolLongPress && !TextUtils.isEmpty(longActivities[target]) &&
+                        !longActivities[target].equals(AwesomeConstant.ACTION_NULL.value())) {
                     mTarget = target;
                     mHandler.postDelayed(SetLongPress, ViewConfiguration.getLongPressTimeout());
                 }
@@ -237,7 +240,8 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         @Override
         Context getContext() {
             return mContext;
-        }};
+        }
+    };
 
     public KeyguardSelectorView(Context context) {
         this(context, null);
@@ -260,24 +264,25 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         mRibbon = (LinearLayout) ribbonView.findViewById(R.id.ribbon);
         mRibbon.removeAllViews();
         mRibbon.addView(AokpRibbonHelper.getRibbon(mContext,
-            Settings.System.getArrayList(cr,
-                Settings.System.RIBBON_TARGETS_SHORT[AokpRibbonHelper.LOCKSCREEN]),
-            Settings.System.getArrayList(cr,
-                Settings.System.RIBBON_TARGETS_LONG[AokpRibbonHelper.LOCKSCREEN]),
-            Settings.System.getArrayList(cr,
-                Settings.System.RIBBON_TARGETS_ICONS[AokpRibbonHelper.LOCKSCREEN]),
-            Settings.System.getBoolean(cr,
-                Settings.System.ENABLE_RIBBON_TEXT[AokpRibbonHelper.LOCKSCREEN], true),
-            Settings.System.getInt(cr,
-                Settings.System.RIBBON_TEXT_COLOR[AokpRibbonHelper.LOCKSCREEN], -1),
-            Settings.System.getInt(cr,
-                Settings.System.RIBBON_ICON_SIZE[AokpRibbonHelper.LOCKSCREEN], 0),
-            Settings.System.getInt(cr,
-                Settings.System.RIBBON_ICON_SPACE[AokpRibbonHelper.LOCKSCREEN], 5),
-            Settings.System.getBoolean(cr,
-                Settings.System.RIBBON_ICON_VIBRATE[AokpRibbonHelper.LOCKSCREEN], true),
-            Settings.System.getBoolean(cr,
-                Settings.System.RIBBON_ICON_COLORIZE[AokpRibbonHelper.LOCKSCREEN], true), 0));
+                Settings.System.getArrayList(cr,
+                        Settings.System.RIBBON_TARGETS_SHORT[AokpRibbonHelper.LOCKSCREEN]),
+                Settings.System.getArrayList(cr,
+                        Settings.System.RIBBON_TARGETS_LONG[AokpRibbonHelper.LOCKSCREEN]),
+                Settings.System.getArrayList(cr,
+                        Settings.System.RIBBON_TARGETS_ICONS[AokpRibbonHelper.LOCKSCREEN]),
+                Settings.System.getBoolean(cr,
+                        Settings.System.ENABLE_RIBBON_TEXT[AokpRibbonHelper.LOCKSCREEN], true),
+                Settings.System.getInt(cr,
+                        Settings.System.RIBBON_TEXT_COLOR[AokpRibbonHelper.LOCKSCREEN], -1),
+                Settings.System.getInt(cr,
+                        Settings.System.RIBBON_ICON_SIZE[AokpRibbonHelper.LOCKSCREEN], 0),
+                Settings.System.getInt(cr,
+                        Settings.System.RIBBON_ICON_SPACE[AokpRibbonHelper.LOCKSCREEN], 5),
+                Settings.System.getBoolean(cr,
+                        Settings.System.RIBBON_ICON_VIBRATE[AokpRibbonHelper.LOCKSCREEN], true),
+                Settings.System.getBoolean(cr,
+                        Settings.System.RIBBON_ICON_COLORIZE[AokpRibbonHelper.LOCKSCREEN], true),
+                0));
         updateTargets();
 
         mGlowTorch = Settings.System.getBoolean(cr,
@@ -336,7 +341,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     private void vibrate() {
         if (Settings.System.getIntForUser(mContext.getContentResolver(),
                 Settings.System.HAPTIC_FEEDBACK_ENABLED, 1, UserHandle.USER_CURRENT) != 0) {
-            android.os.Vibrator vib = (android.os.Vibrator)mContext.getSystemService(
+            android.os.Vibrator vib = (android.os.Vibrator) mContext.getSystemService(
                     Context.VIBRATOR_SERVICE);
             if (vib != null) {
                 vib.vibrate(25);
@@ -344,7 +349,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         }
     }
 
-    final Runnable checkTorch = new Runnable () {
+    final Runnable checkTorch = new Runnable() {
         public void run() {
             boolean torchActive = Settings.System.getBoolean(mContext.getContentResolver(),
                     Settings.System.TORCH_STATE, false);
@@ -355,7 +360,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         }
     };
 
-    final Runnable startTorch = new Runnable () {
+    final Runnable startTorch = new Runnable() {
         public void run() {
             boolean torchActive = Settings.System.getBoolean(mContext.getContentResolver(),
                     Settings.System.TORCH_STATE, false);
@@ -387,61 +392,68 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         }
 
         mBoolLongPress = Settings.System.getBoolean(
-              mContext.getContentResolver(), Settings.System.LOCKSCREEN_TARGETS_LONGPRESS, false);
+                mContext.getContentResolver(), Settings.System.LOCKSCREEN_TARGETS_LONGPRESS, false);
 
-       if (!TextUtils.isEmpty(targetActivities[5]) || !TextUtils.isEmpty(targetActivities[6]) || !TextUtils.isEmpty(targetActivities[7])) {
-           Resources res = getResources();
-           LinearLayout glowPadContainer = (LinearLayout) findViewById(R.id.keyguard_glow_pad_container);
-           if (glowPadContainer != null && isScreenPortrait()) {
-               FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                   FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
-               int pxBottom = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, res.getDisplayMetrics());
-               params.setMargins(0, 0, 0, -pxBottom);
-               glowPadContainer.setLayoutParams(params);
-           }
-       }
+        if (!TextUtils.isEmpty(targetActivities[5]) || !TextUtils.isEmpty(targetActivities[6]) ||
+                !TextUtils.isEmpty(targetActivities[7])) {
+            Resources res = getResources();
+            LinearLayout glowPadContainer =
+                    (LinearLayout) findViewById(R.id.keyguard_glow_pad_container);
+            if (glowPadContainer != null && isScreenPortrait()) {
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+                int pxBottom = (int) TypedValue
+                        .applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, res.getDisplayMetrics());
+                params.setMargins(0, 0, 0, -pxBottom);
+                glowPadContainer.setLayoutParams(params);
+            }
+        }
 
         // no targets? add just an unlock.
         if (!mUsesCustomTargets) {
-            storedDraw.add(LockScreenHelpers.getTargetDrawable(mContext, AwesomeConstant.ACTION_UNLOCK.value()));
+            storedDraw.add(LockScreenHelpers
+                    .getTargetDrawable(mContext, AwesomeConstant.ACTION_UNLOCK.value()));
         } else if (mTargetCounter() == 0 && mUnlockCounter() < 2) {
             float offset = 0.0f;
             switch (mUnlockPos) {
-            case 0:
-                offset = 0.0f;
-                break;
-            case 1:
-                offset = -45.0f;
-                break;
-            case 2:
-                offset = -90.0f;
-                break;
-            case 3:
-                offset = -135.0f;
-                break;
-            case 4:
-                offset = 180.0f;
-                break;
-            case 5:
-                offset = 135.0f;
-                break;
-            case 6:
-                offset = 90.0f;
-                break;
-            case 7:
-                offset = 45.0f;
-                break;
+                case 0:
+                    offset = 0.0f;
+                    break;
+                case 1:
+                    offset = -45.0f;
+                    break;
+                case 2:
+                    offset = -90.0f;
+                    break;
+                case 3:
+                    offset = -135.0f;
+                    break;
+                case 4:
+                    offset = 180.0f;
+                    break;
+                case 5:
+                    offset = 135.0f;
+                    break;
+                case 6:
+                    offset = 90.0f;
+                    break;
+                case 7:
+                    offset = 45.0f;
+                    break;
             }
             mGlowPadView.setOffset(offset);
-            storedDraw.add(LockScreenHelpers.getTargetDrawable(mContext, AwesomeConstant.ACTION_UNLOCK.value()));
+            storedDraw.add(LockScreenHelpers
+                    .getTargetDrawable(mContext, AwesomeConstant.ACTION_UNLOCK.value()));
         } else {
             mGlowPadView.setMagneticTargets(false);
             // Add The Target actions and Icons
-            for (int i = 0; i < 8 ; i++) {
+            for (int i = 0; i < 8; i++) {
                 if (!TextUtils.isEmpty(customIcons[i])) {
                     storedDraw.add(LockScreenHelpers.getCustomDrawable(mContext, customIcons[i]));
                 } else {
-                    storedDraw.add(LockScreenHelpers.getTargetDrawable(mContext, targetActivities[i]));
+                    storedDraw.add(LockScreenHelpers
+                            .getTargetDrawable(mContext, targetActivities[i]));
                 }
             }
         }
@@ -451,7 +463,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
     private int mUnlockCounter() {
         int counter = 0;
-        for (int i = 0; i < 8 ; i++) {
+        for (int i = 0; i < 8; i++) {
             if (!TextUtils.isEmpty(targetActivities[i])) {
                 if (targetActivities[i].equals(AwesomeConstant.ACTION_UNLOCK.value())) {
                     mUnlockPos = i;
@@ -464,11 +476,11 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
     private int mTargetCounter() {
         int counter = 0;
-        for (int i = 0; i < 8 ; i++) {
+        for (int i = 0; i < 8; i++) {
             if (!TextUtils.isEmpty(targetActivities[i])) {
                 if (targetActivities[i].equals(AwesomeConstant.ACTION_UNLOCK.value()) ||
-                    targetActivities[i].equals(AwesomeConstant.ACTION_NULL.value())) {
-                // I just couldn't take the negative logic....
+                        targetActivities[i].equals(AwesomeConstant.ACTION_NULL.value())) {
+                    // I just couldn't take the negative logic....
                 } else {
                     counter += 1;
                 }
@@ -480,15 +492,15 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     public void updateResources() {
         // Update the search icon with drawable from the search .apk
         Intent intent = ((SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE))
-               .getAssistIntent(mContext, UserHandle.USER_CURRENT);
+                .getAssistIntent(mContext, UserHandle.USER_CURRENT);
         if (intent != null) {
             ComponentName component = intent.getComponent();
             boolean replaced = mGlowPadView.replaceTargetDrawablesIfPresent(component,
                     ASSIST_ICON_METADATA_NAME + "_google",
                     com.android.internal.R.drawable.ic_action_assist_generic);
             if (!replaced && !mGlowPadView.replaceTargetDrawablesIfPresent(component,
-                        ASSIST_ICON_METADATA_NAME,
-                            com.android.internal.R.drawable.ic_action_assist_generic)) {
+                    ASSIST_ICON_METADATA_NAME,
+                    com.android.internal.R.drawable.ic_action_assist_generic)) {
                 Slog.w(TAG, "Couldn't grab icon from package " + component);
             }
         }
@@ -534,7 +546,7 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         KeyguardUpdateMonitor.getInstance(getContext()).registerCallback(mInfoCallback);
         if (!mReceiverRegistered) {
             if (mUnlockReceiver == null) {
-               mUnlockReceiver = new UnlockReceiver();
+                mUnlockReceiver = new UnlockReceiver();
             }
             mContext.registerReceiver(mUnlockReceiver, filter);
             mReceiverRegistered = true;
@@ -561,7 +573,9 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
     }
 
     public class UnlockReceiver extends BroadcastReceiver {
-        public static final String ACTION_UNLOCK_RECEIVER = "com.android.lockscreen.ACTION_UNLOCK_RECEIVER";
+        public static final String ACTION_UNLOCK_RECEIVER =
+                "com.android.lockscreen.ACTION_UNLOCK_RECEIVER";
+
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();

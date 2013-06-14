@@ -43,10 +43,10 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.internal.R;
 
 import java.lang.ref.WeakReference;
+
 /**
  * This is the widget responsible for showing music controls in keyguard.
  */
@@ -87,39 +87,47 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case MSG_UPDATE_STATE:
-                if (mClientGeneration == msg.arg1) updatePlayPauseState(msg.arg2);
-                break;
-
-            case MSG_SET_METADATA:
-                if (mClientGeneration == msg.arg1) updateMetadata((Bundle) msg.obj);
-                break;
-
-            case MSG_SET_TRANSPORT_CONTROLS:
-                if (mClientGeneration == msg.arg1) updateTransportControls(msg.arg2);
-                break;
-
-            case MSG_SET_ARTWORK:
-                if (mClientGeneration == msg.arg1) {
-                    if (mMetadata.bitmap != null) {
-                        mMetadata.bitmap.recycle();
+                case MSG_UPDATE_STATE:
+                    if (mClientGeneration == msg.arg1) {
+                        updatePlayPauseState(msg.arg2);
                     }
-                    mMetadata.bitmap = (Bitmap) msg.obj;
-                    mAlbumArt.setImageBitmap(mMetadata.bitmap);
-                }
-                break;
+                    break;
 
-            case MSG_SET_GENERATION_ID:
-                if (msg.arg2 != 0) {
-                    // This means nobody is currently registered. Hide the view.
-                    onListenerDetached();
-                } else {
-                    onListenerAttached();
-                }
-                if (DEBUG) Log.v(TAG, "New genId = " + msg.arg1 + ", clearing = " + msg.arg2);
-                mClientGeneration = msg.arg1;
-                mClientIntent = (PendingIntent) msg.obj;
-                break;
+                case MSG_SET_METADATA:
+                    if (mClientGeneration == msg.arg1) {
+                        updateMetadata((Bundle) msg.obj);
+                    }
+                    break;
+
+                case MSG_SET_TRANSPORT_CONTROLS:
+                    if (mClientGeneration == msg.arg1) {
+                        updateTransportControls(msg.arg2);
+                    }
+                    break;
+
+                case MSG_SET_ARTWORK:
+                    if (mClientGeneration == msg.arg1) {
+                        if (mMetadata.bitmap != null) {
+                            mMetadata.bitmap.recycle();
+                        }
+                        mMetadata.bitmap = (Bitmap) msg.obj;
+                        mAlbumArt.setImageBitmap(mMetadata.bitmap);
+                    }
+                    break;
+
+                case MSG_SET_GENERATION_ID:
+                    if (msg.arg2 != 0) {
+                        // This means nobody is currently registered. Hide the view.
+                        onListenerDetached();
+                    } else {
+                        onListenerAttached();
+                    }
+                    if (DEBUG) {
+                        Log.v(TAG, "New genId = " + msg.arg1 + ", clearing = " + msg.arg2);
+                    }
+                    mClientGeneration = msg.arg1;
+                    mClientIntent = (PendingIntent) msg.obj;
+                    break;
 
             }
         }
@@ -178,18 +186,22 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
         }
 
         public void setCurrentClientId(int clientGeneration, PendingIntent mediaIntent,
-                boolean clearing) throws RemoteException {
+                                       boolean clearing) throws RemoteException {
             Handler handler = mLocalHandler.get();
             if (handler != null) {
                 handler.obtainMessage(MSG_SET_GENERATION_ID,
-                    clientGeneration, (clearing ? 1 : 0), mediaIntent).sendToTarget();
+                        clientGeneration, (clearing ? 1 : 0), mediaIntent).sendToTarget();
             }
         }
-    };
+    }
+
+    ;
 
     public KeyguardTransportControlView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        if (DEBUG) Log.v(TAG, "Create TCV " + this);
+        if (DEBUG) {
+            Log.v(TAG, "Create TCV " + this);
+        }
         mAudioManager = new AudioManager(mContext);
         mCurrentPlayState = RemoteControlClient.PLAYSTATE_NONE; // until we get a callback
         mIRCD = new IRemoteControlDisplayWeak(mHandler);
@@ -197,7 +209,9 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
 
     protected void onListenerDetached() {
         mMusicClientPresent = false;
-        if (DEBUG) Log.v(TAG, "onListenerDetached()");
+        if (DEBUG) {
+            Log.v(TAG, "onListenerDetached()");
+        }
         if (mTransportCallback != null) {
             mTransportCallback.onListenerDetached();
         } else {
@@ -207,7 +221,9 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
 
     private void onListenerAttached() {
         mMusicClientPresent = true;
-        if (DEBUG) Log.v(TAG, "onListenerAttached()");
+        if (DEBUG) {
+            Log.v(TAG, "onListenerAttached()");
+        }
         if (mTransportCallback != null) {
             mTransportCallback.onListenerAttached();
         } else {
@@ -228,7 +244,7 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
         mBtnPrev = (ImageView) findViewById(R.id.btn_prev);
         mBtnPlay = (ImageView) findViewById(R.id.btn_play);
         mBtnNext = (ImageView) findViewById(R.id.btn_next);
-        final View buttons[] = { mBtnPrev, mBtnPlay, mBtnNext };
+        final View buttons[] = {mBtnPrev, mBtnPlay, mBtnNext};
         for (View view : buttons) {
             view.setOnClickListener(this);
         }
@@ -237,13 +253,17 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (DEBUG) Log.v(TAG, "onAttachToWindow()");
+        if (DEBUG) {
+            Log.v(TAG, "onAttachToWindow()");
+        }
         if (mPopulateMetadataWhenAttached != null) {
             updateMetadata(mPopulateMetadataWhenAttached);
             mPopulateMetadataWhenAttached = null;
         }
         if (!mAttached) {
-            if (DEBUG) Log.v(TAG, "Registering TCV " + this);
+            if (DEBUG) {
+                Log.v(TAG, "Registering TCV " + this);
+            }
             mAudioManager.registerRemoteControlDisplay(mIRCD);
         }
         mAttached = true;
@@ -251,10 +271,14 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
 
     @Override
     public void onDetachedFromWindow() {
-        if (DEBUG) Log.v(TAG, "onDetachFromWindow()");
+        if (DEBUG) {
+            Log.v(TAG, "onDetachFromWindow()");
+        }
         super.onDetachedFromWindow();
         if (mAttached) {
-            if (DEBUG) Log.v(TAG, "Unregistering TCV " + this);
+            if (DEBUG) {
+                Log.v(TAG, "Unregistering TCV " + this);
+            }
             mAudioManager.unregisterRemoteControlDisplay(mIRCD);
         }
         mAttached = false;
@@ -267,7 +291,8 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
         private Bitmap bitmap;
 
         public String toString() {
-            return "Metadata[artist=" + artist + " trackTitle=" + trackTitle + " albumTitle=" + albumTitle + "]";
+            return "Metadata[artist=" + artist + " trackTitle=" + trackTitle + " albumTitle=" +
+                    albumTitle + "]";
         }
     }
 
@@ -326,16 +351,16 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
         setVisibilityBasedOnFlag(mBtnNext, flags, RemoteControlClient.FLAG_KEY_MEDIA_NEXT);
         setVisibilityBasedOnFlag(mBtnPlay, flags,
                 RemoteControlClient.FLAG_KEY_MEDIA_PLAY
-                | RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
-                | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
-                | RemoteControlClient.FLAG_KEY_MEDIA_STOP);
+                        | RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
+                        | RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
+                        | RemoteControlClient.FLAG_KEY_MEDIA_STOP);
 
         updatePlayPauseState(mCurrentPlayState);
     }
 
     public boolean isMusicPlaying() {
-       return mCurrentPlayState == RemoteControlClient.PLAYSTATE_PLAYING
-               || mCurrentPlayState == RemoteControlClient.PLAYSTATE_BUFFERING;
+        return mCurrentPlayState == RemoteControlClient.PLAYSTATE_PLAYING
+                || mCurrentPlayState == RemoteControlClient.PLAYSTATE_BUFFERING;
     }
 
     private static void setVisibilityBasedOnFlag(View view, int flags, int flag) {
@@ -347,8 +372,10 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
     }
 
     private void updatePlayPauseState(int state) {
-        if (DEBUG) Log.v(TAG,
-                "updatePlayPauseState(), old=" + mCurrentPlayState + ", state=" + state);
+        if (DEBUG) {
+            Log.v(TAG,
+                    "updatePlayPauseState(), old=" + mCurrentPlayState + ", state=" + state);
+        }
         if (state == mCurrentPlayState) {
             return;
         }
@@ -431,7 +458,9 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         if (ss.clientPresent) {
-            if (DEBUG) Log.v(TAG, "Reattaching client because it was attached");
+            if (DEBUG) {
+                Log.v(TAG, "Reattaching client because it was attached");
+            }
             onListenerAttached();
         }
     }
@@ -465,7 +494,7 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
         try {
             mClientIntent.send(getContext(), 0, intent);
         } catch (CanceledException e) {
-            Log.e(TAG, "Error sending intent for media button down: "+e);
+            Log.e(TAG, "Error sending intent for media button down: " + e);
             e.printStackTrace();
         }
 
@@ -475,7 +504,7 @@ public class KeyguardTransportControlView extends FrameLayout implements OnClick
         try {
             mClientIntent.send(getContext(), 0, intent);
         } catch (CanceledException e) {
-            Log.e(TAG, "Error sending intent for media button up: "+e);
+            Log.e(TAG, "Error sending intent for media button up: " + e);
             e.printStackTrace();
         }
     }

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsTileView;
 
@@ -16,7 +15,7 @@ public class ClockToggle extends BaseToggle {
     public void init(Context c, int style) {
         super.init(c, style);
     }
-    
+
     @Override
     public void onClick(View v) {
         Intent intent = new Intent("android.intent.action.MAIN");

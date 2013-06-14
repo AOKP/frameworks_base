@@ -17,16 +17,10 @@
 package com.android.systemui.statusbar.tablet;
 
 import android.content.Context;
-import android.content.res.Resources;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Slog;
-import android.view.View;
+import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ImageView;
-import android.view.MotionEvent;
-
 import com.android.systemui.R;
 
 
@@ -38,7 +32,7 @@ public class NotificationIconArea extends RelativeLayout {
     public NotificationIconArea(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        mIconLayout = (IconLayout)findViewById(R.id.icons);
+        mIconLayout = (IconLayout) findViewById(R.id.icons);
     }
 
     static class IconLayout extends LinearLayout {

@@ -21,34 +21,33 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.ContentObserver;
-import android.graphics.drawable.Drawable;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Slog;
 import android.util.Log;
+import android.util.Slog;
 import android.view.ViewDebug;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
+import com.android.internal.statusbar.StatusBarIcon;
+import com.android.systemui.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-
-import com.android.internal.statusbar.StatusBarIcon;
-
-import com.android.systemui.R;
 
 public class StatusBarIconView extends AnimatedImageView {
     private static final String TAG = "StatusBarIconView";
 
     private StatusBarIcon mIcon;
-    @ViewDebug.ExportedProperty private String mSlot;
+    @ViewDebug.ExportedProperty
+    private String mSlot;
     private Drawable mNumberBackground;
     private Paint mNumberPain;
     private int mNumberX;
@@ -82,7 +81,7 @@ public class StatusBarIconView extends AnimatedImageView {
         if (notification != null) {
             final int outerBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_size);
             final int imageBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size);
-            final float scale = (float)imageBounds / (float)outerBounds;
+            final float scale = (float) imageBounds / (float) outerBounds;
             setScaleX(scale);
             setScaleY(scale);
             final float alpha = res.getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
@@ -97,7 +96,7 @@ public class StatusBarIconView extends AnimatedImageView {
         final Resources res = context.getResources();
         final int outerBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_size);
         final int imageBounds = res.getDimensionPixelSize(R.dimen.status_bar_icon_drawing_size);
-        final float scale = (float)imageBounds / (float)outerBounds;
+        final float scale = (float) imageBounds / (float) outerBounds;
         setScaleX(scale);
         setScaleY(scale);
         final float alpha = res.getFraction(R.dimen.status_bar_icon_drawing_alpha, 1, 1);
@@ -174,7 +173,7 @@ public class StatusBarIconView extends AnimatedImageView {
     /**
      * Returns the right icon to use for this item, respecting the iconId and
      * iconPackage (if set)
-     * 
+     *
      * @param context Context to use to get resources if iconPackage is not set
      * @return Drawable for this item, or null if the package or item could not
      *         be found
@@ -206,8 +205,8 @@ public class StatusBarIconView extends AnimatedImageView {
             return r.getDrawable(icon.iconId);
         } catch (RuntimeException e) {
             Slog.w(TAG, "Icon not found in "
-                  + (icon.iconPackage != null ? icon.iconId : "<system>")
-                  + ": " + Integer.toHexString(icon.iconId));
+                    + (icon.iconPackage != null ? icon.iconId : "<system>")
+                    + ": " + Integer.toHexString(icon.iconId));
         }
 
         return null;
@@ -278,7 +277,7 @@ public class StatusBarIconView extends AnimatedImageView {
                 android.R.integer.status_bar_notification_info_maxnum);
         if (mIcon.number > tooBig) {
             str = mContext.getResources().getString(
-                        android.R.string.status_bar_notification_info_overflow);
+                    android.R.string.status_bar_notification_info_overflow);
         } else {
             NumberFormat f = NumberFormat.getIntegerInstance();
             str = f.format(mIcon.number);
@@ -296,13 +295,13 @@ public class StatusBarIconView extends AnimatedImageView {
         if (dw < mNumberBackground.getMinimumWidth()) {
             dw = mNumberBackground.getMinimumWidth();
         }
-        mNumberX = w-r.right-((dw-r.right-r.left)/2);
+        mNumberX = w - r.right - ((dw - r.right - r.left) / 2);
         int dh = r.top + th + r.bottom;
         if (dh < mNumberBackground.getMinimumWidth()) {
             dh = mNumberBackground.getMinimumWidth();
         }
-        mNumberY = h-r.bottom-((dh-r.top-th-r.bottom)/2);
-        mNumberBackground.setBounds(w-dw, h-dh, w, h);
+        mNumberY = h - r.bottom - ((dh - r.top - th - r.bottom) / 2);
+        mNumberBackground.setBounds(w - dw, h - dh, w, h);
     }
 
     private void setContentDescription(Notification notification) {
@@ -315,13 +314,13 @@ public class StatusBarIconView extends AnimatedImageView {
     }
 
     public String toString() {
-        return "StatusBarIconView(slot=" + mSlot + " icon=" + mIcon 
-            + " notification=" + mNotification + ")";
+        return "StatusBarIconView(slot=" + mSlot + " icon=" + mIcon
+                + " notification=" + mNotification + ")";
     }
 
     static class GlobalSettingsObserver extends ContentObserver {
         private static GlobalSettingsObserver sInstance;
-        private ArrayList<StatusBarIconView> mIconViews = new ArrayList<StatusBarIconView> ();
+        private ArrayList<StatusBarIconView> mIconViews = new ArrayList<StatusBarIconView>();
         private Context mContext;
 
         GlobalSettingsObserver(Handler handler, Context context) {

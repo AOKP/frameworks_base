@@ -2,31 +2,23 @@
 package com.android.systemui.statusbar.toggles;
 
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.ContentObserver;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
-import android.widget.ImageView;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.internal.util.aokp.NavBarHelpers;
 import com.android.systemui.aokp.AwesomeAction;
-import com.android.systemui.R;
 
 import java.io.File;
-import java.io.IOException;
+
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
 
 public class CustomToggle extends BaseToggle {
 
@@ -57,11 +49,11 @@ public class CustomToggle extends BaseToggle {
     private static final String KEY_TOGGLE_STATE = "toggle_state";
 
     public final static String[] StockClickActions = {
-        AwesomeConstant.ACTION_NULL.value(),
-        AwesomeConstant.ACTION_NULL.value(),
-        AwesomeConstant.ACTION_NULL.value(),
-        AwesomeConstant.ACTION_NULL.value(),
-        AwesomeConstant.ACTION_NULL.value() };
+            AwesomeConstant.ACTION_NULL.value(),
+            AwesomeConstant.ACTION_NULL.value(),
+            AwesomeConstant.ACTION_NULL.value(),
+            AwesomeConstant.ACTION_NULL.value(),
+            AwesomeConstant.ACTION_NULL.value()};
 
     private SettingsObserver mObserver = null;
 
@@ -91,7 +83,7 @@ public class CustomToggle extends BaseToggle {
         super.cleanup();
     }
 
-    final Runnable delayBootAction = new Runnable () {
+    final Runnable delayBootAction = new Runnable() {
         public void run() {
             mCustomState = 0;
             commitState();
@@ -100,14 +92,14 @@ public class CustomToggle extends BaseToggle {
         }
     };
 
-    final Runnable DelayShortPress = new Runnable () {
+    final Runnable DelayShortPress = new Runnable() {
         public void run() {
             doubleClickCounter = 0;
             startCounting();
         }
     };
 
-    final Runnable ResetDoubleClickCounter = new Runnable () {
+    final Runnable ResetDoubleClickCounter = new Runnable() {
         public void run() {
             doubleClickCounter = 0;
         }
@@ -132,13 +124,13 @@ public class CustomToggle extends BaseToggle {
                         mCustomState--;
                         commitState();
                     } else {
-                        mCustomState = mNumberOfActions-1;
+                        mCustomState = mNumberOfActions - 1;
                         commitState();
                     }
                     startMagicTricks();
                     break;
                 case SKIP_FORWARD:
-                    if (mCustomState < mNumberOfActions-1) {
+                    if (mCustomState < mNumberOfActions - 1) {
                         mCustomState += 1;
                         commitState();
                     } else {
@@ -156,14 +148,14 @@ public class CustomToggle extends BaseToggle {
     }
 
     private void startCounting() {
-        if (mCustomState < mNumberOfActions-1) {
+        if (mCustomState < mNumberOfActions - 1) {
             mCustomState += 1;
             commitState();
-            mMatchState = mCustomState-1;
+            mMatchState = mCustomState - 1;
         } else {
             mCustomState = 0;
             commitState();
-            mMatchState = mNumberOfActions-1;
+            mMatchState = mNumberOfActions - 1;
         }
         startActions();
     }
@@ -173,7 +165,7 @@ public class CustomToggle extends BaseToggle {
             mCustomState--;
             commitState();
         } else {
-            mCustomState = mNumberOfActions-1;
+            mCustomState = mNumberOfActions - 1;
             commitState();
         }
         launchLongOrShort();
@@ -219,7 +211,7 @@ public class CustomToggle extends BaseToggle {
         Drawable myIcon = null;
         String toggleText = NavBarHelpers.getProperSummary(mContext,
                 "**null**".equals(mClickActions[mCustomState])
-                ? mLongActions[mCustomState] : mClickActions[mCustomState]);
+                        ? mLongActions[mCustomState] : mClickActions[mCustomState]);
         iconUri = mToggleIcons[mCustomState];
         if (iconUri != null && iconUri.length() > 0) {
             File f = new File(Uri.parse(iconUri).getPath());
@@ -227,13 +219,16 @@ public class CustomToggle extends BaseToggle {
                 myIcon = new BitmapDrawable(mContext.getResources(), f.getAbsolutePath());
             }
         } else {
-            myIcon = NavBarHelpers.getIconImage(mContext, "**null**".equals(mClickActions[mCustomState])
-                    ? mLongActions[mCustomState] : mClickActions[mCustomState]);
+            myIcon = NavBarHelpers
+                    .getIconImage(mContext, "**null**".equals(mClickActions[mCustomState])
+                            ? mLongActions[mCustomState] : mClickActions[mCustomState]);
         }
         setLabel(toggleText);
         setIcon(myIcon);
         scheduleViewUpdate();
-    };
+    }
+
+    ;
 
     @Override
     public void onClick(View v) {
@@ -249,6 +244,7 @@ public class CustomToggle extends BaseToggle {
                 break;
         }
     }
+
     @Override
     public boolean onLongClick(View v) {
         AwesomeAction.launchAction(mContext, mLongActions[mCustomState]);

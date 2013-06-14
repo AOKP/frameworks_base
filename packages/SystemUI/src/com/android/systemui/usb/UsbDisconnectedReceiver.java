@@ -33,7 +33,7 @@ class UsbDisconnectedReceiver extends BroadcastReceiver {
     private UsbAccessory mAccessory;
 
     public UsbDisconnectedReceiver(Activity activity, UsbDevice device) {
-       mActivity = activity;
+        mActivity = activity;
         mDevice = device;
 
         IntentFilter filter = new IntentFilter(UsbManager.ACTION_USB_DEVICE_DETACHED);
@@ -52,13 +52,13 @@ class UsbDisconnectedReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-            UsbDevice device = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+            UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
             if (device != null && device.equals(mDevice)) {
                 mActivity.finish();
             }
         } else if (UsbManager.ACTION_USB_ACCESSORY_DETACHED.equals(action)) {
             UsbAccessory accessory =
-                    (UsbAccessory)intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+                    (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
             if (accessory != null && accessory.equals(mAccessory)) {
                 mActivity.finish();
             }

@@ -18,17 +18,11 @@ package com.android.systemui.statusbar.tablet;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.os.RemoteException;
 import android.util.AttributeSet;
-import android.util.Slog;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
-
 import com.android.systemui.R;
 
 public class CompatModePanel extends FrameLayout implements StatusBarPanel,
@@ -53,7 +47,7 @@ public class CompatModePanel extends FrameLayout implements StatusBarPanel,
 
     @Override
     public void onFinishInflate() {
-        mOnButton  = (RadioButton) findViewById(R.id.compat_mode_on_radio);
+        mOnButton = (RadioButton) findViewById(R.id.compat_mode_on_radio);
         mOffButton = (RadioButton) findViewById(R.id.compat_mode_off_radio);
         mOnButton.setOnClickListener(this);
         mOffButton.setOnClickListener(this);
@@ -110,13 +104,17 @@ public class CompatModePanel extends FrameLayout implements StatusBarPanel,
 
     public void openPanel() {
         setVisibility(View.VISIBLE);
-        if (mTrigger != null) mTrigger.setSelected(true);
+        if (mTrigger != null) {
+            mTrigger.setSelected(true);
+        }
         refresh();
     }
 
     public void closePanel() {
         setVisibility(View.GONE);
-        if (mTrigger != null) mTrigger.setSelected(false);
+        if (mTrigger != null) {
+            mTrigger.setSelected(false);
+        }
     }
 
     private void refresh() {

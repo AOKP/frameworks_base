@@ -23,12 +23,14 @@ public interface KeyguardSecurityView {
 
     /**
      * Interface back to keyguard to tell it when security
+     *
      * @param callback
      */
     void setKeyguardCallback(KeyguardSecurityCallback callback);
 
     /**
      * Set {@link LockPatternUtils} object. Useful for providing a mock interface.
+     *
      * @param utils
      */
     void setLockPatternUtils(LockPatternUtils utils);
@@ -48,6 +50,7 @@ public interface KeyguardSecurityView {
     /**
      * Emulate activity life cycle within this view.  When called, the view should prepare itself
      * to be shown.
+     *
      * @param reason the root cause of the event.
      */
     void onResume(int reason);
@@ -61,19 +64,20 @@ public interface KeyguardSecurityView {
 
     /**
      * Get {@link KeyguardSecurityCallback} for the given object
+     *
      * @return KeyguardSecurityCallback
      */
     KeyguardSecurityCallback getCallback();
 
     /**
      * Instruct the view to show usability hints, if any.
-     *
      */
     void showUsabilityHint();
 
     /**
      * Place the security view into bouncer mode.
      * Animate transisiton if duration is non-zero.
+     *
      * @param duration millisends for the transisiton animation.
      */
     void showBouncer(int duration);
@@ -81,6 +85,7 @@ public interface KeyguardSecurityView {
     /**
      * Place the security view into non-bouncer mode.
      * Animate transisiton if duration is non-zero.
+     *
      * @param duration millisends for the transisiton animation.
      */
     void hideBouncer(int duration);

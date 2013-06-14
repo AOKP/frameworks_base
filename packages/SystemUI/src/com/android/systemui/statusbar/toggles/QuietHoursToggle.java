@@ -1,16 +1,13 @@
 
 package com.android.systemui.statusbar.toggles;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.database.ContentObserver;
-import android.os.Handler;
-import android.provider.Settings;;
+import android.provider.Settings;
 import android.view.View;
-
 import com.android.systemui.R;
+
+;
 
 public class QuietHoursToggle extends StatefulToggle {
 
@@ -35,7 +32,8 @@ public class QuietHoursToggle extends StatefulToggle {
     @Override
     public boolean onLongClick(View v) {
         Intent intent = new Intent("android.intent.action.MAIN");
-        intent.setClassName("com.android.settings", "com.android.settings.Settings$QuietHoursSettingsActivity");
+        intent.setClassName("com.android.settings",
+                "com.android.settings.Settings$QuietHoursSettingsActivity");
         intent.addCategory("android.intent.category.LAUNCHER");
         startActivity(intent);
         return super.onLongClick(v);

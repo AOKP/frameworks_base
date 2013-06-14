@@ -6,10 +6,10 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.systemui.R;
 import com.android.systemui.aokp.AwesomeAction;
+
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
 
 public class TorchToggle extends StatefulToggle {
     TorchObserver mObserver = null;

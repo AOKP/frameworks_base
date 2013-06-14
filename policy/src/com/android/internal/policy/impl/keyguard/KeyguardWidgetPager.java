@@ -39,7 +39,6 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-
 import com.android.internal.widget.LockPatternUtils;
 
 import java.util.ArrayList;
@@ -52,9 +51,9 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
     protected static float OVERSCROLL_MAX_ROTATION = 30;
     private static final boolean PERFORM_OVERSCROLL_ROTATION = true;
 
-    private static final String[] CLOCK_WIDGET_PACKAGES = new String[] {
-        "com.cyanogenmod.lockclock",
-        "com.android.deskclock"
+    private static final String[] CLOCK_WIDGET_PACKAGES = new String[]{
+            "com.cyanogenmod.lockclock",
+            "com.android.deskclock"
     };
 
     protected KeyguardViewStateManager mViewStateManager;
@@ -257,9 +256,13 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
 
     public interface Callbacks {
         public void userActivity();
+
         public void onUserActivityTimeoutChanged();
+
         public void onAddView(View v);
+
         public void onRemoveView(View v, boolean deletePermanently);
+
         public void onRemoveViewAnimationCompleted();
     }
 
@@ -319,7 +322,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
 
             // The framework adds a default padding to AppWidgetHostView. We don't need this padding
             // for the Keyguard, so we override it to be 0.
-            widget.setPadding(0,  0, 0, 0);
+            widget.setPadding(0, 0, 0, 0);
             frame.addView(widget, lp);
 
             // We set whether or not this widget supports vertical resizing.
@@ -352,11 +355,11 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
         }
 
         // Update the frame content description.
-        View content = (widget == frame) ?  frame.getContent() : widget;
+        View content = (widget == frame) ? frame.getContent() : widget;
         if (content != null) {
             String contentDescription = mContext.getString(
-                com.android.internal.R.string.keyguard_accessibility_widget,
-                content.getContentDescription());
+                    com.android.internal.R.string.keyguard_accessibility_widget,
+                    content.getContentDescription());
             frame.setContentDescription(contentDescription);
         }
         updateWidgetFrameImportantForAccessibility(frame);
@@ -364,6 +367,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
 
     /**
      * Use addWidget() instead.
+     *
      * @deprecated
      */
     @Override
@@ -374,6 +378,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
 
     /**
      * Use addWidget() instead.
+     *
      * @deprecated
      */
     @Override
@@ -384,6 +389,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
 
     /**
      * Use addWidget() instead.
+     *
      * @deprecated
      */
     @Override
@@ -394,6 +400,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
 
     /**
      * Use addWidget() instead.
+     *
      * @deprecated
      */
     @Override
@@ -471,7 +478,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
 
         public float getInterpolation(float input) {
             return (1.0f - focalLength / (focalLength + input)) /
-                (1.0f - focalLength / (focalLength + 1.0f));
+                    (1.0f - focalLength / (focalLength + 1.0f));
         }
     }
 
@@ -516,7 +523,9 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
         updatePageAlphaValues(screenCenter);
         for (int i = 0; i < getChildCount(); i++) {
             KeyguardWidgetFrame v = getWidgetPageAt(i);
-            if (v == mDragView) continue;
+            if (v == mDragView) {
+                continue;
+            }
             if (v != null) {
                 float scrollProgress = getScrollProgress(screenCenter, v, i);
 
@@ -527,7 +536,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
                     float pivotY = v.getMeasuredHeight() / 2;
                     v.setPivotX(pivotX);
                     v.setPivotY(pivotY);
-                    v.setRotationY(- OVERSCROLL_MAX_ROTATION * scrollProgress);
+                    v.setRotationY(-OVERSCROLL_MAX_ROTATION * scrollProgress);
                     v.setOverScrollAmount(Math.abs(scrollProgress), scrollProgress < 0);
                 } else {
                     v.setRotationY(0f);
@@ -686,7 +695,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
 
         if (duration == -1) {
             duration = show ? CHILDREN_OUTLINE_FADE_IN_DURATION :
-                CHILDREN_OUTLINE_FADE_OUT_DURATION;
+                    CHILDREN_OUTLINE_FADE_OUT_DURATION;
         }
 
         int curPage = getNextPage();
@@ -772,7 +781,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
             return indexOfChild(view);
         } else {
             // View was wrapped by a KeyguardWidgetFrame by KeyguardWidgetPager#addWidget()
-            return indexOfChild((KeyguardWidgetFrame)view.getParent());
+            return indexOfChild((KeyguardWidgetFrame) view.getParent());
         }
     }
 
@@ -806,13 +815,13 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
             mZoomInOutAnim = new AnimatorSet();
             mZoomInOutAnim.playTogether(
                     ObjectAnimator.ofFloat(currentPage, "scaleX", 1f),
-                    ObjectAnimator.ofFloat(currentPage , "scaleY", 1f));
+                    ObjectAnimator.ofFloat(currentPage, "scaleY", 1f));
             mZoomInOutAnim.setDuration(mBouncerZoomInOutDuration);
             mZoomInOutAnim.setInterpolator(new DecelerateInterpolator(1.5f));
             mZoomInOutAnim.start();
         }
         if (currentPage instanceof KeyguardWidgetFrame) {
-            ((KeyguardWidgetFrame)currentPage).onBouncerShowing(false);
+            ((KeyguardWidgetFrame) currentPage).onBouncerShowing(false);
         }
     }
 
@@ -825,7 +834,8 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
         View currentPage = getPageAt(curPage);
         if (shouldSetTopAlignedPivotForWidget(curPage)) {
             currentPage.setPivotY(0);
-            // Note: we are working around the issue that setting the x-pivot to the same value as it
+            // Note: we are working around the issue that setting the x-pivot to the same value
+            // as it
             //       was does not actually work.
             currentPage.setPivotX(0);
             currentPage.setPivotX(currentPage.getMeasuredWidth() / 2);
@@ -840,7 +850,7 @@ public class KeyguardWidgetPager extends PagedView implements PagedView.PageSwit
             mZoomInOutAnim.start();
         }
         if (currentPage instanceof KeyguardWidgetFrame) {
-            ((KeyguardWidgetFrame)currentPage).onBouncerShowing(true);
+            ((KeyguardWidgetFrame) currentPage).onBouncerShowing(true);
         }
     }
 

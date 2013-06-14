@@ -1,15 +1,12 @@
 
 package com.android.systemui.statusbar.toggles;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.provider.Settings;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Toast;
-
 import com.android.systemui.R;
 
 public class ScreenshotToggle extends BaseToggle {

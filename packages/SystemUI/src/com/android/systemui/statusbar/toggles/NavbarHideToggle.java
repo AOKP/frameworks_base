@@ -6,7 +6,6 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.provider.Settings;
-
 import com.android.systemui.R;
 
 public class NavbarHideToggle extends StatefulToggle {

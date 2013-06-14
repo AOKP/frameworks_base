@@ -18,13 +18,13 @@ package com.android.internal.policy.impl.keyguard;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.telephony.TelephonyManager;
-
 import com.android.internal.telephony.IccCardConstants;
 import com.android.internal.widget.LockPatternUtils;
 
 public class KeyguardSecurityModel {
     /**
      * The different types of security available for {@link Mode#UnlockScreen}.
+     *
      * @see com.android.internal.policy.impl.LockPatternKeyguardView#getUnlockMode()
      */
     enum SecurityMode {
@@ -100,7 +100,7 @@ public class KeyguardSecurityModel {
                 case DevicePolicyManager.PASSWORD_QUALITY_UNSPECIFIED:
                     if (mLockPatternUtils.isLockPatternEnabled()) {
                         mode = mLockPatternUtils.isPermanentlyLocked() ?
-                            SecurityMode.Account : SecurityMode.Pattern;
+                                SecurityMode.Account : SecurityMode.Pattern;
                     }
                     break;
 
@@ -122,8 +122,8 @@ public class KeyguardSecurityModel {
     SecurityMode getAlternateFor(SecurityMode mode) {
         if (isBiometricUnlockEnabled() && !isBiometricUnlockSuppressed()
                 && (mode == SecurityMode.Password
-                        || mode == SecurityMode.PIN
-                        || mode == SecurityMode.Pattern)) {
+                || mode == SecurityMode.PIN
+                || mode == SecurityMode.Pattern)) {
             return SecurityMode.Biometric;
         }
         return mode; // no alternate, return what was given
@@ -136,7 +136,7 @@ public class KeyguardSecurityModel {
      * @return backup method or current security mode
      */
     SecurityMode getBackupSecurityMode(SecurityMode mode) {
-        switch(mode) {
+        switch (mode) {
             case Biometric:
                 return getSecurityMode();
             case Pattern:

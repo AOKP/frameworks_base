@@ -22,9 +22,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Slog;
-import android.view.View;
 import android.view.MotionEvent;
-
+import android.view.View;
 import com.android.internal.util.aokp.BackgroundAlphaColorDrawable;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.PanelBar;
@@ -45,7 +44,7 @@ public class TabletStatusBarView extends PanelBar {
         super(context, attrs);
 
         Drawable bg = mContext.getResources().getDrawable(R.drawable.system_bar_background);
-        if(bg instanceof ColorDrawable) {
+        if (bg instanceof ColorDrawable) {
             setBackground(new BackgroundAlphaColorDrawable(((ColorDrawable) bg).getColor()));
         }
     }
@@ -72,7 +71,8 @@ public class TabletStatusBarView extends PanelBar {
             if (TabletStatusBar.DEBUG) {
                 Slog.d(TabletStatusBar.TAG, "TabletStatusBarView intercepting touch event: " + ev);
             }
-            // do not close the recents panel here- the intended behavior is that recents is dismissed
+            // do not close the recents panel here- the intended behavior is that recents is
+            // dismissed
             // on touch up when clicking on status bar buttons
             // TODO: should we be closing the notification panel and input methods panel?
             mHandler.removeMessages(TabletStatusBar.MSG_CLOSE_NOTIFICATION_PANEL);
@@ -82,13 +82,13 @@ public class TabletStatusBarView extends PanelBar {
             mHandler.removeMessages(TabletStatusBar.MSG_STOP_TICKER);
             mHandler.sendEmptyMessage(TabletStatusBar.MSG_STOP_TICKER);
 
-            for (int i=0; i < mPanels.length; i++) {
+            for (int i = 0; i < mPanels.length; i++) {
                 if (mPanels[i] != null && mPanels[i].getVisibility() == View.VISIBLE) {
                     if (eventInside(mIgnoreChildren[i], ev)) {
                         if (TabletStatusBar.DEBUG) {
                             Slog.d(TabletStatusBar.TAG,
                                     "TabletStatusBarView eating event for view: "
-                                    + mIgnoreChildren[i]);
+                                            + mIgnoreChildren[i]);
                         }
                         return true;
                     }
@@ -103,8 +103,8 @@ public class TabletStatusBarView extends PanelBar {
 
     private boolean eventInside(View v, MotionEvent ev) {
         // assume that x and y are window coords because we are.
-        final int x = (int)ev.getX();
-        final int y = (int)ev.getY();
+        final int x = (int) ev.getX();
+        final int y = (int) ev.getY();
 
         final int[] p = mPos;
         v.getLocationInWindow(p);
@@ -123,7 +123,7 @@ public class TabletStatusBarView extends PanelBar {
 
     /**
      * Let the status bar know that if you tap on ignore while panel is showing, don't do anything.
-     *
+     * <p/>
      * Debounces taps on, say, a popup's trigger when the popup is already showing.
      */
     public void setIgnoreChildren(int index, View ignore, View panel) {

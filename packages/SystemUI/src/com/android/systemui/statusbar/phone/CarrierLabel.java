@@ -23,16 +23,8 @@ import android.content.IntentFilter;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Slog;
-import android.view.View;
 import android.widget.TextView;
-
 import com.android.internal.telephony.TelephonyIntents;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.TimeZone;
-
-import com.android.internal.R;
 
 /**
  * This widget display an analogic clock with two hands for hours and

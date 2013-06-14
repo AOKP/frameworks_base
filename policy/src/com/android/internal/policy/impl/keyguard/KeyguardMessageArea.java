@@ -30,12 +30,10 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-
+import com.android.internal.R;
 import libcore.util.MutableInt;
 
-import com.android.internal.R;
-
-/***
+/**
  * Manages a number of views inside of the given layout. See below for a list of widgets.
  */
 class KeyguardMessageArea extends TextView {
@@ -89,6 +87,7 @@ class KeyguardMessageArea extends TextView {
 
     public static class Helper implements SecurityMessageDisplay {
         KeyguardMessageArea mMessageArea;
+
         Helper(View v) {
             mMessageArea = (KeyguardMessageArea) v.findViewById(R.id.keyguard_message_area);
             if (mMessageArea == null) {
@@ -140,7 +139,7 @@ class KeyguardMessageArea extends TextView {
         public void onRefreshBatteryInfo(KeyguardUpdateMonitor.BatteryStatus status) {
             mShowingBatteryInfo = status.isPluggedIn() || status.isBatteryLow();
             mCharging = status.status == BatteryManager.BATTERY_STATUS_CHARGING
-                     || status.status == BatteryManager.BATTERY_STATUS_FULL;
+                    || status.status == BatteryManager.BATTERY_STATUS_FULL;
             mBatteryLevel = status.level;
             mBatteryCharged = status.isCharged();
             mBatteryIsLow = status.isBatteryLow();
@@ -189,6 +188,7 @@ class KeyguardMessageArea extends TextView {
      * AlarmStatus: Alarm state always gets it's own line.
      * Status1 is shared between help, battery status and generic unlock instructions,
      * prioritized in that order.
+     *
      * @param showStatusLines status lines are shown if true
      */
     void update() {
@@ -244,13 +244,14 @@ class KeyguardMessageArea extends TextView {
                         com.android.internal.R.string.lockscreen_low_battery);
                 icon.value = BATTERY_LOW_ICON;
                 if (mLockAlwaysBattery) {
-                    string = getContext().getString(R.string.lockscreen_always_low_battery, mBatteryLevel);
+                    string = getContext()
+                            .getString(R.string.lockscreen_always_low_battery, mBatteryLevel);
                     icon.value = BATTERY_LOW_ICON;
                 }
             }
         } else if (mLockAlwaysBattery) {
-                string = getContext().getString(R.string.lockscreen_always_battery, mBatteryLevel);
-                icon.value = BATTERY_ICON;
+            string = getContext().getString(R.string.lockscreen_always_battery, mBatteryLevel);
+            icon.value = BATTERY_ICON;
         }
         return string;
     }
@@ -261,10 +262,10 @@ class KeyguardMessageArea extends TextView {
             anim.setDuration(duration);
             if (thenUpdate) {
                 anim.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                            public void onAnimationEnd(Animator animation) {
-                            update();
-                        }
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        update();
+                    }
                 });
             }
             anim.start();

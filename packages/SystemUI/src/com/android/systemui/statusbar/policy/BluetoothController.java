@@ -25,7 +25,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.view.View;
 import android.widget.ImageView;
-
 import com.android.systemui.R;
 
 import java.util.ArrayList;
@@ -87,7 +86,7 @@ public class BluetoothController extends BroadcastReceiver {
         } else if (action.equals(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED)) {
             handleConnectionStateChange(
                     intent.getIntExtra(BluetoothAdapter.EXTRA_CONNECTION_STATE,
-                        BluetoothAdapter.STATE_DISCONNECTED));
+                            BluetoothAdapter.STATE_DISCONNECTED));
         } else if (action.equals(BluetoothDevice.ACTION_BOND_STATE_CHANGED)) {
             // Fall through and update bonded devices and refresh view
         }
@@ -128,7 +127,7 @@ public class BluetoothController extends BroadcastReceiver {
 
     public void refreshViews() {
         int N = mIconViews.size();
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             ImageView v = mIconViews.get(i);
             v.setImageResource(mIconId);
             v.setVisibility(mEnabled ? View.VISIBLE : View.GONE);

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public class ImeToggle extends BaseToggle {

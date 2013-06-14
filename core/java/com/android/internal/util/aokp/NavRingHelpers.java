@@ -16,45 +16,36 @@
 
 package com.android.internal.util.aokp;
 
-import android.app.SearchManager;
-import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
 import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.graphics.Xfermode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
-import android.media.AudioManager;
-import android.os.UserHandle;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.WindowManager;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
-import com.android.internal.widget.multiwaveview.GlowPadView;
 import com.android.internal.widget.multiwaveview.TargetDrawable;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
+
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
+import static com.android.internal.util.aokp.AwesomeConstants.fromString;
 
 public class NavRingHelpers {
 
@@ -142,8 +133,7 @@ public class NavRingHelpers {
                 int desiredSize = (int) (48 * metrics.density);
                 int width = activityIcon.getIntrinsicWidth();
 
-                if (width > desiredSize)
-                {
+                if (width > desiredSize) {
                     Bitmap bm = ((BitmapDrawable) activityIcon).getBitmap();
                     if (bm != null) {
                         Bitmap bitmapOrig = Bitmap.createScaledBitmap(bm, desiredSize, desiredSize,
@@ -166,10 +156,10 @@ public class NavRingHelpers {
         Drawable iconBgActivated = res
                 .getDrawable(com.android.internal.R.drawable.ic_navbar_blank_activated);
         int margin = (int) (iconBg.getIntrinsicHeight() / 3);
-        LayerDrawable icon = new LayerDrawable(new Drawable[] {
+        LayerDrawable icon = new LayerDrawable(new Drawable[]{
                 iconBg, activityIcon
         });
-        LayerDrawable iconActivated = new LayerDrawable(new Drawable[] {
+        LayerDrawable iconActivated = new LayerDrawable(new Drawable[]{
                 iconBgActivated, activityIcon
         });
 
@@ -177,17 +167,17 @@ public class NavRingHelpers {
         iconActivated.setLayerInset(1, margin, margin, margin, margin);
 
         StateListDrawable selector = new StateListDrawable();
-        selector.addState(new int[] {
+        selector.addState(new int[]{
                 android.R.attr.state_enabled,
                 -android.R.attr.state_active,
                 -android.R.attr.state_focused
         }, icon);
-        selector.addState(new int[] {
+        selector.addState(new int[]{
                 android.R.attr.state_enabled,
                 android.R.attr.state_active,
                 -android.R.attr.state_focused
         }, iconActivated);
-        selector.addState(new int[] {
+        selector.addState(new int[]{
                 android.R.attr.state_enabled,
                 -android.R.attr.state_active,
                 android.R.attr.state_focused
@@ -208,10 +198,10 @@ public class NavRingHelpers {
                 com.android.internal.R.drawable.ic_navbar_blank_activated);
 
         int margin = (int) (iconBg.getIntrinsicHeight() / 3);
-        LayerDrawable icon = new LayerDrawable(new Drawable[] {
+        LayerDrawable icon = new LayerDrawable(new Drawable[]{
                 iconBg, activityIcon
         });
-        LayerDrawable iconActivated = new LayerDrawable(new Drawable[] {
+        LayerDrawable iconActivated = new LayerDrawable(new Drawable[]{
                 iconBgActivated, activityIcon
         });
 
@@ -219,17 +209,17 @@ public class NavRingHelpers {
         iconActivated.setLayerInset(1, margin, margin, margin, margin);
 
         StateListDrawable selector = new StateListDrawable();
-        selector.addState(new int[] {
+        selector.addState(new int[]{
                 android.R.attr.state_enabled,
                 -android.R.attr.state_active,
                 -android.R.attr.state_focused
         }, icon);
-        selector.addState(new int[] {
+        selector.addState(new int[]{
                 android.R.attr.state_enabled,
                 android.R.attr.state_active,
                 -android.R.attr.state_focused
         }, iconActivated);
-        selector.addState(new int[] {
+        selector.addState(new int[]{
                 android.R.attr.state_enabled,
                 -android.R.attr.state_active,
                 android.R.attr.state_focused

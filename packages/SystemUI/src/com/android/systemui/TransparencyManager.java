@@ -1,4 +1,3 @@
-
 package com.android.systemui;
 
 import android.animation.Animator;
@@ -22,8 +21,6 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-
 import com.android.internal.util.aokp.BackgroundAlphaColorDrawable;
 import com.android.systemui.statusbar.NavigationBarView;
 import com.android.systemui.statusbar.phone.PanelBar;
@@ -147,13 +144,16 @@ public class TransparencyManager {
             @Override
             public void onAnimationStart(Animator animation) {
             }
+
             @Override
             public void onAnimationRepeat(Animator animation) {
             }
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 info.anim = null;
             }
+
             @Override
             public void onAnimationCancel(Animator animation) {
                 info.anim = null;
@@ -179,9 +179,9 @@ public class TransparencyManager {
             set.playTogether(navAnim, sbAnim);
             set.start();
         } else {
-            if(navAnim != null) {
+            if (navAnim != null) {
                 navAnim.start();
-            } else if(sbAnim != null) {
+            } else if (sbAnim != null) {
                 sbAnim.start();
             }
         }
@@ -203,14 +203,15 @@ public class TransparencyManager {
                     return true;
                 }
             }
-        } catch(Exception ignore) {
+        } catch (Exception ignore) {
         }
         return false;
     }
 
     private boolean isKeyguardShowing() {
-        if (km == null)
+        if (km == null) {
             return false;
+        }
         return km.isKeyguardLocked();
     }
 

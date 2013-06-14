@@ -22,7 +22,6 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.phone.QuickSettingsTileView;
 
@@ -124,7 +123,7 @@ public class FavoriteUserToggle extends BaseToggle {
                             ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
                     Uri res = ContactsContract.Contacts.lookupContact(
                             mContext.getContentResolver(), lookupUri);
-                    String[] projection = new String[] {
+                    String[] projection = new String[]{
                             ContactsContract.Contacts.DISPLAY_NAME,
                             ContactsContract.Contacts.PHOTO_URI,
                             ContactsContract.Contacts.LOOKUP_KEY

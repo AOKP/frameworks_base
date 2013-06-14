@@ -4,10 +4,10 @@ package com.android.systemui.statusbar.toggles;
 import android.content.Context;
 import android.media.AudioManager;
 import android.view.View;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.systemui.R;
 import com.android.systemui.aokp.AwesomeAction;
+
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
 
 public class VibrateToggle extends StatefulToggle {
 

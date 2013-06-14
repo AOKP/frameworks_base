@@ -19,15 +19,14 @@
 
 <!-- This is the combined status bar / notification panel window. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/status_bar_cling"
-    android:paddingLeft="40dp"
-    android:paddingRight="40dp"
-    android:background="#DD000000"
-    android:focusable="true"
-    android:orientation="vertical"
-    android:gravity="top|left"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/status_bar_cling"
+              android:paddingLeft="40dp"
+              android:paddingRight="40dp"
+              android:background="#DD000000"
+              android:focusable="true"
+              android:orientation="vertical"
+              android:gravity="top|left"
     >
 
     <ImageView

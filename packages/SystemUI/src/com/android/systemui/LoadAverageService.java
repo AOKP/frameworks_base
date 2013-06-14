@@ -16,8 +16,6 @@
 
 package com.android.systemui;
 
-import com.android.internal.os.ProcessStats;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -30,33 +28,34 @@ import android.os.Message;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+import com.android.internal.os.ProcessStats;
 
 public class LoadAverageService extends Service {
     private View mView;
-    
+
     private static final class Stats extends ProcessStats {
         String mLoadText;
         int mLoadWidth;
-        
+
         private final Paint mPaint;
-        
+
         Stats(Paint paint) {
             super(false);
             mPaint = paint;
         }
-        
+
         @Override
         public void onLoadChanged(float load1, float load5, float load15) {
             mLoadText = load1 + " / " + load5 + " / " + load15;
-            mLoadWidth = (int)mPaint.measureText(mLoadText);
+            mLoadWidth = (int) mPaint.measureText(mLoadText);
         }
 
         @Override
         public int onMeasureProcessName(String name) {
-            return (int)mPaint.measureText(name);
+            return (int) mPaint.measureText(name);
         }
     }
-    
+
     private class LoadView extends View {
         private Handler mHandler = new Handler() {
             @Override
@@ -71,7 +70,7 @@ public class LoadAverageService extends Service {
         };
 
         private final Stats mStats;
-        
+
         private Paint mLoadPaint;
         private Paint mAddedPaint;
         private Paint mRemovedPaint;
@@ -101,7 +100,7 @@ public class LoadAverageService extends Service {
             if (density < 1) {
                 textSize = 9;
             } else {
-                textSize = (int)(10*density);
+                textSize = (int) (10 * density);
                 if (textSize < 10) {
                     textSize = 10;
                 }
@@ -148,7 +147,7 @@ public class LoadAverageService extends Service {
 
             mAscent = mLoadPaint.ascent();
             float descent = mLoadPaint.descent();
-            mFH = (int)(descent - mAscent + .5f);
+            mFH = (int) (descent - mAscent + .5f);
 
             mStats = new Stats(mLoadPaint);
             mStats.init();
@@ -177,7 +176,7 @@ public class LoadAverageService extends Service {
         public void onDraw(Canvas canvas) {
             super.onDraw(canvas);
             final int W = mNeededWidth;
-            final int RIGHT = getWidth()-1;
+            final int RIGHT = getWidth() - 1;
 
             final Stats stats = mStats;
             final int userTime = stats.getLastUserTime();
@@ -186,75 +185,80 @@ public class LoadAverageService extends Service {
             final int irqTime = stats.getLastIrqTime();
             final int softIrqTime = stats.getLastSoftIrqTime();
             final int idleTime = stats.getLastIdleTime();
-            
-            final int totalTime = userTime+systemTime+iowaitTime+irqTime+softIrqTime+idleTime;
+
+            final int totalTime =
+                    userTime + systemTime + iowaitTime + irqTime + softIrqTime + idleTime;
             if (totalTime == 0) {
                 return;
             }
-            int userW = (userTime*W)/totalTime;
-            int systemW = (systemTime*W)/totalTime;
-            int irqW = ((iowaitTime+irqTime+softIrqTime)*W)/totalTime;
+            int userW = (userTime * W) / totalTime;
+            int systemW = (systemTime * W) / totalTime;
+            int irqW = ((iowaitTime + irqTime + softIrqTime) * W) / totalTime;
 
             int x = RIGHT - mPaddingRight;
             int top = mPaddingTop + 2;
             int bottom = mPaddingTop + mFH - 2;
 
             if (irqW > 0) {
-                canvas.drawRect(x-irqW, top, x, bottom, mIrqPaint);
+                canvas.drawRect(x - irqW, top, x, bottom, mIrqPaint);
                 x -= irqW;
             }
             if (systemW > 0) {
-                canvas.drawRect(x-systemW, top, x, bottom, mSystemPaint);
+                canvas.drawRect(x - systemW, top, x, bottom, mSystemPaint);
                 x -= systemW;
             }
             if (userW > 0) {
-                canvas.drawRect(x-userW, top, x, bottom, mUserPaint);
+                canvas.drawRect(x - userW, top, x, bottom, mUserPaint);
                 x -= userW;
             }
 
-            int y = mPaddingTop - (int)mAscent;
-            canvas.drawText(stats.mLoadText, RIGHT-mPaddingRight-stats.mLoadWidth-1,
-                    y-1, mShadowPaint);
-            canvas.drawText(stats.mLoadText, RIGHT-mPaddingRight-stats.mLoadWidth-1,
-                    y+1, mShadowPaint);
-            canvas.drawText(stats.mLoadText, RIGHT-mPaddingRight-stats.mLoadWidth+1,
-                    y-1, mShadow2Paint);
-            canvas.drawText(stats.mLoadText, RIGHT-mPaddingRight-stats.mLoadWidth+1,
-                    y+1, mShadow2Paint);
-            canvas.drawText(stats.mLoadText, RIGHT-mPaddingRight-stats.mLoadWidth,
+            int y = mPaddingTop - (int) mAscent;
+            canvas.drawText(stats.mLoadText, RIGHT - mPaddingRight - stats.mLoadWidth - 1,
+                    y - 1, mShadowPaint);
+            canvas.drawText(stats.mLoadText, RIGHT - mPaddingRight - stats.mLoadWidth - 1,
+                    y + 1, mShadowPaint);
+            canvas.drawText(stats.mLoadText, RIGHT - mPaddingRight - stats.mLoadWidth + 1,
+                    y - 1, mShadow2Paint);
+            canvas.drawText(stats.mLoadText, RIGHT - mPaddingRight - stats.mLoadWidth + 1,
+                    y + 1, mShadow2Paint);
+            canvas.drawText(stats.mLoadText, RIGHT - mPaddingRight - stats.mLoadWidth,
                     y, mLoadPaint);
 
             int N = stats.countWorkingStats();
-            for (int i=0; i<N; i++) {
+            for (int i = 0; i < N; i++) {
                 Stats.Stats st = stats.getWorkingStats(i);
                 y += mFH;
                 top += mFH;
                 bottom += mFH;
 
-                userW = (st.rel_utime*W)/totalTime;
-                systemW = (st.rel_stime*W)/totalTime;
+                userW = (st.rel_utime * W) / totalTime;
+                systemW = (st.rel_stime * W) / totalTime;
                 x = RIGHT - mPaddingRight;
                 if (systemW > 0) {
-                    canvas.drawRect(x-systemW, top, x, bottom, mSystemPaint);
+                    canvas.drawRect(x - systemW, top, x, bottom, mSystemPaint);
                     x -= systemW;
                 }
                 if (userW > 0) {
-                    canvas.drawRect(x-userW, top, x, bottom, mUserPaint);
+                    canvas.drawRect(x - userW, top, x, bottom, mUserPaint);
                     x -= userW;
                 }
 
-                canvas.drawText(st.name, RIGHT-mPaddingRight-st.nameWidth-1,
-                        y-1, mShadowPaint);
-                canvas.drawText(st.name, RIGHT-mPaddingRight-st.nameWidth-1,
-                        y+1, mShadowPaint);
-                canvas.drawText(st.name, RIGHT-mPaddingRight-st.nameWidth+1,
-                        y-1, mShadow2Paint);
-                canvas.drawText(st.name, RIGHT-mPaddingRight-st.nameWidth+1,
-                        y+1, mShadow2Paint);
+                canvas.drawText(st.name, RIGHT - mPaddingRight - st.nameWidth - 1,
+                        y - 1, mShadowPaint);
+                canvas.drawText(st.name, RIGHT - mPaddingRight - st.nameWidth - 1,
+                        y + 1, mShadowPaint);
+                canvas.drawText(st.name, RIGHT - mPaddingRight - st.nameWidth + 1,
+                        y - 1, mShadow2Paint);
+                canvas.drawText(st.name, RIGHT - mPaddingRight - st.nameWidth + 1,
+                        y + 1, mShadow2Paint);
                 Paint p = mLoadPaint;
-                if (st.added) p = mAddedPaint;
-                if (st.removed) p = mRemovedPaint;
-                canvas.drawText(st.name, RIGHT-mPaddingRight-st.nameWidth, y, p);
+                if (st.added) {
+                    p = mAddedPaint;
+                }
+                if (st.removed) {
+                    p = mRemovedPaint;
+                }
+                canvas.drawText(st.name, RIGHT - mPaddingRight - st.nameWidth, y, p);
             }
         }
 
@@ -263,15 +267,15 @@ public class LoadAverageService extends Service {
             final int NW = stats.countWorkingStats();
 
             int maxWidth = stats.mLoadWidth;
-            for (int i=0; i<NW; i++) {
+            for (int i = 0; i < NW; i++) {
                 Stats.Stats st = stats.getWorkingStats(i);
                 if (st.nameWidth > maxWidth) {
                     maxWidth = st.nameWidth;
                 }
             }
-            
+
             int neededWidth = mPaddingLeft + mPaddingRight + maxWidth;
-            int neededHeight = mPaddingTop + mPaddingBottom + (mFH*(1+NW));
+            int neededHeight = mPaddingTop + mPaddingBottom + (mFH * (1 + NW));
             if (neededWidth != mNeededWidth || neededHeight != mNeededHeight) {
                 mNeededWidth = neededWidth;
                 mNeededHeight = neededHeight;
@@ -287,22 +291,22 @@ public class LoadAverageService extends Service {
         super.onCreate();
         mView = new LoadView(this);
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-            WindowManager.LayoutParams.MATCH_PARENT,
-            WindowManager.LayoutParams.WRAP_CONTENT,
-            WindowManager.LayoutParams.TYPE_SECURE_SYSTEM_OVERLAY,
-            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|
-            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-            PixelFormat.TRANSLUCENT);
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_SECURE_SYSTEM_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                PixelFormat.TRANSLUCENT);
         params.gravity = Gravity.RIGHT | Gravity.TOP;
         params.setTitle("Load Average");
-        WindowManager wm = (WindowManager)getSystemService(WINDOW_SERVICE);
+        WindowManager wm = (WindowManager) getSystemService(WINDOW_SERVICE);
         wm.addView(mView, params);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ((WindowManager)getSystemService(WINDOW_SERVICE)).removeView(mView);
+        ((WindowManager) getSystemService(WINDOW_SERVICE)).removeView(mView);
         mView = null;
     }
 

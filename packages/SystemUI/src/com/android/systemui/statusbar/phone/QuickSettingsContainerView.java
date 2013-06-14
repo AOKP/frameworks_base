@@ -24,7 +24,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import com.android.systemui.R;
 
 /**
@@ -57,7 +56,8 @@ public class QuickSettingsContainerView extends FrameLayout {
         Resources r = getContext().getResources();
         mCellGap = r.getDimension(R.dimen.quick_settings_cell_gap);
         mNumColumns = Settings.System.getInt(mContext.getContentResolver(),
-                Settings.System.QUICK_TOGGLES_PER_ROW, r.getInteger(R.integer.quick_settings_num_columns));
+                Settings.System.QUICK_TOGGLES_PER_ROW,
+                r.getInteger(R.integer.quick_settings_num_columns));
         requestLayout();
     }
 
@@ -78,12 +78,13 @@ public class QuickSettingsContainerView extends FrameLayout {
             // Update the child's width
             QuickSettingsTileView v = (QuickSettingsTileView) getChildAt(i);
             if (v.getVisibility() != View.GONE) {
-                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+                ViewGroup.MarginLayoutParams lp =
+                        (ViewGroup.MarginLayoutParams) v.getLayoutParams();
                 int colSpan = v.getColumnSpan();
                 lp.width = (int) ((colSpan * cellWidth) + (colSpan - 1) * mCellGap);
 
                 if (mNumColumns > 3) {
-                    lp.height = (lp.width * mNumColumns-1) / mNumColumns;
+                    lp.height = (lp.width * mNumColumns - 1) / mNumColumns;
                 }
                 // Measure the child
                 int newWidthSpec = MeasureSpec.makeMeasureSpec(lp.width, MeasureSpec.EXACTLY);

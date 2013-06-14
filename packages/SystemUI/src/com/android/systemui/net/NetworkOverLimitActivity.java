@@ -16,11 +16,6 @@
 
 package com.android.systemui.net;
 
-import static android.net.NetworkPolicyManager.EXTRA_NETWORK_TEMPLATE;
-import static android.net.NetworkTemplate.MATCH_MOBILE_3G_LOWER;
-import static android.net.NetworkTemplate.MATCH_MOBILE_4G;
-import static android.net.NetworkTemplate.MATCH_MOBILE_ALL;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -34,8 +29,10 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Slog;
 import android.view.WindowManager;
-
 import com.android.systemui.R;
+
+import static android.net.NetworkPolicyManager.EXTRA_NETWORK_TEMPLATE;
+import static android.net.NetworkTemplate.*;
 
 /**
  * Notify user that a {@link NetworkTemplate} is over its
@@ -57,10 +54,10 @@ public class NetworkOverLimitActivity extends Activity {
         builder.setPositiveButton(android.R.string.ok, null);
         builder.setNegativeButton(
                 R.string.data_usage_disabled_dialog_enable, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        snoozePolicy(template);
-                    }
-                });
+            public void onClick(DialogInterface dialog, int which) {
+                snoozePolicy(template);
+            }
+        });
 
         final Dialog dialog = builder.create();
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

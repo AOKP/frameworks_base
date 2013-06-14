@@ -1,10 +1,10 @@
 package com.android.systemui.statusbar.policy;
+
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
@@ -71,7 +71,8 @@ public class WifiText extends TextView {
             mSettingsObserver = new SettingsObserver(mHandler);
             mSettingsObserver.observe();
             mWifiManager = (WifiManager) mContext.getSystemService(Context.WIFI_SERVICE);
-            mContext.registerReceiver(rssiReceiver, new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
+            mContext.registerReceiver(rssiReceiver,
+                    new IntentFilter(WifiManager.RSSI_CHANGED_ACTION));
             updateSettings();
         }
     }
@@ -97,7 +98,8 @@ public class WifiText extends TextView {
                     Settings.System.getUriFor(Settings.System.STATUSBAR_WIFI_SIGNAL_TEXT), false,
                     this);
             resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.STATUSBAR_WIFI_SIGNAL_TEXT_COLOR), false,
+                    Settings.System.getUriFor(Settings.System.STATUSBAR_WIFI_SIGNAL_TEXT_COLOR),
+                    false,
                     this);
         }
 
@@ -111,7 +113,7 @@ public class WifiText extends TextView {
         int newColor = 0;
         ContentResolver resolver = getContext().getContentResolver();
         newColor = Settings.System.getInt(resolver,
-                Settings.System.STATUSBAR_WIFI_SIGNAL_TEXT_COLOR,mSignalColor);
+                Settings.System.STATUSBAR_WIFI_SIGNAL_TEXT_COLOR, mSignalColor);
         if (newColor < 0 && newColor != mSignalColor) {
             mSignalColor = newColor;
             setTextColor(mSignalColor);

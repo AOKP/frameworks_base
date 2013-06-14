@@ -34,9 +34,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.SoundEffectConstants;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.View.OnClickListener;
 import android.widget.TextView;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
     Runnable mCleanup = new Runnable() {
         public void run() {
             // dump extra memory we're hanging on to
-            for (TextView icon: mIcons) {
+            for (TextView icon : mIcons) {
                 icon.setCompoundDrawables(null, null, null, null);
                 icon.setTag(null);
             }
@@ -89,7 +89,7 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
         Context context = getContext();
 
         if (sStatusBar == null) {
-            sStatusBar = (StatusBarManager)context.getSystemService(Context.STATUS_BAR_SERVICE);
+            sStatusBar = (StatusBarManager) context.getSystemService(Context.STATUS_BAR_SERVICE);
         }
 
         Window window = getWindow();
@@ -107,17 +107,17 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
         window.setAttributes(params);
         window.setFlags(0, WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 
-        mIcons[0] = (TextView)findViewById(com.android.internal.R.id.button0);
-        mIcons[1] = (TextView)findViewById(com.android.internal.R.id.button1);
-        mIcons[2] = (TextView)findViewById(com.android.internal.R.id.button2);
-        mIcons[3] = (TextView)findViewById(com.android.internal.R.id.button3);
-        mIcons[4] = (TextView)findViewById(com.android.internal.R.id.button4);
-        mIcons[5] = (TextView)findViewById(com.android.internal.R.id.button5);
-        mIcons[6] = (TextView)findViewById(com.android.internal.R.id.button6);
-        mIcons[7] = (TextView)findViewById(com.android.internal.R.id.button7);
+        mIcons[0] = (TextView) findViewById(com.android.internal.R.id.button0);
+        mIcons[1] = (TextView) findViewById(com.android.internal.R.id.button1);
+        mIcons[2] = (TextView) findViewById(com.android.internal.R.id.button2);
+        mIcons[3] = (TextView) findViewById(com.android.internal.R.id.button3);
+        mIcons[4] = (TextView) findViewById(com.android.internal.R.id.button4);
+        mIcons[5] = (TextView) findViewById(com.android.internal.R.id.button5);
+        mIcons[6] = (TextView) findViewById(com.android.internal.R.id.button6);
+        mIcons[7] = (TextView) findViewById(com.android.internal.R.id.button7);
         mNoAppsText = findViewById(com.android.internal.R.id.no_applications_message);
 
-        for (TextView b: mIcons) {
+        for (TextView b : mIcons) {
             b.setOnClickListener(this);
         }
     }
@@ -188,9 +188,9 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
      * Handler for user clicks.  If a button was clicked, launch the corresponding activity.
      */
     public void onClick(View v) {
-        for (TextView b: mIcons) {
+        for (TextView b : mIcons) {
             if (b == v) {
-                RecentTag tag = (RecentTag)b.getTag();
+                RecentTag tag = (RecentTag) b.getTag();
                 switchTo(tag);
                 break;
             }
@@ -247,7 +247,7 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
         getContext().unregisterReceiver(mBroadcastReceiver);
 
         mHandler.postDelayed(mCleanup, 100);
-     }
+    }
 
     /**
      * Reload the 6 buttons with recent activities
@@ -261,9 +261,9 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
         final List<ActivityManager.RecentTaskInfo> recentTasks =
                 am.getRecentTasks(MAX_RECENT_TASKS, ActivityManager.RECENT_IGNORE_UNAVAILABLE);
 
-        ActivityInfo homeInfo = 
-            new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-                    .resolveActivityInfo(pm, 0);
+        ActivityInfo homeInfo =
+                new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+                        .resolveActivityInfo(pm, 0);
 
         IconUtilities iconUtilities = new IconUtilities(getContext());
 
@@ -276,7 +276,9 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
             final ActivityManager.RecentTaskInfo info = recentTasks.get(i);
 
             // for debug purposes only, disallow first result to create empty lists
-            if (DBG_FORCE_EMPTY_LIST && (i == 0)) continue;
+            if (DBG_FORCE_EMPTY_LIST && (i == 0)) {
+                continue;
+            }
 
             Intent intent = new Intent(info.baseIntent);
             if (info.origActivity != null) {
@@ -288,12 +290,12 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
                 if (homeInfo.packageName.equals(
                         intent.getComponent().getPackageName())
                         && homeInfo.name.equals(
-                                intent.getComponent().getClassName())) {
+                        intent.getComponent().getClassName())) {
                     continue;
                 }
             }
 
-            intent.setFlags((intent.getFlags()&~Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
+            intent.setFlags((intent.getFlags() & ~Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED)
                     | Intent.FLAG_ACTIVITY_NEW_TASK);
             final ResolveInfo resolveInfo = pm.resolveActivity(intent, 0);
             if (resolveInfo != null) {
@@ -338,7 +340,7 @@ public class RecentApplicationsDialog extends Dialog implements OnClickListener 
             String action = intent.getAction();
             if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(action)) {
                 String reason = intent.getStringExtra(PhoneWindowManager.SYSTEM_DIALOG_REASON_KEY);
-                if (! PhoneWindowManager.SYSTEM_DIALOG_REASON_RECENT_APPS.equals(reason)) {
+                if (!PhoneWindowManager.SYSTEM_DIALOG_REASON_RECENT_APPS.equals(reason)) {
                     dismiss();
                 }
             }

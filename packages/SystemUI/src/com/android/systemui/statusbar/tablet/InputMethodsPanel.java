@@ -16,8 +16,6 @@
 
 package com.android.systemui.statusbar.tablet;
 
-import com.android.systemui.R;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +38,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import android.widget.TextView;
+import com.android.systemui.R;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -66,8 +65,8 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
             new HashMap<View, Pair<InputMethodInfo, InputMethodSubtype>>();
     private final TreeMap<InputMethodInfo, List<InputMethodSubtype>>
             mEnabledInputMethodAndSubtypesCache =
-                    new TreeMap<InputMethodInfo, List<InputMethodSubtype>>(
-                            new InputMethodComparator());
+            new TreeMap<InputMethodInfo, List<InputMethodSubtype>>(
+                    new InputMethodComparator());
 
     private boolean mAttached = false;
     private boolean mPackageChanged = false;
@@ -88,8 +87,12 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
     private class InputMethodComparator implements Comparator<InputMethodInfo> {
         @Override
         public int compare(InputMethodInfo imi1, InputMethodInfo imi2) {
-            if (imi2 == null) return 0;
-            if (imi1 == null) return 1;
+            if (imi2 == null) {
+                return 0;
+            }
+            if (imi1 == null) {
+                return 1;
+            }
             if (mPackageManager == null) {
                 return imi1.getId().compareTo(imi2.getId());
             }
@@ -179,8 +182,9 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
             final boolean checked = mHardKeyboardSwitch.isChecked();
             if (mHardKeyboardEnabled != checked) {
                 mHardKeyboardEnabled = checked;
-                if (mHardKeyboardEnabledChangeListener != null)
+                if (mHardKeyboardEnabledChangeListener != null) {
                     mHardKeyboardEnabledChangeListener.onHardKeyboardEnabledChange(checked);
+                }
             }
         }
     }
@@ -226,10 +230,10 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
         final CharSequence imiName = getIMIName(imi);
         final Drawable icon = getSubtypeIcon(imi, subtype);
         final View view = View.inflate(mContext, R.layout.system_bar_input_methods_item, null);
-        final ImageView subtypeIcon = (ImageView)view.findViewById(R.id.item_icon);
-        final TextView itemTitle = (TextView)view.findViewById(R.id.item_title);
-        final TextView itemSubtitle = (TextView)view.findViewById(R.id.item_subtitle);
-        final ImageView settingsIcon = (ImageView)view.findViewById(R.id.item_settings_icon);
+        final ImageView subtypeIcon = (ImageView) view.findViewById(R.id.item_icon);
+        final TextView itemTitle = (TextView) view.findViewById(R.id.item_title);
+        final TextView itemSubtitle = (TextView) view.findViewById(R.id.item_subtitle);
+        final ImageView settingsIcon = (ImageView) view.findViewById(R.id.item_settings_icon);
         final View subtypeView = view.findViewById(R.id.item_subtype);
         if (subtypeName == null) {
             itemTitle.setText(imiName);
@@ -261,7 +265,7 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
             settingsIcon.setVisibility(View.GONE);
         }
         mRadioViewAndImiMap.put(
-                subtypeView, new Pair<InputMethodInfo, InputMethodSubtype> (imi, subtype));
+                subtypeView, new Pair<InputMethodInfo, InputMethodSubtype>(imi, subtype));
         subtypeView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -285,14 +289,14 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
         Map<InputMethodInfo, List<InputMethodSubtype>> enabledIMIs =
                 getEnabledInputMethodAndSubtypeList();
         Set<InputMethodInfo> cachedImiSet = enabledIMIs.keySet();
-        for (InputMethodInfo imi: cachedImiSet) {
+        for (InputMethodInfo imi : cachedImiSet) {
             List<InputMethodSubtype> subtypes = enabledIMIs.get(imi);
             if (subtypes == null || subtypes.size() == 0) {
                 mInputMethodMenuList.addView(
                         createInputMethodItem(imi, null));
                 continue;
             }
-            for (InputMethodSubtype subtype: subtypes) {
+            for (InputMethodSubtype subtype : subtypes) {
                 mInputMethodMenuList.addView(createInputMethodItem(imi, subtype));
             }
         }
@@ -339,7 +343,7 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
     private Pair<InputMethodInfo, InputMethodSubtype> updateRadioButtonsByView(View selectedView) {
         Pair<InputMethodInfo, InputMethodSubtype> selectedImiAndSubtype = null;
         if (mRadioViewAndImiMap.containsKey(selectedView)) {
-            for (View radioView: mRadioViewAndImiMap.keySet()) {
+            for (View radioView : mRadioViewAndImiMap.keySet()) {
                 RadioButton subtypeRadioButton =
                         (RadioButton) radioView.findViewById(R.id.item_radio);
                 if (subtypeRadioButton == null) {
@@ -348,7 +352,7 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
                 }
                 if (radioView == selectedView) {
                     Pair<InputMethodInfo, InputMethodSubtype> imiAndSubtype =
-                        mRadioViewAndImiMap.get(radioView);
+                            mRadioViewAndImiMap.get(radioView);
                     selectedImiAndSubtype = imiAndSubtype;
                     subtypeRadioButton.setChecked(true);
                 } else {
@@ -367,11 +371,13 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
     // Turn on the selected radio button at startup
     private void updateRadioButtonsByImiAndSubtype(
             InputMethodInfo imi, InputMethodSubtype subtype) {
-        if (imi == null) return;
+        if (imi == null) {
+            return;
+        }
         if (DEBUG) {
             Log.d(TAG, "Update radio buttons by " + imi.getId() + ", " + subtype);
         }
-        for (View radioView: mRadioViewAndImiMap.keySet()) {
+        for (View radioView : mRadioViewAndImiMap.keySet()) {
             RadioButton subtypeRadioButton =
                     (RadioButton) radioView.findViewById(R.id.item_radio);
             if (subtypeRadioButton == null) {
@@ -390,7 +396,7 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
     }
 
     private TreeMap<InputMethodInfo, List<InputMethodSubtype>>
-            getEnabledInputMethodAndSubtypeList() {
+    getEnabledInputMethodAndSubtypeList() {
         String newEnabledIMIs = Settings.Secure.getString(
                 mContext.getContentResolver(), Settings.Secure.ENABLED_INPUT_METHODS);
         String currentSystemLocaleString =
@@ -400,7 +406,7 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
                 || mPackageChanged) {
             mEnabledInputMethodAndSubtypesCache.clear();
             final List<InputMethodInfo> imis = mImm.getEnabledInputMethodList();
-            for (InputMethodInfo imi: imis) {
+            for (InputMethodInfo imi : imis) {
                 mEnabledInputMethodAndSubtypesCache.put(imi,
                         mImm.getEnabledInputMethodSubtypeList(imi, true));
             }
@@ -416,14 +422,14 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
                 .getContentResolver(), Settings.Secure.DEFAULT_INPUT_METHOD);
         Set<InputMethodInfo> cachedImiSet = mEnabledInputMethodAndSubtypesCache.keySet();
         // 1. Search IMI in cache
-        for (InputMethodInfo imi: cachedImiSet) {
+        for (InputMethodInfo imi : cachedImiSet) {
             if (imi.getId().equals(curInputMethodId)) {
                 return imi;
             }
         }
         // 2. Get current enabled IMEs and search IMI
         cachedImiSet = getEnabledInputMethodAndSubtypeList().keySet();
-        for (InputMethodInfo imi: cachedImiSet) {
+        for (InputMethodInfo imi : cachedImiSet) {
             if (imi.getId().equals(curInputMethodId)) {
                 return imi;
             }
@@ -432,12 +438,16 @@ public class InputMethodsPanel extends LinearLayout implements StatusBarPanel,
     }
 
     private CharSequence getIMIName(InputMethodInfo imi) {
-        if (imi == null) return null;
+        if (imi == null) {
+            return null;
+        }
         return imi.loadLabel(mPackageManager);
     }
 
     private CharSequence getSubtypeName(InputMethodInfo imi, InputMethodSubtype subtype) {
-        if (imi == null || subtype == null) return null;
+        if (imi == null || subtype == null) {
+            return null;
+        }
         if (DEBUG) {
             Log.d(TAG, "Get text from: " + imi.getPackageName() + subtype.getNameResId()
                     + imi.getServiceInfo().applicationInfo);

@@ -19,7 +19,6 @@ package com.android.systemui.statusbar;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public class DelegateViewHelper {
@@ -113,12 +112,14 @@ public class DelegateViewHelper {
      *
      * @param views
      */
-    public void setInitialTouchRegion(View ... views) {
+    public void setInitialTouchRegion(View... views) {
         RectF bounds = new RectF();
         int p[] = new int[2];
         for (int i = 0; i < views.length; i++) {
             View view = views[i];
-            if (view == null) continue;
+            if (view == null) {
+                continue;
+            }
             view.getLocationOnScreen(p);
             if (i == 0) {
                 bounds.set(p[0], p[1], p[0] + view.getWidth(), p[1] + view.getHeight());
@@ -131,6 +132,7 @@ public class DelegateViewHelper {
 
     /**
      * When rotation is set to NO_SENSOR, then this allows swapping x/y for gesture detection
+     *
      * @param swap
      */
     public void setSwapXY(boolean swap) {

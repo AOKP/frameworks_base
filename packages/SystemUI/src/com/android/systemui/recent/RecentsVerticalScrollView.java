@@ -32,7 +32,6 @@ import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-
 import com.android.systemui.R;
 import com.android.systemui.SwipeHelper;
 import com.android.systemui.recent.RecentsPanelView.TaskDescriptionAdapter;
@@ -167,15 +166,15 @@ public class RecentsVerticalScrollView extends ScrollView
 
         // Scroll to end after initial layout.
         final OnGlobalLayoutListener updateScroll = new OnGlobalLayoutListener() {
-                public void onGlobalLayout() {
-                    mLastScrollPosition = scrollPositionOfMostRecent();
-                    scrollTo(0, mLastScrollPosition);
-                    final ViewTreeObserver observer = getViewTreeObserver();
-                    if (observer.isAlive()) {
-                        observer.removeOnGlobalLayoutListener(this);
-                    }
+            public void onGlobalLayout() {
+                mLastScrollPosition = scrollPositionOfMostRecent();
+                scrollTo(0, mLastScrollPosition);
+                final ViewTreeObserver observer = getViewTreeObserver();
+                if (observer.isAlive()) {
+                    observer.removeOnGlobalLayoutListener(this);
                 }
-            };
+            }
+        };
         getViewTreeObserver().addOnGlobalLayoutListener(updateScroll);
     }
 
@@ -185,15 +184,17 @@ public class RecentsVerticalScrollView extends ScrollView
     }
 
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (DEBUG) Log.v(TAG, "onInterceptTouchEvent()");
+        if (DEBUG) {
+            Log.v(TAG, "onInterceptTouchEvent()");
+        }
         return mSwipeHelper.onInterceptTouchEvent(ev) ||
-            super.onInterceptTouchEvent(ev);
+                super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return mSwipeHelper.onTouchEvent(ev) ||
-            super.onTouchEvent(ev);
+                super.onTouchEvent(ev);
     }
 
     public boolean canChildBeDismissed(View v) {
@@ -293,7 +294,7 @@ public class RecentsVerticalScrollView extends ScrollView
         setScrollbarFadingEnabled(true);
         mLinearLayout = (LinearLayout) findViewById(R.id.recents_linear_layout);
         final int leftPadding = mContext.getResources()
-            .getDimensionPixelOffset(R.dimen.status_bar_recents_thumbnail_left_margin);
+                .getDimensionPixelOffset(R.dimen.status_bar_recents_thumbnail_left_margin);
         setOverScrollEffectPadding(leftPadding, 0);
     }
 

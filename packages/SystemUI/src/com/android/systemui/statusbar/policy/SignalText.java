@@ -1,30 +1,21 @@
-
 package com.android.systemui.statusbar.policy;
 
-import java.lang.ref.WeakReference;
-
-import com.android.internal.telephony.PhoneStateIntentReceiver;
-
-import android.R.integer;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.Settings;
-import android.telephony.PhoneStateListener;
-import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
-import android.telephony.TelephonyManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.CharacterStyle;
 import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
+import com.android.internal.telephony.PhoneStateIntentReceiver;
+
+import java.lang.ref.WeakReference;
 
 public class SignalText extends TextView {
 
@@ -132,7 +123,7 @@ public class SignalText extends TextView {
         int newColor = 0;
         ContentResolver resolver = getContext().getContentResolver();
         newColor = Settings.System.getInt(resolver,
-                Settings.System.STATUSBAR_SIGNAL_TEXT_COLOR,mSignalColor);
+                Settings.System.STATUSBAR_SIGNAL_TEXT_COLOR, mSignalColor);
         if (newColor < 0 && newColor != mSignalColor) {
             mSignalColor = newColor;
             setTextColor(mSignalColor);
@@ -143,11 +134,15 @@ public class SignalText extends TextView {
     public void updateSignalStrength() {
         dBm = mPhoneStateReceiver.getSignalStrengthDbm();
 
-        if (-1 == dBm) dBm = 0;
+        if (-1 == dBm) {
+            dBm = 0;
+        }
 
         ASU = mPhoneStateReceiver.getSignalStrengthLevelAsu();
 
-        if (-1 == ASU) ASU = 0;
+        if (-1 == ASU) {
+            ASU = 0;
+        }
         updateSignalText();
     }
 

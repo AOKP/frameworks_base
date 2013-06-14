@@ -17,7 +17,6 @@ package com.android.internal.policy.impl.keyguard;
 
 import android.app.admin.DevicePolicyManager;
 import android.media.AudioManager;
-
 import com.android.internal.telephony.IccCardConstants;
 
 /**
@@ -30,28 +29,33 @@ class KeyguardUpdateMonitorCallback {
      *
      * @param status current battery status
      */
-    void onRefreshBatteryInfo(KeyguardUpdateMonitor.BatteryStatus status) { }
+    void onRefreshBatteryInfo(KeyguardUpdateMonitor.BatteryStatus status) {
+    }
 
     /**
      * Called once per minute or when the time changes.
      */
-    void onTimeChanged() { }
+    void onTimeChanged() {
+    }
 
     /**
      * Called when the carrier PLMN or SPN changes.
      *
      * @param plmn The operator name of the registered network.  May be null if it shouldn't
-     *   be displayed.
-     * @param spn The service provider name.  May be null if it shouldn't be displayed.
+     *             be displayed.
+     * @param spn  The service provider name.  May be null if it shouldn't be displayed.
      */
-    void onRefreshCarrierInfo(CharSequence plmn, CharSequence spn) { }
+    void onRefreshCarrierInfo(CharSequence plmn, CharSequence spn) {
+    }
 
     /**
      * Called when the ringer mode changes.
+     *
      * @param state the current ringer state, as defined in
-     * {@link AudioManager#RINGER_MODE_CHANGED_ACTION}
+     *              {@link AudioManager#RINGER_MODE_CHANGED_ACTION}
      */
-    void onRingerModeChanged(int state) { }
+    void onRingerModeChanged(int state) {
+    }
 
     /**
      * Called when the phone state changes. String will be one of:
@@ -59,52 +63,63 @@ class KeyguardUpdateMonitorCallback {
      * {@link TelephonyManager@EXTRA_STATE_RINGING}
      * {@link TelephonyManager#EXTRA_STATE_OFFHOOK
      */
-    void onPhoneStateChanged(int phoneState) { }
+    void onPhoneStateChanged(int phoneState) {
+    }
 
     /**
      * Called when the visibility of the keyguard changes.
+     *
      * @param showing Indicates if the keyguard is now visible.
      */
-    void onKeyguardVisibilityChanged(boolean showing) { }
+    void onKeyguardVisibilityChanged(boolean showing) {
+    }
 
     /**
      * Called when visibility of lockscreen clock changes, such as when
      * obscured by a widget.
      */
-    void onClockVisibilityChanged() { }
+    void onClockVisibilityChanged() {
+    }
 
     /**
      * Called when the device becomes provisioned
      */
-    void onDeviceProvisioned() { }
+    void onDeviceProvisioned() {
+    }
 
     /**
      * Called when the device policy changes.
      * See {@link DevicePolicyManager#ACTION_DEVICE_POLICY_MANAGER_STATE_CHANGED}
      */
-    void onDevicePolicyManagerStateChanged() { }
+    void onDevicePolicyManagerStateChanged() {
+    }
 
     /**
      * Called when the user changes.
      */
-    void onUserSwitched(int userId) { }
+    void onUserSwitched(int userId) {
+    }
 
     /**
      * Called when the SIM state changes.
+     *
      * @param simState
      */
-    void onSimStateChanged(IccCardConstants.State simState) { }
+    void onSimStateChanged(IccCardConstants.State simState) {
+    }
 
     /**
      * Called when a user is removed.
      */
-    void onUserRemoved(int userId) { }
+    void onUserRemoved(int userId) {
+    }
 
     /**
      * Called when boot completed.
-     *
+     * <p/>
      * Note, this callback will only be received if boot complete occurs after registering with
      * KeyguardUpdateMonitor.
      */
-    void onBootCompleted() { }
+    void onBootCompleted() {
+    }
 }

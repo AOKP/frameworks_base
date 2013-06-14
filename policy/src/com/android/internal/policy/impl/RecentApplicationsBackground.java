@@ -21,7 +21,6 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -74,7 +73,9 @@ public class RecentApplicationsBackground extends LinearLayout {
     @Override
     public void jumpDrawablesToCurrentState() {
         super.jumpDrawablesToCurrentState();
-        if (mBackground != null) mBackground.jumpToCurrentState();
+        if (mBackground != null) {
+            mBackground.jumpToCurrentState();
+        }
     }
 
     @Override
@@ -123,7 +124,7 @@ public class RecentApplicationsBackground extends LinearLayout {
             p.setColor(0x88ffff00);
             canvas.drawRect(background.getBounds(), p);
         }
-        canvas.drawARGB((int)(0.75*0xff), 0, 0, 0);
+        canvas.drawARGB((int) (0.75 * 0xff), 0, 0, 0);
 
         super.draw(canvas);
     }
@@ -140,12 +141,12 @@ public class RecentApplicationsBackground extends LinearLayout {
         super.onDetachedFromWindow();
         mBackground.setCallback(null);
     }
-    
+
     private void getChildBounds(Rect r) {
         r.left = r.top = Integer.MAX_VALUE;
         r.bottom = r.right = Integer.MIN_VALUE;
         final int N = getChildCount();
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             View v = getChildAt(i);
             if (v.getVisibility() == View.VISIBLE) {
                 r.left = Math.min(r.left, v.getLeft());

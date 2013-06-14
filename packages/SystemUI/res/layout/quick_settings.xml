@@ -14,7 +14,7 @@
      limitations under the License.
 -->
 
-<com.android.systemui.statusbar.phone.SettingsPanelView 
+<com.android.systemui.statusbar.phone.SettingsPanelView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -22,10 +22,10 @@
     android:background="@drawable/notification_panel_bg"
     >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
 
         <LinearLayout
@@ -35,31 +35,32 @@
             android:paddingLeft="@*android:dimen/notification_ribbon_padding"
             android:paddingRight="@*android:dimen/notification_ribbon_padding"
             android:orientation="horizontal"
-            android:gravity="center_horizontal" >
+            android:gravity="center_horizontal">
         </LinearLayout>
 
-    <!-- TODO: Put into ScrollView -->
-    <com.android.systemui.statusbar.phone.QuickSettingsScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/close_handle_underlap"
-        android:overScrollMode="ifContentScrolls"
-        >
-        <com.android.systemui.statusbar.phone.QuickSettingsContainerView
-            android:id="@+id/quick_settings_container"
+        <!-- TODO: Put into ScrollView -->
+        <com.android.systemui.statusbar.phone.QuickSettingsScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:columnCount="@integer/quick_settings_num_columns"
-            />
-    </com.android.systemui.statusbar.phone.QuickSettingsScrollView>
+            android:layout_marginBottom="@dimen/close_handle_underlap"
+            android:overScrollMode="ifContentScrolls"
+            >
 
-    <View
-        android:id="@+id/handle"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/close_handle_height"
-        android:background="@drawable/status_bar_close"
-        android:visibility="invisible"
-        />
+            <com.android.systemui.statusbar.phone.QuickSettingsContainerView
+                android:id="@+id/quick_settings_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:animateLayoutChanges="true"
+                android:columnCount="@integer/quick_settings_num_columns"
+                />
+        </com.android.systemui.statusbar.phone.QuickSettingsScrollView>
+
+        <View
+            android:id="@+id/handle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/close_handle_height"
+            android:background="@drawable/status_bar_close"
+            android:visibility="invisible"
+            />
     </LinearLayout>
-</com.android.systemui.statusbar.phone.SettingsPanelView >
+</com.android.systemui.statusbar.phone.SettingsPanelView>

@@ -1,13 +1,10 @@
 
 package com.android.systemui.statusbar.toggles;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.view.View;
 import android.os.PowerManager;
 import android.os.SystemClock;
-
+import android.view.View;
 import com.android.systemui.R;
 
 public class SleepToggle extends BaseToggle {

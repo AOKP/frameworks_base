@@ -1,7 +1,4 @@
-
 package com.android.systemui;
-
-import java.util.ArrayList;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -9,8 +6,9 @@ import android.appwidget.AppWidgetProviderInfo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
 import com.android.systemui.statusbar.WidgetView;
+
+import java.util.ArrayList;
 
 public class WidgetSelectActivity extends Activity {
 
@@ -106,7 +104,8 @@ public class WidgetSelectActivity extends Activity {
         send.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         send.putExtra("summary", getWidgetSummary(appWidgetId));
         sendBroadcast(send);
-        Log.i(TAG, "ACTION_SEND_ID sent ID:"+ appWidgetId + " Label:"+getWidgetSummary(appWidgetId) );
+        Log.i(TAG, "ACTION_SEND_ID sent ID:" + appWidgetId + " Label:" +
+                getWidgetSummary(appWidgetId));
         finish();
 
     }

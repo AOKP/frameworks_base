@@ -39,9 +39,11 @@ public class PanelHolder extends FrameLayout {
 
     public int getPanelIndex(PanelView pv) {
         final int N = getChildCount();
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             final PanelView v = (PanelView) getChildAt(i);
-            if (pv == v) return i;
+            if (pv == v) {
+                return i;
+            }
         }
         return -1;
     }

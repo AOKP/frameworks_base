@@ -35,8 +35,8 @@ public final class TaskDescription {
     private boolean mLoaded;
 
     public TaskDescription(int _taskId, int _persistentTaskId,
-            ResolveInfo _resolveInfo, Intent _intent,
-            String _packageName, CharSequence _description) {
+                           ResolveInfo _resolveInfo, Intent _intent,
+                           String _packageName, CharSequence _description) {
         resolveInfo = _resolveInfo;
         intent = _intent;
         taskId = _taskId;

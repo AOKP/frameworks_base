@@ -16,15 +16,12 @@
 
 package com.android.internal.policy.impl.keyguard;
 
-import com.android.internal.telephony.ITelephony;
-
-import android.content.Context;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
@@ -32,8 +29,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView.OnEditorActionListener;
-
 import com.android.internal.R;
+import com.android.internal.telephony.ITelephony;
 
 /**
  * Displays a PIN pad for unlocking.
@@ -91,7 +88,7 @@ public class KeyguardSimPinView extends KeyguardAbsKeyInputView
                 public void onClick(View v) {
                     CharSequence str = mPasswordEntry.getText();
                     if (str.length() > 0) {
-                        mPasswordEntry.setText(str.subSequence(0, str.length()-1));
+                        mPasswordEntry.setText(str.subSequence(0, str.length() - 1));
                     }
                     doHapticKeyClick();
                 }
@@ -176,7 +173,7 @@ public class KeyguardSimPinView extends KeyguardAbsKeyInputView
     @Override
     protected void verifyPasswordAndUnlock() {
         String entry = mPasswordEntry.getText().toString();
-        
+
         if (entry.length() < 4) {
             // otherwise, display a message to the user, and don't submit.
             mSecurityMessageDisplay.setMessage(R.string.kg_invalid_sim_pin_hint, true);
@@ -203,7 +200,7 @@ public class KeyguardSimPinView extends KeyguardAbsKeyInputView
                                 mCallback.dismiss(true);
                             } else {
                                 mSecurityMessageDisplay.setMessage
-                                    (R.string.kg_password_wrong_pin_code, true);
+                                        (R.string.kg_password_wrong_pin_code, true);
                                 mPasswordEntry.setText("");
                             }
                             mCallback.userActivity(0);

@@ -3,7 +3,6 @@ package com.android.systemui.statusbar.toggles;
 
 import android.content.res.Resources;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public abstract class StatefulToggle extends BaseToggle {

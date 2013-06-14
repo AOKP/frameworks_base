@@ -28,7 +28,7 @@ import android.view.View;
 public class KeyguardSecurityViewHelper {
 
     public static void showBouncer(SecurityMessageDisplay securityMessageDisplay,
-            final View ecaView, Drawable bouncerFrame, int duration) {
+                                   final View ecaView, Drawable bouncerFrame, int duration) {
         if (securityMessageDisplay != null) {
             securityMessageDisplay.showBouncer(duration);
         }
@@ -38,12 +38,14 @@ public class KeyguardSecurityViewHelper {
                 anim.setDuration(duration);
                 anim.addListener(new AnimatorListenerAdapter() {
                     private boolean mCanceled;
+
                     @Override
                     public void onAnimationCancel(Animator animation) {
                         // Fail safe and show the emergency button in onAnimationEnd()
                         mCanceled = true;
                         ecaView.setAlpha(1f);
                     }
+
                     @Override
                     public void onAnimationEnd(Animator animation) {
                         ecaView.setVisibility(mCanceled ? View.VISIBLE : View.INVISIBLE);
@@ -67,7 +69,7 @@ public class KeyguardSecurityViewHelper {
     }
 
     public static void hideBouncer(SecurityMessageDisplay securityMessageDisplay,
-            View ecaView, Drawable bouncerFrame, int duration) {
+                                   View ecaView, Drawable bouncerFrame, int duration) {
         if (securityMessageDisplay != null) {
             securityMessageDisplay.hideBouncer(duration);
         }

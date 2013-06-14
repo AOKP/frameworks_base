@@ -26,6 +26,7 @@
     android:layout_width="match_parent"
     systemui:recentItemLayout="@layout/status_bar_recent_item"
     >
+
     <FrameLayout
         android:id="@+id/recents_bg_protect"
         android:background="@drawable/status_bar_recents_background"
@@ -47,7 +48,8 @@
             android:clipToPadding="false"
             android:clipChildren="false">
 
-            <LinearLayout android:id="@+id/recents_linear_layout"
+            <LinearLayout
+                android:id="@+id/recents_linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -59,7 +61,8 @@
 
     </FrameLayout>
 
-    <include layout="@layout/status_bar_no_recent_apps"
+    <include
+        layout="@layout/status_bar_no_recent_apps"
         android:id="@+id/recents_no_apps"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

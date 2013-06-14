@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.view.View;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.NetworkController.NetworkSignalChangedCallback;
 
@@ -53,7 +52,7 @@ public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCa
 
     @Override
     public void onWifiSignalChanged(boolean enabled, int wifiSignalIconId,
-            String wifiSignalContentDescription, String enabledDesc) {
+                                    String wifiSignalContentDescription, String enabledDesc) {
         Resources r = mContext.getResources();
 
         boolean wifiConnected = enabled && (wifiSignalIconId > 0) && (enabledDesc != null);
@@ -82,8 +81,9 @@ public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCa
 
     @Override
     public void onMobileDataSignalChanged(boolean enabled, int mobileSignalIconId,
-            String mobileSignalContentDescriptionId, int dataTypeIconId,
-            String dataTypeContentDescriptionId, String description) {
+                                          String mobileSignalContentDescriptionId,
+                                          int dataTypeIconId,
+                                          String dataTypeContentDescriptionId, String description) {
     }
 
     @Override

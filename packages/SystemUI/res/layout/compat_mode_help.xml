@@ -23,6 +23,7 @@
     android:layout_width="match_parent"
     android:background="@drawable/compat_mode_help_bg"
     >
+
     <TextView
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -37,6 +38,7 @@
         android:text="@string/compat_mode_help_header"
         android:background="@drawable/compat_mode_help_divider_top"
         />
+
     <ImageView
         android:id="@+id/diagram"
         android:layout_width="wrap_content"
@@ -45,6 +47,7 @@
         android:src="@drawable/compat_mode_help_diagram"
         android:contentDescription="@string/accessibility_compatibility_zoom_example"
         />
+
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -55,6 +58,7 @@
         android:layout_alignLeft="@id/header"
         android:layout_alignParentBottom="true"
         >
+
         <ImageView
             android:id="@+id/icon"
             android:layout_width="wrap_content"
@@ -64,6 +68,7 @@
             android:src="@drawable/compat_mode_help_icon"
             android:contentDescription="@string/accessibility_compatibility_zoom_button"
             />
+
         <TextView
             android:id="@+id/explanation"
             android:layout_width="match_parent"
@@ -78,6 +83,7 @@
             android:text="@string/compat_mode_help_body"
             />
     </RelativeLayout>
+
     <Button
         android:id="@+id/button"
         android:layout_width="208dp"

@@ -16,14 +16,8 @@
 
 package com.android.systemui.statusbar.policy;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -31,17 +25,13 @@ import android.util.Log;
 import android.util.Slog;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-
 import com.android.systemui.R;
 import com.android.systemui.SwipeHelper;
 import com.android.systemui.statusbar.BaseStatusBar;
-
-import java.util.HashMap;
 
 public class IntruderAlertView extends LinearLayout implements SwipeHelper.Callback {
     private static final String TAG = "IntruderAlertView";
@@ -50,10 +40,10 @@ public class IntruderAlertView extends LinearLayout implements SwipeHelper.Callb
     Rect mTmpRect = new Rect();
 
     private SwipeHelper mSwipeHelper;
-    
+
     BaseStatusBar mBar;
     private ViewGroup mContentHolder;
-    
+
     private RemoteViews mIntruderRemoteViews;
     private OnClickListener mOnClickListener;
 
@@ -72,29 +62,31 @@ public class IntruderAlertView extends LinearLayout implements SwipeHelper.Callb
         float densityScale = getResources().getDisplayMetrics().density;
         float pagingTouchSlop = ViewConfiguration.get(getContext()).getScaledPagingTouchSlop();
         mSwipeHelper = new SwipeHelper(SwipeHelper.X, this, densityScale, pagingTouchSlop);
-        
+
         mContentHolder = (ViewGroup) findViewById(R.id.contentHolder);
         if (mIntruderRemoteViews != null) {
             // whoops, we're on already!
             applyIntruderContent(mIntruderRemoteViews, mOnClickListener);
         }
     }
-    
+
     public void setBar(BaseStatusBar bar) {
         mBar = bar;
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (DEBUG) Log.v(TAG, "onInterceptTouchEvent()");
+        if (DEBUG) {
+            Log.v(TAG, "onInterceptTouchEvent()");
+        }
         return mSwipeHelper.onInterceptTouchEvent(ev) ||
-            super.onInterceptTouchEvent(ev);
+                super.onInterceptTouchEvent(ev);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         return mSwipeHelper.onTouchEvent(ev) ||
-            super.onTouchEvent(ev);
+                super.onTouchEvent(ev);
     }
 
     public boolean canChildBeDismissed(View v) {
@@ -150,7 +142,7 @@ public class IntruderAlertView extends LinearLayout implements SwipeHelper.Callb
         }
         mIntruderRemoteViews = intruderView;
         mOnClickListener = listener;
-        if (mContentHolder == null) { 
+        if (mContentHolder == null) {
             // too soon!
             return;
         }
@@ -161,16 +153,17 @@ public class IntruderAlertView extends LinearLayout implements SwipeHelper.Callb
         final View content = intruderView.apply(getContext(), mContentHolder);
         if (listener != null) {
             content.setOnClickListener(listener);
-            
+
             //content.setBackgroundResource(R.drawable.intruder_row_bg);
             Drawable bg = getResources().getDrawable(R.drawable.intruder_row_bg);
             if (bg == null) {
-                Log.e(TAG, String.format("Can't find background drawable id=0x%08x", R.drawable.intruder_row_bg));
+                Log.e(TAG, String.format("Can't find background drawable id=0x%08x",
+                        R.drawable.intruder_row_bg));
             } else {
                 content.setBackgroundDrawable(bg);
             }
         }
         mContentHolder.addView(content);
-        
+
     }
 }

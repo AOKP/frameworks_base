@@ -16,7 +16,6 @@
 
 package com.android.systemui.usb;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -25,8 +24,8 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.hardware.usb.IUsbManager;
-import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbAccessory;
+import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -39,10 +38,8 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-
 import com.android.systemui.R;
 
 public class UsbPermissionActivity extends AlertActivity
@@ -64,10 +61,10 @@ public class UsbPermissionActivity extends AlertActivity
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
 
-       Intent intent = getIntent();
-        mDevice = (UsbDevice)intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-        mAccessory = (UsbAccessory)intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
-        mPendingIntent = (PendingIntent)intent.getParcelableExtra(Intent.EXTRA_INTENT);
+        Intent intent = getIntent();
+        mDevice = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+        mAccessory = (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+        mPendingIntent = (PendingIntent) intent.getParcelableExtra(Intent.EXTRA_INTENT);
         mUid = intent.getIntExtra(Intent.EXTRA_UID, -1);
         mPackageName = intent.getStringExtra("package");
 
@@ -98,18 +95,18 @@ public class UsbPermissionActivity extends AlertActivity
         ap.mNegativeButtonListener = this;
 
         // add "always use" checkbox
-        LayoutInflater inflater = (LayoutInflater)getSystemService(
+        LayoutInflater inflater = (LayoutInflater) getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         ap.mView = inflater.inflate(com.android.internal.R.layout.always_use_checkbox, null);
-        mAlwaysUse = (CheckBox)ap.mView.findViewById(com.android.internal.R.id.alwaysUse);
+        mAlwaysUse = (CheckBox) ap.mView.findViewById(com.android.internal.R.id.alwaysUse);
         if (mDevice == null) {
             mAlwaysUse.setText(R.string.always_use_accessory);
         } else {
             mAlwaysUse.setText(R.string.always_use_device);
         }
         mAlwaysUse.setOnCheckedChangeListener(this);
-        mClearDefaultHint = (TextView)ap.mView.findViewById(
-                                                    com.android.internal.R.id.clearDefaultHint);
+        mClearDefaultHint = (TextView) ap.mView.findViewById(
+                com.android.internal.R.id.clearDefaultHint);
         mClearDefaultHint.setVisibility(View.GONE);
 
         setupAlert();
@@ -166,9 +163,11 @@ public class UsbPermissionActivity extends AlertActivity
     }
 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (mClearDefaultHint == null) return;
+        if (mClearDefaultHint == null) {
+            return;
+        }
 
-        if(isChecked) {
+        if (isChecked) {
             mClearDefaultHint.setVisibility(View.VISIBLE);
         } else {
             mClearDefaultHint.setVisibility(View.GONE);

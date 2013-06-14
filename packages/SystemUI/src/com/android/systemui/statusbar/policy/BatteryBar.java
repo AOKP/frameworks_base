@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
@@ -120,12 +119,13 @@ public class BatteryBar extends RelativeLayout implements Animatable {
             // charger
             mChargerLayout = new LinearLayout(mContext);
 
-            if (vertical)
+            if (vertical) {
                 addView(mChargerLayout, new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT,
                         pixels));
-            else
+            } else {
                 addView(mChargerLayout, new RelativeLayout.LayoutParams(pixels,
                         LayoutParams.MATCH_PARENT));
+            }
 
             mCharger = new View(mContext);
             mChargerLayout.setVisibility(View.GONE);
@@ -161,7 +161,8 @@ public class BatteryBar extends RelativeLayout implements Animatable {
 
             if (Intent.ACTION_BATTERY_CHANGED.equals(action)) {
                 mBatteryLevel = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, 0);
-                mBatteryCharging = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0) == BatteryManager.BATTERY_STATUS_CHARGING;
+                mBatteryCharging = intent.getIntExtra(BatteryManager.EXTRA_STATUS, 0) ==
+                        BatteryManager.BATTERY_STATUS_CHARGING;
                 if (mBatteryCharging && mBatteryLevel < 100) {
                     start();
                 } else {
@@ -218,8 +219,9 @@ public class BatteryBar extends RelativeLayout implements Animatable {
 
     @Override
     public void start() {
-        if (!shouldAnimateCharging)
+        if (!shouldAnimateCharging) {
             return;
+        }
 
         if (vertical) {
             TranslateAnimation a = new TranslateAnimation(getX(), getX(), getHeight(),

@@ -1,16 +1,11 @@
 package com.android.systemui.statusbar.toggles;
 
 import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.PowerManager;
-import android.os.ServiceManager;
-import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
-
 import com.android.systemui.R;
 
 public class RebootToggle extends BaseToggle {

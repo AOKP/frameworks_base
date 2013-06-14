@@ -26,7 +26,6 @@ import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-
 import com.android.internal.R;
 
 import java.util.ArrayList;
@@ -58,7 +57,9 @@ public class KeyguardWidgetCarousel extends KeyguardWidgetPager {
 
     public float getAlphaForPage(int screenCenter, int index, boolean showSidePages) {
         View child = getChildAt(index);
-        if (child == null) return 0f;
+        if (child == null) {
+            return 0f;
+        }
 
         boolean inVisibleRange = index >= getNextPage() - 1 && index <= getNextPage() + 1;
         float scrollProgress = getScrollProgress(screenCenter, child, index);
@@ -94,7 +95,7 @@ public class KeyguardWidgetCarousel extends KeyguardWidgetPager {
                 KeyguardWidgetFrame child = getWidgetPageAt(i);
                 if (child != null) {
                     float outlineAlpha = getOutlineAlphaForPage(screenCenter, i, showSidePages);
-                    float contentAlpha = getAlphaForPage(screenCenter, i,showSidePages);
+                    float contentAlpha = getAlphaForPage(screenCenter, i, showSidePages);
                     child.setBackgroundAlpha(outlineAlpha);
                     child.setContentAlpha(contentAlpha);
                 }
@@ -110,7 +111,7 @@ public class KeyguardWidgetCarousel extends KeyguardWidgetPager {
             KeyguardWidgetFrame child = getWidgetPageAt(i);
             if (inVisibleRange) {
                 if (!Settings.System.getBoolean(getContext().getContentResolver(),
-                            Settings.System.LOCKSCREEN_HIDE_INITIAL_PAGE_HINTS, false)) {
+                        Settings.System.LOCKSCREEN_HIDE_INITIAL_PAGE_HINTS, false)) {
                     child.setBackgroundAlpha(KeyguardWidgetFrame.OUTLINE_ALPHA_MULTIPLIER);
                     child.setContentAlpha(1f);
                 }
@@ -125,22 +126,26 @@ public class KeyguardWidgetCarousel extends KeyguardWidgetPager {
     protected void screenScrolled(int screenCenter) {
         mScreenCenter = screenCenter;
         updatePageAlphaValues(screenCenter);
-        if (isReordering(false)) return;
+        if (isReordering(false)) {
+            return;
+        }
         for (int i = 0; i < getChildCount(); i++) {
             KeyguardWidgetFrame v = getWidgetPageAt(i);
             float scrollProgress = getScrollProgress(screenCenter, v, i);
             float boundedProgress = getBoundedScrollProgress(screenCenter, v, i);
-            if (v == mDragView || v == null) continue;
+            if (v == mDragView || v == null) {
+                continue;
+            }
             v.setCameraDistance(CAMERA_DISTANCE);
 
             if (isOverScrollChild(i, scrollProgress)) {
-                v.setRotationY(- OVERSCROLL_MAX_ROTATION * scrollProgress);
+                v.setRotationY(-OVERSCROLL_MAX_ROTATION * scrollProgress);
                 v.setOverScrollAmount(Math.abs(scrollProgress), scrollProgress < 0);
             } else {
                 int width = v.getMeasuredWidth();
                 float pivotX = (width / 2f) + boundedProgress * (width / 2f);
                 float pivotY = v.getMeasuredHeight() / 2;
-                float rotationY = - mAdjacentPagesAngle * boundedProgress;
+                float rotationY = -mAdjacentPagesAngle * boundedProgress;
                 v.setPivotX(pivotX);
                 v.setPivotY(pivotY);
                 v.setRotationY(rotationY);
@@ -179,7 +184,8 @@ public class KeyguardWidgetCarousel extends KeyguardWidgetPager {
             outlineAlpha = PropertyValuesHolder.ofFloat("backgroundAlpha",
                     KeyguardWidgetFrame.OUTLINE_ALPHA_MULTIPLIER);
             rotationY = PropertyValuesHolder.ofFloat("rotationY", 0f);
-            ObjectAnimator a = ObjectAnimator.ofPropertyValuesHolder(child, alpha, outlineAlpha, rotationY);
+            ObjectAnimator a =
+                    ObjectAnimator.ofPropertyValuesHolder(child, alpha, outlineAlpha, rotationY);
             child.setVisibility(VISIBLE);
             if (!inVisibleRange) {
                 a.setInterpolator(mSlowFadeInterpolator);
@@ -198,7 +204,7 @@ public class KeyguardWidgetCarousel extends KeyguardWidgetPager {
     private void getTransformForPage(int screenCenter, int index, float[] transform) {
         View child = getChildAt(index);
         float boundedProgress = getBoundedScrollProgress(screenCenter, child, index);
-        float rotationY = - mAdjacentPagesAngle * boundedProgress;
+        float rotationY = -mAdjacentPagesAngle * boundedProgress;
         int width = child.getMeasuredWidth();
         float pivotX = (width / 2f) + boundedProgress * (width / 2f);
         float pivotY = child.getMeasuredHeight() / 2;
@@ -211,6 +217,7 @@ public class KeyguardWidgetCarousel extends KeyguardWidgetPager {
     Interpolator mFastFadeInterpolator = new Interpolator() {
         Interpolator mInternal = new DecelerateInterpolator(1.5f);
         float mFactor = 2.5f;
+
         @Override
         public float getInterpolation(float input) {
             return mInternal.getInterpolation(Math.min(mFactor * input, 1f));
@@ -220,6 +227,7 @@ public class KeyguardWidgetCarousel extends KeyguardWidgetPager {
     Interpolator mSlowFadeInterpolator = new Interpolator() {
         Interpolator mInternal = new AccelerateInterpolator(1.5f);
         float mFactor = 1.3f;
+
         @Override
         public float getInterpolation(float input) {
             input -= (1 - 1 / mFactor);

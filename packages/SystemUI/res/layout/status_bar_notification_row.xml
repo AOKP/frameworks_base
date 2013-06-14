@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
     >
 
     <View
@@ -24,7 +24,8 @@
         android:paddingLeft="8dp"
         />
 
-    <com.android.systemui.statusbar.LatestItemView android:id="@+id/content"
+    <com.android.systemui.statusbar.LatestItemView
+        android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/notification_divider_height"
@@ -33,9 +34,10 @@
         android:clickable="true"
         >
 
-        <com.android.internal.widget.SizeAdaptiveLayout android:id="@+id/adaptive"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content" />
+        <com.android.internal.widget.SizeAdaptiveLayout
+            android:id="@+id/adaptive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </com.android.systemui.statusbar.LatestItemView>
 

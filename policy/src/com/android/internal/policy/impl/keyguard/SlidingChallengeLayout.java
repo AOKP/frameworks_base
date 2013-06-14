@@ -16,18 +16,14 @@
 
 package com.android.internal.policy.impl.keyguard;
 
-import com.android.internal.R;
-
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -42,6 +38,7 @@ import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
+import com.android.internal.R;
 
 /**
  * This layout handles interaction with the sliding security challenge views
@@ -118,7 +115,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
 
     private int mDragHandleEdgeSlop;
     private int mChallengeBottomBound; // Number of pixels from the top of the challenge view
-                                       // that should remain on-screen
+    // that should remain on-screen
 
     private int mTouchSlop;
     private int mTouchSlopSquare;
@@ -137,17 +134,17 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
 
     static final Property<SlidingChallengeLayout, Float> HANDLE_ALPHA =
             new FloatProperty<SlidingChallengeLayout>("handleAlpha") {
-        @Override
-        public void setValue(SlidingChallengeLayout view, float value) {
-            view.mHandleAlpha = value;
-            view.invalidate();
-        }
+                @Override
+                public void setValue(SlidingChallengeLayout view, float value) {
+                    view.mHandleAlpha = value;
+                    view.invalidate();
+                }
 
-        @Override
-        public Float get(SlidingChallengeLayout view) {
-            return view.mHandleAlpha;
-        }
-    };
+                @Override
+                public Float get(SlidingChallengeLayout view) {
+                    return view.mHandleAlpha;
+                }
+            };
 
     // True if at least one layout pass has happened since the view was attached.
     private boolean mHasLayout;
@@ -165,7 +162,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
         }
     };
 
-    private final Runnable mEndScrollRunnable = new Runnable () {
+    private final Runnable mEndScrollRunnable = new Runnable() {
         public void run() {
             completeChallengeScroll();
         }
@@ -193,9 +190,9 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
     public interface OnChallengeScrolledListener {
         /**
          * The scroll state itself changed.
-         *
+         * <p/>
          * <p>scrollState will be one of the following:</p>
-         *
+         * <p/>
          * <ul>
          * <li><code>SCROLL_STATE_IDLE</code> - The challenge area is stationary.</li>
          * <li><code>SCROLL_STATE_DRAGGING</code> - The user is actively dragging
@@ -203,7 +200,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
          * <li><code>SCROLL_STATE_SETTLING</code> - The challenge area is animating
          * into place.</li>
          * </ul>
-         *
+         * <p/>
          * <p>Do not perform expensive operations (e.g. layout)
          * while the scroll state is not <code>SCROLL_STATE_IDLE</code>.</p>
          *
@@ -213,7 +210,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
 
         /**
          * The precise position of the challenge area has changed.
-         *
+         * <p/>
          * <p>NOTE: It is NOT safe to modify layout or call any View methods that may
          * result in a requestLayout anywhere in your view hierarchy as a result of this call.
          * It may be called during drawing.</p>
@@ -221,8 +218,8 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
          * @param scrollPosition New relative position of the challenge area.
          *                       1.f = fully visible/ready to be interacted with.
          *                       0.f = fully invisible/inaccessible to the user.
-         * @param challengeTop Position of the top edge of the challenge view in px in the
-         *                     SlidingChallengeLayout's coordinate system.
+         * @param challengeTop   Position of the top edge of the challenge view in px in the
+         *                       SlidingChallengeLayout's coordinate system.
          */
         public void onScrollPositionChanged(float scrollPosition, int challengeTop);
     }
@@ -380,7 +377,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
     /**
      * Animate the bottom edge of the challenge view to the given position.
      *
-     * @param y desired final position for the bottom edge of the challenge view in px
+     * @param y        desired final position for the bottom edge of the challenge view in px
      * @param velocity velocity in
      */
     void animateChallengeTo(int y, int velocity) {
@@ -478,7 +475,9 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
 
     @Override
     public void showBouncer() {
-        if (mIsBouncing) return;
+        if (mIsBouncing) {
+            return;
+        }
         mWasChallengeShowing = mChallengeShowing;
         mIsBouncing = true;
         showChallenge(true);
@@ -504,8 +503,12 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
 
     @Override
     public void hideBouncer() {
-        if (!mIsBouncing) return;
-        if (!mWasChallengeShowing) showChallenge(false);
+        if (!mIsBouncing) {
+            return;
+        }
+        if (!mWasChallengeShowing) {
+            showChallenge(false);
+        }
         mIsBouncing = false;
 
         if (mScrimView != null) {
@@ -569,9 +572,9 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
                     final float x = ev.getX(i);
                     final float y = ev.getY(i);
                     if (!mIsBouncing && mActivePointerId == INVALID_POINTER
-                                && (crossedDragHandle(x, y, mGestureStartY)
-                                || (isInChallengeView(x, y) &&
-                                        mScrollState == SCROLL_STATE_SETTLING))) {
+                            && (crossedDragHandle(x, y, mGestureStartY)
+                            || (isInChallengeView(x, y) &&
+                            mScrollState == SCROLL_STATE_SETTLING))) {
                         mActivePointerId = ev.getPointerId(i);
                         mGestureStartX = x;
                         mGestureStartY = y;
@@ -688,7 +691,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
      * The lifecycle of touch events is subtle and it's very easy to do something
      * that will cause bugs that will be nasty to track when overriding this method.
      * Normally one should always override onInterceptTouchEvent instead.
-     *
+     * <p/>
      * To put it another way, don't try this at home.
      */
     @Override
@@ -737,6 +740,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
     private int getDragHandleSizeAbove() {
         return isChallengeShowing() ? mDragHandleOpenAbove : mDragHandleClosedAbove;
     }
+
     private int getDragHandleSizeBelow() {
         return isChallengeShowing() ? mDragHandleOpenBelow : mDragHandleClosedBelow;
     }
@@ -823,8 +827,8 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
                             "There may only be one child with layout_isChallenge=\"true\"");
                 }
                 if (!(child instanceof KeyguardSecurityContainer)) {
-                            throw new IllegalArgumentException(
-                                    "Challenge must be a KeyguardSecurityContainer");
+                    throw new IllegalArgumentException(
+                            "Challenge must be a KeyguardSecurityContainer");
                 }
                 mChallengeView = (KeyguardSecurityContainer) child;
                 if (mChallengeView != oldChallengeView) {
@@ -840,7 +844,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
                 if (mExpandChallengeView != null) {
                     throw new IllegalStateException(
                             "There may only be one child with layout_childType"
-                            + "=\"expandChallengeHandle\"");
+                                    + "=\"expandChallengeHandle\"");
                 }
                 mExpandChallengeView = child;
                 if (mExpandChallengeView != oldExpandChallengeView) {
@@ -886,7 +890,9 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
                 continue;
             }
             // Don't measure the challenge view twice!
-            if (child == mChallengeView) continue;
+            if (child == mChallengeView) {
+                continue;
+            }
 
             // Measure children. Widget frame measures special, so that we can ignore
             // insets for the IME.
@@ -923,7 +929,9 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
 
-            if (child.getVisibility() == GONE) continue;
+            if (child.getVisibility() == GONE) {
+                continue;
+            }
 
             final LayoutParams lp = (LayoutParams) child.getLayoutParams();
 
@@ -1027,6 +1035,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
                 public void onAnimationStart(Animator animation) {
                     onFadeStart(show);
                 }
+
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     onFadeEnd(show);
@@ -1038,7 +1047,9 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
     }
 
     private int getMaxChallengeBottom() {
-        if (mChallengeView == null) return 0;
+        if (mChallengeView == null) {
+            return 0;
+        }
         final int layoutBottom = getLayoutBottom();
         final int challengeHeight = mChallengeView.getMeasuredHeight();
 
@@ -1075,7 +1086,9 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
     }
 
     public int getMaxChallengeTop() {
-        if (mChallengeView == null) return 0;
+        if (mChallengeView == null) {
+            return 0;
+        }
 
         final int layoutBottom = getLayoutBottom();
         final int challengeHeight = mChallengeView.getMeasuredHeight();
@@ -1136,13 +1149,16 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
      * The bottom edge of mChallengeView; essentially, where the sliding challenge 'is'.
      */
     private int getChallengeBottom() {
-        if (mChallengeView == null) return 0;
+        if (mChallengeView == null) {
+            return 0;
+        }
 
         return mChallengeView.getBottom();
     }
 
     /**
      * Show or hide the challenge view, animating it if necessary.
+     *
      * @param show true to show, false to hide
      */
     public void showChallenge(boolean show) {
@@ -1187,7 +1203,7 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
     protected ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams p) {
         return p instanceof LayoutParams ? new LayoutParams((LayoutParams) p) :
                 p instanceof MarginLayoutParams ? new LayoutParams((MarginLayoutParams) p) :
-                new LayoutParams(p);
+                        new LayoutParams(p);
     }
 
     @Override
@@ -1252,11 +1268,11 @@ public class SlidingChallengeLayout extends ViewGroup implements ChallengeLayout
         if (Settings.System.getBoolean(mContext.getContentResolver(),
                 Settings.System.NAV_HIDE_ENABLE, false)) {
             int adjustment = Settings.System.getInt(
-                        mContext.getContentResolver(),
-                        Settings.System.NAVIGATION_BAR_HEIGHT,
-                        mContext.getResources()
-                                .getDimensionPixelSize(
-                                        com.android.internal.R.dimen.navigation_bar_height));
+                    mContext.getContentResolver(),
+                    Settings.System.NAVIGATION_BAR_HEIGHT,
+                    mContext.getResources()
+                            .getDimensionPixelSize(
+                                    com.android.internal.R.dimen.navigation_bar_height));
             padding += adjustment;
         }
 

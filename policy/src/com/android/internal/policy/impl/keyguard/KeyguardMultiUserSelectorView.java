@@ -26,7 +26,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-
 import com.android.internal.R;
 
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class KeyguardMultiUserSelectorView extends FrameLayout implements View.O
         super(context, attrs, defStyle);
     }
 
-    protected void onFinishInflate () {
+    protected void onFinishInflate() {
         mUsersGrid = (ViewGroup) findViewById(R.id.keyguard_users_grid);
         mUsersGrid.removeAllViews();
         setClipChildren(false);
@@ -77,7 +76,7 @@ public class KeyguardMultiUserSelectorView extends FrameLayout implements View.O
         ArrayList<UserInfo> users = new ArrayList<UserInfo>(userList);
         Collections.sort(users, mOrderAddedComparator);
 
-        for (UserInfo user: users) {
+        for (UserInfo user : users) {
             KeyguardMultiUserAvatar uv = createAndAddUser(user);
             if (user.id == activeUser.id) {
                 mActiveUserAvatar = uv;
@@ -104,15 +103,14 @@ public class KeyguardMultiUserSelectorView extends FrameLayout implements View.O
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
-        if(event.getActionMasked() != MotionEvent.ACTION_CANCEL && mCallback != null) {
+        if (event.getActionMasked() != MotionEvent.ACTION_CANCEL && mCallback != null) {
             mCallback.userActivity();
         }
         return false;
     }
 
-    private void setAllClickable(boolean clickable)
-    {
-        for(int i = 0; i < mUsersGrid.getChildCount(); i++) {
+    private void setAllClickable(boolean clickable) {
+        for (int i = 0; i < mUsersGrid.getChildCount(); i++) {
             View v = mUsersGrid.getChildAt(i);
             v.setClickable(clickable);
             v.setPressed(false);
@@ -121,7 +119,9 @@ public class KeyguardMultiUserSelectorView extends FrameLayout implements View.O
 
     @Override
     public void onClick(View v) {
-        if (!(v instanceof KeyguardMultiUserAvatar)) return;
+        if (!(v instanceof KeyguardMultiUserAvatar)) {
+            return;
+        }
         final KeyguardMultiUserAvatar avatar = (KeyguardMultiUserAvatar) v;
         if (avatar.isClickable()) { // catch race conditions
             if (mActiveUserAvatar == avatar) {

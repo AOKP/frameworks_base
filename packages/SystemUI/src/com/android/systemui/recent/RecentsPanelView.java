@@ -61,14 +61,12 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-
+import com.android.internal.util.MemInfoReader;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.phone.PhoneStatusBar;
 import com.android.systemui.statusbar.tablet.StatusBarPanel;
 import com.android.systemui.statusbar.tablet.TabletStatusBar;
-
-import com.android.internal.util.MemInfoReader;
 
 import java.util.ArrayList;
 
@@ -118,17 +116,23 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
     public static interface RecentsScrollView {
         public int numItemsInOneScreenful();
+
         public void setAdapter(TaskDescriptionAdapter adapter);
+
         public void setCallback(RecentsCallback callback);
+
         public void setMinSwipeAlpha(float minAlpha);
+
         public View findViewForTask(int persistentTaskId);
     }
 
     private final class OnLongClickDelegate implements View.OnLongClickListener {
         View mOtherView;
+
         OnLongClickDelegate(View other) {
             mOtherView = other;
         }
+
         public boolean onLongClick(View v) {
             return mOtherView.performLongClick();
         }
@@ -306,11 +310,11 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     }
 
     public int numItemsInOneScreenful() {
-        if (mRecentsContainer instanceof RecentsScrollView){
+        if (mRecentsContainer instanceof RecentsScrollView) {
             RecentsScrollView scrollView
                     = (RecentsScrollView) mRecentsContainer;
             return scrollView.numItemsInOneScreenful();
-        }  else {
+        } else {
             throw new IllegalArgumentException("missing Recents[Horizontal]ScrollView");
         }
     }
@@ -339,7 +343,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     }
 
     public void show(boolean show, ArrayList<TaskDescription> recentTaskDescriptions,
-            boolean firstScreenful, boolean animateIconOfFirstTask) {
+                     boolean firstScreenful, boolean animateIconOfFirstTask) {
         mAnimateIconOfFirstTask = animateIconOfFirstTask;
         mWaitingForWindowAnimation = animateIconOfFirstTask;
         if (show) {
@@ -414,10 +418,10 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     public void onAnimationEnd(Animator animation) {
         if (mShowing) {
             final LayoutTransition transitioner = new LayoutTransition();
-            ((ViewGroup)mRecentsContainer).setLayoutTransition(transitioner);
+            ((ViewGroup) mRecentsContainer).setLayoutTransition(transitioner);
             createCustomAnimations(transitioner);
         } else {
-            ((ViewGroup)mRecentsContainer).setLayoutTransition(null);
+            ((ViewGroup) mRecentsContainer).setLayoutTransition(null);
         }
     }
 
@@ -470,7 +474,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         mRecentsContainer = (ViewGroup) findViewById(R.id.recents_container);
         mStatusBarTouchProxy = (StatusBarTouchProxy) findViewById(R.id.status_bar_touch_proxy);
         mListAdapter = new TaskDescriptionAdapter(mContext);
-        if (mRecentsContainer instanceof RecentsScrollView){
+        if (mRecentsContainer instanceof RecentsScrollView) {
             RecentsScrollView scrollView
                     = (RecentsScrollView) mRecentsContainer;
             scrollView.setAdapter(mListAdapter);
@@ -505,9 +509,9 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     }
 
     public void setMinSwipeAlpha(float minAlpha) {
-        if (mRecentsContainer instanceof RecentsScrollView){
+        if (mRecentsContainer instanceof RecentsScrollView) {
             RecentsScrollView scrollView
-                = (RecentsScrollView) mRecentsContainer;
+                    = (RecentsScrollView) mRecentsContainer;
             scrollView.setMinSwipeAlpha(minAlpha);
         }
     }
@@ -541,8 +545,8 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             // scale the image to fill the full width of the ImageView. do this only if
             // we haven't set a bitmap before, or if the bitmap size has changed
             if (h.thumbnailViewImageBitmap == null ||
-                h.thumbnailViewImageBitmap.getWidth() != thumbnail.getWidth() ||
-                h.thumbnailViewImageBitmap.getHeight() != thumbnail.getHeight()) {
+                    h.thumbnailViewImageBitmap.getWidth() != thumbnail.getWidth() ||
+                    h.thumbnailViewImageBitmap.getHeight() != thumbnail.getHeight()) {
                 if (mFitThumbnailToXY) {
                     h.thumbnailViewImage.setScaleType(ScaleType.FIT_XY);
                 } else {
@@ -573,10 +577,10 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                             R.id.recents_linear_layout);
                 }
                 // Look for a view showing this thumbnail, to update.
-                for (int i=0; i < container.getChildCount(); i++) {
+                for (int i = 0; i < container.getChildCount(); i++) {
                     View v = container.getChildAt(i);
                     if (v.getTag() instanceof ViewHolder) {
-                        ViewHolder h = (ViewHolder)v.getTag();
+                        ViewHolder h = (ViewHolder) v.getTag();
                         if (!h.loadedThumbnailAndIcon && h.taskDescription == td) {
                             // only fade in the thumbnail if recents is already visible-- we
                             // show it immediately otherwise
@@ -606,7 +610,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             final ViewHolder holder = mItemToAnimateInWhenWindowAnimationIsFinished;
             final TimeInterpolator cubic = new DecelerateInterpolator(1.5f);
             for (View v :
-                new View[] { holder.iconView, holder.labelView, holder.calloutLine }) {
+                    new View[]{holder.iconView, holder.labelView, holder.calloutLine}) {
                 if (v != null) {
                     v.animate().translationX(0).translationY(0).alpha(1f).setStartDelay(startDelay)
                             .setDuration(duration).setInterpolator(cubic);
@@ -684,18 +688,18 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         String recentAppsAccessibilityDescription;
         if (numRecentApps == 0) {
             recentAppsAccessibilityDescription =
-                getResources().getString(R.string.status_bar_no_recent_apps);
+                    getResources().getString(R.string.status_bar_no_recent_apps);
         } else {
             recentAppsAccessibilityDescription = getResources().getQuantityString(
-                R.plurals.status_bar_accessibility_recent_apps, numRecentApps, numRecentApps);
+                    R.plurals.status_bar_accessibility_recent_apps, numRecentApps, numRecentApps);
         }
         setContentDescription(recentAppsAccessibilityDescription);
     }
 
     public boolean simulateClick(int persistentTaskId) {
-        if (mRecentsContainer instanceof RecentsScrollView){
+        if (mRecentsContainer instanceof RecentsScrollView) {
             RecentsScrollView scrollView
-                = (RecentsScrollView) mRecentsContainer;
+                    = (RecentsScrollView) mRecentsContainer;
             View v = scrollView.findViewForTask(persistentTaskId);
             if (v != null) {
                 handleOnClick(v);
@@ -706,7 +710,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     }
 
     public void handleOnClick(View view) {
-        ViewHolder holder = (ViewHolder)view.getTag();
+        ViewHolder holder = (ViewHolder) view.getTag();
         TaskDescription ad = holder.taskDescription;
         final Context context = view.getContext();
         Bitmap bm = holder.thumbnailViewImageBitmap;
@@ -734,7 +738,9 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             intent.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY
                     | Intent.FLAG_ACTIVITY_TASK_ON_HOME
                     | Intent.FLAG_ACTIVITY_NEW_TASK);
-            if (DEBUG) Log.v(TAG, "Starting activity " + intent);
+            if (DEBUG) {
+                Log.v(TAG, "Starting activity " + intent);
+            }
             context.startActivityAsUser(intent, opts,
                     new UserHandle(UserHandle.USER_CURRENT));
         }
@@ -754,7 +760,9 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                     " tag=" + view.getTag());
             return;
         }
-        if (DEBUG) Log.v(TAG, "Jettison " + ad.getLabel());
+        if (DEBUG) {
+            Log.v(TAG, "Jettison " + ad.getLabel());
+        }
         mRecentTaskDescriptions.remove(ad);
         mRecentTasksLoader.remove(ad);
 
@@ -772,7 +780,8 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
             // Accessibility feedback
             setContentDescription(
-                    mContext.getString(R.string.accessibility_recents_item_dismissed, ad.getLabel()));
+                    mContext.getString(R.string.accessibility_recents_item_dismissed,
+                            ad.getLabel()));
             sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
             setContentDescription(null);
         }
@@ -799,7 +808,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             final View selectedView, final View anchorView, final View thumbnailView) {
         thumbnailView.setSelected(true);
         final PopupMenu popup =
-            new PopupMenu(mContext, anchorView == null ? selectedView : anchorView);
+                new PopupMenu(mContext, anchorView == null ? selectedView : anchorView);
         mPopup = popup;
         popup.getMenuInflater().inflate(R.menu.recent_popup_menu, popup.getMenu());
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -830,13 +839,14 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         popup.show();
     }
 
-    private void killAllRecentApps(){
-        if(!mRecentTaskDescriptions.isEmpty()){
-            for(TaskDescription ad : mRecentTaskDescriptions){
+    private void killAllRecentApps() {
+        if (!mRecentTaskDescriptions.isEmpty()) {
+            for (TaskDescription ad : mRecentTaskDescriptions) {
                 mAm.removeTask(ad.persistentTaskId, ActivityManager.REMOVE_TASK_KILL_PROCESS);
                 // Accessibility feedback
                 setContentDescription(
-                        mContext.getString(R.string.accessibility_recents_item_dismissed, ad.getLabel()));
+                        mContext.getString(R.string.accessibility_recents_item_dismissed,
+                                ad.getLabel()));
                 sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_SELECTED);
                 setContentDescription(null);
             }
@@ -849,8 +859,9 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     private final Runnable updateRamBarTask = new Runnable() {
         @Override
         public void run() {
-            if (!ramBarEnabled)
+            if (!ramBarEnabled) {
                 return;
+            }
 
             mAm.getMemoryInfo(mMemInfo);
             long secServerMem = mMemInfo.secondaryServerThreshold;
@@ -859,7 +870,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
                     secServerMem;
             long totalMem = mMemInfoReader.getTotalSize();
 
-            String sizeStr = Formatter.formatShortFileSize(mContext, totalMem-availMem);
+            String sizeStr = Formatter.formatShortFileSize(mContext, totalMem - availMem);
             mForegroundProcessText.setText(getResources().getString(
                     R.string.service_foreground_processes, sizeStr));
             sizeStr = Formatter.formatShortFileSize(mContext, availMem);

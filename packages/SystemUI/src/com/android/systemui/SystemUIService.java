@@ -16,25 +16,18 @@
 
 package com.android.systemui;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
-
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.os.Binder;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.os.ServiceManager;
 import android.util.Slog;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
 import android.view.accessibility.AccessibilityManager;
 
-import android.widget.FrameLayout;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 
 public class SystemUIService extends Service {
     static final String TAG = "SystemUIService";
@@ -42,11 +35,11 @@ public class SystemUIService extends Service {
     /**
      * The class names of the stuff to start.
      */
-    final Object[] SERVICES = new Object[] {
+    final Object[] SERVICES = new Object[]{
             0, // system bar or status bar, filled in below.
             com.android.systemui.power.PowerUI.class,
             com.android.systemui.media.RingtonePlayer.class,
-        };
+    };
 
     /**
      * Hold a reference on the stuff we start.
@@ -55,14 +48,14 @@ public class SystemUIService extends Service {
 
     private Class chooseClass(Object o) {
         if (o instanceof Integer) {
-            final String cl = getString((Integer)o);
+            final String cl = getString((Integer) o);
             try {
                 return getClassLoader().loadClass(cl);
             } catch (ClassNotFoundException ex) {
                 throw new RuntimeException(ex);
             }
         } else if (o instanceof Class) {
-            return (Class)o;
+            return (Class) o;
         } else {
             throw new RuntimeException("Unknown system ui service: " + o);
         }
@@ -86,11 +79,11 @@ public class SystemUIService extends Service {
 
         final int N = SERVICES.length;
         mServices = new SystemUI[N];
-        for (int i=0; i<N; i++) {
+        for (int i = 0; i < N; i++) {
             Class cl = chooseClass(SERVICES[i]);
             Slog.d(TAG, "loading: " + cl);
             try {
-                mServices[i] = (SystemUI)cl.newInstance();
+                mServices[i] = (SystemUI) cl.newInstance();
             } catch (IllegalAccessException ex) {
                 throw new RuntimeException(ex);
             } catch (InstantiationException ex) {
@@ -105,7 +98,7 @@ public class SystemUIService extends Service {
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
-        for (SystemUI ui: mServices) {
+        for (SystemUI ui : mServices) {
             ui.onConfigurationChanged(newConfig);
         }
     }
@@ -121,13 +114,13 @@ public class SystemUIService extends Service {
     @Override
     protected void dump(FileDescriptor fd, PrintWriter pw, String[] args) {
         if (args == null || args.length == 0) {
-            for (SystemUI ui: mServices) {
+            for (SystemUI ui : mServices) {
                 pw.println("dumping service: " + ui.getClass().getName());
                 ui.dump(fd, pw, args);
             }
         } else {
             String svc = args[0];
-            for (SystemUI ui: mServices) {
+            for (SystemUI ui : mServices) {
                 String name = ui.getClass().getName();
                 if (name.endsWith(svc)) {
                     ui.dump(fd, pw, args);

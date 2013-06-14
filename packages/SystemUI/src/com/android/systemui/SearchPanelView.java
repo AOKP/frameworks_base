@@ -18,43 +18,18 @@ package com.android.systemui;
 
 import android.animation.LayoutTransition;
 import android.app.ActivityOptions;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.KeyguardManager;
 import android.app.SearchManager;
-import android.app.ActivityManager;
-import android.app.ActivityManager.RunningAppProcessInfo;
-import android.app.ActivityManagerNative;
-import android.app.IActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
-import android.content.res.Configuration;
-import android.content.Context;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ActivityInfo;
-import android.content.ServiceConnection;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.ContentObserver;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.StateListDrawable;
-import android.media.AudioManager;
-import android.media.ToneGenerator;
-import android.os.Vibrator;
 import android.os.Handler;
-import android.os.IBinder;
-import android.os.SystemClock;
-import android.os.PowerManager;
-import android.os.Process;
-import android.os.ServiceManager;
 import android.os.Message;
-import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserHandle;
@@ -63,8 +38,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Slog;
-import android.util.Log;
-import android.view.HapticFeedbackConstants;
 import android.view.IWindowManager;
 import android.view.MotionEvent;
 import android.view.View;
@@ -73,27 +46,22 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.internal.util.aokp.NavRingHelpers;
 import com.android.internal.widget.multiwaveview.GlowPadView;
 import com.android.internal.widget.multiwaveview.GlowPadView.OnTriggerListener;
 import com.android.internal.widget.multiwaveview.TargetDrawable;
-import com.android.systemui.R;
+import com.android.systemui.aokp.AwesomeAction;
 import com.android.systemui.recent.StatusBarTouchProxy;
 import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.PhoneStatusBar;
 import com.android.systemui.statusbar.tablet.StatusBarPanel;
 import com.android.systemui.statusbar.tablet.TabletStatusBar;
-import com.android.systemui.aokp.AwesomeAction;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.net.URISyntaxException;
+
+import static com.android.internal.util.aokp.AwesomeConstants.ASSIST_ICON_METADATA_NAME;
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
 
 public class SearchPanelView extends FrameLayout implements
         StatusBarPanel, ActivityOptions.OnAnimationStartedListener {
@@ -163,7 +131,9 @@ public class SearchPanelView extends FrameLayout implements
     }
 
     private void startAssistActivity() {
-        if (!mBar.isDeviceProvisioned()) return;
+        if (!mBar.isDeviceProvisioned()) {
+            return;
+        }
 
         maybeSkipKeyguard();
         // Close Recent Apps if needed
@@ -187,7 +157,9 @@ public class SearchPanelView extends FrameLayout implements
             // Otherwise, keyguard isn't showing so launch it from here.
             Intent intent = ((SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE))
                     .getAssistIntent(mContext, UserHandle.USER_CURRENT);
-            if (intent == null) return;
+            if (intent == null) {
+                return;
+            }
 
             try {
                 ActivityOptions opts = ActivityOptions.makeCustomAnimation(mContext,
@@ -215,7 +187,7 @@ public class SearchPanelView extends FrameLayout implements
     class GlowPadTriggerListener implements GlowPadView.OnTriggerListener {
         boolean mWaitingForLaunch;
 
-       final Runnable SetLongPress = new Runnable () {
+        final Runnable SetLongPress = new Runnable() {
             public void run() {
                 if (!mSearchPanelLock) {
                     mSearchPanelLock = true;
@@ -225,7 +197,7 @@ public class SearchPanelView extends FrameLayout implements
                     }
                     AwesomeAction.launchAction(mContext, longList.get(mTarget));
                     mBar.hideSearchPanel();
-                 }
+                }
             }
         };
 
@@ -241,7 +213,8 @@ public class SearchPanelView extends FrameLayout implements
                 mHandler.removeCallbacks(SetLongPress);
                 mLongPress = false;
             } else {
-                if (mBoolLongPress && !TextUtils.isEmpty(longList.get(target)) && !longList.get(target).equals(AwesomeConstant.ACTION_NULL.value())) {
+                if (mBoolLongPress && !TextUtils.isEmpty(longList.get(target)) &&
+                        !longList.get(target).equals(AwesomeConstant.ACTION_NULL.value())) {
                     mTarget = target;
                     mHandler.postDelayed(SetLongPress, ViewConfiguration.getLongPressTimeout());
                 }
@@ -274,6 +247,7 @@ public class SearchPanelView extends FrameLayout implements
         public void onFinishFinalAnimation() {
         }
     }
+
     final GlowPadTriggerListener mGlowPadViewListener = new GlowPadTriggerListener();
 
     @Override
@@ -303,11 +277,11 @@ public class SearchPanelView extends FrameLayout implements
 
     private boolean shouldUnlock(String action) {
         if (action.equals(AwesomeConstant.ACTION_SILENT_VIB.value()) ||
-            action.equals(AwesomeConstant.ACTION_VIB.value()) ||
-            action.equals(AwesomeConstant.ACTION_POWER.value()) ||
-            action.equals(AwesomeConstant.ACTION_TORCH.value()) ||
-            action.equals(AwesomeConstant.ACTION_NOTIFICATIONS.value()) ||
-            action.equals(AwesomeConstant.ACTION_SILENT.value())) {
+                action.equals(AwesomeConstant.ACTION_VIB.value()) ||
+                action.equals(AwesomeConstant.ACTION_POWER.value()) ||
+                action.equals(AwesomeConstant.ACTION_TORCH.value()) ||
+                action.equals(AwesomeConstant.ACTION_NOTIFICATIONS.value()) ||
+                action.equals(AwesomeConstant.ACTION_SILENT.value())) {
             return false;
         }
 
@@ -324,9 +298,12 @@ public class SearchPanelView extends FrameLayout implements
         mLongPress = false;
         mSearchPanelLock = false;
 
-        String tgtCenter = Settings.System.getString(mContext.getContentResolver(), Settings.System.SYSTEMUI_NAVRING[0]);
+        String tgtCenter = Settings.System
+                .getString(mContext.getContentResolver(), Settings.System.SYSTEMUI_NAVRING[0]);
         if (TextUtils.isEmpty(tgtCenter)) {
-            Settings.System.putString(mContext.getContentResolver(), Settings.System.SYSTEMUI_NAVRING[0], AwesomeConstant.ACTION_ASSIST.value());
+            Settings.System
+                    .putString(mContext.getContentResolver(), Settings.System.SYSTEMUI_NAVRING[0],
+                            AwesomeConstant.ACTION_ASSIST.value());
         }
 
         // Custom Targets
@@ -336,48 +313,49 @@ public class SearchPanelView extends FrameLayout implements
         int middleBlanks = 0;
 
         switch (mCurrentUIMode) {
-            case 0 : // Phone Mode
+            case 0: // Phone Mode
                 if (isScreenPortrait()) { // NavRing on Bottom
-                    startPosOffset =  1;
-                    endPosOffset =  (mNavRingAmount) + 1;
-                } else if (mLefty) { // either lefty or... (Ring is actually on right side of screen)
-                        startPosOffset =  1 - (mNavRingAmount % 2);
-                        middleBlanks = mNavRingAmount + 2;
-                        endPosOffset = 0;
+                    startPosOffset = 1;
+                    endPosOffset = (mNavRingAmount) + 1;
+                } else if (mLefty) { // either lefty or... (Ring is actually on right side of
+                // screen)
+                    startPosOffset = 1 - (mNavRingAmount % 2);
+                    middleBlanks = mNavRingAmount + 2;
+                    endPosOffset = 0;
 
                 } else { // righty... (Ring actually on left side of tablet)
-                    startPosOffset =  (Math.min(1,mNavRingAmount / 2)) + 2;
-                    endPosOffset =  startPosOffset - 1;
+                    startPosOffset = (Math.min(1, mNavRingAmount / 2)) + 2;
+                    endPosOffset = startPosOffset - 1;
                 }
                 break;
-            case 1 : // Tablet Mode
+            case 1: // Tablet Mode
                 if (mLefty) { // either lefty or... (Ring is actually on right side of screen)
-                    startPosOffset =  (mNavRingAmount) + 1;
-                    endPosOffset =  (mNavRingAmount *2) + 1;
+                    startPosOffset = (mNavRingAmount) + 1;
+                    endPosOffset = (mNavRingAmount * 2) + 1;
                 } else { // righty... (Ring actually on left side of tablet)
-                    startPosOffset =  1;
+                    startPosOffset = 1;
                     endPosOffset = (mNavRingAmount * 3) + 1;
                 }
                 break;
-            case 2 : // Phablet Mode - Search Ring stays at bottom
-                startPosOffset =  1;
-                endPosOffset =  (mNavRingAmount) + 1;
+            case 2: // Phablet Mode - Search Ring stays at bottom
+                startPosOffset = 1;
+                endPosOffset = (mNavRingAmount) + 1;
                 break;
-         } 
+        }
 
         intentList.clear();
         longList.clear();
 
-         int middleStart = mNavRingAmount;
-         int tqty = middleStart;
-         int middleFinish = 0;
+        int middleStart = mNavRingAmount;
+        int tqty = middleStart;
+        int middleFinish = 0;
 
-         if (middleBlanks > 0) {
-             middleStart = (tqty/2) + (tqty%2);
-             middleFinish = (tqty/2);
-         }
+        if (middleBlanks > 0) {
+            middleStart = (tqty / 2) + (tqty % 2);
+            middleFinish = (tqty / 2);
+        }
 
-         // Add Initial Place Holder Targets
+        // Add Initial Place Holder Targets
         for (int i = 0; i < startPosOffset; i++) {
             storedDraw.add(NavRingHelpers.getTargetDrawable(mContext, null));
             intentList.add(AwesomeConstant.ACTION_NULL.value());
@@ -431,7 +409,9 @@ public class SearchPanelView extends FrameLayout implements
             if (component == null || !mGlowPadView.replaceTargetDrawablesIfPresent(component,
                     ASSIST_ICON_METADATA_NAME,
                     com.android.internal.R.drawable.ic_action_assist_generic)) {
-                if (DEBUG) Slog.v(TAG, "Couldn't grab icon for component " + component);
+                if (DEBUG) {
+                    Slog.v(TAG, "Couldn't grab icon for component " + component);
+                }
             }
         }
     }
@@ -462,6 +442,7 @@ public class SearchPanelView extends FrameLayout implements
             return false;
         }
     };
+
     private void vibrate() {
         Context context = getContext();
         if (Settings.System.getIntForUser(context.getContentResolver(),
@@ -611,12 +592,15 @@ public class SearchPanelView extends FrameLayout implements
                     Settings.System.SYSTEMUI_NAVRING_LONG_ENABLE), false, this);
 
             for (int i = 0; i < 5; i++) {
-	            resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.SYSTEMUI_NAVRING[i]), false, this);
                 resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.SYSTEMUI_NAVRING_LONG[i]), false, this);
+                        Settings.System.getUriFor(Settings.System.SYSTEMUI_NAVRING[i]), false,
+                        this);
                 resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.SYSTEMUI_NAVRING_ICON[i]), false, this);
+                        Settings.System.getUriFor(Settings.System.SYSTEMUI_NAVRING_LONG[i]), false,
+                        this);
+                resolver.registerContentObserver(
+                        Settings.System.getUriFor(Settings.System.SYSTEMUI_NAVRING_ICON[i]), false,
+                        this);
             }
         }
 
@@ -645,7 +629,7 @@ public class SearchPanelView extends FrameLayout implements
                 Settings.System.SYSTEMUI_NAVRING_LONG_ENABLE, false));
 
         mNavRingAmount = Settings.System.getInt(mContext.getContentResolver(),
-                         Settings.System.SYSTEMUI_NAVRING_AMOUNT, 1);
+                Settings.System.SYSTEMUI_NAVRING_AMOUNT, 1);
         // Not using getBoolean here, because CURRENT_UI_MODE can be 0,1 or 2
         mCurrentUIMode = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.CURRENT_UI_MODE, 0);

@@ -21,6 +21,7 @@ public interface KeyguardSecurityCallback {
 
     /**
      * Dismiss the given security screen.
+     *
      * @param securityVerified true if the user correctly entered credentials for the given screen.
      */
     void dismiss(boolean securityVerified);
@@ -28,12 +29,14 @@ public interface KeyguardSecurityCallback {
     /**
      * Manually report user activity to keep the device awake. If timeout is 0,
      * uses user-defined timeout.
+     *
      * @param timeout
      */
     void userActivity(long timeout);
 
     /**
      * Checks if keyguard is in "verify credentials" mode.
+     *
      * @return true if user has been asked to verify security.
      */
     boolean isVerifyUnlockOnly();
@@ -50,6 +53,7 @@ public interface KeyguardSecurityCallback {
 
     /**
      * Gets the number of attempts thus far as reported by {@link #reportFailedUnlockAttempt()}
+     *
      * @return number of failed attempts
      */
     int getFailedAttempts();
@@ -61,6 +65,7 @@ public interface KeyguardSecurityCallback {
 
     /**
      * Sets an action to perform after the user successfully enters their credentials.
+     *
      * @param action
      */
     void setOnDismissAction(OnDismissAction action);

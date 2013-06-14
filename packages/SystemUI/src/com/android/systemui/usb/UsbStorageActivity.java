@@ -16,7 +16,6 @@
 
 package com.android.systemui.usb;
 
-import com.android.internal.R;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
@@ -24,31 +23,29 @@ import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.storage.IMountService;
-import android.os.storage.StorageManager;
-import android.os.storage.StorageEventListener;
 import android.os.RemoteException;
 import android.os.ServiceManager;
-import android.widget.ImageView;
+import android.os.storage.IMountService;
+import android.os.storage.StorageEventListener;
+import android.os.storage.StorageManager;
+import android.util.Log;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.util.Log;
+import com.android.internal.R;
 
 import java.util.List;
 
@@ -79,7 +76,9 @@ public class UsbStorageActivity extends Activity
     // thread for working with the storage services, which can be slow
     private Handler mAsyncStorageHandler;
 
-    /** Used to detect when the USB cable is unplugged, so we can call finish() */
+    /**
+     * Used to detect when the USB cable is unplugged, so we can call finish()
+     */
     private BroadcastReceiver mUsbStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -96,7 +95,7 @@ public class UsbStorageActivity extends Activity
             switchDisplay(on);
         }
     };
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,7 +106,7 @@ public class UsbStorageActivity extends Activity
                 Log.w(TAG, "Failed to get StorageManager");
             }
         }
-        
+
         mUIHandler = new Handler();
 
         HandlerThread thr = new HandlerThread("SystemUI UsbStorageActivity");
@@ -186,7 +185,7 @@ public class UsbStorageActivity extends Activity
     @Override
     protected void onPause() {
         super.onPause();
-        
+
         unregisterReceiver(mUsbStateReceiver);
         if (mStorageManager == null && mStorageListener != null) {
             mStorageManager.unregisterListener(mStorageListener);
@@ -212,24 +211,25 @@ public class UsbStorageActivity extends Activity
     @Override
     public Dialog onCreateDialog(int id, Bundle args) {
         switch (id) {
-        case DLG_CONFIRM_KILL_STORAGE_USERS:
-            return new AlertDialog.Builder(this)
-                    .setTitle(R.string.dlg_confirm_kill_storage_users_title)
-                    .setPositiveButton(R.string.dlg_ok, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            switchUsbMassStorage(true);
-                        }})
-                    .setNegativeButton(R.string.cancel, null)
-                    .setMessage(R.string.dlg_confirm_kill_storage_users_text)
-                    .setOnCancelListener(this)
-                    .create();
-        case DLG_ERROR_SHARING:
-            return new AlertDialog.Builder(this)
-                    .setTitle(R.string.dlg_error_title)
-                    .setNeutralButton(R.string.dlg_ok, null)
-                    .setMessage(R.string.usb_storage_error_message)
-                    .setOnCancelListener(this)
-                    .create();
+            case DLG_CONFIRM_KILL_STORAGE_USERS:
+                return new AlertDialog.Builder(this)
+                        .setTitle(R.string.dlg_confirm_kill_storage_users_title)
+                        .setPositiveButton(R.string.dlg_ok, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                switchUsbMassStorage(true);
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .setMessage(R.string.dlg_confirm_kill_storage_users_text)
+                        .setOnCancelListener(this)
+                        .create();
+            case DLG_ERROR_SHARING:
+                return new AlertDialog.Builder(this)
+                        .setTitle(R.string.dlg_error_title)
+                        .setNeutralButton(R.string.dlg_ok, null)
+                        .setMessage(R.string.usb_storage_error_message)
+                        .setOnCancelListener(this)
+                        .create();
         }
         return null;
     }
@@ -258,7 +258,7 @@ public class UsbStorageActivity extends Activity
                 // will be hidden once USB mass storage kicks in (or fails)
             }
         });
-        
+
         // things to do elsewhere
         mAsyncStorageHandler.post(new Runnable() {
             @Override
@@ -295,7 +295,7 @@ public class UsbStorageActivity extends Activity
                 showDialog = true;
             } else {
                 // List of applications on sdcard.
-                ActivityManager am = (ActivityManager)getSystemService(Context.ACTIVITY_SERVICE);
+                ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                 List<ApplicationInfo> infoList = am.getRunningExternalApplications();
                 if (infoList != null && infoList.size() > 0) {
                     showDialog = true;
@@ -309,17 +309,21 @@ public class UsbStorageActivity extends Activity
             // Display dialog to user
             scheduleShowDialog(DLG_CONFIRM_KILL_STORAGE_USERS);
         } else {
-            if (localLOGV) Log.i(TAG, "Enabling UMS");
+            if (localLOGV) {
+                Log.i(TAG, "Enabling UMS");
+            }
             switchUsbMassStorage(true);
         }
     }
 
     public void onClick(View v) {
         if (v == mMountButton) {
-           // Check for list of storage users and display dialog if needed.
+            // Check for list of storage users and display dialog if needed.
             checkStorageUsers();
         } else if (v == mUnmountButton) {
-            if (localLOGV) Log.i(TAG, "Disabling UMS");
+            if (localLOGV) {
+                Log.i(TAG, "Disabling UMS");
+            }
             switchUsbMassStorage(false);
         }
     }

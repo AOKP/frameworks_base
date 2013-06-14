@@ -31,7 +31,6 @@ import android.os.ServiceManager;
 import android.os.UserHandle;
 import android.util.Log;
 import android.widget.CheckBox;
-
 import com.android.internal.app.ResolverActivity;
 import com.android.systemui.R;
 
@@ -55,13 +54,14 @@ public class UsbResolverActivity extends ResolverActivity {
             finish();
             return;
         }
-        Intent target = (Intent)targetParcelable;
+        Intent target = (Intent) targetParcelable;
         ArrayList<ResolveInfo> rList = intent.getParcelableArrayListExtra(EXTRA_RESOLVE_INFOS);
-        CharSequence title = getResources().getText(com.android.internal.R.string.chooseUsbActivity);
+        CharSequence title =
+                getResources().getText(com.android.internal.R.string.chooseUsbActivity);
         super.onCreate(savedInstanceState, target, title, null, rList,
-                true /* Set alwaysUseOption to true to enable "always use this app" checkbox. */ );
+                true /* Set alwaysUseOption to true to enable "always use this app" checkbox. */);
 
-        CheckBox alwaysUse = (CheckBox)findViewById(com.android.internal.R.id.alwaysUse);
+        CheckBox alwaysUse = (CheckBox) findViewById(com.android.internal.R.id.alwaysUse);
         if (alwaysUse != null) {
             if (mDevice == null) {
                 alwaysUse.setText(R.string.always_use_accessory);
@@ -70,11 +70,11 @@ public class UsbResolverActivity extends ResolverActivity {
             }
         }
 
-        mDevice = (UsbDevice)target.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+        mDevice = (UsbDevice) target.getParcelableExtra(UsbManager.EXTRA_DEVICE);
         if (mDevice != null) {
             mDisconnectedReceiver = new UsbDisconnectedReceiver(this, mDevice);
         } else {
-            mAccessory = (UsbAccessory)target.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+            mAccessory = (UsbAccessory) target.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
             if (mAccessory == null) {
                 Log.e(TAG, "no device or accessory");
                 finish();

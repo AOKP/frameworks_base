@@ -1,8 +1,5 @@
 package com.android.systemui.statusbar;
 
-import com.android.systemui.R;
-import com.android.systemui.WidgetSelectActivity;
-
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -10,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.PixelFormat;
 import android.os.Handler;
@@ -19,17 +15,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.android.systemui.R;
+import com.android.systemui.WidgetSelectActivity;
 
 public class WidgetView extends LinearLayout {
 
@@ -86,18 +84,18 @@ public class WidgetView extends LinearLayout {
                     WindowManager.LayoutParams.WRAP_CONTENT,
                     WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                            | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                            | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                     PixelFormat.TRANSLUCENT);
             params.gravity = Gravity.BOTTOM;
             params.setTitle("Widgets");
-            if (mWindowManager != null && mAdapter !=null){
+            if (mWindowManager != null && mAdapter != null) {
                 showing = true;
                 mWindowManager.addView(mPopupView, params);
                 mAdapter.onShow();
                 PlayInAnim();
             } else {
-                Log.e(TAG,"WTF - ToggleWidget when no pager or window manager exist?");
+                Log.e(TAG, "WTF - ToggleWidget when no pager or window manager exist?");
             }
         }
     }
@@ -113,7 +111,8 @@ public class WidgetView extends LinearLayout {
 
     public Animation PlayInAnim() {
         if (widgetView != null) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.slide_in_up);
+            Animation animation =
+                    AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.slide_in_up);
             animation.setStartOffset(0);
             widgetView.startAnimation(animation);
             return animation;
@@ -123,7 +122,8 @@ public class WidgetView extends LinearLayout {
 
     public Animation PlayOutAnim() {
         if (widgetView != null) {
-            Animation animation = AnimationUtils.loadAnimation(mContext, com.android.internal.R.anim.slide_out_down);
+            Animation animation = AnimationUtils
+                    .loadAnimation(mContext, com.android.internal.R.anim.slide_out_down);
             animation.setStartOffset(0);
             widgetView.startAnimation(animation);
             return animation;
@@ -142,7 +142,7 @@ public class WidgetView extends LinearLayout {
 
         int dp = mAdapter.getHeight(mWidgetPager.getCurrentItem());
         float px = dp * getResources().getDisplayMetrics().density;
-        mWidgetPager.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,(int) px));
+        mWidgetPager.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, (int) px));
 
         mPopupView.setOnTouchListener(new View.OnTouchListener() {
 
@@ -156,7 +156,7 @@ public class WidgetView extends LinearLayout {
             }
         });
 
-        final Runnable SetMoving = new Runnable () {
+        final Runnable SetMoving = new Runnable() {
             public void run() {
                 mMoving = true;
                 mDowntime = System.currentTimeMillis();
@@ -177,11 +177,13 @@ public class WidgetView extends LinearLayout {
                     if (mMoving) {
                         float diff = event.getY() - mFirstMoveY;
                         int oldheight = mWidgetPager.getHeight();
-                        int newheight = oldheight + (int) - diff; // this is pixels
-                        if (System.currentTimeMillis() - mDowntime > 150) { // slow down the move/updates
+                        int newheight = oldheight + (int) -diff; // this is pixels
+                        if (System.currentTimeMillis() - mDowntime >
+                                150) { // slow down the move/updates
                             mWidgetPager.setLayoutParams(
                                     new LayoutParams(LayoutParams.MATCH_PARENT, newheight));
-                            newheight = (int) (newheight / getResources().getDisplayMetrics().density);
+                            newheight =
+                                    (int) (newheight / getResources().getDisplayMetrics().density);
                             mAdapter.setSavedHeight(mCurrentWidgetPage, newheight);
                             //mFirstMoveY = event.getY(); // reset the diff
                             mDowntime = System.currentTimeMillis();
@@ -232,12 +234,13 @@ public class WidgetView extends LinearLayout {
         SettingsObserver(Handler handler) {
             super(handler);
         }
+
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(
-                Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_WIDGETS),
-                false,
-                this);
+                    Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_WIDGETS),
+                    false,
+                    this);
             updateSettings();
         }
 
@@ -264,9 +267,12 @@ public class WidgetView extends LinearLayout {
     public class WidgetReceiver extends BroadcastReceiver {
 
         public static final String ACTION_ALLOCATE_ID = "com.android.systemui.ACTION_ALLOCATE_ID";
-        public static final String ACTION_DEALLOCATE_ID = "com.android.systemui.ACTION_DEALLOCATE_ID";
-        public static final String ACTION_TOGGLE_WIDGETS = "com.android.systemui.ACTION_TOGGLE_WIDGETS";
-        public static final String ACTION_DELETE_WIDGETS = "com.android.systemui.ACTION_DELETE_WIDGETS";
+        public static final String ACTION_DEALLOCATE_ID =
+                "com.android.systemui.ACTION_DEALLOCATE_ID";
+        public static final String ACTION_TOGGLE_WIDGETS =
+                "com.android.systemui.ACTION_TOGGLE_WIDGETS";
+        public static final String ACTION_DELETE_WIDGETS =
+                "com.android.systemui.ACTION_DELETE_WIDGETS";
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -303,7 +309,7 @@ public class WidgetView extends LinearLayout {
             } else if (Intent.ACTION_CONFIGURATION_CHANGED.equals(action)) {
                 // detect inverted ui mode change
                 int uiInvertedMode =
-                    mContext.getResources().getConfiguration().uiInvertedMode;
+                        mContext.getResources().getConfiguration().uiInvertedMode;
                 if (uiInvertedMode != mCurrUiInvertedMode) {
                     mCurrUiInvertedMode = uiInvertedMode;
                     createWidgetView();

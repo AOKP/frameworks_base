@@ -21,7 +21,7 @@
     android:background="@drawable/system_bar_background"
     android:layout_height="@*android:dimen/system_bar_height"
     >
-    
+
     <LinearLayout
         android:id="@+id/bar_contents"
         android:layout_width="match_parent"
@@ -31,22 +31,26 @@
         >
         <!-- navigation controls -->
         <LinearLayout
-               android:id="@+id/navigationArea"
-               android:layout_width="0dp"
-               android:layout_height="match_parent"
-               android:layout_weight="45" >
-               <include layout="@layout/navigation_bar"
-                    android:id="@+id/navigationBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-         </LinearLayout>
+            android:id="@+id/navigationArea"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="45">
+
+            <include
+                layout="@layout/navigation_bar"
+                android:id="@+id/navigationBar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
 
         <!-- fake space bar zone -->
         <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="0dp"
-            android:layout_weight="5" >
-            <com.android.systemui.statusbar.policy.EventHole android:id="@+id/fake_space_bar"
+            android:layout_weight="5">
+
+            <com.android.systemui.statusbar.policy.EventHole
+                android:id="@+id/fake_space_bar"
                 android:layout_height="match_parent"
                 android:layout_width="0dp"
                 android:paddingLeft="8dip"
@@ -59,14 +63,18 @@
             android:id="@+id/notificationHolder"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="50" >
-            <include layout="@layout/system_bar_notification_area"
+            android:layout_weight="50">
+
+            <include
+                layout="@layout/system_bar_notification_area"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="1dp" />
-        </RelativeLayout>>
+        </RelativeLayout>
+        >
     </LinearLayout>
+
     <FrameLayout
         android:id="@+id/bar_shadow_holder"
         android:layout_width="match_parent"

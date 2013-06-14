@@ -20,19 +20,18 @@ import android.content.Context;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.inputmethod.InputMethodInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.view.inputmethod.InputMethodSubtype;
-import android.view.View;
 import android.widget.ImageView;
-
 import com.android.systemui.R;
 
 import java.util.List;
 
 public class InputMethodButton extends ImageView {
 
-    private static final String  TAG = "StatusBar/InputMethodButton";
+    private static final String TAG = "StatusBar/InputMethodButton";
     private static final boolean DEBUG = false;
 
     // These values are defined in Settings application.
@@ -72,13 +71,17 @@ public class InputMethodButton extends ImageView {
     private boolean needsToShowIMEButtonWhenVisibilityAuto() {
         List<InputMethodInfo> imis = mImm.getEnabledInputMethodList();
         final int N = imis.size();
-        if (N > 2) return true;
-        if (N < 1) return false;
+        if (N > 2) {
+            return true;
+        }
+        if (N < 1) {
+            return false;
+        }
         int nonAuxCount = 0;
         int auxCount = 0;
         InputMethodSubtype nonAuxSubtype = null;
         InputMethodSubtype auxSubtype = null;
-        for(int i = 0; i < N; ++i) {
+        for (int i = 0; i < N; ++i) {
             final InputMethodInfo imi = imis.get(i);
             final List<InputMethodSubtype> subtypes = mImm.getEnabledInputMethodSubtypeList(
                     imi, true);
@@ -103,8 +106,8 @@ public class InputMethodButton extends ImageView {
         } else if (nonAuxCount == 1 && auxCount == 1) {
             if (nonAuxSubtype != null && auxSubtype != null
                     && (nonAuxSubtype.getLocale().equals(auxSubtype.getLocale())
-                            || auxSubtype.overridesImplicitlyEnabledSubtype()
-                            || nonAuxSubtype.overridesImplicitlyEnabledSubtype())
+                    || auxSubtype.overridesImplicitlyEnabledSubtype()
+                    || nonAuxSubtype.overridesImplicitlyEnabledSubtype())
                     && nonAuxSubtype.containsExtraValueKey(TAG_TRY_SUPPRESSING_IME_SWITCHER)) {
                 return false;
             }
@@ -114,7 +117,9 @@ public class InputMethodButton extends ImageView {
     }
 
     private boolean needsToShowIMEButton() {
-        if (!mShowButton || mScreenLocked) return false;
+        if (!mShowButton || mScreenLocked) {
+            return false;
+        }
 
         if (mHardKeyboardAvailable) {
             return true;

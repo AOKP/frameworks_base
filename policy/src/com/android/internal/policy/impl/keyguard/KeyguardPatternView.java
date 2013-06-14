@@ -34,10 +34,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-
+import com.android.internal.R;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockPatternView;
-import com.android.internal.R;
 
 import java.io.IOException;
 import java.util.List;
@@ -72,6 +71,7 @@ public class KeyguardPatternView extends LinearLayout implements KeyguardSecurit
      * Keeps track of the last time we poked the wake lock during dispatching of the touch event.
      * Initialized to something guaranteed to make us poke the wakelock when the user starts
      * drawing the pattern.
+     *
      * @see #dispatchTouchEvent(android.view.MotionEvent)
      */
     private long mLastPokeTime = -UNLOCK_PATTERN_WAKE_INTERVAL_MS;
@@ -151,19 +151,27 @@ public class KeyguardPatternView extends LinearLayout implements KeyguardSecurit
     }
 
     private void updateFooter(FooterMode mode) {
-        if (mForgotPatternButton == null) return; // no ECA? no footer
+        if (mForgotPatternButton == null) {
+            return; // no ECA? no footer
+        }
 
         switch (mode) {
             case Normal:
-                if (DEBUG) Log.d(TAG, "mode normal");
+                if (DEBUG) {
+                    Log.d(TAG, "mode normal");
+                }
                 mForgotPatternButton.setVisibility(View.GONE);
                 break;
             case ForgotLockPattern:
-                if (DEBUG) Log.d(TAG, "mode ForgotLockPattern");
+                if (DEBUG) {
+                    Log.d(TAG, "mode ForgotLockPattern");
+                }
                 mForgotPatternButton.setVisibility(View.VISIBLE);
                 break;
             case VerifyUnlocked:
-                if (DEBUG) Log.d(TAG, "mode VerifyUnlocked");
+                if (DEBUG) {
+                    Log.d(TAG, "mode VerifyUnlocked");
+                }
                 mForgotPatternButton.setVisibility(View.GONE);
         }
     }
@@ -223,9 +231,13 @@ public class KeyguardPatternView extends LinearLayout implements KeyguardSecurit
     public void showUsabilityHint() {
     }
 
-    /** TODO: hook this up */
+    /**
+     * TODO: hook this up
+     */
     public void cleanUp() {
-        if (DEBUG) Log.v(TAG, "Cleanup() called on " + this);
+        if (DEBUG) {
+            Log.v(TAG, "Cleanup() called on " + this);
+        }
         mLockPatternUtils = null;
         mLockPatternView.setOnPatternListener(null);
     }

@@ -16,39 +16,21 @@
 
 package com.android.systemui.statusbar.phone;
 
-import java.util.List;
-
 import android.app.ActivityManager;
-import android.app.KeyguardManager;
 import android.app.StatusBarManager;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
-import android.database.ContentObserver;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Broadcaster;
-import android.os.Handler;
-import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Slog;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
-
 import com.android.internal.util.aokp.BackgroundAlphaColorDrawable;
 import com.android.systemui.R;
-import com.android.systemui.statusbar.NavigationBarView;
 
 public class PhoneStatusBarView extends PanelBar {
     private static final String TAG = "PhoneStatusBarView";
@@ -73,13 +55,14 @@ public class PhoneStatusBarView extends PanelBar {
         mScrimColor = res.getColor(R.color.notification_panel_scrim_color);
         mSettingsPanelDragzoneMin = res.getDimension(R.dimen.settings_panel_dragzone_min);
         try {
-            mSettingsPanelDragzoneFrac = res.getFraction(R.dimen.settings_panel_dragzone_fraction, 1, 1);
+            mSettingsPanelDragzoneFrac =
+                    res.getFraction(R.dimen.settings_panel_dragzone_fraction, 1, 1);
         } catch (NotFoundException ex) {
             mSettingsPanelDragzoneFrac = 0f;
         }
         mFullWidthNotifications = mSettingsPanelDragzoneFrac <= 0f;
         Drawable bg = mContext.getResources().getDrawable(R.drawable.status_bar_background);
-        if(bg instanceof ColorDrawable) {
+        if (bg instanceof ColorDrawable) {
             setBackground(new BackgroundAlphaColorDrawable(((ColorDrawable) bg).getColor()));
         }
 
@@ -108,18 +91,18 @@ public class PhoneStatusBarView extends PanelBar {
         super.addPanel(pv);
         if (pv.getId() == R.id.notification_panel) {
             mNotificationPanel = pv;
-        } else if (pv.getId() == R.id.settings_panel){
+        } else if (pv.getId() == R.id.settings_panel) {
             mSettingsPanel = pv;
         }
         pv.setRubberbandingEnabled(!mFullWidthNotifications);
     }
-   
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mBar.onBarViewDetached();
     }
- 
+
     @Override
     public boolean panelsEnabled() {
         return ((mBar.mDisabled & StatusBarManager.DISABLE_EXPAND) == 0);
@@ -146,12 +129,12 @@ public class PhoneStatusBarView extends PanelBar {
 
         if (mFullWidthNotifications) {
             // No double swiping. If either panel is open, nothing else can be pulled down.
-            return ((mSettingsPanel == null ? 0 : mSettingsPanel.getExpandedHeight()) 
-                        + mNotificationPanel.getExpandedHeight() > 0) 
-                    ? null 
+            return ((mSettingsPanel == null ? 0 : mSettingsPanel.getExpandedHeight())
+                    + mNotificationPanel.getExpandedHeight() > 0)
+                    ? null
                     : mNotificationPanel;
         }
-        if(mToggleStyle != 0) {
+        if (mToggleStyle != 0) {
             return mNotificationPanel;
         }
 
@@ -164,11 +147,13 @@ public class PhoneStatusBarView extends PanelBar {
 
         if (DEBUG) {
             Slog.v(TAG, String.format(
-                "w=%.1f frac=%.3f region=%.1f min=%.1f x=%.1f w-x=%.1f",
-                w, mSettingsPanelDragzoneFrac, region, mSettingsPanelDragzoneMin, x, (w-x)));
+                    "w=%.1f frac=%.3f region=%.1f min=%.1f x=%.1f w-x=%.1f",
+                    w, mSettingsPanelDragzoneFrac, region, mSettingsPanelDragzoneMin, x, (w - x)));
         }
 
-        if (region < mSettingsPanelDragzoneMin) region = mSettingsPanelDragzoneMin;
+        if (region < mSettingsPanelDragzoneMin) {
+            region = mSettingsPanelDragzoneMin;
+        }
 
         return (w - x < region) ? mSettingsPanel : mNotificationPanel;
     }
@@ -239,9 +224,11 @@ public class PhoneStatusBarView extends PanelBar {
                     mBar.mStatusBarWindow.setBackgroundColor(0);
                 } else {
                     // woo, special effects
-                    final float k = (float)(1f-0.5f*(1f-Math.cos(3.14159f * Math.pow(1f-frac, 2f))));
+                    final float k = (float) (1f -
+                            0.5f * (1f - Math.cos(3.14159f * Math.pow(1f - frac, 2f))));
                     // attenuate background color alpha by k
-                    final int color = (int) ((mScrimColor >>> 24) * k) << 24 | (mScrimColor & 0xFFFFFF);
+                    final int color =
+                            (int) ((mScrimColor >>> 24) * k) << 24 | (mScrimColor & 0xFFFFFF);
                     mBar.mStatusBarWindow.setBackgroundColor(color);
                 }
             }
@@ -252,9 +239,12 @@ public class PhoneStatusBarView extends PanelBar {
         final int H = mBar.getStatusBarHeight();
         final float ph = panel.getExpandedHeight() + panel.getPaddingBottom();
         float alpha = 1f;
-        if (ph < 2*H) {
-            if (ph < H) alpha = 0f;
-            else alpha = (ph - H) / H;
+        if (ph < 2 * H) {
+            if (ph < H) {
+                alpha = 0f;
+            } else {
+                alpha = (ph - H) / H;
+            }
             alpha = alpha * alpha; // get there faster
         }
         if (panel.getAlpha() != alpha) {
@@ -265,7 +255,7 @@ public class PhoneStatusBarView extends PanelBar {
     }
 
     private void updateBackgroundAlpha(float ex) {
-        if(mFadingPanel != null || ex > 0) {
+        if (mFadingPanel != null || ex > 0) {
             mBar.mTransparencyManager.setTempDisableStatusbarState(true);
         } else {
             mBar.mTransparencyManager.setTempDisableStatusbarState(false);

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public class NfcToggle extends StatefulToggle {

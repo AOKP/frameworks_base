@@ -28,7 +28,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.LinearLayout;
-
 import com.android.internal.R;
 
 /**
@@ -72,7 +71,7 @@ public class KeyguardGlowStripView extends LinearLayout {
 
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         int availableWidth = w - getPaddingLeft() - getPaddingRight();
-        mHorizontalDotGap = (availableWidth - mDotSize * mNumDots) /  (mNumDots - 1);
+        mHorizontalDotGap = (availableWidth - mDotSize * mNumDots) / (mNumDots - 1);
         mDotStripTop = getPaddingTop();
         invalidate();
     }
@@ -81,7 +80,9 @@ public class KeyguardGlowStripView extends LinearLayout {
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
 
-        if (!mDrawDots) return;
+        if (!mDrawDots) {
+            return;
+        }
 
         int xOffset = getPaddingLeft();
         mDotDrawable.setBounds(0, 0, mDotSize, mDotSize);

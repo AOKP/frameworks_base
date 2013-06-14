@@ -19,7 +19,6 @@ package com.android.systemui.statusbar;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-
 import com.android.internal.statusbar.IStatusBar;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.internal.statusbar.StatusBarIconList;
@@ -34,28 +33,28 @@ import com.android.internal.statusbar.StatusBarNotification;
  */
 public class CommandQueue extends IStatusBar.Stub {
     private static final int INDEX_MASK = 0xffff;
-    private static final int MSG_SHIFT  = 16;
-    private static final int MSG_MASK   = 0xffff << MSG_SHIFT;
+    private static final int MSG_SHIFT = 16;
+    private static final int MSG_MASK = 0xffff << MSG_SHIFT;
 
-    private static final int OP_SET_ICON    = 1;
+    private static final int OP_SET_ICON = 1;
     private static final int OP_REMOVE_ICON = 2;
 
-    private static final int MSG_ICON                       = 1 << MSG_SHIFT;
-    private static final int MSG_ADD_NOTIFICATION           = 2 << MSG_SHIFT;
-    private static final int MSG_UPDATE_NOTIFICATION        = 3 << MSG_SHIFT;
-    private static final int MSG_REMOVE_NOTIFICATION        = 4 << MSG_SHIFT;
-    private static final int MSG_DISABLE                    = 5 << MSG_SHIFT;
-    private static final int MSG_EXPAND_NOTIFICATIONS       = 6 << MSG_SHIFT;
-    private static final int MSG_COLLAPSE_PANELS            = 7 << MSG_SHIFT;
-    private static final int MSG_EXPAND_SETTINGS            = 8 << MSG_SHIFT;
-    private static final int MSG_SET_SYSTEMUI_VISIBILITY    = 9 << MSG_SHIFT;
-    private static final int MSG_TOP_APP_WINDOW_CHANGED     = 10 << MSG_SHIFT;
-    private static final int MSG_SHOW_IME_BUTTON            = 11 << MSG_SHIFT;
-    private static final int MSG_SET_HARD_KEYBOARD_STATUS   = 12 << MSG_SHIFT;
-    private static final int MSG_TOGGLE_RECENT_APPS         = 13 << MSG_SHIFT;
-    private static final int MSG_PRELOAD_RECENT_APPS        = 14 << MSG_SHIFT;
+    private static final int MSG_ICON = 1 << MSG_SHIFT;
+    private static final int MSG_ADD_NOTIFICATION = 2 << MSG_SHIFT;
+    private static final int MSG_UPDATE_NOTIFICATION = 3 << MSG_SHIFT;
+    private static final int MSG_REMOVE_NOTIFICATION = 4 << MSG_SHIFT;
+    private static final int MSG_DISABLE = 5 << MSG_SHIFT;
+    private static final int MSG_EXPAND_NOTIFICATIONS = 6 << MSG_SHIFT;
+    private static final int MSG_COLLAPSE_PANELS = 7 << MSG_SHIFT;
+    private static final int MSG_EXPAND_SETTINGS = 8 << MSG_SHIFT;
+    private static final int MSG_SET_SYSTEMUI_VISIBILITY = 9 << MSG_SHIFT;
+    private static final int MSG_TOP_APP_WINDOW_CHANGED = 10 << MSG_SHIFT;
+    private static final int MSG_SHOW_IME_BUTTON = 11 << MSG_SHIFT;
+    private static final int MSG_SET_HARD_KEYBOARD_STATUS = 12 << MSG_SHIFT;
+    private static final int MSG_TOGGLE_RECENT_APPS = 13 << MSG_SHIFT;
+    private static final int MSG_PRELOAD_RECENT_APPS = 14 << MSG_SHIFT;
     private static final int MSG_CANCEL_PRELOAD_RECENT_APPS = 15 << MSG_SHIFT;
-    private static final int MSG_SET_NAVIGATION_ICON_HINTS  = 16 << MSG_SHIFT;
+    private static final int MSG_SET_NAVIGATION_ICON_HINTS = 16 << MSG_SHIFT;
     private static final int MSG_TOGGLE_NOTIFICATION_SHADE = 17 << MSG_SHIFT;
 
     public static final int FLAG_EXCLUDE_NONE = 0;
@@ -79,27 +78,48 @@ public class CommandQueue extends IStatusBar.Stub {
      */
     public interface Callbacks {
         public void addIcon(String slot, int index, int viewIndex, StatusBarIcon icon);
+
         public void updateIcon(String slot, int index, int viewIndex,
-                StatusBarIcon old, StatusBarIcon icon);
+                               StatusBarIcon old, StatusBarIcon icon);
+
         public void removeIcon(String slot, int index, int viewIndex);
+
         public void addNotification(IBinder key, StatusBarNotification notification);
+
         public void updateNotification(IBinder key, StatusBarNotification notification);
+
         public void removeNotification(IBinder key);
+
         public void disable(int state);
+
         public void animateExpandNotificationsPanel();
+
         public void animateCollapsePanels();
+
         public void animateCollapsePanels(int flags);
+
         public void animateExpandSettingsPanel();
+
         public void setSystemUiVisibility(int vis, int mask);
+
         public void topAppWindowChanged(boolean visible);
+
         public void setImeWindowStatus(IBinder token, int vis, int backDisposition);
+
         public void setHardKeyboardStatus(boolean available, boolean enabled);
+
         public void toggleNotificationShade();
+
         public void toggleRecentApps();
+
         public void preloadRecentApps();
+
         public void showSearchPanel();
+
         public void hideSearchPanel();
+
         public void cancelPreloadRecentApps();
+
         public void setNavigationIconHints(int hints);
     }
 
@@ -251,7 +271,7 @@ public class CommandQueue extends IStatusBar.Stub {
                     final int viewIndex = mList.getViewIndex(index);
                     switch (msg.arg1) {
                         case OP_SET_ICON: {
-                            StatusBarIcon icon = (StatusBarIcon)msg.obj;
+                            StatusBarIcon icon = (StatusBarIcon) msg.obj;
                             StatusBarIcon old = mList.getIcon(index);
                             if (old == null) {
                                 mList.setIcon(index, icon);
@@ -273,17 +293,17 @@ public class CommandQueue extends IStatusBar.Stub {
                     break;
                 }
                 case MSG_ADD_NOTIFICATION: {
-                    final NotificationQueueEntry ne = (NotificationQueueEntry)msg.obj;
+                    final NotificationQueueEntry ne = (NotificationQueueEntry) msg.obj;
                     mCallbacks.addNotification(ne.key, ne.notification);
                     break;
                 }
                 case MSG_UPDATE_NOTIFICATION: {
-                    final NotificationQueueEntry ne = (NotificationQueueEntry)msg.obj;
+                    final NotificationQueueEntry ne = (NotificationQueueEntry) msg.obj;
                     mCallbacks.updateNotification(ne.key, ne.notification);
                     break;
                 }
                 case MSG_REMOVE_NOTIFICATION: {
-                    mCallbacks.removeNotification((IBinder)msg.obj);
+                    mCallbacks.removeNotification((IBinder) msg.obj);
                     break;
                 }
                 case MSG_DISABLE:
@@ -305,7 +325,7 @@ public class CommandQueue extends IStatusBar.Stub {
                     mCallbacks.topAppWindowChanged(msg.arg1 != 0);
                     break;
                 case MSG_SHOW_IME_BUTTON:
-                    mCallbacks.setImeWindowStatus((IBinder)msg.obj, msg.arg1, msg.arg2);
+                    mCallbacks.setImeWindowStatus((IBinder) msg.obj, msg.arg1, msg.arg2);
                     break;
                 case MSG_SET_HARD_KEYBOARD_STATUS:
                     mCallbacks.setHardKeyboardStatus(msg.arg1 != 0, msg.arg2 != 0);

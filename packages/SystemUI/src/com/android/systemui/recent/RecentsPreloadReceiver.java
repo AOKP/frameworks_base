@@ -25,7 +25,7 @@ public class RecentsPreloadReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         if (RecentsActivity.PRELOAD_INTENT.equals(intent.getAction())) {
             RecentTasksLoader.getInstance(context).preloadRecentTasksList();
-        } else if (RecentsActivity.CANCEL_PRELOAD_INTENT.equals(intent.getAction())){
+        } else if (RecentsActivity.CANCEL_PRELOAD_INTENT.equals(intent.getAction())) {
             RecentTasksLoader.getInstance(context).cancelPreloadingRecentTasksList();
         }
     }

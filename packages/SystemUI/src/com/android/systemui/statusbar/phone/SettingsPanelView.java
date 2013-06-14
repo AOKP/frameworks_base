@@ -22,7 +22,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
-
 import com.android.systemui.R;
 import com.android.systemui.statusbar.GestureRecorder;
 
@@ -64,8 +63,8 @@ public class SettingsPanelView extends PanelView {
         GestureRecorder gr = ((PhoneStatusBarView) mBar).mBar.getGestureRecorder();
         if (gr != null) {
             gr.tag(
-                "fling " + ((vel > 0) ? "open" : "closed"),
-                "settings,v=" + vel);
+                    "fling " + ((vel > 0) ? "open" : "closed"),
+                    "settings,v=" + vel);
         }
         super.fling(vel, always);
     }

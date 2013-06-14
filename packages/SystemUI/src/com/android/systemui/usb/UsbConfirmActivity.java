@@ -37,7 +37,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
 import com.android.systemui.R;
@@ -61,7 +60,7 @@ public class UsbConfirmActivity extends AlertActivity
 
         Intent intent = getIntent();
         mDevice = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-        mAccessory = (UsbAccessory)intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
+        mAccessory = (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY);
         mResolveInfo = (ResolveInfo) intent.getParcelableExtra("rinfo");
 
         PackageManager packageManager = getPackageManager();
@@ -83,18 +82,18 @@ public class UsbConfirmActivity extends AlertActivity
         ap.mNegativeButtonListener = this;
 
         // add "always use" checkbox
-        LayoutInflater inflater = (LayoutInflater)getSystemService(
+        LayoutInflater inflater = (LayoutInflater) getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         ap.mView = inflater.inflate(com.android.internal.R.layout.always_use_checkbox, null);
-        mAlwaysUse = (CheckBox)ap.mView.findViewById(com.android.internal.R.id.alwaysUse);
+        mAlwaysUse = (CheckBox) ap.mView.findViewById(com.android.internal.R.id.alwaysUse);
         if (mDevice == null) {
             mAlwaysUse.setText(R.string.always_use_accessory);
         } else {
             mAlwaysUse.setText(R.string.always_use_device);
         }
         mAlwaysUse.setOnCheckedChangeListener(this);
-        mClearDefaultHint = (TextView)ap.mView.findViewById(
-                                                    com.android.internal.R.id.clearDefaultHint);
+        mClearDefaultHint = (TextView) ap.mView.findViewById(
+                com.android.internal.R.id.clearDefaultHint);
         mClearDefaultHint.setVisibility(View.GONE);
 
         setupAlert();
@@ -149,8 +148,8 @@ public class UsbConfirmActivity extends AlertActivity
 
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setComponent(
-                    new ComponentName(mResolveInfo.activityInfo.packageName,
-                            mResolveInfo.activityInfo.name));
+                        new ComponentName(mResolveInfo.activityInfo.packageName,
+                                mResolveInfo.activityInfo.name));
                 startActivityAsUser(intent, new UserHandle(userId));
             } catch (Exception e) {
                 Log.e(TAG, "Unable to start activity", e);
@@ -160,9 +159,11 @@ public class UsbConfirmActivity extends AlertActivity
     }
 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (mClearDefaultHint == null) return;
+        if (mClearDefaultHint == null) {
+            return;
+        }
 
-        if(isChecked) {
+        if (isChecked) {
             mClearDefaultHint.setVisibility(View.VISIBLE);
         } else {
             mClearDefaultHint.setVisibility(View.GONE);

@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.view.View;
-
 import com.android.systemui.R;
 
 public class WifiApToggle extends StatefulToggle {

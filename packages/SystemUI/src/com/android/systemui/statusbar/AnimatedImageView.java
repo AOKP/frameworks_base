@@ -20,7 +20,6 @@ import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Slog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RemoteViews.RemoteView;
@@ -44,7 +43,7 @@ public class AnimatedImageView extends ImageView {
             mAnim.stop();
         }
         if (drawable instanceof AnimationDrawable) {
-            mAnim = (AnimationDrawable)drawable;
+            mAnim = (AnimationDrawable) drawable;
             if (isShown()) {
                 mAnim.start();
             }

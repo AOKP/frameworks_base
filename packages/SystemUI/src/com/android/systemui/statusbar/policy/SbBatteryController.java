@@ -16,15 +16,7 @@
 
 package com.android.systemui.statusbar.policy;
 
-import java.util.ArrayList;
-
-import android.bluetooth.BluetoothAdapter.BluetoothStateChangeCallback;
 import android.content.BroadcastReceiver;
-import android.graphics.Color;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.RelativeSizeSpan;
-import android.text.style.CharacterStyle;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,14 +25,19 @@ import android.database.ContentObserver;
 import android.os.BatteryManager;
 import android.os.Handler;
 import android.provider.Settings;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.CharacterStyle;
+import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.android.systemui.R;
+
+import java.util.ArrayList;
 
 public class SbBatteryController extends LinearLayout {
     private static final String TAG = "StatusBar.BatteryController";
@@ -168,7 +165,7 @@ public class SbBatteryController extends LinearLayout {
             SpannableStringBuilder formatted = new SpannableStringBuilder(
                     Integer.toString(level) + "%");
             CharacterStyle style = new RelativeSizeSpan(0.7f); // beautiful
-                                                               // formatting
+            // formatting
             if (level < 10) { // level < 10, 2nd char is %
                 formatted.setSpan(style, 1, 2,
                         Spannable.SPAN_EXCLUSIVE_INCLUSIVE);

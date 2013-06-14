@@ -16,14 +16,10 @@
 
 package com.android.systemui.statusbar.policy;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -32,9 +28,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout;
-
 import com.android.systemui.ExpandHelper;
 import com.android.systemui.R;
 import com.android.systemui.SwipeHelper;
@@ -42,10 +36,9 @@ import com.android.systemui.statusbar.NotificationData;
 
 import java.util.HashMap;
 
-public class NotificationRowLayout 
-        extends LinearLayout 
-        implements SwipeHelper.Callback, ExpandHelper.Callback
-{
+public class NotificationRowLayout
+        extends LinearLayout
+        implements SwipeHelper.Callback, ExpandHelper.Callback {
     private static final String TAG = "NotificationRowLayout";
     private static final boolean DEBUG = false;
     private static final boolean SLOW_ANIMATIONS = DEBUG;
@@ -61,7 +54,7 @@ public class NotificationRowLayout
     HashMap<View, ValueAnimator> mDisappearingViews = new HashMap<View, ValueAnimator>();
 
     private SwipeHelper mSwipeHelper;
-    
+
     private OnSizeChangedListener mOnSizeChangedListener;
 
     // Flag set during notification removal animation to avoid causing too much work until
@@ -80,7 +73,7 @@ public class NotificationRowLayout
         mRealLayoutTransition = new LayoutTransition();
         mRealLayoutTransition.setAnimateParentHierarchy(true);
         setLayoutTransitionsEnabled(true);
-        
+
         setOrientation(LinearLayout.VERTICAL);
 
         if (DEBUG) {
@@ -89,6 +82,7 @@ public class NotificationRowLayout
                 public void onChildViewAdded(View parent, View child) {
                     Slog.d(TAG, "view added: " + child + "; new count: " + getChildCount());
                 }
+
                 @Override
                 public void onChildViewRemoved(View parent, View child) {
                     Slog.d(TAG, "view removed: " + child + "; new count: " + (getChildCount() - 1));
@@ -125,16 +119,20 @@ public class NotificationRowLayout
 
     private void logLayoutTransition() {
         Log.v(TAG, "layout " +
-              (mRealLayoutTransition.isChangingLayout() ? "is " : "is not ") +
-              "in transition and animations " +
-              (mRealLayoutTransition.isRunning() ? "are " : "are not ") +
-              "running.");
+                (mRealLayoutTransition.isChangingLayout() ? "is " : "is not ") +
+                "in transition and animations " +
+                (mRealLayoutTransition.isRunning() ? "are " : "are not ") +
+                "running.");
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (DEBUG) Log.v(TAG, "onInterceptTouchEvent()");
-        if (DEBUG) logLayoutTransition();
+        if (DEBUG) {
+            Log.v(TAG, "onInterceptTouchEvent()");
+        }
+        if (DEBUG) {
+            logLayoutTransition();
+        }
 
         return mSwipeHelper.onInterceptTouchEvent(ev) ||
                 super.onInterceptTouchEvent(ev);
@@ -142,8 +140,12 @@ public class NotificationRowLayout
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (DEBUG) Log.v(TAG, "onTouchEvent()");
-        if (DEBUG) logLayoutTransition();
+        if (DEBUG) {
+            Log.v(TAG, "onTouchEvent()");
+        }
+        if (DEBUG) {
+            logLayoutTransition();
+        }
 
         return mSwipeHelper.onTouchEvent(ev) ||
                 super.onTouchEvent(ev);
@@ -167,7 +169,9 @@ public class NotificationRowLayout
     }
 
     public void onChildDismissed(View v) {
-        if (DEBUG) Slog.v(TAG, "onChildDismissed: " + v + " mRemoveViews=" + mRemoveViews);
+        if (DEBUG) {
+            Slog.v(TAG, "onChildDismissed: " + v + " mRemoveViews=" + mRemoveViews);
+        }
         final View veto = v.findViewById(R.id.veto);
         if (veto != null && veto.getVisibility() != View.GONE && mRemoveViews) {
             veto.performClick();
@@ -205,7 +209,9 @@ public class NotificationRowLayout
                 continue;
             }
             y += slidingChild.getMeasuredHeight();
-            if (touchY < y) return slidingChild;
+            if (touchY < y) {
+                return slidingChild;
+            }
         }
         return null;
     }
@@ -231,7 +237,9 @@ public class NotificationRowLayout
      * get removed properly.
      */
     public void setViewRemoval(boolean removeViews) {
-        if (DEBUG) Slog.v(TAG, "setViewRemoval: " + removeViews);
+        if (DEBUG) {
+            Slog.v(TAG, "setViewRemoval: " + removeViews);
+        }
         mRemoveViews = removeViews;
     }
 
@@ -258,13 +266,17 @@ public class NotificationRowLayout
     @Override
     public void onFinishInflate() {
         super.onFinishInflate();
-        if (DEBUG) setWillNotDraw(false);
+        if (DEBUG) {
+            setWillNotDraw(false);
+        }
     }
 
     @Override
     public void onDraw(android.graphics.Canvas c) {
         super.onDraw(c);
-        if (DEBUG) logLayoutTransition();
+        if (DEBUG) {
+            logLayoutTransition();
+        }
         if (DEBUG) {
             //Slog.d(TAG, "onDraw: canvas height: " + c.getHeight() + "px; measured height: "
             //        + getMeasuredHeight() + "px");

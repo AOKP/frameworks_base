@@ -16,16 +16,9 @@
 
 package com.android.systemui.statusbar.policy;
 
-import android.content.ContentResolver;
 import android.content.Context;
-import android.os.RemoteException;
-import android.os.ServiceManager;
-import android.os.Vibrator;
 import android.media.AudioManager;
-import android.provider.Settings;
-import android.util.Slog;
-import android.view.IWindowManager;
-import android.widget.CompoundButton;
+import android.os.Vibrator;
 
 public class VolumeController implements ToggleSlider.Listener {
     private static final String TAG = "StatusBar.VolumeController";
@@ -47,7 +40,7 @@ public class VolumeController implements ToggleSlider.Listener {
         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
         mHasVibrator = vibrator == null ? false : vibrator.hasVibrator();
 
-        mAudioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 
         mMute = mAudioManager.getRingerMode() != AudioManager.RINGER_MODE_NORMAL;
         mVolume = mAudioManager.getStreamVolume(STREAM);
@@ -67,7 +60,7 @@ public class VolumeController implements ToggleSlider.Listener {
             if (mute) {
                 mAudioManager.setRingerMode(
                         mHasVibrator ? AudioManager.RINGER_MODE_VIBRATE
-                                     : AudioManager.RINGER_MODE_SILENT);
+                                : AudioManager.RINGER_MODE_SILENT);
             } else {
                 mAudioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                 mAudioManager.setStreamVolume(STREAM, level, AudioManager.FLAG_PLAY_SOUND);

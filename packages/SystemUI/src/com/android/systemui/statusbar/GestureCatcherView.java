@@ -1,8 +1,5 @@
 package com.android.systemui.statusbar;
 
-import com.android.systemui.R;
-import com.android.systemui.aokp.AokpSwipeRibbon;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,8 +18,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import com.android.systemui.R;
+import com.android.systemui.aokp.AokpSwipeRibbon;
 
-public class GestureCatcherView extends LinearLayout{
+public class GestureCatcherView extends LinearLayout {
 
     private Context mContext;
     private Resources res;
@@ -69,33 +68,33 @@ public class GestureCatcherView extends LinearLayout{
             public boolean onTouch(View v, MotionEvent event) {
                 int action = event.getAction();
                 switch (action) {
-                case  MotionEvent.ACTION_DOWN :
-                    if (!mNavBarSwipeStarted) {
-                        mDownPoint[0] = event.getX();
-                        mDownPoint[1] = event.getY();
-                        mNavBarSwipeStarted = true;
-                    }
-                    break;
-                case MotionEvent.ACTION_CANCEL :
-                    mNavBarSwipeStarted = false;
-                    break;
-                case MotionEvent.ACTION_MOVE :
-                    if (mNavBarSwipeStarted) {
-                        final int historySize = event.getHistorySize();
-                        for (int k = 0; k < historySize + 1; k++) {
-                            float x = k < historySize ? event.getHistoricalX(k) : event.getX();
-                            float y = k < historySize ? event.getHistoricalY(k) : event.getY();
-                            float distance = 0f;
-                            distance = mSwapXY ? (mDownPoint[0] - x) : (mDownPoint[1] - y);
-                            if (distance > mTriggerThreshhold) {
-                                mNavBarSwipeStarted = false;
-                                mBar.showBar(false);
+                    case MotionEvent.ACTION_DOWN:
+                        if (!mNavBarSwipeStarted) {
+                            mDownPoint[0] = event.getX();
+                            mDownPoint[1] = event.getY();
+                            mNavBarSwipeStarted = true;
+                        }
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
+                        mNavBarSwipeStarted = false;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (mNavBarSwipeStarted) {
+                            final int historySize = event.getHistorySize();
+                            for (int k = 0; k < historySize + 1; k++) {
+                                float x = k < historySize ? event.getHistoricalX(k) : event.getX();
+                                float y = k < historySize ? event.getHistoricalY(k) : event.getY();
+                                float distance = 0f;
+                                distance = mSwapXY ? (mDownPoint[0] - x) : (mDownPoint[1] - y);
+                                if (distance > mTriggerThreshhold) {
+                                    mNavBarSwipeStarted = false;
+                                    mBar.showBar(false);
+                                }
                             }
                         }
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    break;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
                 }
                 return false;
             }
@@ -111,8 +110,8 @@ public class GestureCatcherView extends LinearLayout{
                 toggleRibbon.putExtra("action", "bottom");
                 mContext.sendBroadcast(toggleRibbon);
                 return true;
-                }
-            });
+            }
+        });
     }
 
 
@@ -135,42 +134,51 @@ public class GestureCatcherView extends LinearLayout{
     }
 
     public WindowManager.LayoutParams getGesturePanelLayoutParams() {
-        WindowManager.LayoutParams lp  = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.WRAP_CONTENT,
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                 PixelFormat.TRANSLUCENT);
-        lp.gravity = (mSwapXY ? Gravity.CENTER_VERTICAL | Gravity.RIGHT : Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
+        lp.gravity = (mSwapXY ? Gravity.CENTER_VERTICAL | Gravity.RIGHT :
+                Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM);
         lp.setTitle("GesturePanel");
         return lp;
     }
 
-    private void updateLayout () {
+    private void updateLayout() {
         LinearLayout.LayoutParams dragParams;
         float dragSize = 0;
         removeAllViews();
-        if (mSwapXY && mPhoneMode) { // Landscape Mode **we should always multiply if the result would be te same as / easier for the alu
-            dragSize = ((mScreenWidth) * (mButtonWeight*0.01f)) / getResources().getDisplayMetrics().density;
-            mDragButton.setImageDrawable(mContext.getResources().getDrawable(R.drawable.navbar_drag_button_land));
-            dragParams = new LinearLayout.LayoutParams(mGestureHeight,(int) dragSize);
+        if (mSwapXY &&
+                mPhoneMode) { // Landscape Mode **we should always multiply if the result would
+                // be te same as / easier for the alu
+            dragSize = ((mScreenWidth) * (mButtonWeight * 0.01f)) /
+                    getResources().getDisplayMetrics().density;
+            mDragButton.setImageDrawable(
+                    mContext.getResources().getDrawable(R.drawable.navbar_drag_button_land));
+            dragParams = new LinearLayout.LayoutParams(mGestureHeight, (int) dragSize);
             setOrientation(VERTICAL);
         } else if (mSwapXY && !mPhoneMode) {
-            dragSize = ((mScreenHeight) * (mButtonWeight*0.01f)) / getResources().getDisplayMetrics().density;
-            mDragButton.setImageDrawable(mContext.getResources().getDrawable(R.drawable.navbar_drag_button));
+            dragSize = ((mScreenHeight) * (mButtonWeight * 0.01f)) /
+                    getResources().getDisplayMetrics().density;
+            mDragButton.setImageDrawable(
+                    mContext.getResources().getDrawable(R.drawable.navbar_drag_button));
             dragParams = new LinearLayout.LayoutParams((int) dragSize, mGestureHeight);
             setOrientation(HORIZONTAL);
         } else {
-            dragSize = ((mScreenWidth) * (mButtonWeight*0.01f)) / getResources().getDisplayMetrics().density;
-            mDragButton.setImageDrawable(mContext.getResources().getDrawable(R.drawable.navbar_drag_button));
+            dragSize = ((mScreenWidth) * (mButtonWeight * 0.01f)) /
+                    getResources().getDisplayMetrics().density;
+            mDragButton.setImageDrawable(
+                    mContext.getResources().getDrawable(R.drawable.navbar_drag_button));
             dragParams = new LinearLayout.LayoutParams((int) dragSize, mGestureHeight);
             setOrientation(HORIZONTAL);
         }
         mDragButton.setScaleType(ImageView.ScaleType.FIT_XY);
-        float opacity = (255f * (mDragButtonOpacity/ 100f));
+        float opacity = (255f * (mDragButtonOpacity / 100f));
         mDragButton.setImageAlpha((int) opacity);
-        addView(mDragButton,dragParams);
+        addView(mDragButton, dragParams);
         invalidate();
     }
 
@@ -178,6 +186,7 @@ public class GestureCatcherView extends LinearLayout{
         SettingsObserver(Handler handler) {
             super(handler);
         }
+
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -185,15 +194,17 @@ public class GestureCatcherView extends LinearLayout{
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DRAG_HANDLE_OPACITY), false, this);
         }
-         @Override
+
+        @Override
         public void onChange(boolean selfChange) {
             updateSettings();
         }
     }
-   protected void updateSettings() {
+
+    protected void updateSettings() {
         ContentResolver cr = mContext.getContentResolver();
         mDragButtonOpacity = Settings.System.getInt(cr, Settings.System.DRAG_HANDLE_OPACITY, 50);
-        mPhoneMode = Settings.System.getInt(cr,Settings.System.CURRENT_UI_MODE, 0) == 0;
+        mPhoneMode = Settings.System.getInt(cr, Settings.System.CURRENT_UI_MODE, 0) == 0;
 
         mButtonWeight = Settings.System.getInt(cr, Settings.System.DRAG_HANDLE_WEIGHT, 5);
         updateLayout();

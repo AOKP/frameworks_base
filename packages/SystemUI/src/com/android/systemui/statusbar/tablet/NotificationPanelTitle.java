@@ -16,8 +16,6 @@
 
 package com.android.systemui.statusbar.tablet;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -25,8 +23,9 @@ import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.RelativeLayout;
-
 import com.android.systemui.R;
+
+import java.util.ArrayList;
 
 
 public class NotificationPanelTitle extends RelativeLayout implements View.OnClickListener {
@@ -63,8 +62,9 @@ public class NotificationPanelTitle extends RelativeLayout implements View.OnCli
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        if (!mSettingsButton.isEnabled())
+        if (!mSettingsButton.isEnabled()) {
             return false;
+        }
         switch (e.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 setPressed(true);

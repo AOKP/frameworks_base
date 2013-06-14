@@ -34,7 +34,7 @@ public class StatusBarTouchProxy extends FrameLayout {
         mStatusBar = statusBar;
     }
 
-    public boolean onTouchEvent (MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
         return mStatusBar.dispatchTouchEvent(event);
     }
 }

@@ -17,14 +17,12 @@
 package com.android.internal.policy.impl.keyguard;
 
 import android.content.Context;
-import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView.OnEditorActionListener;
-
 import com.android.internal.R;
 
 /**
@@ -89,7 +87,7 @@ public class KeyguardPINView extends KeyguardAbsKeyInputView
                     if (mPasswordEntry.isEnabled()) {
                         CharSequence str = mPasswordEntry.getText();
                         if (str.length() > 0) {
-                            mPasswordEntry.setText(str.subSequence(0, str.length()-1));
+                            mPasswordEntry.setText(str.subSequence(0, str.length() - 1));
                         }
                     }
                     doHapticKeyClick();
