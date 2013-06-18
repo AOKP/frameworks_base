@@ -208,6 +208,7 @@ status_t OpenGLRenderer::prepareDirty(float left, float top, float right, float 
 }
 
 status_t OpenGLRenderer::clear(float left, float top, float right, float bottom, bool opaque) {
+#ifndef QCOM_OLD_ADRENO_BLOBS
 #ifdef QCOM_HARDWARE
     mCaches.enableScissor();
     mCaches.setScissor(left, mSnapshot->height - bottom, right - left, bottom - top);
@@ -231,8 +232,8 @@ status_t OpenGLRenderer::clear(float left, float top, float right, float bottom,
 
     mCaches.resetScissor();
     return DrawGlInfo::kStatusDone;
-#endif
-}
+#endif // QCOM_HARDWARE
+#endif // QCOM_OLD_ADRENO_BLOBS
 
 void OpenGLRenderer::syncState() {
     glViewport(0, 0, mWidth, mHeight);
