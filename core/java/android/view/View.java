@@ -2540,6 +2540,11 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
      */
     private int mOverScrollMode;
 
+    private boolean mHasDoubleClick = false;
+    private boolean isFirstClick = true;
+    private Handler mH = new Handler();
+    private DoSingleClick mDoSingleClick = null;
+
     /**
      * The parent this view is attached to.
      * {@hide}
@@ -2953,6 +2958,13 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
          * {@hide}
          */
         protected OnLongClickListener mOnLongClickListener;
+
+        /**
+         * Listener used to dispatch double click events.
+         * This field should be made private, so it is hidden from the SDK.
+         * {@hide}
+         */
+        public OnDoubleClickListener mOnDoubleClickListener;
 
         /**
          * Listener used to build the context menu.
@@ -4174,6 +4186,21 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
     }
 
     /**
+     *
+     *
+     * @param l The callback that will run
+     *
+     * @see #setDoubleClickable(boolean)
+     */
+    public void setOnDoubleClickListener(OnDoubleClickListener l) {
+        if (!isClickable()) {
+            setClickable(true);
+        }
+        mHasDoubleClick = true;
+        getListenerInfo().mOnDoubleClickListener = l;
+    }
+
+    /**
      * Register a callback to be invoked when the context menu for this view is
      * being built. If this view is not long clickable, it becomes long clickable.
      *
@@ -4199,10 +4226,15 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
         sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
 
         ListenerInfo li = mListenerInfo;
-        if (li != null && li.mOnClickListener != null) {
-            playSoundEffect(SoundEffectConstants.CLICK);
-            li.mOnClickListener.onClick(this);
-            return true;
+        if (li != null && ((li.mOnClickListener != null) || (li.mOnDoubleClickListener != null))) {
+            if (mHasDoubleClick) {
+                passForDoubleClick();
+                return true;
+            } else {
+                playSoundEffect(SoundEffectConstants.CLICK);
+                li.mOnClickListener.onClick(this);
+                return true;
+            }
         }
 
         return false;
@@ -4219,10 +4251,28 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
     public boolean callOnClick() {
         ListenerInfo li = mListenerInfo;
         if (li != null && li.mOnClickListener != null) {
-            li.mOnClickListener.onClick(this);
-            return true;
+            if (mHasDoubleClick) {
+                passForDoubleClick();
+                return true;
+            } else {
+               li.mOnClickListener.onClick(this);
+               return true;
+            }
         }
         return false;
+    }
+
+    private void passForDoubleClick() {
+        ListenerInfo li = mListenerInfo;
+        if (!isFirstClick) {
+           mH.removeCallbacks(mDoSingleClick);
+           li.mOnDoubleClickListener.onDoubleClick(this);
+           return;
+        } else {
+            mDoSingleClick = new DoSingleClick(this);
+            mH.postDelayed(mDoSingleClick, 250);
+            isFirstClick = false;
+        }
     }
 
     /**
@@ -17520,6 +17570,24 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
     }
 
     /**
+     * By Steve Spear Jun 2013
+     * Interface definition for a callback to be invoked when a view is clicked.
+     */
+    public interface OnDoubleClickListener {
+        /**
+         * Called when a view has been single clicked.
+         *
+         * @param v The view that was clicked.
+         */
+        void onSingleClick(View v);
+        /**
+         * Called when a view has been double clicked.
+         *
+         */
+        void onDoubleClick(View v);
+    }
+
+    /**
      * Interface definition for a callback to be invoked when the context menu
      * for this view is being built.
      */
@@ -18400,4 +18468,16 @@ public class View implements Drawable.Callback, KeyEvent.Callback,
         final String output = bits + " " + name;
         found.put(key, output);
     }
+
+    public class DoSingleClick implements Runnable {
+         private View v;
+         public DoSingleClick(View view) {
+             this.v = view;
+         }
+         public void run() {
+            ListenerInfo li = mListenerInfo;
+            isFirstClick = true;
+            li.mOnDoubleClickListener.onSingleClick(v);
+        }
+     }
 }
