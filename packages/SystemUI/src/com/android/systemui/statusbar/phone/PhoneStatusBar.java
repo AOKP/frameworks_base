@@ -234,10 +234,8 @@ public class PhoneStatusBar extends BaseStatusBar {
     private int shortClick = 0;
     private int longClick = 1;
     private int doubleClick = 2;
-    private int doubleClickCounter = 0;
 
     public String[] mClockActions = new String[3];
-    private boolean mClockDoubleClicked;
 
     // carrier/wifi label
     private TextView mCarrierLabel;
@@ -491,7 +489,7 @@ public class PhoneStatusBar extends BaseStatusBar {
 
         mDateTimeView = mNotificationPanelHeader.findViewById(R.id.datetime);
         if (mDateTimeView != null) {
-            mDateTimeView.setOnClickListener(mClockClickListener);
+            mDateTimeView.setOnDoubleClickListener(mClockClickListener);
             mDateTimeView.setOnLongClickListener(mClockLongClickListener);
             mDateTimeView.setEnabled(true);
         }
@@ -2486,43 +2484,20 @@ public class PhoneStatusBar extends BaseStatusBar {
         }
     };
 
-       final Runnable DelayShortPress = new Runnable () {
-            public void run() {
-                    doubleClickCounter = 0;
-                    animateCollapsePanels();
-                    dismissKeyguard();
-                    AwesomeAction.launchAction(mContext, mClockActions[shortClick]);
-            }
-        };
 
-       final Runnable ResetDoubleClickCounter = new Runnable () {
-            public void run() {
-                    doubleClickCounter = 0;
-            }
-        };
-
-    private View.OnClickListener mClockClickListener = new View.OnClickListener() {
-        public void onClick(View v) {
-            if (mClockDoubleClicked) {
-                if (doubleClickCounter > 0) {
-                    mHandler.removeCallbacks(DelayShortPress);
-                    vibrate();
-                    animateCollapsePanels();
-                    dismissKeyguard();
-                    AwesomeAction.launchAction(mContext, mClockActions[doubleClick]);
-                    mHandler.postDelayed(ResetDoubleClickCounter, 50);
-                } else {
-                    doubleClickCounter = doubleClickCounter + 1;
-                    vibrate();
-                    mHandler.postDelayed(DelayShortPress, 400);
-                }
-            } else {
+    private View.OnDoubleClickListener mClockClickListener = new View.OnDoubleClickListener() {
+        public void onSingleClick(View v) {
                 vibrate();
                 animateCollapsePanels();
                 dismissKeyguard();
                 AwesomeAction.launchAction(mContext, mClockActions[shortClick]);
-            }
+        }
 
+        public void onDoubleClick(View v) {
+                vibrate();
+                animateCollapsePanels();
+                dismissKeyguard();
+                AwesomeAction.launchAction(mContext, mClockActions[doubleClick]);
         }
     };
 
@@ -2882,9 +2857,6 @@ public class PhoneStatusBar extends BaseStatusBar {
         }
         if (mClockActions[doubleClick] == null || mClockActions[doubleClick].equals("") || mClockActions[doubleClick].equals("**null**")) {
             mClockActions[doubleClick] = "**null**";
-            mClockDoubleClicked = false;
-        } else {
-            mClockDoubleClicked = true;
         }
         mCurrentUIMode = Settings.System.getInt(cr,Settings.System.CURRENT_UI_MODE, 0);
         mNavBarAutoHide = Settings.System.getBoolean(cr, Settings.System.NAV_HIDE_ENABLE, false);
