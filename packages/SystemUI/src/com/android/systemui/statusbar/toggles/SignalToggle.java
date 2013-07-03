@@ -58,7 +58,7 @@ public class SignalToggle extends StatefulToggle implements NetworkSignalChanged
                 : R.drawable.ic_qs_signal_no_signal;
         mRSSIState.signalContentDescription = enabled && (mobileSignalIconId > 0)
                 ? signalContentDescription
-                : r.getString(R.string.accessibility_no_signal);
+                : removeTrailingPeriod(r.getString(R.string.accessibility_no_signal));
         mRSSIState.dataTypeIconId = enabled && (dataTypeIconId > 0) && !mWifiState.enabled
                 ? dataTypeIconId
                 : 0;
