@@ -286,7 +286,7 @@
     <string name="accessibility_wimax_signal_full">WiMAX signal full.</string>
 
     <!-- Content description of an item with no signal for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
-    <string name="accessibility_no_signal">No signal.</string>
+    <string name="accessibility_no_signal">No signal</string>
     <!-- Content description of an item with no signal and no connection for accessibility (not shown on the screen) [CHAR LIMIT=NONE] -->
     <string name="accessibility_not_connected">Not connected.</string>
     <!-- Content description of an item with zero signal bars for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
