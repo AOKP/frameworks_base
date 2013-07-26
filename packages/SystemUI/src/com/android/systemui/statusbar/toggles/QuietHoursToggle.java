@@ -14,6 +14,12 @@ import com.android.systemui.R;
 
 public class QuietHoursToggle extends StatefulToggle {
 
+    private static final String STOP_SERVICE_COMMAND =
+            "com.android.settings.service.STOP_SERVICE_COMMAND";
+
+    private static final String SCHEDULE_SERVICE_COMMAND =
+            "com.android.settings.service.SCHEDULE_SERVICE_COMMAND";
+
     @Override
     public void init(Context c, int style) {
         super.init(c, style);
@@ -24,12 +30,14 @@ public class QuietHoursToggle extends StatefulToggle {
     protected void doEnable() {
         Settings.System.putInt(mContext.getContentResolver(),
                 Settings.System.QUIET_HOURS_ENABLED, 1);
+        autoSmsIntentBroadcast(SCHEDULE_SERVICE_COMMAND);
     }
 
     @Override
     protected void doDisable() {
         Settings.System.putInt(mContext.getContentResolver(),
                 Settings.System.QUIET_HOURS_ENABLED, 0);
+        autoSmsIntentBroadcast(STOP_SERVICE_COMMAND);
     }
 
     @Override
@@ -52,4 +60,9 @@ public class QuietHoursToggle extends StatefulToggle {
         super.updateView();
     }
 
+    private void autoSmsIntentBroadcast(String action) {
+        Intent scheduleSms = new Intent();
+        scheduleSms.setAction(action);
+        mContext.sendBroadcast(scheduleSms);
+    }
 }
