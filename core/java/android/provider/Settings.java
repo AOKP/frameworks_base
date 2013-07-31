@@ -7090,6 +7090,13 @@ public final class Settings {
          * @hide
          */
         public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
+
+        /**
+         * Force dual panel for apps pulling dependencies from framework
+         * @hide
+         */
+        public static final String FORCE_DUAL_PANEL = "force_dual_panel";
+
     }
 
     /**
