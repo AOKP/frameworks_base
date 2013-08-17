@@ -282,4 +282,6 @@
     <!-- AM/PM size in active display -->
     <dimen name="ad_ampm_font_size">32dp</dimen>
 
+    <!-- Network stats text size -->
+    <dimen name="network_stats_text_size">8dp</dimen>
 </resources>
