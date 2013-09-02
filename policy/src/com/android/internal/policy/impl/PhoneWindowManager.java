@@ -2973,7 +2973,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     if (navVisible) {
                         mNavigationBar.showLw(true);
                         if (!mNavBarAutoHide)
-                            mSystemBottom = mDockBottom = mTmpNavigationFrame.bottom - mDockTop;
+                            mSystemBottom = mDockBottom = mTmpNavigationFrame.top - mDockTop;
                     } else {
                         // We currently want to hide the navigation UI.
                         mNavigationBar.hideLw(true);
