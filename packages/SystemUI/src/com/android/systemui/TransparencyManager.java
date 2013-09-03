@@ -36,6 +36,8 @@ public class TransparencyManager {
 
     private static final String TAG = TransparencyManager.class.getSimpleName();
 
+    private static final String WALLPAPER_IMAGE_PATH = "/data/data/com.aokp.romcontrol/files/lockscreen_wallpaper.jpg";
+
     NavigationBarView mNavbar;
     PanelBar mStatusbar;
 
