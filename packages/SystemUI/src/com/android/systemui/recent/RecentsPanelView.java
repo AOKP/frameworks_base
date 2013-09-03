@@ -64,7 +64,9 @@ import android.widget.ImageView.ScaleType;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.systemui.R;
+import com.android.systemui.aokp.AwesomeAction;
 import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.phone.PhoneStatusBar;
 import com.android.systemui.statusbar.tablet.StatusBarPanel;
@@ -93,6 +95,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     private boolean mCallUiHiddenBeforeNextReload;
 
     private Button mRecentsKillAllButton;
+    private Button mGoogleNowButton;
     private LinearColorBar mRamUsageBar;
 
     private RecentTasksLoader mRecentTasksLoader;
@@ -519,6 +522,13 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             @Override
             public void onClick(View v) {
                 killAllRecentApps();
+            }
+        });
+        mGoogleNowButton = (Button) findViewById(R.id.recents_google_now_button);
+        mGoogleNowButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AwesomeAction.launchAction(v.getContext(), AwesomeConstant.ACTION_ASSIST.value());
             }
         });
     }
