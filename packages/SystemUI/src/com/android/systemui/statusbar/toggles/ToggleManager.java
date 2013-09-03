@@ -432,7 +432,9 @@ public class ToggleManager {
     }
 
     private boolean deviceSupportsBluetooth() {
-        return (BluetoothAdapter.getDefaultAdapter() != null);
+        boolean bluetoothToggle = BluetoothAdapter.getDefaultAdapter() != null;
+        Log.d(TAG, "Is Bluetooth supported: " + bluetoothToggle);
+        return bluetoothToggle;
     }
 
     class SettingsObserver extends ContentObserver {
