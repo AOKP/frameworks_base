@@ -347,8 +347,12 @@ public class FmTransmitterService extends IFmTransmitter.Stub {
                 }
 
                 // power down hardware
-                if (_fm_transmitter_reset() > FmTransmitter.STATE_IDLE) {
-                    notifyOnForcedReset(FmTransmitter.RESET_RADIO_FORBIDDEN);
+                try {
+                    if (_fm_transmitter_reset() > FmTransmitter.STATE_IDLE) {
+                        notifyOnForcedReset(FmTransmitter.RESET_RADIO_FORBIDDEN);
+                    }
+                } catch (java.lang.UnsatisfiedLinkError badlink) {
+                    Log.wtf(TAG, "HACK: Linkage to native _fm_transmitter_reset() failed", badlink);
                 }
             }
         }
@@ -399,7 +403,11 @@ public class FmTransmitterService extends IFmTransmitter.Stub {
             throw new SecurityException("Requires FM_RADIO_TRANSMITTER permission");
         }
 
-        _fm_transmitter_reset();
+        try {
+            _fm_transmitter_reset();
+        } catch (java.lang.UnsatisfiedLinkError badlink) {
+            Log.wtf(TAG, "HACK: Linkage to native _fm_transmitter_reset() failed", badlink);
+        }
     }
 
     public void pause() {
