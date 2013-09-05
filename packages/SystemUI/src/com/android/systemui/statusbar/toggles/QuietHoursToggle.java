@@ -9,6 +9,8 @@ import android.view.View;
 import com.android.systemui.R;
 
 public class QuietHoursToggle extends StatefulToggle {
+    private static final String SCHEDULE_SERVICE_COMMAND =
+            "com.android.settings.service.SCHEDULE_SERVICE_COMMAND";
 
     @Override
     public void init(Context c, int style) {
@@ -18,14 +20,24 @@ public class QuietHoursToggle extends StatefulToggle {
 
     @Override
     protected void doEnable() {
+
         Settings.AOKP.putInt(mContext.getContentResolver(),
                 Settings.AOKP.QUIET_HOURS_ENABLED, 1);
+        Settings.System.putInt(mContext.getContentResolver(),
+                Settings.System.QUIET_HOURS_ENABLED, 1);
+        autoSmsIntentBroadcast();
+
     }
 
     @Override
     protected void doDisable() {
+
         Settings.AOKP.putInt(mContext.getContentResolver(),
                 Settings.AOKP.QUIET_HOURS_ENABLED, 0);
+        Settings.System.putInt(mContext.getContentResolver(),
+                Settings.System.QUIET_HOURS_ENABLED, 0);
+        autoSmsIntentBroadcast();
+
     }
 
     @Override
@@ -48,8 +60,15 @@ public class QuietHoursToggle extends StatefulToggle {
         super.updateView();
     }
 
+
     @Override
     public int getDefaultIconResId() {
         return R.drawable.ic_qs_quiet_hours_on;
+
+    private void autoSmsIntentBroadcast() {
+        Intent scheduleSms = new Intent();
+        scheduleSms.setAction(SCHEDULE_SERVICE_COMMAND);
+        mContext.sendBroadcast(scheduleSms);
+
     }
 }
