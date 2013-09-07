@@ -30,6 +30,8 @@
 #include "android_util_Log.h"
 
 #define MIN(a,b) ((a<b)?a:b)
+#define NO_LOGGING = 0
+#define ALLOW_LOGGING = 1
 
 namespace android {
 
@@ -102,12 +104,29 @@ bool android_util_Log_isVerboseLogEnabled(const char* tag) {
 }
 
 /*
+ * Not in a class but exists to prevent native apps from failing unexpectedly
+ *  public static native int println_native(int buffer, int priority,
+ *  String tag, String msg)
+ *
+ * Defaults to allowing message to be logged
+ */ 
+static jint android_util_Log_println_native(JNIEnv* env, jobject clazz,
+        jint bufID, jint priority, jstring tagObj, jstring msgObj) {
+    return android_util_Log_println_native(env, clazz, bufID, priority,
+            tagObj, msgObj, ALLOW_LOGGING);
+{
+
+/*
  * In class android.util.Log:
- *  public static native int println_native(int buffer, int priority, String tag, String msg)
+ *  public static native int println_native(int buffer, int priority,
+ *  String tag, String msg, int noLogging)
  */
 static jint android_util_Log_println_native(JNIEnv* env, jobject clazz,
-        jint bufID, jint priority, jstring tagObj, jstring msgObj)
+        jint bufID, jint priority, jstring tagObj, jstring msgObj, int noLogging)
 {
+    if (noLogging == NO_LOGGING) {
+        return -1;
+    }
     const char* tag = NULL;
     const char* msg = NULL;
 
@@ -140,7 +159,8 @@ static jint android_util_Log_println_native(JNIEnv* env, jobject clazz,
 static JNINativeMethod gMethods[] = {
     /* name, signature, funcPtr */
     { "isLoggable",      "(Ljava/lang/String;I)Z", (void*) android_util_Log_isLoggable },
-    { "println_native",  "(IILjava/lang/String;Ljava/lang/String;)I", (void*) android_util_Log_println_native },
+    { "println_native",  "(IILjava/lang/String;Ljava/lang/String/;Ljava/lang/Integer;)I", (void*) android_util_Log_println_native },
+    { "println_native",  "(IILjava/lang/String;Ljava/lang/String/;Ljava/lang;)I", (void*) android_util_Log_println_native },
 };
 
 int register_android_util_Log(JNIEnv* env)
