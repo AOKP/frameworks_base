@@ -16,10 +16,14 @@
 
 package android.util;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+
 import com.android.internal.os.RuntimeInit;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.SecurityException;
 import java.net.UnknownHostException;
 
 /**
@@ -51,6 +55,21 @@ import java.net.UnknownHostException;
  * significant work and incurring significant overhead.
  */
 public final class Log {
+
+    /**
+     * Defines if logging is permitted
+     */
+    private static int LOGGING_STATUS = 0;
+
+    /**
+     * Constant to disable logging
+     */
+    public static final int DISABLE_LOGGING = 0;
+
+    /**
+     * Constant to allow logging
+     */
+    public static final int ALLOW_LOGGING = 1;
 
     /**
      * Priority constant for the println method; use Log.v.
@@ -89,6 +108,26 @@ public final class Log {
         TerribleFailure(String msg, Throwable cause) { super(msg, cause); }
     }
 
+    private static final String CHANGE_LOGGING_STATUS =
+            "android.permission.aokp.CHANGE_LOGGING_STATUS";
+
+    public static void setLogability(Context context, int status)
+            throws SecurityException {
+        PackageManager pm = context.getPackageManager();
+        if (pm.checkPermission(CHANGE_LOGGING_STATUS,
+                context.getPackageName()) == PackageManager.PERMISSION_GRANTED)
+        {
+            LOGGING_STATUS = status == ALLOW_LOGGING ? 1 : 0;
+        } else {
+            throw new SecurityException("Permission to change logging status" +
+                " must be declared in AndroidManifest... failing");
+        }
+    }
+    
+    public static int getStatus() {
+        return LOGGING_STATUS;
+    }
+
     /**
      * Interface to handle terrible failures from {@link #wtf()}.
      *
@@ -114,7 +153,7 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int v(String tag, String msg) {
-        return println_native(LOG_ID_MAIN, VERBOSE, tag, msg);
+        return println_native(LOG_ID_MAIN, VERBOSE, tag, msg, DISABLE_LOGGING);
     }
 
     /**
@@ -125,7 +164,8 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int v(String tag, String msg, Throwable tr) {
-        return println_native(LOG_ID_MAIN, VERBOSE, tag, msg + '\n' + getStackTraceString(tr));
+        return println_native(LOG_ID_MAIN, VERBOSE, tag,
+            msg + '\n' + getStackTraceString(tr), DISABLE_LOGGING);
     }
 
     /**
@@ -135,7 +175,7 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int d(String tag, String msg) {
-        return println_native(LOG_ID_MAIN, DEBUG, tag, msg);
+        return println_native(LOG_ID_MAIN, DEBUG, tag, msg, DISABLE_LOGGING);
     }
 
     /**
@@ -146,7 +186,8 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int d(String tag, String msg, Throwable tr) {
-        return println_native(LOG_ID_MAIN, DEBUG, tag, msg + '\n' + getStackTraceString(tr));
+        return println_native(LOG_ID_MAIN, DEBUG, tag,
+            msg + '\n' + getStackTraceString(tr), DISABLE_LOGGING);
     }
 
     /**
@@ -156,7 +197,7 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int i(String tag, String msg) {
-        return println_native(LOG_ID_MAIN, INFO, tag, msg);
+        return println_native(LOG_ID_MAIN, INFO, tag, msg, DISABLE_LOGGING);
     }
 
     /**
@@ -167,7 +208,8 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int i(String tag, String msg, Throwable tr) {
-        return println_native(LOG_ID_MAIN, INFO, tag, msg + '\n' + getStackTraceString(tr));
+        return println_native(LOG_ID_MAIN, INFO, tag,
+           msg + '\n' + getStackTraceString(tr), DISABLE_LOGGING);
     }
 
     /**
@@ -177,7 +219,7 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int w(String tag, String msg) {
-        return println_native(LOG_ID_MAIN, WARN, tag, msg);
+        return println_native(LOG_ID_MAIN, WARN, tag, msg, DISABLE_LOGGING);
     }
 
     /**
@@ -188,7 +230,8 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int w(String tag, String msg, Throwable tr) {
-        return println_native(LOG_ID_MAIN, WARN, tag, msg + '\n' + getStackTraceString(tr));
+        return println_native(LOG_ID_MAIN, WARN, tag, msg + '\n' + getStackTraceString(tr),
+            DISABLE_LOGGING);
     }
 
     /**
@@ -218,7 +261,8 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int w(String tag, Throwable tr) {
-        return println_native(LOG_ID_MAIN, WARN, tag, getStackTraceString(tr));
+        return println_native(LOG_ID_MAIN, WARN, tag, getStackTraceString(tr),
+            DISABLE_LOGGING);
     }
 
     /**
@@ -228,7 +272,7 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int e(String tag, String msg) {
-        return println_native(LOG_ID_MAIN, ERROR, tag, msg);
+        return println_native(LOG_ID_MAIN, ERROR, tag, msg, DISABLE_LOGGING);
     }
 
     /**
@@ -239,7 +283,8 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int e(String tag, String msg, Throwable tr) {
-        return println_native(LOG_ID_MAIN, ERROR, tag, msg + '\n' + getStackTraceString(tr));
+        return println_native(LOG_ID_MAIN, ERROR, tag, msg + '\n' + getStackTraceString(tr),
+            DISABLE_LOGGING);
     }
 
     /**
@@ -274,7 +319,7 @@ public final class Log {
      */
     public static int wtf(String tag, String msg, Throwable tr) {
         TerribleFailure what = new TerribleFailure(msg, tr);
-        int bytes = println_native(LOG_ID_MAIN, ASSERT, tag, msg + '\n' + getStackTraceString(tr));
+        int bytes = println_native(LOG_ID_MAIN, ASSERT, tag, msg + '\n' + getStackTraceString(tr), DISABLE_LOGGING);
         sWtfHandler.onTerribleFailure(tag, what);
         return bytes;
     }
@@ -329,7 +374,7 @@ public final class Log {
      * @return The number of bytes written.
      */
     public static int println(int priority, String tag, String msg) {
-        return println_native(LOG_ID_MAIN, priority, tag, msg);
+        return println_native(LOG_ID_MAIN, priority, tag, msg, DISABLE_LOGGING);
     }
 
     /** @hide */ public static final int LOG_ID_MAIN = 0;
@@ -338,5 +383,5 @@ public final class Log {
     /** @hide */ public static final int LOG_ID_SYSTEM = 3;
 
     /** @hide */ public static native int println_native(int bufID,
-            int priority, String tag, String msg);
+            int priority, String tag, String msg, int allowLogging);
 }
