@@ -30,56 +30,55 @@ public final class Slog {
     }
 
     public static int v(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_SYSTEM, Log.VERBOSE, tag, msg);
+        return Log.println_native(Log.LOG_ID_SYSTEM, Log.VERBOSE, tag, msg, Log.getStatus());
     }
 
     public static int v(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_SYSTEM, Log.VERBOSE, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int d(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_SYSTEM, Log.DEBUG, tag, msg);
+        return Log.println_native(Log.LOG_ID_SYSTEM, Log.DEBUG, tag, msg, Log.getStatus());
     }
 
     public static int d(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_SYSTEM, Log.DEBUG, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int i(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_SYSTEM, Log.INFO, tag, msg);
+        return Log.println_native(Log.LOG_ID_SYSTEM, Log.INFO, tag, msg, Log.getStatus());
     }
 
     public static int i(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_SYSTEM, Log.INFO, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int w(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_SYSTEM, Log.WARN, tag, msg);
+        return Log.println_native(Log.LOG_ID_SYSTEM, Log.WARN, tag, msg, Log.getStatus());
     }
 
     public static int w(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_SYSTEM, Log.WARN, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int w(String tag, Throwable tr) {
-        return Log.println_native(Log.LOG_ID_SYSTEM, Log.WARN, tag, Log.getStackTraceString(tr));
+        return Log.println_native(Log.LOG_ID_SYSTEM, Log.WARN, tag, Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int e(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_SYSTEM, Log.ERROR, tag, msg);
+        return Log.println_native(Log.LOG_ID_SYSTEM, Log.ERROR, tag, msg, Log.getStatus());
     }
 
     public static int e(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_SYSTEM, Log.ERROR, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int println(int priority, String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_SYSTEM, priority, tag, msg);
+        return Log.println_native(Log.LOG_ID_SYSTEM, priority, tag, msg, Log.getStatus());
     }
 }
-

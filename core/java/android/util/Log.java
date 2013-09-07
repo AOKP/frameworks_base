@@ -16,10 +16,15 @@
 
 package android.util;
 
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.os.SystemProperties;
+
 import com.android.internal.os.RuntimeInit;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.SecurityException;
 import java.net.UnknownHostException;
 
 /**
@@ -51,6 +56,21 @@ import java.net.UnknownHostException;
  * significant work and incurring significant overhead.
  */
 public final class Log {
+
+    /**
+     * Defines if logging is permitted
+     */
+    private static boolean LOGGING_STATUS = true;
+
+    /**
+     * Constant to disable logging
+     */
+    public static final boolean DISABLE_LOGGING = false;
+
+    /**
+     * Constant to allow logging
+     */
+    public static final boolean ALLOW_LOGGING = true;
 
     /**
      * Priority constant for the println method; use Log.v.
@@ -89,6 +109,35 @@ public final class Log {
         TerribleFailure(String msg, Throwable cause) { super(msg, cause); }
     }
 
+    public static final String LOGGING_SYSTEM_PROPERTY = "aokp.logging.status";
+
+    private static final String CHANGE_LOGGING_STATUS =
+            "android.permission.aokp.CHANGE_LOGGING_STATUS";
+
+    public static void setLogability(Context context, boolean loggingStatus)
+            throws SecurityException {
+        PackageManager pm = context.getPackageManager();
+        int perm = context.checkCallingOrSelfPermission(CHANGE_LOGGING_STATUS);
+        i("Log", "ChangeLoggingState permission: " + perm);
+        if (perm == PackageManager.PERMISSION_GRANTED) {
+            i("Log", loggingStatus ?
+                    "Enabling debug logging" : //Will not show logging is off
+                    "Disabling debug logging");
+            SystemProperties.set(LOGGING_SYSTEM_PROPERTY,
+                loggingStatus ? "1" : "0");
+        } else {
+            throw new SecurityException("Permission to change logging status" +
+                " must be declared in AndroidManifest... failing");
+        }
+    }
+
+    public static boolean getStatus() {
+        // check SystemProperties for logging status
+        boolean status = "1".equals(SystemProperties.get(LOGGING_SYSTEM_PROPERTY, "1"));
+        Log.i("Log", "Logging status: " + status);
+        return status;
+    }
+
     /**
      * Interface to handle terrible failures from {@link #wtf()}.
      *
@@ -114,6 +163,9 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int v(String tag, String msg) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, VERBOSE, tag, msg);
     }
 
@@ -125,7 +177,11 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int v(String tag, String msg, Throwable tr) {
-        return println_native(LOG_ID_MAIN, VERBOSE, tag, msg + '\n' + getStackTraceString(tr));
+        if (!getStatus()) {
+            return -1;
+        }
+        return println_native(LOG_ID_MAIN, VERBOSE, tag,
+            msg + '\n' + getStackTraceString(tr));
     }
 
     /**
@@ -135,6 +191,9 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int d(String tag, String msg) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, DEBUG, tag, msg);
     }
 
@@ -146,7 +205,11 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int d(String tag, String msg, Throwable tr) {
-        return println_native(LOG_ID_MAIN, DEBUG, tag, msg + '\n' + getStackTraceString(tr));
+        if (!getStatus()) {
+            return -1;
+        }
+        return println_native(LOG_ID_MAIN, DEBUG, tag,
+            msg + '\n' + getStackTraceString(tr));
     }
 
     /**
@@ -156,6 +219,9 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int i(String tag, String msg) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, INFO, tag, msg);
     }
 
@@ -167,7 +233,11 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int i(String tag, String msg, Throwable tr) {
-        return println_native(LOG_ID_MAIN, INFO, tag, msg + '\n' + getStackTraceString(tr));
+        if (!getStatus()) {
+            return -1;
+        }
+        return println_native(LOG_ID_MAIN, INFO, tag,
+           msg + '\n' + getStackTraceString(tr));
     }
 
     /**
@@ -177,6 +247,9 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int w(String tag, String msg) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, WARN, tag, msg);
     }
 
@@ -188,6 +261,9 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int w(String tag, String msg, Throwable tr) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, WARN, tag, msg + '\n' + getStackTraceString(tr));
     }
 
@@ -218,6 +294,9 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int w(String tag, Throwable tr) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, WARN, tag, getStackTraceString(tr));
     }
 
@@ -228,6 +307,9 @@ public final class Log {
      * @param msg The message you would like logged.
      */
     public static int e(String tag, String msg) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, ERROR, tag, msg);
     }
 
@@ -239,6 +321,9 @@ public final class Log {
      * @param tr An exception to log
      */
     public static int e(String tag, String msg, Throwable tr) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, ERROR, tag, msg + '\n' + getStackTraceString(tr));
     }
 
@@ -273,8 +358,12 @@ public final class Log {
      * @param tr An exception to log.  May be null.
      */
     public static int wtf(String tag, String msg, Throwable tr) {
+        if (getStatus()) {
+            return -1;
+        }
         TerribleFailure what = new TerribleFailure(msg, tr);
-        int bytes = println_native(LOG_ID_MAIN, ASSERT, tag, msg + '\n' + getStackTraceString(tr));
+        int bytes = println_native(LOG_ID_MAIN, ASSERT, tag,
+                msg + '\n' + getStackTraceString(tr));
         sWtfHandler.onTerribleFailure(tag, what);
         return bytes;
     }
@@ -329,6 +418,9 @@ public final class Log {
      * @return The number of bytes written.
      */
     public static int println(int priority, String tag, String msg) {
+        if (!getStatus()) {
+            return -1;
+        }
         return println_native(LOG_ID_MAIN, priority, tag, msg);
     }
 
@@ -339,4 +431,15 @@ public final class Log {
 
     /** @hide */ public static native int println_native(int bufID,
             int priority, String tag, String msg);
+    /** Catch all calls to the native method before taking the time
+        
+    /** @hide */
+    public static int println_native(int bufID,
+            int priority, String tag, String msg, boolean allowLogging) {
+        if (!allowLogging) {
+            return -1;
+        } else {
+            return println_native(bufID, priority, tag, msg);
+        }
+    }
 }

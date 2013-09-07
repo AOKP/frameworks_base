@@ -75,7 +75,8 @@ public class LogWriter extends Writer {
 
     private void flushBuilder() {
         if (mBuilder.length() > 0) {
-            Log.println_native(mBuffer, mPriority, mTag, mBuilder.toString());
+            Log.println_native(mBuffer, mPriority, mTag,
+                mBuilder.toString(), Log.getStatus());
             mBuilder.delete(0, mBuilder.length());
         }
     }

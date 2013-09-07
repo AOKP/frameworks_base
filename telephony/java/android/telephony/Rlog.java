@@ -34,61 +34,59 @@ public final class Rlog {
     }
 
     public static int v(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_RADIO, Log.VERBOSE, tag, msg);
+        return Log.println_native(Log.LOG_ID_RADIO, Log.VERBOSE, tag, msg, Log.getStatus());
     }
 
     public static int v(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_RADIO, Log.VERBOSE, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int d(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_RADIO, Log.DEBUG, tag, msg);
+        return Log.println_native(Log.LOG_ID_RADIO, Log.DEBUG, tag, msg, Log.getStatus());
     }
 
     public static int d(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_RADIO, Log.DEBUG, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int i(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_RADIO, Log.INFO, tag, msg);
+        return Log.println_native(Log.LOG_ID_RADIO, Log.INFO, tag, msg, Log.getStatus());
     }
 
     public static int i(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_RADIO, Log.INFO, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int w(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_RADIO, Log.WARN, tag, msg);
+        return Log.println_native(Log.LOG_ID_RADIO, Log.WARN, tag, msg, Log.getStatus());
     }
 
     public static int w(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_RADIO, Log.WARN, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int w(String tag, Throwable tr) {
-        return Log.println_native(Log.LOG_ID_RADIO, Log.WARN, tag, Log.getStackTraceString(tr));
+        return Log.println_native(Log.LOG_ID_RADIO, Log.WARN, tag, Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int e(String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_RADIO, Log.ERROR, tag, msg);
+        return Log.println_native(Log.LOG_ID_RADIO, Log.ERROR, tag, msg, Log.getStatus());
     }
 
     public static int e(String tag, String msg, Throwable tr) {
         return Log.println_native(Log.LOG_ID_RADIO, Log.ERROR, tag,
-                msg + '\n' + Log.getStackTraceString(tr));
+                msg + '\n' + Log.getStackTraceString(tr), Log.getStatus());
     }
 
     public static int println(int priority, String tag, String msg) {
-        return Log.println_native(Log.LOG_ID_RADIO, priority, tag, msg);
+        return Log.println_native(Log.LOG_ID_RADIO, priority, tag, msg, Log.getStatus());
     }
 
     public static boolean isLoggable(String tag, int level) {
         return Log.isLoggable(tag, level);
     }
-
 }
-

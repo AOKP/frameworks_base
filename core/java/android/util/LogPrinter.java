@@ -54,6 +54,6 @@ public class LogPrinter implements Printer {
     }
     
     public void println(String x) {
-        Log.println_native(mBuffer, mPriority, mTag, x);
+        Log.println_native(mBuffer, mPriority, mTag, x, Log.getStatus());
     }
 }
