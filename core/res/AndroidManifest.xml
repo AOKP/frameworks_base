@@ -1381,6 +1381,13 @@
         android:description="@string/permgroupdesc_systemTools"
         android:priority="100" />
 
+    <!-- @hide Change logging ability -->
+    <permission android:name="android.permission.aokp.CHANGE_LOGGING_STATUS"
+        android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
+        android:protectionLevel="signature|system"
+        android:label="@string/permlab_changeLoggingStatus"
+        android:description="@string/permdesc_changeLoggingStatus" />
+
     <!-- @hide Change the screen compatibility mode of applications -->
     <permission android:name="android.permission.SET_SCREEN_COMPATIBILITY"
         android:permissionGroup="android.permission-group.SYSTEM_TOOLS"
