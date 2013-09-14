@@ -30,7 +30,7 @@
 
     <FrameLayout
         android:id="@+id/remote_content_parent"
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/notification_panel_width"
         android:layout_height="@dimen/notification_max_height"
         android:layout_gravity="center_horizontal">
 
@@ -40,6 +40,7 @@
             android:layout_height="wrap_content" />
 
     </FrameLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -51,8 +52,7 @@
             android:layout_width="@dimen/handle_icon_size"
             android:layout_height="@dimen/handle_icon_size"
             android:layout_centerInParent="true"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_ad_unlock" />
+            android:scaleType="fitCenter" />
 
         <View
             android:id="@+id/anchor"
@@ -114,7 +114,3 @@
     </RelativeLayout>
 
 </FrameLayout>
-<<<<<<< HEAD
-
-=======
->>>>>>> 0bbecfd... Squashed Omni's active display

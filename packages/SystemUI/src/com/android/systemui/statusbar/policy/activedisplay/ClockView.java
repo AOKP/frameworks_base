@@ -163,10 +163,17 @@ public class ClockView extends RelativeLayout {
         void observe() {
             ContentResolver resolver =
                     ClockView.this.mContext.getContentResolver();
+<<<<<<< HEAD
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ACTIVE_DISPLAY_SHOW_AMPM), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ACTIVE_DISPLAY_SHOW_DATE), false, this);
+=======
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_SHOW_AMPM), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_SHOW_DATE), false, this);
+>>>>>>> 0bbecfd... Squashed Omni's active display
             update();
         }
 
@@ -184,10 +191,17 @@ public class ClockView extends RelativeLayout {
             ContentResolver resolver =
                     ClockView.this.mContext.getContentResolver();
 
+<<<<<<< HEAD
             boolean showAmPm = Settings.System.getInt(
                     resolver, Settings.System.ACTIVE_DISPLAY_SHOW_AMPM, 0) == 1;
             boolean showDate = Settings.System.getInt(
                     resolver, Settings.System.ACTIVE_DISPLAY_SHOW_DATE, 0) == 1;
+=======
+            boolean showAmPm = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_SHOW_AMPM, 0) == 1;
+            boolean showDate = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_SHOW_DATE, 0) == 1;
+>>>>>>> 0bbecfd... Squashed Omni's active display
 
             mAmPm.setShowAmPm(showAmPm);
             mDateView.setVisibility(showDate ? View.VISIBLE : View.INVISIBLE);
@@ -217,7 +231,10 @@ public class ClockView extends RelativeLayout {
         super.onAttachedToWindow();
 
         mAttached++;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         /* monitor time ticks, time changed, timezone */
         if (mIntentReceiver == null) {
             mIntentReceiver = new TimeChangedReceiver(this);
@@ -227,12 +244,19 @@ public class ClockView extends RelativeLayout {
             filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
             mContext.registerReceiverAsUser(mIntentReceiver, UserHandle.OWNER, filter, null, null );
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         /* monitor 12/24-hour display preference */
         if (mFormatChangeObserver == null) {
             mFormatChangeObserver = new FormatChangeObserver(this);
             mContext.getContentResolver().registerContentObserver(
+<<<<<<< HEAD
                     Settings.System.CONTENT_URI, true, mFormatChangeObserver);
+=======
+                    Settings.AOKP.CONTENT_URI, true, mFormatChangeObserver);
+>>>>>>> 0bbecfd... Squashed Omni's active display
         }
         if (mSettingsObserver == null) {
             mSettingsObserver = new SettingsObserver(new Handler());
@@ -247,7 +271,10 @@ public class ClockView extends RelativeLayout {
         super.onDetachedFromWindow();
 
         mAttached--;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         if (mIntentReceiver != null) {
             mContext.unregisterReceiver(mIntentReceiver);
         }
@@ -258,7 +285,10 @@ public class ClockView extends RelativeLayout {
         if (mSettingsObserver != null) {
             mSettingsObserver.unobserve();
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         mSettingsObserver = null;
         mFormatChangeObserver = null;
         mIntentReceiver = null;
@@ -271,7 +301,10 @@ public class ClockView extends RelativeLayout {
 
     public void updateTime() {
         mCalendar.setTimeInMillis(System.currentTimeMillis());
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         String newTime = DateFormat.format(mFormat, mCalendar).toString();
         SpannableString span = new SpannableString(newTime);
         int colonIndex = newTime.indexOf(':');

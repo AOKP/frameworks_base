@@ -100,8 +100,11 @@ public class ActiveDisplayView extends FrameLayout {
 
     private static final int MAX_OVERFLOW_ICONS = 8;
 
+<<<<<<< HEAD
     private static final long DISPLAY_TIMEOUT = 8000L;
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
     private static final int HIDE_NOTIFICATIONS_BELOW_SCORE = Notification.PRIORITY_LOW;
 
     // the different pocket mode options
@@ -142,11 +145,19 @@ public class ActiveDisplayView extends FrameLayout {
     private Sensor mProximitySensor;
     private boolean mProximityIsFar = true;
     private boolean mIsInBrightLight = false;
+<<<<<<< HEAD
+=======
+    private boolean mWakedByPocketMode = false;
+>>>>>>> 0bbecfd... Squashed Omni's active display
     private LinearLayout mOverflowNotifications;
     private LayoutParams mRemoteViewLayoutParams;
     private int mIconSize;
     private int mIconMargin;
     private int mIconPadding;
+<<<<<<< HEAD
+=======
+    private long mPocketTime = 0;
+>>>>>>> 0bbecfd... Squashed Omni's active display
     private LinearLayout.LayoutParams mOverflowLayoutParams;
     private KeyguardManager mKeyguardManager;
     private KeyguardLock mKeyguardLock;
@@ -164,6 +175,12 @@ public class ActiveDisplayView extends FrameLayout {
     private int mUserBrightnessLevel = -1;
     private boolean mSunlightModeEnabled = false;
     private Set<String> mExcludedApps = new HashSet<String>();
+<<<<<<< HEAD
+=======
+    private long mDisplayTimeout = 8000L;
+    private long mProximityThreshold = 5000L;
+    private boolean mTurnOffModeEnabled = true;
+>>>>>>> 0bbecfd... Squashed Omni's active display
 
     /**
      * Simple class that listens to changes in notifications
@@ -200,6 +217,11 @@ public class ActiveDisplayView extends FrameLayout {
 
         public void onTrigger(final View v, final int target) {
             if (target == UNLOCK_TARGET) {
+<<<<<<< HEAD
+=======
+                mWakedByPocketMode = false;
+                disableProximitySensor();
+>>>>>>> 0bbecfd... Squashed Omni's active display
                 mNotification = null;
                 hideNotificationView();
                 if (!mKeyguardManager.isKeyguardSecure()) {
@@ -215,6 +237,11 @@ public class ActiveDisplayView extends FrameLayout {
                     }
                 }
             } else if (target == OPEN_APP_TARGET) {
+<<<<<<< HEAD
+=======
+                mWakedByPocketMode = false;
+                disableProximitySensor();
+>>>>>>> 0bbecfd... Squashed Omni's active display
                 hideNotificationView();
                 if (!mKeyguardManager.isKeyguardSecure()) {
                     sendUnlockBroadcast();
@@ -260,6 +287,7 @@ public class ActiveDisplayView extends FrameLayout {
         }
 
         public void onGrabbedStateChange(final View v, final int handle) {
+<<<<<<< HEAD
 
         }
 
@@ -267,6 +295,12 @@ public class ActiveDisplayView extends FrameLayout {
 
         }
 
+=======
+        }
+
+        public void onFinishFinalAnimation() {
+        }
+>>>>>>> 0bbecfd... Squashed Omni's active display
     };
 
     /**
@@ -280,6 +314,7 @@ public class ActiveDisplayView extends FrameLayout {
         void observe() {
             ContentResolver resolver =
                     ActiveDisplayView.this.mContext.getContentResolver();
+<<<<<<< HEAD
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ENABLE_ACTIVE_DISPLAY), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -300,6 +335,34 @@ public class ActiveDisplayView extends FrameLayout {
                     Settings.System.ACTIVE_DISPLAY_EXCLUDED_APPS), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.SCREEN_BRIGHTNESS_MODE), false, this);
+=======
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ENABLE_ACTIVE_DISPLAY), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_TEXT), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_ALL_NOTIFICATIONS), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_HIDE_LOW_PRIORITY_NOTIFICATIONS), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_POCKET_MODE), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_REDISPLAY), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_BRIGHTNESS), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_SUNLIGHT_MODE), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_EXCLUDED_APPS), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.System.SCREEN_BRIGHTNESS_MODE), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_TIMEOUT), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_TURNOFF_MODE), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ACTIVE_DISPLAY_THRESHOLD), false, this);
+>>>>>>> 0bbecfd... Squashed Omni's active display
             update();
         }
 
@@ -320,6 +383,7 @@ public class ActiveDisplayView extends FrameLayout {
             ContentResolver resolver =
                     ActiveDisplayView.this.mContext.getContentResolver();
 
+<<<<<<< HEAD
             mDisplayNotifications = Settings.System.getInt(
                     resolver, Settings.System.ENABLE_ACTIVE_DISPLAY, 0) == 1;
             mDisplayNotificationText = Settings.System.getInt(
@@ -342,6 +406,36 @@ public class ActiveDisplayView extends FrameLayout {
             createExcludedAppsSet(excludedApps);
 
             int brightnessMode = Settings.System.getInt(
+=======
+            mDisplayNotifications = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ENABLE_ACTIVE_DISPLAY, 0) == 1;
+            mDisplayNotificationText = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_TEXT, 0) == 1;
+            mShowAllNotifications = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_ALL_NOTIFICATIONS, 0) == 1;
+            mHideLowPriorityNotifications = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_HIDE_LOW_PRIORITY_NOTIFICATIONS, 0) == 1;
+            mPocketMode = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_POCKET_MODE, POCKET_MODE_OFF);
+            mRedisplayTimeout = Settings.AOKP.getLong(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_REDISPLAY, 0L);
+            mInitialBrightness = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_BRIGHTNESS, 100) / 100f;
+            mSunlightModeEnabled = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_SUNLIGHT_MODE, 0) == 1;
+            String excludedApps = Settings.AOKP.getString(resolver,
+                    Settings.AOKP.ACTIVE_DISPLAY_EXCLUDED_APPS);
+            mDisplayTimeout = Settings.AOKP.getLong(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_TIMEOUT, 8000L);
+            mTurnOffModeEnabled = Settings.AOKP.getInt(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_TURNOFF_MODE, 0) == 1;
+            mProximityThreshold = Settings.AOKP.getLong(
+                    resolver, Settings.AOKP.ACTIVE_DISPLAY_THRESHOLD, 8000L);
+
+            createExcludedAppsSet(excludedApps);
+
+            int brightnessMode = Settings.AOKP.getInt(
+>>>>>>> 0bbecfd... Squashed Omni's active display
                     resolver, Settings.System.SCREEN_BRIGHTNESS_MODE, -1);
             if (mBrightnessMode != brightnessMode) {
                 mBrightnessMode = brightnessMode;
@@ -471,7 +565,11 @@ public class ActiveDisplayView extends FrameLayout {
         mGlowPadView.setOnTriggerListener(mOnTriggerListener);
         mGlowPadView.setDrawOuterRing(false);
         TargetDrawable nDrawable = new TargetDrawable(getResources(),
+<<<<<<< HEAD
                 createLockHandle( getResources().getDrawable(R.drawable.ic_handle_notification_normal)));
+=======
+                R.drawable.ic_handle_notification_normal);
+>>>>>>> 0bbecfd... Squashed Omni's active display
         mGlowPadView.setHandleDrawable(nDrawable);
 
         mRemoteViewLayout = (FrameLayout) contents.findViewById(R.id.remote_content_parent);
@@ -541,7 +639,11 @@ public class ActiveDisplayView extends FrameLayout {
         final Resources res = getResources();
         final int targetInset = res.getDimensionPixelSize(com.android.internal.R.dimen.lockscreen_target_inset);
         final Drawable blankActiveDrawable =
+<<<<<<< HEAD
                 res.getDrawable(com.android.internal.R.drawable.ic_lockscreen_target_activated);
+=======
+                res.getDrawable(R.drawable.ic_lockscreen_target_activated);
+>>>>>>> 0bbecfd... Squashed Omni's active display
         final InsetDrawable activeBack = new InsetDrawable(blankActiveDrawable, 0, 0, 0, 0);
 
         // Add unlock target
@@ -556,7 +658,11 @@ public class ActiveDisplayView extends FrameLayout {
             if (mNotification != null && mNotification.isClearable()) {
                 storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_ad_dismiss_notification)));
             } else {
+<<<<<<< HEAD
                 storedDraw.add(new TargetDrawable(res, null));
+=======
+                storedDraw.add(new TargetDrawable(res, res.getDrawable(R.drawable.ic_qs_power)));
+>>>>>>> 0bbecfd... Squashed Omni's active display
             }
         }
         storedDraw.add(new TargetDrawable(res, null));
@@ -645,7 +751,11 @@ public class ActiveDisplayView extends FrameLayout {
         }
         setVisibility(View.GONE);
         restoreBrightness();
+<<<<<<< HEAD
         mBar.disable(0);
+=======
+        mWakedByPocketMode = false;
+>>>>>>> 0bbecfd... Squashed Omni's active display
         cancelTimeoutTimer();
         unregisterSensorListener(mLightSensor);
     }
@@ -662,6 +772,7 @@ public class ActiveDisplayView extends FrameLayout {
     }
 
     private void handleDismissNotification() {
+<<<<<<< HEAD
         try {
             mNM.cancelNotificationFromSystemListener(mNotificationListener,
                     mNotification.getPackageName(), mNotification.getTag(),
@@ -676,6 +787,23 @@ public class ActiveDisplayView extends FrameLayout {
             return;
         }
 
+=======
+        if (mNotification != null && mNotification.isClearable()) {
+            try {
+                mNM.cancelNotificationFromSystemListener(mNotificationListener,
+                        mNotification.getPackageName(), mNotification.getTag(),
+                        mNotification.getId());
+            } catch (RemoteException e) {
+            } catch (NullPointerException npe) {
+            }
+            mNotification = getNextAvailableNotification();
+            if (mNotification != null) {
+                setActiveNotification(mNotification, true);
+                userActivity();
+                return;
+            }
+        }
+>>>>>>> 0bbecfd... Squashed Omni's active display
         // no other notifications to display so turn screen off
         turnScreenOff();
     }
@@ -694,10 +822,17 @@ public class ActiveDisplayView extends FrameLayout {
 
     private void onScreenTurnedOn() {
         cancelRedisplayTimer();
+<<<<<<< HEAD
         disableProximitySensor();
     }
 
     private void onScreenTurnedOff() {
+=======
+    }
+
+    private void onScreenTurnedOff() {
+        mWakedByPocketMode = false;
+>>>>>>> 0bbecfd... Squashed Omni's active display
         hideNotificationView();
         cancelTimeoutTimer();
         if (mRedisplayTimeout > 0) updateRedisplayTimer();
@@ -705,6 +840,11 @@ public class ActiveDisplayView extends FrameLayout {
     }
 
     private void turnScreenOff() {
+<<<<<<< HEAD
+=======
+        mWakedByPocketMode = false;
+        Log.i(TAG, "ActiveDisplay: turn screen off");
+>>>>>>> 0bbecfd... Squashed Omni's active display
         try {
             mPM.goToSleep(SystemClock.uptimeMillis(), 0);
         } catch (RemoteException e) {
@@ -729,34 +869,58 @@ public class ActiveDisplayView extends FrameLayout {
             return mPM.isScreenOn();
         } catch (RemoteException e) {
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         return false;
     }
 
     private void enableProximitySensor() {
         if (mPocketMode != POCKET_MODE_OFF && mDisplayNotifications) {
+<<<<<<< HEAD
             mProximityIsFar = true;
+=======
+            Log.i(TAG, "ActiveDisplay: enable ProximitySensor");
+            mProximityIsFar = true;
+            mPocketTime = 0;
+>>>>>>> 0bbecfd... Squashed Omni's active display
             registerSensorListener(mProximitySensor);
         }
     }
 
     private void disableProximitySensor() {
         if (mPocketMode != POCKET_MODE_OFF && mDisplayNotifications) {
+<<<<<<< HEAD
+=======
+            Log.i(TAG, "ActiveDisplay: disable ProximitySensor");
+>>>>>>> 0bbecfd... Squashed Omni's active display
             unregisterSensorListener(mProximitySensor);
         }
     }
 
     private void setBrightness(float brightness) {
         final ContentResolver resolver = mContext.getContentResolver();
+<<<<<<< HEAD
         mBrightnessMode = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
                 Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
         if (mBrightnessMode != Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
             mUserBrightnessLevel = Settings.System.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS,
+=======
+        mBrightnessMode = Settings.AOKP.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
+                Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC);
+        if (mBrightnessMode != Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
+            mUserBrightnessLevel = Settings.AOKP.getInt(resolver, Settings.System.SCREEN_BRIGHTNESS,
+>>>>>>> 0bbecfd... Squashed Omni's active display
                     android.os.PowerManager.BRIGHTNESS_ON);
             final int dim = getResources().getInteger(
                     com.android.internal.R.integer.config_screenBrightnessDim);
             int level = (int)((android.os.PowerManager.BRIGHTNESS_ON - dim) * brightness) + dim;
+<<<<<<< HEAD
             Settings.System.putInt(resolver,
+=======
+            Settings.AOKP.putInt(resolver,
+>>>>>>> 0bbecfd... Squashed Omni's active display
                     Settings.System.SCREEN_BRIGHTNESS_MODE,
                     Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
             try {
@@ -776,7 +940,11 @@ public class ActiveDisplayView extends FrameLayout {
             mPM.setTemporaryScreenBrightnessSettingOverride(mUserBrightnessLevel);
         } catch (RemoteException e) {
         }
+<<<<<<< HEAD
         Settings.System.putInt(resolver,
+=======
+        Settings.AOKP.putInt(resolver,
+>>>>>>> 0bbecfd... Squashed Omni's active display
                 Settings.System.SCREEN_BRIGHTNESS_MODE,
                 mBrightnessMode);
     }
@@ -810,7 +978,11 @@ public class ActiveDisplayView extends FrameLayout {
     }
 
     private void unregisterNotificationListener() {
+<<<<<<< HEAD
         if (mNotificationListener !=  null) {
+=======
+        if (mNotificationListener != null) {
+>>>>>>> 0bbecfd... Squashed Omni's active display
             try {
                 mNM.unregisterListener(mNotificationListener, UserHandle.USER_ALL);
             } catch (RemoteException e) {
@@ -831,6 +1003,10 @@ public class ActiveDisplayView extends FrameLayout {
 
     private void registerCallbacks() {
         if (!mCallbacksRegistered) {
+<<<<<<< HEAD
+=======
+            Log.i(TAG, "ActiveDisplay: register callbacks");
+>>>>>>> 0bbecfd... Squashed Omni's active display
             registerBroadcastReceiver();
             registerNotificationListener();
             mCallbacksRegistered = true;
@@ -839,6 +1015,10 @@ public class ActiveDisplayView extends FrameLayout {
 
     private void unregisterCallbacks() {
         if (mCallbacksRegistered) {
+<<<<<<< HEAD
+=======
+            Log.i(TAG, "ActiveDisplay: unregister callbacks");
+>>>>>>> 0bbecfd... Squashed Omni's active display
             unregisterBroadcastReceiver();
             unregisterNotificationListener();
             mCallbacksRegistered = false;
@@ -860,7 +1040,10 @@ public class ActiveDisplayView extends FrameLayout {
             }
         } catch (RemoteException e) {
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         return null;
     }
 
@@ -908,6 +1091,10 @@ public class ActiveDisplayView extends FrameLayout {
                         }
                     }
                 } catch (RemoteException re) {
+<<<<<<< HEAD
+=======
+                } catch (NullPointerException npe) {
+>>>>>>> 0bbecfd... Squashed Omni's active display
                 }
             }
         });
@@ -942,7 +1129,10 @@ public class ActiveDisplayView extends FrameLayout {
                             }
                         }
                     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
@@ -990,6 +1180,10 @@ public class ActiveDisplayView extends FrameLayout {
             mPM.wakeUp(SystemClock.uptimeMillis());
         } catch (RemoteException e) {
         }
+<<<<<<< HEAD
+=======
+        Log.i(TAG, "ActiveDisplay: Wake device");
+>>>>>>> 0bbecfd... Squashed Omni's active display
         updateTimeoutTimer();
     }
 
@@ -1040,7 +1234,11 @@ public class ActiveDisplayView extends FrameLayout {
         RemoteViews rv = useBigContent ? notification.bigContentView : notification.contentView;
         if (rv != null) {
             if (mRemoteView != null) mRemoteViewLayout.removeView(mRemoteView);
+<<<<<<< HEAD
             if (useBigContent)  {
+=======
+            if (useBigContent) {
+>>>>>>> 0bbecfd... Squashed Omni's active display
                 rv.removeAllViews(com.android.internal.R.id.actions);
                 rv.setViewVisibility(com.android.internal.R.id.action_divider, View.GONE);
                 mRemoteViewLayoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -1082,12 +1280,23 @@ public class ActiveDisplayView extends FrameLayout {
         return stateListDrawable;
     }
 
+<<<<<<< HEAD
+=======
+    private void updateWakedByPocketMode() {
+        if (mTurnOffModeEnabled == true) {
+            mWakedByPocketMode = true;
+            Log.i(TAG, "ActiveDisplay: waked by Pocketmode");
+        }
+    }
+
+>>>>>>> 0bbecfd... Squashed Omni's active display
     private SensorEventListener mSensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
             float value = event.values[0];
             if (event.sensor.equals(mProximitySensor)) {
                 boolean isFar = value >= mProximitySensor.getMaximumRange();
+<<<<<<< HEAD
                 if (isFar != mProximityIsFar) {
                     mProximityIsFar = isFar;
                     if (isFar) {
@@ -1098,10 +1307,40 @@ public class ActiveDisplayView extends FrameLayout {
                             if (mNotification != null) {
                                 showNotification(mNotification, true);
                             } else if (mPocketMode == POCKET_MODE_ALWAYS) {
+=======
+                if (isFar) {
+                    mProximityIsFar = true;
+                    if (!isScreenOn() && mPocketMode != POCKET_MODE_OFF && !isOnCall()) {
+                        if (System.currentTimeMillis() >= (mPocketTime + mProximityThreshold) && mPocketTime != 0){
+
+                            if (mNotification == null) {
+                                mNotification = getNextAvailableNotification();
+                            }
+
+                            if (mNotification != null) {
+                                updateWakedByPocketMode();
+                                showNotification(mNotification, true);
+                            } else if (mPocketMode == POCKET_MODE_ALWAYS) {
+                                updateWakedByPocketMode();
+>>>>>>> 0bbecfd... Squashed Omni's active display
                                 showTime();
                             }
                         }
                     }
+<<<<<<< HEAD
+=======
+                } else {
+                    if (mProximityIsFar) mPocketTime = System.currentTimeMillis();
+                    mProximityIsFar = false;
+                    if (isScreenOn() && mPocketMode != POCKET_MODE_OFF && !isOnCall() && mWakedByPocketMode) {
+                        mWakedByPocketMode = false;
+                        Log.i(TAG, "ActiveDisplay: sent to sleep by Pocketmode");
+
+                        restoreBrightness();
+                        cancelTimeoutTimer();
+                        turnScreenOff();
+                    }
+>>>>>>> 0bbecfd... Squashed Omni's active display
                 }
             } else if (event.sensor.equals(mLightSensor)) {
                 boolean isBright = mIsInBrightLight;
@@ -1157,7 +1396,10 @@ public class ActiveDisplayView extends FrameLayout {
     private void updateRedisplayTimer() {
         AlarmManager am = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(ACTION_REDISPLAY_NOTIFICATION);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         PendingIntent pi = PendingIntent.getBroadcast(mContext, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             am.cancel(pi);
@@ -1174,7 +1416,10 @@ public class ActiveDisplayView extends FrameLayout {
     private void cancelRedisplayTimer() {
         AlarmManager am = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(ACTION_REDISPLAY_NOTIFICATION);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         PendingIntent pi = PendingIntent.getBroadcast(mContext, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             am.cancel(pi);
@@ -1188,14 +1433,21 @@ public class ActiveDisplayView extends FrameLayout {
     private void updateTimeoutTimer() {
         AlarmManager am = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(ACTION_DISPLAY_TIMEOUT);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         PendingIntent pi = PendingIntent.getBroadcast(mContext, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             am.cancel(pi);
         } catch (Exception e) {
         }
         Calendar time = Calendar.getInstance();
+<<<<<<< HEAD
         time.setTimeInMillis(System.currentTimeMillis() + DISPLAY_TIMEOUT);
+=======
+        time.setTimeInMillis(System.currentTimeMillis() + mDisplayTimeout);
+>>>>>>> 0bbecfd... Squashed Omni's active display
         am.set(AlarmManager.RTC, time.getTimeInMillis(), pi);
     }
 
@@ -1205,7 +1457,10 @@ public class ActiveDisplayView extends FrameLayout {
     private void cancelTimeoutTimer() {
         AlarmManager am = (AlarmManager)mContext.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(ACTION_DISPLAY_TIMEOUT);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 0bbecfd... Squashed Omni's active display
         PendingIntent pi = PendingIntent.getBroadcast(mContext, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         try {
             am.cancel(pi);
