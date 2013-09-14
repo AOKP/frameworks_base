@@ -78,7 +78,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -451,6 +450,10 @@ public class PhoneStatusBar extends BaseStatusBar {
             }
         } catch (RemoteException ex) {
             // no window manager? good luck with that
+        }
+
+        if (!mRecreating) {
+            addActiveDisplayView();
         }
 
         // figure out which pixel-format to use for the status bar.
@@ -2211,7 +2214,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         setAreThereNotifications();
     }
 
-    private boolean areLightsOn() {
+    public boolean areLightsOn() {
         return 0 == (mSystemUiVisibility & View.SYSTEM_UI_FLAG_LOW_PROFILE);
     }
 
@@ -2231,6 +2234,11 @@ public class PhoneStatusBar extends BaseStatusBar {
         }
     }
 
+    public void setNavigationBarLightsOn(boolean on, boolean force) {
+        mNavigationBarView.setLowProfile(!on, true, force);
+    }
+
+    @Override
     public void topAppWindowChanged(boolean showMenu) {
         mTransparencyManager.update();
         if (DEBUG) {
