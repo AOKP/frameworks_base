@@ -255,4 +255,7 @@
     <!-- Constant for hidden ribbon drag handle -->
     <dimen name="ribbon_drag_handle_height">25dp</dimen>
 
+    <!-- Height of carrier label + close handle -->
+    <dimen name="weather_text_margin">56dp</dimen>
+
 </resources>
