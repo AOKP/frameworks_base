@@ -78,6 +78,7 @@ public class TabletTicker
     private LayoutTransition mLayoutTransition;
     private boolean mWindowShouldClose;
 
+
     public TabletTicker(TabletStatusBar bar) {
         mBar = bar;
         mContext = bar.getContext();
@@ -159,11 +160,15 @@ public class TabletTicker
         }
     }
 
+
     private void advance() {
         // Out with the old...
         if (mCurrentView != null) {
             if (mWindow != null) {
                 mWindow.removeView(mCurrentView);
+                mWindowManager.removeView(mWindow);
+                mWindow = null;
+                mBar.doneTicking();
             }
             mCurrentView = null;
             mCurrentKey = null;
@@ -280,7 +285,7 @@ public class TabletTicker
                 return null;
             }
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, 
+                    ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT);
             content.addView(expanded, lp);
         } else if (n.tickerText != null) {
