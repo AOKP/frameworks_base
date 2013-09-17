@@ -41,6 +41,9 @@ public class NotificationPanelView extends PanelView {
 
     private static final float STATUS_BAR_SETTINGS_FLIP_PERCENTAGE_RIGHT = 0.15f;
     private static final float STATUS_BAR_SETTINGS_FLIP_PERCENTAGE_LEFT = 0.85f;
+    private static final float STATUS_BAR_SWIPE_TRIGGER_PERCENTAGE = 0.05f;
+    private static final float STATUS_BAR_SWIPE_VERTICAL_MAX_PERCENTAGE = 0.025f;
+    private static final float STATUS_BAR_SWIPE_MOVE_PERCENTAGE = 0.2f;
 
     Drawable mHandleBar;
     int mHandleBarHeight;
@@ -54,6 +57,13 @@ public class NotificationPanelView extends PanelView {
     ContentObserver mChangeSideObserver;
     int mToggleStyle;
     Handler mHandler = new Handler();
+
+    private float mGestureStartX;
+    private float mGestureStartY;
+    private float mFlipOffset;
+    private float mSwipeDirection;
+    private boolean mTrackingSwipe;
+    private boolean mSwipeTriggered;
 
     public NotificationPanelView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -170,11 +180,16 @@ public class NotificationPanelView extends PanelView {
                        event.getActionMasked(), (int) event.getX(), (int) event.getY());
             }
         }
+        boolean shouldRecycleEvent = false;
         if (PhoneStatusBar.SETTINGS_DRAG_SHORTCUT && mStatusBar.mHasFlipSettings) {
             boolean shouldFlip = false;
-
+            boolean swipeFlipJustFinished = false;
+            boolean swipeFlipJustStarted = false;
             switch (event.getActionMasked()) {
                 case MotionEvent.ACTION_DOWN:
+                    mGestureStartX = event.getX(0);
+                    mGestureStartY = event.getY(0);
+                    mTrackingSwipe = isFullyExpanded();
                     mOkToFlip = getExpandedHeight() == 0;
                     if(mToggleStyle != 0) {
                         // don't allow settings panel with non-tile toggles
@@ -199,7 +214,40 @@ public class NotificationPanelView extends PanelView {
                         }
                     }
                     break;
+                case MotionEvent.ACTION_MOVE:
+                    final float deltaX = Math.abs(event.getX(0) - mGestureStartX);
+                    final float deltaY = Math.abs(event.getY(0) - mGestureStartY);
+                    final float maxDeltaY = getHeight() * STATUS_BAR_SWIPE_VERTICAL_MAX_PERCENTAGE;
+                    final float minDeltaX = getWidth() * STATUS_BAR_SWIPE_TRIGGER_PERCENTAGE;
+                    if (mTrackingSwipe && deltaY > maxDeltaY) {
+                        mTrackingSwipe = false;
+                    }
+                    if (mTrackingSwipe && deltaX > deltaY && deltaX > minDeltaX) {
 
+                        mSwipeDirection = event.getX(0) - mGestureStartX;
+
+                        /* The value below can be used to adjust deltaX to always increase,
+                           if the user keeps swiping in the same direction as she started the
+                           gesture. If she, however, moves her finger the other way, deltaX will
+                           decrease.
+
+                           This allows for a horizontal, in any direction, to always flip the
+                           views. */
+
+                        mSwipeDirection = mSwipeDirection < 0f ? -1f : 1f;
+                        if (mStatusBar.isShowingSettings()) {
+                            mFlipOffset = 1f;
+                            // in this case, however, we need deltaX to decrease
+                            mSwipeDirection = -mSwipeDirection;
+                        } else {
+                            mFlipOffset = -1f;
+                        }
+                        mGestureStartX = event.getX(0);
+                        mTrackingSwipe = false;
+                        mSwipeTriggered = true;
+                        swipeFlipJustStarted = true;
+                    }
+                    break;
                 case MotionEvent.ACTION_POINTER_DOWN:
                     if (mOkToFlip) {
                         float miny = event.getY(0);
@@ -214,6 +262,11 @@ public class NotificationPanelView extends PanelView {
                         }
                     }
                     break;
+                case MotionEvent.ACTION_UP:
+                    swipeFlipJustFinished = mSwipeTriggered;
+                    mSwipeTriggered = false;
+                    mTrackingSwipe = false;
+                    break;
             }
             if(mOkToFlip && shouldFlip) {
                 if (getMeasuredHeight() < mHandleBarHeight) {
@@ -222,8 +275,32 @@ public class NotificationPanelView extends PanelView {
                     mStatusBar.flipToSettings();
                 }
                 mOkToFlip = false;
+            } else if (mSwipeTriggered) {
+                final float deltaX = (event.getX(0) - mGestureStartX) * mSwipeDirection;
+                mStatusBar.partialFlip(mFlipOffset +
+                                       deltaX / (getWidth() * STATUS_BAR_SWIPE_MOVE_PERCENTAGE));
+            if (!swipeFlipJustStarted) {
+                    return true; // Consume the event.
+                }
+            } else if (swipeFlipJustFinished) {
+                mStatusBar.completePartialFlip();
+            }
+            if (swipeFlipJustStarted || swipeFlipJustFinished) {
+                // Made up event: finger at the middle bottom of the view.
+                MotionEvent original = event;
+                event = MotionEvent.obtain(original.getDownTime(), original.getEventTime(),
+                    original.getAction(), getWidth()/2, getHeight(),
+                    original.getPressure(0), original.getSize(0), original.getMetaState(),
+                    original.getXPrecision(), original.getYPrecision(), original.getDeviceId(),
+                    original.getEdgeFlags());
+                shouldRecycleEvent = true;
             }
         }
-        return mHandleView.dispatchTouchEvent(event);
+
+        final boolean result = mHandleView.dispatchTouchEvent(event);
+        if (shouldRecycleEvent) {
+            event.recycle();
+        }
+        return result;
     }
 }
