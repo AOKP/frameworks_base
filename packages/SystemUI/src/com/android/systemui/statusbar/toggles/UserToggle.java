@@ -1,4 +1,3 @@
-
 package com.android.systemui.statusbar.toggles;
 
 import android.app.ActivityManagerNative;
@@ -8,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.UserInfo;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -35,12 +35,16 @@ public class UserToggle extends BaseToggle {
     private AsyncTask<Void, Void, Pair<String, Drawable>> mUserInfoTask;
 
     private static Drawable sAvatarDrawable = null;
+
+    private Drawable mTileBackground;
     private static int sAvatarBaseSize = 125;
 
     @Override
     public void init(Context c, int style) {
         super.init(c, style);
         reloadUserInfo();
+
+        mTileBackground = (Drawable) c.getResources() .getDrawable(R.drawable.qs_tile_background);
         registerBroadcastReceiver(new BroadcastReceiver() {
 
             @Override
@@ -161,6 +165,12 @@ public class UserToggle extends BaseToggle {
                 View.inflate(mContext, R.layout.toggle_tile_user, null);
         quick.setOnClickListener(this);
         quick.setOnLongClickListener(this);
+        if (mContext.getResources().getConfiguration().uiInvertedMode
+                              == Configuration.UI_INVERTED_MODE_YES) {
+            quick.setBackgroundColor(R.color.inverted_tile);
+        } else {
+            quick.setBackground(mTileBackground);
+        }
         mLabel = (TextView) quick.findViewById(R.id.user_textview);
         mIcon = (ImageView) quick.findViewById(R.id.user_imageview);
         return quick;
@@ -169,6 +179,13 @@ public class UserToggle extends BaseToggle {
     @Override
     public View createTraditionalView() {
         View v = super.createTraditionalView();
+        if (mContext.getResources().getConfiguration().uiInvertedMode
+                            == Configuration.UI_INVERTED_MODE_YES) {
+            v.setBackgroundColor(R.color.inverted_tile);
+        } else {
+            v.setBackground(mTileBackground);
+        }
+
         return v;
     }
 
