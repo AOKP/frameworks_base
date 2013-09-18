@@ -1,4 +1,3 @@
-
 package com.android.systemui.statusbar.toggles;
 
 import android.app.ActivityManagerNative;
@@ -7,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.ContentObserver;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
@@ -42,6 +42,7 @@ public abstract class BaseToggle
     private boolean mTactileFeedbackEnabled;
     private Vibrator vib;
     private Drawable mIconDrawable = null;
+    private Drawable mTileBackground;
     private int mIconLevel = -1;
     private CharSequence mLabelText = null;
     private int mTextSize = 12;
@@ -73,6 +74,7 @@ public abstract class BaseToggle
         mObserver = new SettingsObserver(mHandler);
         mObserver.observe();
         vib = (Vibrator) mContext.getSystemService(mContext.VIBRATOR_SERVICE);
+        mTileBackground = (Drawable) c.getResources() .getDrawable(R.drawable.qs_tile_background);
         setTextSize(ToggleManager.getTextSize(mContext));
         scheduleViewUpdate();
     }
@@ -161,6 +163,12 @@ public abstract class BaseToggle
                 View.inflate(mContext, R.layout.toggle_tile, null);
         quick.setVisibility(View.VISIBLE);
         quick.setOnClickListener(this);
+        if (mContext.getResources().getConfiguration().uiInvertedMode
+                              == Configuration.UI_INVERTED_MODE_YES) {
+            quick.setBackgroundColor(R.color.inverted_tile);
+        } else {
+            quick.setBackground(mTileBackground);
+        }
         quick.setOnLongClickListener(this);
         mLabel = (TextView) quick.findViewById(R.id.label);
         mIcon = (ImageView) quick.findViewById(R.id.icon);
