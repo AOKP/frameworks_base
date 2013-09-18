@@ -1,4 +1,5 @@
 
+
 package com.android.systemui.statusbar.toggles;
 
 import android.bluetooth.BluetoothAdapter;
@@ -9,7 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.ContentObserver;
+import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -235,6 +238,9 @@ public class ToggleManager {
     private void setupTraditional() {
         int widgetsPerRow = 6;
 
+        Drawable mTileBackground = (Drawable) mContext.getResources()
+                                 .getDrawable(R.drawable.qs_tile_background);
+
         if (mContainers[STYLE_TRADITIONAL] != null) {
             updateToggleList();
 
@@ -259,8 +265,14 @@ public class ToggleManager {
                     if (row.getChildCount() < widgetsPerRow) {
                         View spacer_front = new View(mContext);
                         View spacer_end = new View(mContext);
-                        spacer_front.setBackgroundResource(R.drawable.qs_tile_background);
-                        spacer_end.setBackgroundResource(R.drawable.qs_tile_background);
+                        if (mContext.getResources().getConfiguration().uiInvertedMode
+                              == Configuration.UI_INVERTED_MODE_YES) {
+                            spacer_front.setBackgroundColor(R.color.inverted_tile);
+                            spacer_end.setBackgroundColor(R.color.inverted_tile);
+                        } else {
+                            spacer_front.setBackground(mTileBackground);
+                            spacer_end.setBackground(mTileBackground);
+                        }
                         params.weight = 2f; // change weight so spacers grow
                         row.addView(spacer_front,0, params);
                         row.addView(spacer_end, params);
