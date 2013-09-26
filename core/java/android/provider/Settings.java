@@ -7217,6 +7217,13 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_ADJUST_SOUNDS_ENABLED = "volume_adjust_sounds_enabled";
+
+        /**
+         * Whether or not to show circle battery around the lockscreen handle
+         * @hide
+         */
+        public static final String BATTERY_ARC_LOCKSCREEN_HANDLE = "battery_arc_lockscreen_handle";
+
     }
 
     /**
