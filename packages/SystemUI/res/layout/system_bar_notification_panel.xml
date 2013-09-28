@@ -52,6 +52,11 @@
             android:layout_weight="0"
             />
 
+        <include layout="@layout/weatherpanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
         <LinearLayout
             android:id="@+id/quick_toggles"
             android:layout_width="match_parent"
