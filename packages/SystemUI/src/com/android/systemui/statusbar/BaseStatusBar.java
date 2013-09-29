@@ -495,7 +495,7 @@ public abstract class BaseStatusBar extends SystemUI implements
             case 2 : // Phablet Mode
                 mSearchPanelView = (SearchPanelView) LayoutInflater.from(mContext).inflate(
                     R.layout.status_bar_search_panel_phablet, tmpRoot, false);
-                break;    
+                break;
         }
         mSearchPanelView.setOnTouchListener(
                  new TouchOutsideListener(MSG_CLOSE_SEARCH_PANEL, mSearchPanelView));
@@ -1215,4 +1215,37 @@ public abstract class BaseStatusBar extends SystemUI implements
         KeyguardManager km = (KeyguardManager) mContext.getSystemService(Context.KEYGUARD_SERVICE);
         return km.inKeyguardRestrictedInputMode();
     }
+<<<<<<< HEAD
+=======
+
+    protected void addActiveDisplayView() {
+        mActiveDisplayView = (ActiveDisplayView)View.inflate(mContext, R.layout.active_display, null);
+        mWindowManager.addView(mActiveDisplayView, getActiveDisplayViewLayoutParams());
+        mActiveDisplayView.setStatusBar(this);
+    }
+
+    protected void removeActiveDisplayView() {
+        if (mActiveDisplayView != null)
+            mWindowManager.removeView(mActiveDisplayView);
+    }
+
+    protected WindowManager.LayoutParams getActiveDisplayViewLayoutParams() {
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
+                LayoutParams.MATCH_PARENT,
+                LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.TYPE_STATUS_BAR_PANEL,
+                0
+                        | WindowManager.LayoutParams.FLAG_TOUCHABLE_WHEN_WAKING
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                        | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
+                        | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+                        | WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                PixelFormat.TRANSLUCENT);
+        lp.gravity = Gravity.TOP | Gravity.FILL_VERTICAL | Gravity.FILL_HORIZONTAL;
+        lp.setTitle("ActiveDisplayView");
+
+        return lp;
+    }
+>>>>>>> fbd5e8a... ActiveDisplay: Force FULLSCREEN flag
 }
