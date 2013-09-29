@@ -499,7 +499,7 @@ public abstract class BaseStatusBar extends SystemUI implements
             case 2 : // Phablet Mode
                 mSearchPanelView = (SearchPanelView) LayoutInflater.from(mContext).inflate(
                     R.layout.status_bar_search_panel_phablet, tmpRoot, false);
-                break;    
+                break;
         }
         mSearchPanelView.setOnTouchListener(
                  new TouchOutsideListener(MSG_CLOSE_SEARCH_PANEL, mSearchPanelView));
@@ -1241,7 +1241,8 @@ public abstract class BaseStatusBar extends SystemUI implements
                         | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                        | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
+                        | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
+                        | WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 PixelFormat.TRANSLUCENT);
         lp.gravity = Gravity.TOP | Gravity.FILL_VERTICAL | Gravity.FILL_HORIZONTAL;
         lp.setTitle("ActiveDisplayView");
