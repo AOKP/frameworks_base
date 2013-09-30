@@ -7491,6 +7491,14 @@ public final class Settings {
         public static final String BATTERY_CHARGING_LED_ENABLED = "battery_charging_led_enabled";
 
         /**
+         * Boolean value. Whether to show the 4G icon when on LTE.
+         * True = show 4G
+         * False = show LTE
+         * @hide
+         */
+        public static final String STATUSBAR_SIGNAL_SHOW_4G_FOR_LTE = "statusbar_signal_show_4g_for_lte";
+
+        /**
          * Enable / disable navring
          * @hide
          */
