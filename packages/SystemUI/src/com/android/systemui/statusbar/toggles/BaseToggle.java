@@ -136,7 +136,7 @@ public abstract class BaseToggle
 
     protected final void vibrateOnTouch() {
         if (mTactileFeedbackEnabled &&  mVibratePref && vib != null ) {
-            vib.vibrate(10);
+            vib.vibrate(25);
         }
     }
 
