@@ -206,6 +206,12 @@ public class VibratorService extends IVibratorService.Stub
             return;
         }
 
+        int userMillis = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.GENERIC_VIBRATE_INTENSITY, 0);
+        if (userMillis != 0 && milliseconds <= 35) {
+            milliseconds = userMillis;
+        }
+
         Vibration vib = new Vibration(token, milliseconds, uid, packageName);
 
         final long ident = Binder.clearCallingIdentity();
