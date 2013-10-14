@@ -238,6 +238,12 @@
             android:process=":screenshot"
             android:exported="false" />
 
+        <receiver android:name=".BootReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <!-- Called from PhoneWindowManager -->
         <receiver android:name=".screenshot.ScreenshotServiceErrorReceiver"
             android:process=":screenshot"
@@ -255,6 +261,9 @@
                 <data android:scheme="package" />
             </intent-filter>
         </receiver>
+
+        <service android:name=".CPUInfoService"
+                android:exported="true" />
 
         <service android:name=".ImageWallpaper"
                 android:permission="android.permission.BIND_WALLPAPER"
