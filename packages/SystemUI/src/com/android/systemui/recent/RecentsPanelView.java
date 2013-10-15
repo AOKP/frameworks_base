@@ -75,6 +75,8 @@ import com.android.systemui.statusbar.tablet.TabletStatusBar;
 import com.android.internal.util.MemInfoReader;
 
 import java.util.ArrayList;
+import java.io.OutputStreamWriter;
+import java.lang.Runtime;
 
 public class RecentsPanelView extends FrameLayout implements OnItemClickListener, RecentsCallback,
         StatusBarPanel, Animator.AnimatorListener {
@@ -530,6 +532,23 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             @Override
             public void onClick(View v) {
                 AwesomeAction.launchAction(v.getContext(), AwesomeConstant.ACTION_ASSIST.value());
+            }
+        });
+        mRecentsKillAllButton.setOnLongClickListener(new OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    killAllRecentApps();
+                    try {
+                        ProcessBuilder pb = new ProcessBuilder("su", "-c", "/system/bin/sh");
+                        OutputStreamWriter osw = new OutputStreamWriter(pb.start().getOutputStream());
+                        osw.write("sync" + "\n" + "echo 3 > /proc/sys/vm/drop_caches" + "\n");
+                        osw.write("\nexit\n");
+                        osw.flush();
+                        osw.close();
+                    } catch (Exception e) {
+                        Log.d(TAG, "Failed!");
+                    }
+                    return true;
             }
         });
     }
