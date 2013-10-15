@@ -2543,6 +2543,13 @@ public final class Settings {
         public static final String LOW_BATTERY_SOUND = Global.LOW_BATTERY_SOUND;
 
         /**
+         * A list of packages to exclude from being displayed in active display.
+         * This should be a string of packages separated by |
+         * @hide
+         */
+        public static final String ACTIVE_DISPLAY_EXCLUDED_APPS = "active_display_excluded_apps";
+
+        /**
          * @deprecated Use {@link android.provider.Settings.Global#DESK_DOCK_SOUND}
          * instead
          * @hide
