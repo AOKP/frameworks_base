@@ -2535,6 +2535,12 @@ public final class Settings {
         public static final String ACTIVE_DISPLAY_SUNLIGHT_MODE = "active_display_sunlight_mode";
 
         /**
+         * Whether active display should respect the Quiet Hours rangle
+         * @hide
+         */
+        public static final String ACTIVE_DISPLAY_RESPECT_QH = "active_display_respect_qh";
+
+        /**
          * @deprecated Use {@link android.provider.Settings.Global#LOW_BATTERY_SOUND}
          * instead
          * @hide
