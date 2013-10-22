@@ -30,6 +30,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -61,6 +62,7 @@ import android.service.notification.StatusBarNotification;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -159,6 +161,12 @@ public class ActiveDisplayView extends FrameLayout {
     private int mUserBrightnessLevel = -1;
     private boolean mSunlightModeEnabled = false;
     private Set<String> mExcludedApps = new HashSet<String>();
+    private boolean mActiveDisplayRespectQh = false;
+
+    // QuietHour Stubs
+    private boolean mQuietHoursEnabled;
+    private int mQuietHoursStart;
+    private int mQuietHoursEnd;
 
     /**
      * Simple class that listens to changes in notifications
@@ -299,6 +307,14 @@ public class ActiveDisplayView extends FrameLayout {
                     Settings.System.ACTIVE_DISPLAY_EXCLUDED_APPS), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.SCREEN_BRIGHTNESS_MODE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.ACTIVE_DISPLAY_RESPECT_QH), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QUIET_HOURS_ENABLED), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QUIET_HOURS_START), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QUIET_HOURS_END), false, this);
             update();
         }
 
@@ -335,8 +351,16 @@ public class ActiveDisplayView extends FrameLayout {
                     resolver, Settings.System.ACTIVE_DISPLAY_BRIGHTNESS, 100) / 100f;
             mSunlightModeEnabled = Settings.System.getInt(
                     resolver, Settings.System.ACTIVE_DISPLAY_SUNLIGHT_MODE, 0) == 1;
-            String excludedApps = Settings.System.getString(resolver,
-                    Settings.System.ACTIVE_DISPLAY_EXCLUDED_APPS);
+            String excludedApps = Settings.System.getString(
+                    resolver, Settings.System.ACTIVE_DISPLAY_EXCLUDED_APPS);
+            mActiveDisplayRespectQh = Settings.System.getInt(
+                    resolver, Settings.System.ACTIVE_DISPLAY_RESPECT_QH, 0) == 1;
+            mQuietHoursEnabled = Settings.System.getInt(
+                    resolver, Settings.System.QUIET_HOURS_ENABLED, 0) != 0;
+            mQuietHoursStart = Settings.System.getInt(
+                    resolver, Settings.System.QUIET_HOURS_START, 0);
+            mQuietHoursEnd = Settings.System.getInt(
+                    resolver, Settings.System.QUIET_HOURS_END, 0);
 
             createExcludedAppsSet(excludedApps);
 
@@ -710,7 +734,7 @@ public class ActiveDisplayView extends FrameLayout {
     }
 
     private void enableProximitySensor() {
-        if (mPocketModeEnabled && mDisplayNotifications) {
+        if (mPocketModeEnabled && mDisplayNotifications && !inQuietHours()) {
             mProximityIsFar = true;
             registerSensorListener(mProximitySensor);
         }
@@ -796,13 +820,11 @@ public class ActiveDisplayView extends FrameLayout {
     }
 
     private void registerSensorListener(Sensor sensor) {
-        if (sensor != null)
-            mSensorManager.registerListener(mSensorListener, sensor, SensorManager.SENSOR_DELAY_UI);
+        if (sensor != null) mSensorManager.registerListener(mSensorListener, sensor, SensorManager.SENSOR_DELAY_UI);
     }
 
     private void unregisterSensorListener(Sensor sensor) {
-        if (sensor != null)
-            mSensorManager.unregisterListener(mSensorListener, sensor);
+        if (sensor != null) mSensorManager.unregisterListener(mSensorListener, sensor);
     }
 
     private void registerCallbacks() {
@@ -937,7 +959,7 @@ public class ActiveDisplayView extends FrameLayout {
      */
     private boolean isValidNotification(StatusBarNotification sbn) {
         return (!mExcludedApps.contains(sbn.getPackageName()) && !isOnCall()
-                && (sbn.isClearable() || mShowAllNotifications)
+                && (sbn.isClearable() && !inQuietHours() || mShowAllNotifications)
                 && !(mHideLowPriorityNotifications && sbn.getNotification().priority < HIDE_NOTIFICATIONS_BELOW_SCORE));
     }
 
@@ -1054,13 +1076,11 @@ public class ActiveDisplayView extends FrameLayout {
                 boolean isFar = value >= mProximitySensor.getMaximumRange();
                 if (isFar != mProximityIsFar) {
                     mProximityIsFar = isFar;
-                    if (isFar) {
-                        if (!isScreenOn() && mPocketModeEnabled && !isOnCall()) {
-                            if (mNotification == null) {
-                                mNotification = getNextAvailableNotification();
-                            }
-                            if (mNotification != null) showNotification(mNotification, true);
+                    if (!isScreenOn() && mPocketModeEnabled && !isOnCall()) {
+                        if (mNotification == null) {
+                            mNotification = getNextAvailableNotification();
                         }
+                        if (mNotification != null) showNotification(mNotification, true);
                     }
                 }
             } else if (event.sensor.equals(mLightSensor)) {
@@ -1073,11 +1093,12 @@ public class ActiveDisplayView extends FrameLayout {
                 } else if (value < (max * 0.5f)) {
                     isBright = false;
                 }
-
                 if (mIsInBrightLight != isBright) {
                     mIsInBrightLight = isBright;
                     ActiveDisplayView.this.invalidate();
                 }
+            } else {
+                return;
             }
         }
 
@@ -1091,10 +1112,12 @@ public class ActiveDisplayView extends FrameLayout {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (ACTION_REDISPLAY_NOTIFICATION.equals(action)) {
-                if (mNotification == null) {
-                    mNotification = getNextAvailableNotification();
+                if (!inQuietHours()) {
+                    if (mNotification == null) {
+                        mNotification = getNextAvailableNotification();
+                    }
+                    if (mNotification != null) showNotification(mNotification, true);
                 }
-                if (mNotification != null) showNotification(mNotification, true);
             } else if (ACTION_DISPLAY_TIMEOUT.equals(action)) {
                 turnScreenOff();
             } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
@@ -1183,4 +1206,28 @@ public class ActiveDisplayView extends FrameLayout {
         String[] appsToExclude = excludedApps.split("\\|");
         mExcludedApps = new HashSet<String>(Arrays.asList(appsToExclude));
     }
+
+    /**
+     * Active Display Quiet Hours
+     * Check time to see if not in predifined time range
+     * for which the user does not want to be shown notifications
+     * 
+     */
+     private boolean inQuietHours() {
+          if (mQuietHoursEnabled && mActiveDisplayRespectQh) {
+              if (mQuietHoursStart == mQuietHoursEnd) {
+                  return true;
+              }
+              // Get date
+              Calendar calendar = Calendar.getInstance();
+              int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
+              if (mQuietHoursEnd < mQuietHoursStart) {
+                  // Starts at night and ends in the morning
+                  return (minutes > mQuietHoursStart) || (minutes < mQuietHoursEnd);
+              } else {
+                  return (minutes > mQuietHoursStart) && (minutes < mQuietHoursEnd);
+              }
+          }
+          return false;
+     }
 }
