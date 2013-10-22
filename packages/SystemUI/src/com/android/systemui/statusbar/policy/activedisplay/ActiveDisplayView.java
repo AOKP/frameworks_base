@@ -30,6 +30,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -61,6 +62,7 @@ import android.service.notification.StatusBarNotification;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.FloatMath;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -135,6 +137,7 @@ public class ActiveDisplayView extends FrameLayout {
     private SensorManager mSensorManager;
     private Sensor mLightSensor;
     private Sensor mProximitySensor;
+    private Sensor mAccelerometerSensor;
     private boolean mProximityIsFar = true;
     private boolean mIsInBrightLight = false;
     private LinearLayout mOverflowNotifications;
@@ -159,6 +162,10 @@ public class ActiveDisplayView extends FrameLayout {
     private int mUserBrightnessLevel = -1;
     private boolean mSunlightModeEnabled = false;
     private Set<String> mExcludedApps = new HashSet<String>();
+    // Accelerometer
+    private float mAccel = 0.00f;
+    private float mAccelCurrent = SensorManager.GRAVITY_EARTH;
+    private float mAccelLast = SensorManager.GRAVITY_EARTH;
 
     /**
      * Simple class that listens to changes in notifications
@@ -391,6 +398,7 @@ public class ActiveDisplayView extends FrameLayout {
 
         mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
         mProximitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        mAccelerometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mLightSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
         mPM = IPowerManager.Stub.asInterface(ServiceManager.getService(Context.POWER_SERVICE));
@@ -627,7 +635,7 @@ public class ActiveDisplayView extends FrameLayout {
                 mBar.disable(0xffffffff);
             }
         }, 100);
-        registerSensorListener(mLightSensor);
+        registerSensorListener(mLightSensorListener, mLightSensor);
     }
 
     private void handleHideNotificationView() {
@@ -639,7 +647,7 @@ public class ActiveDisplayView extends FrameLayout {
         restoreBrightness();
         mBar.disable(0);
         cancelTimeoutTimer();
-        unregisterSensorListener(mLightSensor);
+        unregisterSensorListener(mLightSensorListener, mLightSensor);
     }
 
     private void handleShowNotification(boolean ping) {
@@ -684,6 +692,7 @@ public class ActiveDisplayView extends FrameLayout {
     private void onScreenTurnedOn() {
         cancelRedisplayTimer();
         disableProximitySensor();
+        disableAccelerometerSensor();
     }
 
     private void onScreenTurnedOff() {
@@ -691,6 +700,7 @@ public class ActiveDisplayView extends FrameLayout {
         cancelTimeoutTimer();
         if (mRedisplayTimeout > 0) updateRedisplayTimer();
         enableProximitySensor();
+        enableAccelerometerSensor();
     }
 
     private void turnScreenOff() {
@@ -712,13 +722,25 @@ public class ActiveDisplayView extends FrameLayout {
     private void enableProximitySensor() {
         if (mPocketModeEnabled && mDisplayNotifications) {
             mProximityIsFar = true;
-            registerSensorListener(mProximitySensor);
+            registerSensorListener(mProximitySensorListener, mProximitySensor);
         }
     }
 
     private void disableProximitySensor() {
         if (mPocketModeEnabled && mDisplayNotifications) {
-            unregisterSensorListener(mProximitySensor);
+            unregisterSensorListener(mProximitySensorListener, mProximitySensor);
+        }
+    }
+
+    private void enableAccelerometerSensor() {
+        if (mPocketModeEnabled && mDisplayNotifications) {
+            registerSensorListener(mAccelerometerSensorListener, mAccelerometerSensor);
+        }
+    }
+
+    private void disableAccelerometerSensor() {
+        if (mPocketModeEnabled && mDisplayNotifications) {
+            unregisterSensorListener(mAccelerometerSensorListener, mAccelerometerSensor);
         }
     }
 
@@ -795,14 +817,12 @@ public class ActiveDisplayView extends FrameLayout {
         }
     }
 
-    private void registerSensorListener(Sensor sensor) {
-        if (sensor != null)
-            mSensorManager.registerListener(mSensorListener, sensor, SensorManager.SENSOR_DELAY_UI);
+    private void registerSensorListener(SensorEventListener listener, Sensor sensor) {
+        if (sensor != null) mSensorManager.registerListener(listener, sensor, SensorManager.SENSOR_DELAY_UI);
     }
 
-    private void unregisterSensorListener(Sensor sensor) {
-        if (sensor != null)
-            mSensorManager.unregisterListener(mSensorListener, sensor);
+    private void unregisterSensorListener(SensorEventListener listener, Sensor sensor) {
+        if (sensor != null) mSensorManager.unregisterListener(listener, sensor);
     }
 
     private void registerCallbacks() {
@@ -1046,24 +1066,58 @@ public class ActiveDisplayView extends FrameLayout {
         return stateListDrawable;
     }
 
-    private SensorEventListener mSensorListener = new SensorEventListener() {
+    private SensorEventListener mAccelerometerSensorListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.equals(mAccelerometerSensor)) {
+                float [] mGravity = event.values.clone();
+                // Motion detection
+                float x = mGravity[0];
+                float y = mGravity[1];
+                float z = mGravity[2];
+                mAccelLast = mAccelCurrent;
+                mAccelCurrent = FloatMath.sqrt(x*x + y*y + z*z);
+                float delta = mAccelCurrent - mAccelLast;
+                mAccel = mAccel * 0.9f + delta;
+                shouldWeWakeDevice();
+            } else {
+                // If not accelerometer return
+                return;
+            }
+        }
+
+         @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
+
+
+    private SensorEventListener mProximitySensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
             float value = event.values[0];
             if (event.sensor.equals(mProximitySensor)) {
+                // Convert value to state
                 boolean isFar = value >= mProximitySensor.getMaximumRange();
                 if (isFar != mProximityIsFar) {
                     mProximityIsFar = isFar;
-                    if (isFar) {
-                        if (!isScreenOn() && mPocketModeEnabled && !isOnCall()) {
-                            if (mNotification == null) {
-                                mNotification = getNextAvailableNotification();
-                            }
-                            if (mNotification != null) showNotification(mNotification, true);
-                        }
-                    }
+                    shouldWeWakeDevice();
                 }
-            } else if (event.sensor.equals(mLightSensor)) {
+            } else {
+                return;
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
+
+    private SensorEventListener mLightSensorListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.equals(mLightSensor)) {
+                float value = event.values[0];
                 boolean isBright = mIsInBrightLight;
                 final float max = mLightSensor.getMaximumRange();
                 // we don't want the display switching back and forth so there is a region
@@ -1078,6 +1132,8 @@ public class ActiveDisplayView extends FrameLayout {
                     mIsInBrightLight = isBright;
                     ActiveDisplayView.this.invalidate();
                 }
+            } else {
+                return;
             }
         }
 
@@ -1085,6 +1141,7 @@ public class ActiveDisplayView extends FrameLayout {
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
         }
     };
+            
 
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -1182,5 +1239,29 @@ public class ActiveDisplayView extends FrameLayout {
             return;
         String[] appsToExclude = excludedApps.split("\\|");
         mExcludedApps = new HashSet<String>(Arrays.asList(appsToExclude));
+    }
+
+   /**
+    * Gathers sensor data from proximity and accelerometer
+    * in order to determine if we should wake device to show AD
+    */
+    private void shouldWeWakeDevice() {
+        if (!isScreenOn() && mPocketModeEnabled && !isOnCall()) {
+            if (mProximityIsFar) {
+                if (mAccel == 0) {
+                    //Allow proximity to wake device on flat surface with a wave
+                    if (mNotification == null) {
+                        mNotification = getNextAvailableNotification();
+                    }
+                    if (mNotification != null) showNotification(mNotification, true);
+                } else if (mAccel > 0.25) {
+                    // If proximity is far and device is moving awaken the kraken
+                    if (mNotification == null) {
+                        mNotification = getNextAvailableNotification();
+                    }
+                    if (mNotification != null) showNotification(mNotification, true);
+                }
+            }
+        }
     }
 }
