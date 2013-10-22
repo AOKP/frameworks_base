@@ -25,6 +25,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
@@ -253,8 +254,14 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         super.onFinishInflate();
         res = getResources();
         ContentResolver cr = mContext.getContentResolver();
+
         mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
         mGlowPadView.setOnTriggerListener(mOnTriggerListener);
+
+        int color = Settings.System.getInt(cr,
+                Settings.System.LOCKSCREEN_MISC_COLOR, -1);
+        mGlowPadView.setColoredIcons(color);
+
         ribbonView = (LinearLayout) findViewById(R.id.keyguard_ribbon_and_battery);
         ribbonView.bringToFront();
         mRibbon = (LinearLayout) ribbonView.findViewById(R.id.ribbon);
@@ -287,6 +294,10 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         mSecurityMessageDisplay = new KeyguardMessageArea.Helper(this);
         View bouncerFrameView = findViewById(R.id.keyguard_selector_view_frame);
         mBouncerFrame = bouncerFrameView.getBackground();
+        if (color != -1 && mBouncerFrame != null) {
+            mBouncerFrame.setColorFilter(null);
+            mBouncerFrame.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
         mUnlockBroadcasted = false;
         filter = new IntentFilter();
         filter.addAction(UnlockReceiver.ACTION_UNLOCK_RECEIVER);
