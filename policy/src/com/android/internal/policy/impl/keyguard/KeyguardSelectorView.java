@@ -253,8 +253,15 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
         super.onFinishInflate();
         res = getResources();
         ContentResolver cr = mContext.getContentResolver();
+
         mGlowPadView = (GlowPadView) findViewById(R.id.glow_pad_view);
         mGlowPadView.setOnTriggerListener(mOnTriggerListener);
+
+        int color = Settings.System.getInt(cr,
+                Settings.System.LOCKSCREEN_MISC_COLOR, -1);
+        // TODO: Keys/Pattern Color ::: 10/21/13 ~Jubakuba
+        mGlowPadView.setColoredIcons(color);
+
         ribbonView = (LinearLayout) findViewById(R.id.keyguard_ribbon_and_battery);
         ribbonView.bringToFront();
         mRibbon = (LinearLayout) ribbonView.findViewById(R.id.ribbon);
