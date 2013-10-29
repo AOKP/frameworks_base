@@ -49,4 +49,5 @@
     <string name="toggle_REBOOT">Restartovat</string>
     <string name="toggle_CUSTOM">Vlastní</string>
     <string name="toggle_STAYAWAKE">Neuspávat</string>
+    <string name="toggle_DARKUI">Tmavý vzhled</string>
 </resources>

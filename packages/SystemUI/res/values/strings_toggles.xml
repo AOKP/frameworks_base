@@ -50,4 +50,5 @@
     <string name="toggle_CUSTOM">Custom</string>
     <string name="toggle_STAYAWAKE">Stay awake</string>
     <string name="toggle_WIRELESSADB">Wireless ADB</string>
+    <string name="toggle_DARKUI">DarkUI</string>
 </resources>
