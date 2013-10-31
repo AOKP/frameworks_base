@@ -335,9 +335,6 @@ public class SearchPanelView extends FrameLayout implements
 
 
     private boolean shouldUnlock(String action) {
-        if (TextUtils.isEmpty(action))
-            return false;
-
         if (action.equals(AwesomeConstant.ACTION_SILENT_VIB.value()) ||
             action.equals(AwesomeConstant.ACTION_VIB.value()) ||
             action.equals(AwesomeConstant.ACTION_POWER.value()) ||

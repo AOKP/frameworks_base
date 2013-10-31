@@ -112,12 +112,6 @@ public interface BluetoothProfile {
     public static final int HANDSFREE_CLIENT = 9;
 
     /**
-     * DUN
-     * @hide
-     */
-    public static final int DUN = 21;
-
-    /**
      * Default priority for devices that we try to auto-connect to and
      * and allow incoming connections for the profile
      * @hide
