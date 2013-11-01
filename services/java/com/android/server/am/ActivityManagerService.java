@@ -12819,7 +12819,7 @@ public final class ActivityManagerService  extends ActivityManagerNative
                 }
             }
         }
-
+        
         if (changes != 0 && starting == null) {
             // If the configuration changed, and the caller is not already
             // in the process of starting an activity, then find the top
