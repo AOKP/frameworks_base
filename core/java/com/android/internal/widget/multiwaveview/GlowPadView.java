@@ -30,7 +30,6 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Path;
@@ -469,10 +468,6 @@ public class GlowPadView extends View {
             if (mPadDrawable != null) {
                 mPadDrawable.setColorFilter(null);
                 mPadDrawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-                StateListDrawable stateListDrawable = new StateListDrawable();
-                stateListDrawable.addState(TargetDrawable.STATE_INACTIVE, mPadDrawable);
-                stateListDrawable.addState(TargetDrawable.STATE_ACTIVE, mPadDrawable);
-                stateListDrawable.addState(TargetDrawable.STATE_FOCUSED, mPadDrawable);
                 TargetDrawable handle = new TargetDrawable(getResources(), mPadDrawable);
                 setHandleDrawable(handle);
             }

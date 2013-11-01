@@ -77,8 +77,6 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <include layout="@layout/network_stats" />
-
             <LinearLayout android:id="@+id/statusIcons"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -93,6 +91,10 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 >
+                <include layout="@layout/network_stats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
                 <include layout="@layout/signal_cluster_view" 
                     android:id="@+id/signal_cluster"
                     android:layout_width="wrap_content"
