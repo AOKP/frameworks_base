@@ -62,6 +62,10 @@ final class DisplayPowerRequest {
     // visible to the user.
     public boolean blockScreenOn;
 
+    // Multiplication factor for delays used in auto-brightness computations
+    // Lower values mean faster reaction to changing light conditions, but
+    // potentially higher CPU usage and flicker.
+    public float responsitivityFactor;
     // Electrobeam settings - override config for ElectronBeam on or off
     public int electronBeamMode;
     public boolean electronBeamOffEnabled;
@@ -73,6 +77,7 @@ final class DisplayPowerRequest {
         screenAutoBrightnessAdjustment = 0.0f;
         useAutoBrightness = false;
         blockScreenOn = false;
+        responsitivityFactor = 1.0f;
         electronBeamMode = 0;
         electronBeamOffEnabled = false;
     }
@@ -88,6 +93,7 @@ final class DisplayPowerRequest {
         screenAutoBrightnessAdjustment = other.screenAutoBrightnessAdjustment;
         useAutoBrightness = other.useAutoBrightness;
         blockScreenOn = other.blockScreenOn;
+        responsitivityFactor = other.responsitivityFactor;
         electronBeamMode = other.electronBeamMode;
         electronBeamOffEnabled = other.electronBeamOffEnabled;
     }
@@ -110,6 +116,7 @@ final class DisplayPowerRequest {
                 && screenAutoBrightnessAdjustment == other.screenAutoBrightnessAdjustment
                 && useAutoBrightness == other.useAutoBrightness
                 && blockScreenOn == other.blockScreenOn
+                && Math.abs(responsitivityFactor - other.responsitivityFactor) < 1E-6
                 && electronBeamMode == other.electronBeamMode
                 && electronBeamOffEnabled == other.electronBeamOffEnabled;
     }
@@ -127,6 +134,7 @@ final class DisplayPowerRequest {
                 + ", screenAutoBrightnessAdjustment=" + screenAutoBrightnessAdjustment
                 + ", useAutoBrightness=" + useAutoBrightness
                 + ", blockScreenOn=" + blockScreenOn
+                + ", responsitivityFactor=" + responsitivityFactor
                 + ", electronBeamMode=" + electronBeamMode
                 + ", electronBeamOffEnabled=" + electronBeamOffEnabled;
     }
