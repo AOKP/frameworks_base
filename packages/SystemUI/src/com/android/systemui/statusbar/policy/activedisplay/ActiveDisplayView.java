@@ -740,7 +740,7 @@ public class ActiveDisplayView extends FrameLayout {
     }
 
     private void enableProximitySensor() {
-        if (mPocketMode != POCKET_MODE_OFF && mDisplayNotifications && !inQuietHours()) {
+        if (mPocketMode != POCKET_MODE_OFF && mDisplayNotifications) {
             mProximityIsFar = true;
             registerSensorListener(mProximitySensor);
         }
