@@ -579,6 +579,7 @@ public class PhoneStatusBar extends BaseStatusBar {
         signalCluster.setNetworkController(mNetworkController);
 
         signalCluster = (SignalClusterView)mStatusBarView.findViewById(R.id.signal_cluster_alt);
+        mNetworkController.addSignalCluster(signalCluster);
         signalCluster.setNetworkController(mNetworkController);
 
         if (MSimTelephonyManager.getDefault().isMultiSimEnabled()) {
@@ -625,7 +626,14 @@ public class PhoneStatusBar extends BaseStatusBar {
                     }
                 });
             }
+        } else {
+            mNetworkController = new NetworkController(mContext);
+            signalCluster = (SignalClusterView)mStatusBarView.findViewById(R.id.signal_cluster);
 
+            mNetworkController.addSignalCluster(signalCluster);
+            signalCluster.setNetworkController(mNetworkController);
+
+            signalCluster = (SignalClusterView)mStatusBarView.findViewById(R.id.signal_cluster_alt);
             mNetworkController.addSignalCluster(signalCluster);
             signalCluster.setNetworkController(mNetworkController);
 
@@ -2321,7 +2329,6 @@ public class PhoneStatusBar extends BaseStatusBar {
             } else {
                 signal = mStatusBarView.findViewById(R.id.signal_cluster);
             }
-            final View signal2 = mStatusBarView.findViewById(R.id.signal_cluster);
             final View battery = mStatusBarView.findViewById(R.id.battery);
             final View clock = mStatusBarView.findViewById(R.id.clock);
 
