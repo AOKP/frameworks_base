@@ -19,6 +19,8 @@
 <resources>
   <item type="id" name="background" />
   <item type="id" name="checkbox" />
+  <item type="id" name="monitor_box" />
+  <item type="id" name="seek_bar" />
   <item type="id" name="content" />
   <item type="id" name="empty" />
   <item type="id" name="hint" />
@@ -113,7 +115,7 @@
 
   <!-- Accessibility action identifier for {@link android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction#ACTION_SCROLL_RIGHT}. -->
   <item type="id" name="accessibilityActionScrollRight" />
-  
+
   <!-- Accessibility action identifier for {@link android.view.accessibility.AccessibilityNodeInfo.AccessibilityAction#ACTION_CONTEXT_CLICK}. -->
   <item type="id" name="accessibilityActionContextClick" />
 </resources>
