@@ -154,6 +154,7 @@ import com.android.systemui.doze.DozeHost;
 import com.android.systemui.doze.DozeLog;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.qs.QSDragPanel;
+import com.android.systemui.omni.StatusBarHeaderMachine;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.QSTile;
 import com.android.systemui.recents.ScreenPinningRequest;
@@ -745,6 +746,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private boolean mAutohideSuspended;
     private int mStatusBarMode;
     private int mNavigationBarMode;
+
+    private StatusBarHeaderMachine mStatusBarHeaderMachine;
 
     private ViewMediatorCallback mKeyguardViewMediatorCallback;
     private ScrimController mScrimController;
@@ -1539,6 +1542,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         ThreadedRenderer.overrideProperty("ambientRatio", String.valueOf(1.5f));
 
         UpdateNotifDrawerClearAllIconColor();
+
+        mStatusBarHeaderMachine = new StatusBarHeaderMachine(mContext);
+        mStatusBarHeaderMachine.addObserver(mHeader);
+        mStatusBarHeaderMachine.updateEnablement();
         return mStatusBarView;
     }
 
