@@ -309,6 +309,95 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     };
 
+    private final Runnable mLongPressBrightnessChange = new Runnable() {
+        @Override
+        public void run() {
+            mStatusBarView.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            adjustBrightness(mInitialTouchX);
+            mLinger = BRIGHTNESS_CONTROL_LINGER_THRESHOLD + 1;
+        }
+    };
+
+    private final Runnable mNotifyClearAll = new Runnable() {
+        @Override
+        public void run() {
+            if (DEBUG) {
+                Log.v(TAG, "Notifying status bar of notification clear");
+            }
+            try {
+                mPile.setViewRemoval(true);
+                mBarService.onClearAllNotifications();
+            } catch (RemoteException ex) { }
+        }
+    };
+
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BRIGHTNESS_CONTROL), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SCREEN_BRIGHTNESS_MODE), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BATTERY), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_BATTERY_SHOW_PERCENT), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_CLOCK), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_SIGNAL_TEXT), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NAVBAR_LEFT_IN_LANDSCAPE), false, this);
+            updateSettings();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
+    }
+
+    class DevForceNavbarObserver extends ContentObserver {
+        DevForceNavbarObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DEV_FORCE_SHOW_NAVBAR), false, this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            boolean visible = Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.DEV_FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) == 1;
+            if (visible) {
+                forceAddNavigationBar();
+            } else {
+                removeNavigationBar();
+            }
+        }
+    }
+
+    private void forceAddNavigationBar() {
+        // If we have no Navbar view and we should have one, create it
+        if (mNavigationBarView != null) {
+            return;
+        }
+
+        mNavigationBarView =
+                (NavigationBarView) View.inflate(mContext, R.layout.navigation_bar, null);
+
+        mNavigationBarView.setDisabledFlags(mDisabled);
+        mNavigationBarView.setBar(this);
+        addNavigationBar();
+    }
+
     // ensure quick settings is disabled until the current user makes it through the setup wizard
     private boolean mUserSetup = false;
     private ContentObserver mUserSetupObserver = new ContentObserver(new Handler()) {
