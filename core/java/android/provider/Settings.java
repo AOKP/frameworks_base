@@ -6993,6 +6993,15 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_MINIMIZE_LOCKSCREEN_CHALLENGE = "lockscreen_minimize_lockscreen_challenge";
 
+        /**
+         * Show pointer icon
+         * 0 = no
+         * 1 = yes
+         * @hide
+         */
+        public static final String POINTER_ICON_ENABLED = "pointer_icon_enabled";
+
+
     }
 
     /**
