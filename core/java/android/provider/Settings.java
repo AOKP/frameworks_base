@@ -7209,6 +7209,14 @@ public final class Settings {
         /** Screenshot Menu Options */
         public static final String SCREENSHOT_MODE_OPTIONS = "screenshot_mode_options";
 
+        /**
+         * Show pointer icon
+         * 0 = no
+         * 1 = yes
+         * @hide
+         */
+        public static final String POINTER_ICON_ENABLED = "pointer_icon_enabled";
+
     }
 
     /**
