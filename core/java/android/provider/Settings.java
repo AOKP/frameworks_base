@@ -6833,6 +6833,12 @@ public final class Settings {
          * @hide
          */
         public static final String SWIPE_TO_SWITCH = "swipe_to_switch";
+         
+        /**
+         * Should the non-intrsive incall ui be used
+         * @hide
+         */
+        public static final String NON_INTRUSIVE_INCALL = "non_intrusive_incall";
 
     }
 
