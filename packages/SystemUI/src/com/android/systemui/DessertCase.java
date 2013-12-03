@@ -1,5 +1,7 @@
 /*
  * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2013-2014 The CyanogenMod Project
+ * Copyright (C) 2014 The Android Open Kang Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,23 +26,34 @@ import android.os.Handler;
 import android.util.Slog;
 import android.view.animation.DecelerateInterpolator;
 
+import com.android.systemui.aokp.AOKPCaseView;
+
 public class DessertCase extends Activity {
     DessertCaseView mView;
 
     @Override
     public void onStart() {
         super.onStart();
+        final boolean isAOKP = getIntent().getBooleanExtra("is_aokp", false);
 
         PackageManager pm = getPackageManager();
         final ComponentName cn = new ComponentName(this, DessertCaseDream.class);
         if (pm.getComponentEnabledSetting(cn) != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-            Slog.v("DessertCase", "ACHIEVEMENT UNLOCKED");
+            if (isAOKP) {
+                Slog.v("DessertCase", "AOKP enabled!");
+            } else {
+                Slog.v("DessertCase", "ACHIEVEMENT UNLOCKED");
+            }
             pm.setComponentEnabledSetting(cn,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
         }
 
-        mView = new DessertCaseView(this);
+        if (isAOKP) {
+            mView = new AOKPCaseView(this);
+        } else {
+            mView = new DessertCaseView(this);
+        }
 
         DessertCaseView.RescalingContainer container = new DessertCaseView.RescalingContainer(this);
 
