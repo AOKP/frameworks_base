@@ -1,5 +1,7 @@
 /*
  * Copyright (C) 2013 The Android Open Source Project
+ * Copyright (C) 2013-2014 The CyanogenMod Project
+ * Copyright (C) 2014 The Android Open Kang Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +18,11 @@
 
 package com.android.systemui;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.service.dreams.DreamService;
+
+import com.android.systemui.aokp.AOKPCaseView;
 
 public class DessertCaseDream extends DreamService {
     private DessertCaseView mView;
@@ -27,7 +33,14 @@ public class DessertCaseDream extends DreamService {
         super.onAttachedToWindow();
         setInteractive(false);
 
-        mView = new DessertCaseView(this);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        final boolean isAOKP = prefs.getBoolean("dessert_case_aokp", false);
+
+        if (isAOKP) {
+            mView = new AOKPCaseView(this);
+        } else {
+            mView = new DessertCaseView(this);
+        }
 
         mContainer = new DessertCaseView.RescalingContainer(this);
 
