@@ -85,5 +85,9 @@
     <!-- Recents menu -->
     <string name="status_bar_recent_lock_item_title">Lock app in list</string>
 
+    <!-- AOKP Easter Egg -->
+    <string name="dessert_case_settings_aokp_title">Show unicorns</string>
+    <string name="dessert_case_settings_aokp_summary">Show unicorns together with Android\'s desserts inside the dream</string>
+
 </resources>
 
