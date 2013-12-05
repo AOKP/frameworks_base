@@ -908,11 +908,11 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
 
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.RAM_USAGE_BAR),
+            resolver.registerContentObserver(Settings.AOKP
+                    .getUriFor(Settings.AOKP.RAM_USAGE_BAR),
                     false, this);
-            resolver.registerContentObserver(Settings.System
-                    .getUriFor(Settings.System.RECENT_KILL_ALL_BUTTON),
+            resolver.registerContentObserver(Settings.AOKP
+                    .getUriFor(Settings.AOKP.RECENT_KILL_ALL_BUTTON),
                     false, this);
             updateSettings();
         }
@@ -924,11 +924,11 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     }
 
     public void updateSettings() {
-        ramBarEnabled = Settings.System.getBoolean(mContext.getContentResolver(),
-                Settings.System.RAM_USAGE_BAR, false);
-        mRecentsKillAllEnabled = Settings.System.getBoolean(
+        ramBarEnabled = Settings.AOKP.getBoolean(mContext.getContentResolver(),
+                Settings.AOKP.RAM_USAGE_BAR, false);
+        mRecentsKillAllEnabled = Settings.AOKP.getBoolean(
                 mContext.getContentResolver(),
-                Settings.System.RECENT_KILL_ALL_BUTTON, false);
+                Settings.AOKP.RECENT_KILL_ALL_BUTTON, false);
 
         if (mRamUsageBar != null) {
             mRamUsageBar.setVisibility(ramBarEnabled ? View.VISIBLE : View.GONE);
