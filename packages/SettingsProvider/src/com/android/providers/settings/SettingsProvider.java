@@ -70,7 +70,6 @@ public class SettingsProvider extends ContentProvider {
     private static final String TABLE_GLOBAL = "global";
     private static final String TABLE_FAVORITES = "favorites";
     private static final String TABLE_OLD_FAVORITES = "old_favorites";
-    private static final String TABLE_AOKP = "aokp";
 
     private static final String[] COLUMN_VALUE = new String[] { "value" };
 
@@ -80,8 +79,6 @@ public class SettingsProvider extends ContentProvider {
     private static final SparseArray<SettingsCache> sSystemCaches
             = new SparseArray<SettingsCache>();
     private static final SparseArray<SettingsCache> sSecureCaches
-            = new SparseArray<SettingsCache>();
-   private static final SparseArray<SettingsCache> sAOKPCaches
             = new SparseArray<SettingsCache>();
     private static final SettingsCache sGlobalCache = new SettingsCache(TABLE_GLOBAL);
 
@@ -164,7 +161,7 @@ public class SettingsProvider extends ContentProvider {
                     throw new IllegalArgumentException("Bad root path: " + this.table);
                 }
                 if (TABLE_SYSTEM.equals(this.table) || TABLE_SECURE.equals(this.table) ||
-                    TABLE_GLOBAL.equals(this.table) || TABLE_AOKP.equals(this.table)) {
+                    TABLE_GLOBAL.equals(this.table)) {
                     this.where = Settings.NameValueTable.NAME + "=?";
                     final String name = url.getPathSegments().get(1);
                     this.args = new String[] { name };
@@ -211,8 +208,7 @@ public class SettingsProvider extends ContentProvider {
         String table = tableUri.getPathSegments().get(0);
         if (TABLE_SYSTEM.equals(table) ||
                 TABLE_SECURE.equals(table) ||
-                TABLE_GLOBAL.equals(table) ||
-                TABLE_AOKP.equals(table)) {
+                TABLE_GLOBAL.equals(table)) {
             String name = values.getAsString(Settings.NameValueTable.NAME);
             return Uri.withAppendedPath(tableUri, name);
         } else {
@@ -240,9 +236,6 @@ public class SettingsProvider extends ContentProvider {
             backedUpDataChanged = true;
         } else if (table.equals(TABLE_SECURE)) {
             property = Settings.Secure.SYS_PROP_SETTING_VERSION;
-            backedUpDataChanged = true;
-        } else if (table.equals(TABLE_AOKP)) {
-            property = Settings.AOKP.SYS_PROP_SETTING_VERSION;
             backedUpDataChanged = true;
         } else if (isGlobal) {
             property = Settings.Global.SYS_PROP_SETTING_VERSION;    // this one is global
@@ -371,7 +364,6 @@ public class SettingsProvider extends ContentProvider {
             mOpenHelpers.delete(userHandle);
             sSystemCaches.delete(userHandle);
             sSecureCaches.delete(userHandle);
-            sAOKPCaches.delete(userHandle);
             sKnownMutationsInFlight.delete(userHandle);
         }
     }
@@ -391,7 +383,6 @@ public class SettingsProvider extends ContentProvider {
 
                 sSystemCaches.append(userHandle, new SettingsCache(TABLE_SYSTEM));
                 sSecureCaches.append(userHandle, new SettingsCache(TABLE_SECURE));
-                sAOKPCaches.append(userHandle, new SettingsCache(TABLE_AOKP));
                 sKnownMutationsInFlight.append(userHandle, new AtomicInteger(0));
             }
         }
@@ -446,7 +437,6 @@ public class SettingsProvider extends ContentProvider {
         }
         fullyPopulateCache(dbHelper, TABLE_SECURE, sSecureCaches.get(userHandle));
         fullyPopulateCache(dbHelper, TABLE_SYSTEM, sSystemCaches.get(userHandle));
-        fullyPopulateCache(dbHelper, TABLE_AOKP, sAOKPCaches.get(userHandle));
     }
 
     // Slurp all values (if sane in number & size) into cache.
@@ -563,9 +553,6 @@ public class SettingsProvider extends ContentProvider {
         if (TABLE_SECURE.equals(tableName)) {
             return getOrConstructCache(callingUser, sSecureCaches);
         }
-        if (TABLE_AOKP.equals(tableName)) {
-            return getOrConstructCache(callingUser, sAOKPCaches);
-        }
         if (TABLE_GLOBAL.equals(tableName)) {
             return sGlobalCache;
         }
@@ -629,12 +616,6 @@ public class SettingsProvider extends ContentProvider {
             return lookupValue(getOrEstablishDatabase(UserHandle.USER_OWNER), TABLE_GLOBAL,
                     sGlobalCache, request);
         }
-        if (Settings.CALL_METHOD_GET_AOKP.equals(method)) {
-            if (LOCAL_LOGV) Slog.v(TAG, "call(aokp:" + request + ") for " + callingUser);
-            dbHelper = getOrEstablishDatabase(callingUser);
-            cache = sAOKPCaches.get(callingUser);
-            return lookupValue(dbHelper, TABLE_AOKP, cache, request);
-        }
 
         // Put methods - new value is in the args bundle under the key named by
         // the Settings.NameValueTable.VALUE static.
@@ -668,9 +649,6 @@ public class SettingsProvider extends ContentProvider {
         } else if (Settings.CALL_METHOD_PUT_GLOBAL.equals(method)) {
             if (LOCAL_LOGV) Slog.v(TAG, "call_put(global:" + request + "=" + newValue + ") for " + callingUser);
             insertForUser(Settings.Global.CONTENT_URI, values, callingUser);
-        } else if (Settings.CALL_METHOD_PUT_AOKP.equals(method)) {
-            if (LOCAL_LOGV) Slog.v(TAG, "call_put(aokp:" + request + "=" + newValue + ") for " + callingUser);
-            insertForUser(Settings.AOKP.CONTENT_URI, values, callingUser);
         } else {
             Slog.w(TAG, "call() with invalid method: " + method);
         }
