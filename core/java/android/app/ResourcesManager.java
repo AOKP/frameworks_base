@@ -18,8 +18,6 @@ package android.app;
 
 import static android.app.ActivityThread.DEBUG_CONFIGURATION;
 
-import com.android.internal.app.IAssetRedirectionManager;
-
 import android.content.pm.ActivityInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageInfo;
@@ -27,7 +25,6 @@ import android.content.res.AssetManager;
 import android.content.res.CompatibilityInfo;
 import android.content.res.Configuration;
 import android.content.res.CustomTheme;
-import android.content.res.PackageRedirectionMap;
 import android.content.res.Resources;
 import android.content.res.ResourcesKey;
 import android.hardware.display.DisplayManagerGlobal;
@@ -59,7 +56,6 @@ public class ResourcesManager {
             = new ArrayMap<DisplayAdjustments, DisplayMetrics>();
 
     CompatibilityInfo mResCompatibilityInfo;
-    static IAssetRedirectionManager sAssetRedirectionManager;
     static IPackageManager sPackageManager;
 
     Configuration mResConfiguration;
@@ -217,7 +213,7 @@ public class ResourcesManager {
                 config.customTheme = CustomTheme.getBootTheme();
             }
 
-            if (!TextUtils.isEmpty(config.customTheme.getThemePackageName())) {
+            if (config.customTheme != null) {
                 attachThemeAssets(assets, config.customTheme);
             }
         }
@@ -294,7 +290,7 @@ public class ResourcesManager {
                     AssetManager am = r.getAssets();
                     if (am.hasThemeSupport()) {
                         detachThemeAssets(am);
-                        if (!TextUtils.isEmpty(config.customTheme.getThemePackageName())) {
+                        if (config.customTheme != null) {
                             attachThemeAssets(am, config.customTheme);
                         }
                     }
@@ -426,6 +422,9 @@ public class ResourcesManager {
             assets.setThemeCookie(0);
             assets.clearRedirections();
         }
+
+        return changes != 0;
+
     }
 
 }

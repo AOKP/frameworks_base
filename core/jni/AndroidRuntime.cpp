@@ -1220,7 +1220,10 @@ static const RegJNIRec gRegJNI[] = {
     REG_JNI(register_android_animation_PropertyValuesHolder),
     REG_JNI(register_com_android_internal_content_NativeLibraryHelper),
     REG_JNI(register_com_android_internal_net_NetworkStatsFactory),
+
 #ifdef QCOM_HARDWARE
+
+#ifdef QCOM_ACTIVITY_TRIGGER
     REG_JNI(register_com_android_internal_app_ActivityTrigger),
 #endif
     REG_JNI(register_android_content_res_PackageRedirectionMap),
