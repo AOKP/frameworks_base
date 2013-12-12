@@ -27,6 +27,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.GestureDetector;
+import android.os.PowerManager;
+import android.provider.Settings;
 
 import com.android.systemui.EventLogTags;
 import com.android.systemui.R;
@@ -48,6 +51,7 @@ public class PhoneStatusBarView extends PanelBar {
     private boolean mShouldFade;
     private final PhoneStatusBarTransitions mBarTransitions;
     private int mToggleStyle;
+    private GestureDetector mDoubleTapGesture;
 
     public PhoneStatusBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -62,9 +66,23 @@ public class PhoneStatusBarView extends PanelBar {
         }
         mFullWidthNotifications = mSettingsPanelDragzoneFrac <= 0f;
         mBarTransitions = new PhoneStatusBarTransitions(this);
-     // no need for observer, sysui gets killed when the style is changed.
+        // no need for observer, sysui gets killed when the style is changed.
         mToggleStyle = Settings.AOKP.getInt(mContext.getContentResolver(),
                 Settings.AOKP.TOGGLES_STYLE, 0);
+
+        mDoubleTapGesture = new GestureDetector(mContext, new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+                Log.d(TAG, "Gesture!!");
+                if(pm != null)
+                    pm.goToSleep(e.getEventTime());
+                else
+                    Log.d(TAG, "getSystemService returned null PowerManager");
+
+                return true;
+            }
+        });
     }
 
     public BarTransitions getBarTransitions() {
@@ -210,6 +228,10 @@ public class PhoneStatusBarView extends PanelBar {
                         barConsumedEvent ? 1 : 0);
             }
         }
+
+        if (Settings.AOKP.getInt(mContext.getContentResolver(),
+                    Settings.AOKP.DOUBLE_TAP_SLEEP_GESTURE, 0) == 1)
+            mDoubleTapGesture.onTouchEvent(event);
 
         return barConsumedEvent || super.onTouchEvent(event);
     }
