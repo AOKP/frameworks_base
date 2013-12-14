@@ -33,6 +33,8 @@
     <java-symbol type="string" name="immersive_mode_on"/>
     <java-symbol type="string" name="immersive_mode_off"/>
 
+    <!-- UI theme mode -->
+    <java-symbol type="integer" name="config_uiThemeMode" />
 
      <!--  Awesome Action -->
     <java-symbol type="string" name="action_home"/>
