@@ -95,6 +95,7 @@ import android.view.WindowManagerPolicy;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import com.android.internal.R;
 import com.android.internal.policy.PolicyManager;
@@ -466,6 +467,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     // What we do when the user double-taps on home
     private int mDoubleTapOnHomeBehavior;
 
+    private static final long VOLUME_DOUBLETAP_CHORD_DEBOUNCE_DELAY_MILLIS = 600;
     // Screenshot trigger states
     // Time to volume and power must be pressed within this interval of each other.
     private static final long SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS = 150;
@@ -744,6 +746,27 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mPendingPowerKeyUpCanceled = true;
         }
     }
+    
+    private long mVolumeKeysDownTime;
+    private boolean mVolumeKeysDoubleTapEnabled = true;
+    
+    private void interceptVolumeDoubleTapChord() {
+        if (mVolumeKeysDoubleTapEnabled && !mPowerKeyTriggered
+                && mVolumeDownKeyTriggered && mVolumeUpKeyTriggered) {
+            Log.e("ROMAN", "entered interceptVolumeDoubleTapChord()!!!!!!!");
+            final long now = SystemClock.uptimeMillis();
+            if (now <= mVolumeDownKeyTime + SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS
+                    && now <= mVolumeUpKeyTime + SCREENSHOT_CHORD_DEBOUNCE_DELAY_MILLIS
+                    && now <= mVolumeKeysDownTime + VOLUME_DOUBLETAP_CHORD_DEBOUNCE_DELAY_MILLIS) {
+                // volume down and volume up were triggered fairly recently separately, AND together.
+               mHandler.postDelayed(mDoubleTapRunnable, getScreenshotChordLongPressDelay());
+            }
+            mVolumeDownKeyConsumedByScreenshotChord = true;
+            mVolumeUpKeyConsumedByScreenrecordChord = true;
+            mVolumeKeysDownTime = now;
+        }
+
+    }
 
     private void interceptScreenshotChord() {
         if (mScreenshotChordEnabled
@@ -830,6 +853,30 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 sendCloseSystemWindows(SYSTEM_DIALOG_REASON_GLOBAL_ACTIONS);
                 mWindowManagerFuncs.shutdown(resolvedBehavior == LONG_PRESS_POWER_SHUT_OFF);
                 break;
+            }
+        }
+    };
+    
+    private final Runnable mDoubleTapRunnable = new Runnable() {
+        @Override
+        public void run() {
+            // takeScreenshot();
+//            ContentResolver res = mContext.getContentResolver();
+//            Settings.System.putIntForUser(res,
+//                    Settings.System.ACCELEROMETER_ROTATION,
+//                    getUserRotationMode() != 0 ? 0 : 1,
+//                    UserHandle.USER_CURRENT);
+            Toast.makeText(mContext, "Rotation toggled.", Toast.LENGTH_SHORT).show();
+            try {
+                if(mWindowManager.isRotationFrozen()) {
+                    mWindowManager.thawRotation();
+                } else {
+                    mWindowManager.freezeRotation(-1);
+                }
+                updateRotation(true);
+            } catch (RemoteException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
         }
     };
@@ -4245,6 +4292,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                             cancelPendingPowerKeyAction();
                             cancelPendingScreenrecordChordAction();
                             interceptScreenshotChord();
+                            interceptVolumeDoubleTapChord();
                         }
                     } else {
                         mVolumeDownKeyTriggered = false;
@@ -4261,6 +4309,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                             cancelPendingPowerKeyAction();
                             cancelPendingScreenshotChordAction();
                             interceptScreenrecordChord();
+                            interceptVolumeDoubleTapChord();
                         }
                     } else {
                         mVolumeUpKeyTriggered = false;
