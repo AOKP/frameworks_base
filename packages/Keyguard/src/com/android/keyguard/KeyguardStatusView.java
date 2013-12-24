@@ -57,6 +57,16 @@ public class KeyguardStatusView extends GridLayout {
         @Override
         public void onTimeChanged() {
             if (enableRefresh) {
+
+                refresh();
+            }
+        }
+
+        @Override
+        void onKeyguardVisibilityChanged(boolean showing) {
+            if (showing) {
+                if (DEBUG) Slog.v(TAG, "refresh statusview showing:" + showing);
+
                 refresh();
             }
         }
@@ -65,6 +75,9 @@ public class KeyguardStatusView extends GridLayout {
         public void onScreenTurnedOn() {
             setEnableMarquee(true);
             enableRefresh = true;
+
+            refresh();
+
         };
 
         @Override
