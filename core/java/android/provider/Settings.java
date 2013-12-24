@@ -6770,6 +6770,22 @@ public final class Settings {
          */
         public static final String ADB_NOTIFY = "adb_notify";
 
+        /**
+         * Statusbar toggles style
+         * @hide
+         */
+        public static final String TOGGLES_STYLE = "statusbar_toggles_style";
+
+        /**
+         * @hide
+         */
+        public static final String QUICK_TOGGLES_PER_ROW = "statusbar_toggles_number_per_row";
+
+        /**
+         * @hide
+         */
+        public static final String QUICK_TOGGLES = "statusbar_toggles_order";
+
     }
 
     /**
