@@ -2992,14 +2992,8 @@ public final class Settings {
         }
 
         /**
-         * Convenience function for retrieving a single secure settings value
-         * as an integer.  Note that internally setting values are always
-         * stored as strings; this function converts the string to an integer
-         * for you.
-         * <p>
-         * This version does not take a default value.  If the setting has not
-         * been set, or the string value is not a number,
-         * it throws {@link SettingNotFoundException}.
+         * Settings to backup. This is here so that it's in the same place as the settings
+         * keys and easy to update.
          *
          * @param cr The ContentResolver to access.
          * @param name The name of the setting to retrieve.
@@ -7337,6 +7331,35 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
+
+        /**
+         * ListView Animations
+         * 0 == None
+         * 1 == Wave (Left)
+         * 2 == Wave (Right)
+         * 3 == Scale
+         * 4 == Alpha
+         * 5 == Stack (Top)
+         * 6 == Stack (Bottom)
+         * 7 == Translate (Left)
+         * 8 == Translate (Right)
+         * @hide
+         */
+        public static final String LISTVIEW_ANIMATION = "listview_animation";
+
+        /**
+         * ListView Interpolators
+         * 0 == None
+         * 1 == accelerate_interpolator
+         * 2 == decelerate_interpolator
+         * 3 == accelerate_decelerate_interpolator
+         * 4 == anticipate_interpolator
+         * 5 == overshoot_interpolator
+         * 6 == anticipate_overshoot_interpolator
+         * 7 == bounce_interpolator
+         * @hide
+         */
+        public static final String LISTVIEW_INTERPOLATOR = "listview_interpolator";
 
     }
 
