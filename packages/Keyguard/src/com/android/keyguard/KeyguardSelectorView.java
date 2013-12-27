@@ -107,6 +107,10 @@ public class KeyguardSelectorView extends LinearLayout implements KeyguardSecuri
 
         }
 
+        public void onTargetChange(View v, final int target) {
+
+        }
+
     };
 
     KeyguardUpdateMonitorCallback mUpdateCallback = new KeyguardUpdateMonitorCallback() {
