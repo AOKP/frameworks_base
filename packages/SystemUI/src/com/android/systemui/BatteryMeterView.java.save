@@ -71,6 +71,17 @@ public class BatteryMeterView extends View implements DemoMode {
     private final RectF mClipFrame = new RectF();
     private final RectF mBoltFrame = new RectF();
 
+    private ContentObserver mObserver = new ContentObserver(new Handler()) {
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings();
+        }
+
+        public void onChange(boolean selfChange, android.net.uri uri) {
+            updateSettings();
+        };
+    };
+
     private class BatteryTracker extends BroadcastReceiver {
         public static final int UNKNOWN_LEVEL = -1;
 
@@ -146,17 +157,6 @@ public class BatteryMeterView extends View implements DemoMode {
 
     BatteryTracker mTracker = new BatteryTracker();
 
-    private ContentObserver mObserver = new ContentObserver(new Handler()) {
-        @Override
-        public void onChange(boolean selfChange) {
-            updateSettings();
-        }
-
-        public void onChange(boolean selfChange, android.net.Uri uri) {
-            updateSettings();
-        };
-    };
-
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -171,9 +171,8 @@ public class BatteryMeterView extends View implements DemoMode {
         }
 
         getContext().getContentResolver().registerContentObserver(
-                Settings.AOKP.getUriFor(Settings.AOKP.HIDE_BATTERY_ICON),
-                false, mObserver);
-        updateSettings();
+                Settings.AOKP.getUriFor(Settings.AOKP.HIDE_BATTERY_ICON), false,
+                
     }
 
     @Override
@@ -181,7 +180,6 @@ public class BatteryMeterView extends View implements DemoMode {
         super.onDetachedFromWindow();
 
         getContext().unregisterReceiver(mTracker);
-        getContext().getContentResolver().unregisterContentObserver(mObserver);
     }
 
     public BatteryMeterView(Context context) {
@@ -404,15 +402,4 @@ public class BatteryMeterView extends View implements DemoMode {
            postInvalidate();
         }
     }
-
-    private void updateSettings() {
-        boolean enabled = Settings.AOKP.getBoolean(mContext.getContentResolver(),
-                                Settings.AOKP.HIDE_BATTERY_ICON, false);
-        if (enabled) {
-            setVisibility(View.GONE);
-        } else {
-            setVisibility(View.VISIBLE);
-        }
-    }
-
 }
