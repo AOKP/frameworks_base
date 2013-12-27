@@ -3246,6 +3246,20 @@ public final class Settings {
          * When the user has enable the option to have a "bug report" command
          * in the power menu.
          * @deprecated Use {@link android.provider.Settings.Global#BUGREPORT_IN_POWER_MENU} instead
+         * Holds the text for the Carrier label. An empty string
+         * will bring the default text back.
+         * @hide
+         */
+        public static final String NOTIFICATION_CUSTOM_CARRIER_LABEL = "notification_custom_carrier_label";
+
+        /**
+         * Settings to backup. This is here so that it's in the same place as the settings
+         * keys and easy to update.
+         *
+         * NOTE: Settings are backed up and restored in the order they appear
+         *       in this array. If you have one setting depending on another,
+         *       make sure that they are ordered appropriately.
+         *
          * @hide
          */
         @Deprecated
