@@ -55,7 +55,7 @@ public class StatusBarIconView extends AnimatedImageView {
         mSlot = slot;
         mNumberPain = new Paint();
         mNumberPain.setTextAlign(Paint.Align.CENTER);
-        mNumberPain.setColor(res.getColor(R.drawable.notification_number_text_color));
+        mNumberPain.setColor(res.getColor(R.color.notification_number_text_color));
         mNumberPain.setAntiAlias(true);
         mNotification = notification;
         setContentDescription(notification);

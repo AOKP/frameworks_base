@@ -20,24 +20,17 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ActivityNotFoundException;
 import android.content.ComponentName;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.hardware.input.InputManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.IBinder;
 import android.os.Message;
-import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemClock;
@@ -45,21 +38,19 @@ import android.os.Vibrator;
 import android.provider.AlarmClock;
 import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
-import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyCharacterMap;
 import android.view.KeyEvent;
-import android.widget.Toast;
-
-import static com.android.internal.util.aokp.AwesomeConstants.*;
 import com.android.internal.statusbar.IStatusBarService;
 
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.List;
+
+import static com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
+import static com.android.internal.util.aokp.AwesomeConstants.fromString;
 
 public class AwesomeAction {
 
@@ -243,6 +234,16 @@ public class AwesomeAction {
         List<ResolveInfo> list = packageManager.queryIntentActivities(intent,
                 PackageManager.MATCH_DEFAULT_ONLY);
         return list.size() > 0;
+    }
+
+    public static void injectKey(int action, int flags, long down_time, long when, int key) {
+        final int repeatCount = (flags & KeyEvent.FLAG_LONG_PRESS) != 0 ? 1 : 0;
+        final KeyEvent ev = new KeyEvent(down_time, when, action, key, repeatCount,
+                0, KeyCharacterMap.VIRTUAL_KEYBOARD, 0,
+                flags | KeyEvent.FLAG_FROM_SYSTEM | KeyEvent.FLAG_VIRTUAL_HARD_KEY,
+                InputDevice.SOURCE_KEYBOARD);
+        InputManager.getInstance().injectInputEvent(ev,
+                InputManager.INJECT_INPUT_EVENT_MODE_ASYNC);
     }
 
     private static void injectKeyDelayed(int keycode) {

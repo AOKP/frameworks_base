@@ -6926,6 +6926,188 @@ public final class Settings {
          */
         public static final String SWIPE_TO_SWITCH = "swipe_to_switch";
 
+        /**  Navigation Bar stuff  **/
+
+        /**
+         * User configurable flag for determining if NavBar is enabled
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_SHOW = "navigation_bar_show";
+
+        /**
+         * Used as a flag to determine if we are showing the NavBar *NOW* or is it hidden
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_SHOW_NOW = "navigation_bar_show_now";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
+
+        /**
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_WIDTH_PORT = "navigation_bar_width_port";
+
+        /**
+        *
+        * @hide
+        */
+        public static final String NAVIGATION_BAR_WIDTH_LAND = "navigation_bar_width_land";
+
+        /**
+         * @hide
+         */
+        public static final String NAV_HIDE_TIMEOUT = "nav_hide_timeout";
+
+        /**
+         * @hide
+         */
+        public static final String NAV_HIDE_ENABLE = "nav_hide_enable";
+
+        /**
+         * @hide
+         */
+        public static final String DRAG_HANDLE_WEIGHT = "drag_handle_weight";
+
+        /**
+         * @hide
+         */
+        public static final String DRAG_HANDLE_OPACITY = "drag_handle_opacity";
+
+        /**
+         * @hide
+         */
+        public static final String MENU_LOCATION = "menu_location";
+
+        /**
+         * @hide
+         */
+        public static final String MENU_VISIBILITY = "menu_visibility";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTONS_QTY = "navigation_bar_buttons_qty";
+
+        /**
+         * @hide
+         */
+        public static final String[] NAVIGATION_CUSTOM_ACTIVITIES = new String[] {
+            "navigation_custom_app_intent_0",
+            "navigation_custom_app_intent_1",
+            "navigation_custom_app_intent_2",
+            "navigation_custom_app_intent_3",
+            "navigation_custom_app_intent_4",
+            "navigation_custom_app_intent_5",
+            "navigation_custom_app_intent_6",
+        };
+
+        /**
+         * @hide
+         */
+        public static final String[] NAVIGATION_LONGPRESS_ACTIVITIES = new String[] {
+            "navigation_longpress_app_intent_0",
+            "navigation_longpress_app_intent_1",
+            "navigation_longpress_app_intent_2",
+            "navigation_longpress_app_intent_3",
+            "navigation_longpress_app_intent_4",
+            "navigation_longpress_app_intent_5",
+            "navigation_longpress_app_intent_6",
+        };
+
+        /**
+         * @hide
+         */
+        public static final String[] NAVIGATION_CUSTOM_APP_ICONS = new String[] {
+            "navigation_custom_app_icon_0",
+            "navigation_custom_app_icon_1",
+            "navigation_custom_app_icon_2",
+            "navigation_custom_app_icon_3",
+            "navigation_custom_app_icon_4",
+            "navigation_custom_app_icon_5",
+            "navigation_custom_app_icon_6",
+        };
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTON_ALPHA = "navigation_bar_button_alpha";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_TINT = "navigation_bar_tint";
+
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_GLOW_TINT = "navigation_bar_glow_tint";
+
+        /**
+         * @hide
+         */
+        public static final String[] NAVIGATION_BAR_GLOW_DURATION = new String[] {
+            "navigation_bar_glow_duration_off",
+            "navigation_bar_glow_duration_on",
+        };
+
+        /**
+         * boolean value. toggles using arrow key locations on nav bar
+         * as left and right dpad keys
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_MENU_ARROW_KEYS = "navigation_bar_menu_arrow_keys";
+
+        /**
+         * Navigation bar color.
+         *
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_COLOR = "navigation_bar_color";
+
+
+        /**  NavBar Widget Stuff **/
+
+        /**
+         * Widgets to show, should be separated by |
+         */
+        public static final String NAVIGATION_BAR_WIDGETS = "navigation_bar_widgets";
+
+        /** UI Mode stuff **/
+        /**
+         * Current UI Mode
+         * 
+         *  0 = Phone UI
+         *  1 = Tablet UI
+         *  2 = Phablet UI
+         *  @hide
+         */
+        public static final String CURRENT_UI_MODE = "current_ui_mode";
+
+        /**
+         * User selected UI Mode
+         * 
+         *  0 = Phone UI
+         *  1 = Tablet UI
+         *  2 = Phablet UI
+         *  @hide
+         */
+        public static final String USER_UI_MODE = "user_ui_mode";
+
     }
 
     /**

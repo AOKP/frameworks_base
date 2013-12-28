@@ -18,7 +18,7 @@
 */
 -->
 
-<com.android.systemui.statusbar.phone.NavigationBarView
+<com.android.systemui.statusbar.phone.NavigationBar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
     android:layout_height="match_parent"
@@ -58,7 +58,7 @@
                 systemui:glowBackground="@drawable/ic_sysbar_highlight"
                 android:contentDescription="@string/accessibility_back"
                 />
-            <View 
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -74,7 +74,7 @@
                 systemui:glowBackground="@drawable/ic_sysbar_highlight"
                 android:contentDescription="@string/accessibility_home"
                 />
-            <View 
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -116,7 +116,7 @@
                 android:scaleType="center"
                 android:layout_weight="0"
                 />
-            <View 
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -129,7 +129,7 @@
                 android:scaleType="center"
                 android:layout_weight="0"
                 />
-            <View 
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -144,33 +144,6 @@
                 android:layout_weight="0"
                 />
         </LinearLayout>
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.android.systemui.statusbar.policy.KeyButtonView
-                android:layout_width="80dp"
-                android:id="@+id/search_light"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:src="@drawable/search_light"
-                android:scaleType="center"
-                android:visibility="gone"
-                android:contentDescription="@string/accessibility_search_light"
-                />
-
-            <com.android.systemui.statusbar.policy.KeyButtonView
-                android:id="@+id/camera_button"
-                android:layout_height="match_parent"
-                android:layout_width="80dp"
-                android:layout_gravity="center_vertical|right"
-                android:src="@drawable/ic_sysbar_camera"
-                android:scaleType="center"
-                android:visibility="gone"
-                android:contentDescription="@string/accessibility_camera_button"
-                />
-        </FrameLayout>
 
         <com.android.systemui.statusbar.policy.DeadZone
             android:id="@+id/deadzone"
@@ -192,7 +165,7 @@
         android:paddingTop="0dp"
         >
 
-        <LinearLayout 
+        <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:orientation="vertical"
@@ -201,7 +174,7 @@
             android:id="@+id/nav_buttons"
             android:animateLayoutChanges="true"
             >
-            
+
             <!-- navigation controls -->
             <com.android.systemui.statusbar.policy.KeyButtonView android:id="@+id/menu"
                 android:layout_height="40dp"
@@ -221,7 +194,7 @@
                 android:contentDescription="@string/accessibility_recent"
                 systemui:glowBackground="@drawable/ic_sysbar_highlight_land"
                 />
-            <View 
+            <View
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
@@ -237,7 +210,7 @@
                 android:contentDescription="@string/accessibility_home"
                 systemui:glowBackground="@drawable/ic_sysbar_highlight_land"
                 />
-            <View 
+            <View
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
@@ -262,7 +235,7 @@
         </LinearLayout>
 
         <!-- lights out layout to match exactly -->
-        <LinearLayout 
+        <LinearLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:orientation="vertical"
@@ -277,7 +250,7 @@
                 android:scaleType="center"
                 android:layout_weight="0"
                 />
-            <View 
+            <View
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
@@ -290,7 +263,7 @@
                 android:scaleType="center"
                 android:layout_weight="0"
                 />
-            <View 
+            <View
                 android:layout_height="match_parent"
                 android:layout_width="match_parent"
                 android:layout_weight="1"
@@ -339,4 +312,4 @@
         android:visibility="gone"
         />
 
-</com.android.systemui.statusbar.phone.NavigationBarView>
+</com.android.systemui.statusbar.phone.NavigationBar>
