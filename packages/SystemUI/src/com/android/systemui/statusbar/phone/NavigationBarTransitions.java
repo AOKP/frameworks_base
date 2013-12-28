@@ -33,14 +33,14 @@ public final class NavigationBarTransitions extends BarTransitions {
     private static final float KEYGUARD_QUIESCENT_ALPHA = 0.5f;
     private static final int CONTENT_FADE_DURATION = 200;
 
-    private final NavigationBarView mView;
+    private final NavigationBar mView;
     private final IStatusBarService mBarService;
 
     private boolean mLightsOut;
     private boolean mVertical;
     private int mRequestedMode;
 
-    public NavigationBarTransitions(NavigationBarView view) {
+    public NavigationBarTransitions(NavigationBar view) {
         super(view, R.drawable.nav_background);
         mView = view;
         mBarService = IStatusBarService.Stub.asInterface(

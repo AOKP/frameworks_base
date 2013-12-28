@@ -82,7 +82,6 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -98,6 +97,7 @@ import com.android.systemui.statusbar.NotificationData;
 import com.android.systemui.statusbar.NotificationData.Entry;
 import com.android.systemui.statusbar.SignalClusterView;
 import com.android.systemui.statusbar.StatusBarIconView;
+import com.android.systemui.statusbar.navbar.AOKPNavBar;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.BluetoothController;
 import com.android.systemui.statusbar.policy.DateView;
@@ -244,7 +244,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
     private int mHeadsUpNotificationDecay;
 
     // on-screen navigation buttons
-    private NavigationBarView mNavigationBarView = null;
+    private AOKPNavBar mNavigationBarView = null;
     private int mNavigationBarWindowState = WINDOW_STATE_SHOWING;
 
     // the tracker view
@@ -454,7 +454,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
             if (DEBUG) Log.v(TAG, "hasNavigationBar=" + showNav);
             if (showNav && !mRecreating) {
                 mNavigationBarView =
-                    (NavigationBarView) View.inflate(context, R.layout.navigation_bar, null);
+                    (AOKPNavBar) View.inflate(context, R.layout.aokp_navigation_bar, null);
 
                 mNavigationBarView.setDisabledFlags(mDisabled);
                 mNavigationBarView.setBar(this);

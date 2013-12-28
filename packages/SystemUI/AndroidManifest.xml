@@ -87,6 +87,9 @@
     <!-- USB Tether toggle , 2G/4G toggles -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
 
+    <uses-sdk android:minSdkVersion="19"
+            android:targetSdkVersion="19"/>
+
     <application
         android:persistent="true"
         android:allowClearUserData="false"
