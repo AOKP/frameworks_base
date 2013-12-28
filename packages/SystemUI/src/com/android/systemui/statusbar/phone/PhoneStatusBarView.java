@@ -48,6 +48,8 @@ public class PhoneStatusBarView extends PanelBar {
     private boolean mShouldFade;
     private final PhoneStatusBarTransitions mBarTransitions;
     private int mToggleStyle;
+    private float mPeekHeight;
+    boolean mDragToTopFlippityThreshold;
 
     public PhoneStatusBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -65,6 +67,7 @@ public class PhoneStatusBarView extends PanelBar {
      // no need for observer, sysui gets killed when the style is changed.
         mToggleStyle = Settings.AOKP.getInt(mContext.getContentResolver(),
                 Settings.AOKP.TOGGLES_STYLE, 0);
+        mPeekHeight = res.getDimension(R.dimen.peek_height);
     }
 
     public BarTransitions getBarTransitions() {
@@ -211,7 +214,29 @@ public class PhoneStatusBarView extends PanelBar {
             }
         }
 
-        return barConsumedEvent || super.onTouchEvent(event);
+        boolean superConsumedEvent = super.onTouchEvent(event); // parent needs to be called to open panels properly.
+        /**
+         * flip between notification and setting pannels when dragging the handle up to the top and back down
+         */
+        switch (event.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                mDragToTopFlippityThreshold = false;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                float combinedPanelExpandedH = (mSettingsPanel != null ? mSettingsPanel.getExpandedHeight() : 0)
+                    + mNotificationPanel.getExpandedHeight();
+                if (combinedPanelExpandedH > mPeekHeight) {
+                    mDragToTopFlippityThreshold = true;
+                } else /* if (combinedPanelExpandedH <= mPeekHeight) */{
+                    if (mDragToTopFlippityThreshold) {
+                        mDragToTopFlippityThreshold = false;
+                        mBar.flipPanels();
+                    }
+                }
+                break;
+        }
+        return barConsumedEvent || superConsumedEvent;
     }
 
     @Override
