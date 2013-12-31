@@ -6968,6 +6968,11 @@ public final class Settings {
          */
         public static final String VOLUME_MUSIC_CONTROLS = "volume_music_controls";
 
+        /**
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTONS = "navigation_bar_buttons";
+
     }
 
     /**
