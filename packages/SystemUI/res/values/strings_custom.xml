@@ -39,5 +39,9 @@
     <!-- Battery percent format -->
     <string name="battery_percent_format"><xliff:g id="number">%d%%</xliff:g></string>
 
+        <!-- App Window -->
+    <string name="app_window">Application Window</string>
+    <string name="close">Close</string>
+
 </resources>
 
