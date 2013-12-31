@@ -6660,6 +6660,38 @@ public final class Settings {
         }
 
         /**
+         * @hide
+         */
+        public static final String[] AOKP_LEFT_RIBBON = new String[] {
+            "left_enabled",
+            "left_ribbon_items",
+            "left_ribbon_long_items",
+            "left_handle_weight",
+            "left_handle_height",
+            "left_handle_opacity",
+            "left_handle_vibrate",
+            "left_handle_location",
+            "left_handle_long_swipe",
+            "left_handle_long_press",
+        };
+
+        /**
+         * @hide
+         */
+        public static final String[] AOKP_RIGHT_RIBBON = new String[] {
+            "right_enabled",
+            "right_ribbon_items",
+            "right_ribbon_long_items",
+            "right_handle_weight",
+            "right_handle_height",
+            "right_handle_opacity",
+            "right_handle_vibrate",
+            "right_handle_location",
+            "right_handle_long_swipe",
+            "right_handle_long_press",
+        };
+
+        /**
          * Whether to enable quiet hours.
          * @hide
          */
