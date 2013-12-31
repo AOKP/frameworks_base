@@ -78,5 +78,9 @@
     <!-- Description of an application permission, listed so the user can choose whether they want to allow the application to do this. -->
     <string name="permlab_screenrecord">Allows the app to capture a screen recording. This is protected by SystemUI.</string>
 
+        <!-- App Window -->
+    <string name="app_window">Application Window</string>
+    <string name="close">Close</string>
+
 </resources>
 
