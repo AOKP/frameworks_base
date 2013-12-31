@@ -111,6 +111,8 @@ import com.android.systemui.statusbar.policy.OnSizeChangedListener;
 import com.android.systemui.statusbar.policy.RotationLockController;
 import com.android.systemui.statusbar.toggles.ToggleManager;
 
+import com.android.systemui.aokp.AokpSwipeRibbon;
+
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -348,6 +350,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
     private int mStatusBarMode;
     private int mNavigationBarMode;
     private Boolean mScreenOn;
+ 
+    private AokpSwipeRibbon mAokpSwipeRibbonLeft;
+    private AokpSwipeRibbon mAokpSwipeRibbonRight;
 
     private final Runnable mAutohide = new Runnable() {
         @Override
@@ -644,6 +649,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
             // wherever you find it, Quick Settings needs a container to survive
             mSettingsContainer = (QuickSettingsContainerView)
                     mStatusBarWindow.findViewById(R.id.quick_settings_container);
+
+            mAokpSwipeRibbonLeft = new AokpSwipeRibbon(mContext, "left");
+            mAokpSwipeRibbonRight = new AokpSwipeRibbon(mContext, "right");
 
             if(mToggleManager == null) {
                 mToggleManager = new ToggleManager(mContext);
@@ -1277,6 +1285,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
         final int old = mDisabled;
         final int diff = state ^ old;
         mDisabled = state;
+
+        mAokpSwipeRibbonLeft.setDisabledFlags(state);
+        mAokpSwipeRibbonRight.setDisabledFlags(state);
 
         if (DEBUG) {
             Log.d(TAG, String.format("disable: 0x%08x -> 0x%08x (diff: 0x%08x)",
@@ -2160,6 +2171,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode {
     public void setImeWindowStatus(IBinder token, int vis, int backDisposition) {
         boolean altBack = (backDisposition == InputMethodService.BACK_DISPOSITION_WILL_DISMISS)
             || ((vis & InputMethodService.IME_VISIBLE) != 0);
+
+        mAokpSwipeRibbonLeft.setNavigationIconHints(vis);
+        mAokpSwipeRibbonRight.setNavigationIconHints(vis);
 
         setNavigationIconHints(
                 altBack ? (mNavigationIconHints | NAVIGATION_HINT_BACK_ALT)
