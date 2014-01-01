@@ -14,7 +14,13 @@
      limitations under the License.
 -->
 
+<<<<<<< HEAD:media/lib/com.android.media.remotedisplay.xml
 <permissions>
     <library name="com.android.media.remotedisplay"
             file="/system/framework/com.android.media.remotedisplay.jar" />
 </permissions>
+=======
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<solid
+android:color="@android:color/black" />
+>>>>>>> 1b7ce40... Make Settings background black:core/res/res/drawable/background_holo_dark.xml
