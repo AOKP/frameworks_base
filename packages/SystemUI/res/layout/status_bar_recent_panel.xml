@@ -63,8 +63,10 @@
         <ImageView
             android:id="@+id/recents_clear"
             android:clickable="true"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="15dp"
             android:scaleType="center"
             android:layout_gravity="bottom|left"
             android:src="@drawable/ic_notify_clear" />
