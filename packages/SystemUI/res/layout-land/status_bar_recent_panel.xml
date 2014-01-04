@@ -61,6 +61,8 @@
             android:clickable="true"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:paddingTop="15dp"
+            android:paddingRight="15dp"
             android:scaleType="center"
             android:layout_gravity="top|right"
             android:src="@drawable/ic_notify_clear" />
