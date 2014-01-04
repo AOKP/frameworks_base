@@ -56,12 +56,10 @@
 
         </com.android.systemui.recent.RecentsHorizontalScrollView>
 
-        <ImageView
+        <Button
             android:id="@+id/recents_clear"
-            android:clickable="true"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:scaleType="center"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_gravity="top|right"
             android:src="@drawable/ic_notify_clear" />
 

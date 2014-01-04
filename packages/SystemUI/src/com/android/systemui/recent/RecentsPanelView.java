@@ -92,7 +92,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
     private boolean mFitThumbnailToXY;
     private int mRecentItemLayoutId;
     private boolean mHighEndGfx;
-    private ImageView mClearRecents;
+    private Button mClearRecents;
 
     public static interface RecentsScrollView {
         public int numItemsInOneScreenful();
@@ -449,7 +449,7 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         mRecentsScrim = findViewById(R.id.recents_bg_protect);
         mRecentsNoApps = findViewById(R.id.recents_no_apps);
 
-        mClearRecents = (ImageView) findViewById(R.id.recents_clear);
+        mClearRecents = (Button) findViewById(R.id.recents_clear);
         if (mClearRecents != null){
             mClearRecents.setOnClickListener(new OnClickListener() {
                 @Override
