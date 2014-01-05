@@ -16,6 +16,7 @@
 
 package android.provider;
 
+import android.annotation.ManagedSetting;
 import android.annotation.SdkConstant;
 import android.annotation.SdkConstant.SdkConstantType;
 import android.app.SearchManager;
@@ -6735,6 +6736,9 @@ public final class Settings {
          * 1 = force on
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.force_overflow,
+                category=com.android.internal.R.string.user_interface,
+                requiresReboot=false )
         public static final String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
 
        /**
