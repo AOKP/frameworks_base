@@ -16,6 +16,7 @@
 
 package android.provider;
 
+import android.annotation.ManagedSetting;
 import android.annotation.SdkConstant;
 import android.annotation.SdkConstant.SdkConstantType;
 import android.app.SearchManager;
@@ -64,6 +65,7 @@ import java.util.Locale;
  * The Settings provider contains global system-level device preferences.
  */
 public final class Settings {
+    protected static final String NONE = "";
 
     // Intent actions for Settings
 
@@ -6749,18 +6751,18 @@ public final class Settings {
          public static final String KEY_MENU_LONG_PRESS_ACTION = "key_menu_long_press_action";
 
          /**
-          * Action to perform when the assistant (search) key is pressed. (Default is 3)
-          * (See KEY_HOME_LONG_PRESS_ACTION for valid values)
-          * @hide
-          */
-         public static final String KEY_ASSIST_ACTION = "key_assist_action";
-
-         /**
           * Action to perform when the assistant (search) key is long-pressed. (Default is 4)
           * (See KEY_HOME_LONG_PRESS_ACTION for valid values)
           * @hide
           */
          public static final String KEY_ASSIST_LONG_PRESS_ACTION = "key_assist_long_press_action";
+
+         /**
+          * Action to perform when the assistant (search) key is pressed. (Default is 3)
+          * (See KEY_HOME_LONG_PRESS_ACTION for valid values)
+          * @hide
+          */
+         public static final String KEY_ASSIST_ACTION = "key_assist_action";
 
          /**
           * Action to perform when the app switch key is pressed. (Default is 2)
@@ -6777,17 +6779,35 @@ public final class Settings {
          public static final String KEY_APP_SWITCH_LONG_PRESS_ACTION = "key_app_switch_long_press_action";
 
         /**
+         * AOKP Backup container for key controls
+         */
+        @ManagedSetting( title=com.android.internal.R.string.key_assist,
+                 category=com.android.internal.R.string.category_user_interface,
+                 isMaster=true )
+        public static final String[] KEY_APP_SWITCH = {
+                KEY_MENU_ACTION, KEY_MENU_LONG_PRESS_ACTION,
+                KEY_ASSIST_ACTION, KEY_ASSIST_LONG_PRESS_ACTION,
+                KEY_APP_SWITCH_ACTION, KEY_APP_SWITCH_LONG_PRESS_ACTION
+        };
+
+        /**
          * Control the display of the action overflow button within app UI.
          * 0 = use system default
          * 1 = force on
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.force_overflow,
+                category=com.android.internal.R.string.category_user_interface,
+                requiresReboot=false )
         public static final String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
 
        /**
          * Whether to enable swiping your finger across the statusbar to change the brightness.
          * Boolean value. Defaults to true.
          */
+        @ManagedSetting( title=com.android.internal.R.string.statusbar_brightness_slider,
+                category=com.android.internal.R.string.category_statusbar,
+                requiresReboot=false )
         public static final String STATUSBAR_ENABLE_BRIGHTNESS_SLIDER = "statusbar_enable_brightness_slider";
 
         /**
@@ -6802,6 +6822,9 @@ public final class Settings {
          *
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.statusbar_battery_percentage,
+                category=com.android.internal.R.string.category_statusbar,
+                requiresReboot=false )
         public static final String BATTERY_PERCENTAGE_INDICATOR = "battery_percentage_indicator";
 
         /**
@@ -6816,12 +6839,18 @@ public final class Settings {
          *
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.statusbar_show_ime_switcher,
+                category=com.android.internal.R.string.category_statusbar,
+                requiresReboot=false )
         public static final String SHOW_STATUSBAR_IME_SWITCHER = "show_statusbar_ime_switcher";
 
         /**
          * Whether to display the ADB notification.
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.statusbar_show_adb,
+                category=com.android.internal.R.string.category_statusbar,
+                requiresReboot=false )
         public static final String ADB_NOTIFY = "adb_notify";
 
        /**

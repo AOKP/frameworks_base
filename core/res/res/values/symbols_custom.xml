@@ -65,4 +65,15 @@
     <java-symbol type="string" name="action_widgets"/>
     <java-symbol type="string" name="action_app_window"/>
     <java-symbol type="string" name="app_killed_message"/>
+    <!-- AOKP Backup -->
+    <java-symbol type="string" name="category_statusbar"/>
+    <java-symbol type="string" name="category_user_interface"/>
+    <java-symbol type="string" name="key_assist"/>
+    <java-symbol type="string" name="force_overflow"/>
+    <java-symbol type="string" name="statusbar_brightness_slider"/>
+    <java-symbol type="string" name="statusbar_battery_percentage"/>
+    <java-symbol type="string" name="statusbar_show_ime_switcher"/>
+    <java-symbol type="string" name="statusbar_show_adb"/>
+    <java-symbol type="string" name="uncategorized_setting"/>
+    <java-symbol type="string" name="unknown_title"/>
 </resources>

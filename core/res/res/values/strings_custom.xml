@@ -73,4 +73,18 @@
     <!-- Long-press back kill application -->
     <string name="app_killed_message">Application killed</string>
 
+    <!-- AOKP Backup annotation defaults -->
+    <string name="unknown_title">Unknown Setting</string>
+    <string name="uncategorized_setting">Uncategorized</string>
+    <!-- Categories -->
+    <string name="category_user_interface">User interface</string>
+    <string name="category_statusbar">Statusbar</string>
+    <!-- ManagedSetting names -->
+    <string name="force_overflow">Force overflow menu</string>
+    <string name="key_assist">Action to perform when the assistant (search) key is pressed</string>
+    <string name="statusbar_brightness_slider">Brightness slider</string>
+    <string name="statusbar_battery_percentage">Battery percentage</string>
+    <string name="statusbar_show_ime_switcher">Show IME switcher</string>
+    <string name="statusbar_show_adb">Show ADB notification</string>
+
 </resources>
