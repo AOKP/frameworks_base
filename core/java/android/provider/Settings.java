@@ -16,6 +16,7 @@
 
 package android.provider;
 
+import android.annotation.ManagedSetting;
 import android.annotation.SdkConstant;
 import android.annotation.SdkConstant.SdkConstantType;
 import android.app.SearchManager;
@@ -6782,12 +6783,18 @@ public final class Settings {
          * 1 = force on
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.force_overflow,
+                category=com.android.internal.R.string.category_user_interface,
+                requiresReboot=false )
         public static final String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
 
        /**
          * Whether to enable swiping your finger across the statusbar to change the brightness.
          * Boolean value. Defaults to true.
          */
+        @ManagedSetting( title=com.android.internal.R.string.statusbar_brightness_slider,
+                category=com.android.internal.R.string.category_statusbar,
+                requiresReboot=false )
         public static final String STATUSBAR_ENABLE_BRIGHTNESS_SLIDER = "statusbar_enable_brightness_slider";
 
         /**
@@ -6802,6 +6809,9 @@ public final class Settings {
          *
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.statusbar_battery_percentage,
+                category=com.android.internal.R.string.category_statusbar,
+                requiresReboot=false )
         public static final String BATTERY_PERCENTAGE_INDICATOR = "battery_percentage_indicator";
 
         /**
@@ -6816,12 +6826,18 @@ public final class Settings {
          *
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.statusbar_show_ime_switcher,
+                category=com.android.internal.R.string.category_statusbar,
+                requiresReboot=false )
         public static final String SHOW_STATUSBAR_IME_SWITCHER = "show_statusbar_ime_switcher";
 
         /**
          * Whether to display the ADB notification.
          * @hide
          */
+        @ManagedSetting( title=com.android.internal.R.string.statusbar_show_adb,
+                category=com.android.internal.R.string.category_statusbar,
+                requiresReboot=false )
         public static final String ADB_NOTIFY = "adb_notify";
 
        /**
