@@ -73,4 +73,10 @@
     <!-- Long-press back kill application -->
     <string name="app_killed_message">Application killed</string>
 
+    <!-- AOKP Backup annotation defaults -->
+    <string name="unknown_title">Unknown Setting</string>
+    <string name="uncategorized_setting">Uncategorized</string>
+    <string name="force_overflow">Force overflow menu</string>
+    <string name="user_interface">User interface</string>
+
 </resources>
