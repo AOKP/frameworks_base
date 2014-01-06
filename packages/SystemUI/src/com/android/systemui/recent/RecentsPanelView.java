@@ -41,6 +41,7 @@ import android.os.RemoteException;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -343,6 +344,23 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             mRecentsNoApps.setAlpha(1f);
             mRecentsNoApps.setVisibility(noApps ? View.VISIBLE : View.INVISIBLE);
             mClearRecents.setVisibility(noApps ? View.GONE : View.VISIBLE);
+            // Set margins programicaly if there is no HW buttons
+            if (!noApps && !hasHWbuttons()) {
+                final Configuration config = getResources().getConfiguration();
+                ViewGroup.MarginLayoutParams imgViewParams = (ViewGroup.MarginLayoutParams) mClearRecents.getLayoutParams();
+                if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    imgViewParams.setMargins(pxToDp(15, mContext), 0, 0, pxToDp(65, mContext));
+                } else {
+                    // phablet or tablet
+                    if (isTablet(mContext)) {
+                        imgViewParams.setMargins(0, pxToDp(30, mContext), pxToDp(15, mContext), 0);
+                    // phone
+                    } else {
+                        imgViewParams.setMargins(0, pxToDp(30, mContext), pxToDp(65, mContext), 0);
+                    }
+                }
+                mClearRecents.setLayoutParams(imgViewParams);
+            }
             onAnimationEnd(null);
             setFocusable(true);
             setFocusableInTouchMode(true);
@@ -821,5 +839,34 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             bottom += getBottomPaddingOffset();
         }
         mRecentsContainer.drawFadedEdges(canvas, left, right, top, bottom);
+    }
+
+    private boolean hasHWbuttons() {
+        int KEY_MASK_HOME = 0x01;
+        int KEY_MASK_MENU = 0x04;
+        int KEY_MASK_ASSIST = 0x08;
+        int KEY_MASK_APP_SWITCH = 0x10;
+        int hardwareKeyMask = mContext.getResources()
+                .getInteger(com.android.internal.R.integer.config_deviceHardwareKeys);
+        boolean HasMenu = (hardwareKeyMask & KEY_MASK_MENU) != 0;
+        boolean HasHome = (hardwareKeyMask & KEY_MASK_HOME) != 0;
+        boolean HasAssist = (hardwareKeyMask & KEY_MASK_ASSIST) != 0;
+        boolean HasAppSwitch = (hardwareKeyMask & KEY_MASK_APP_SWITCH) != 0;
+
+        if (HasMenu || HasHome || HasAssist || HasAppSwitch) {
+            return true;
+        }
+        return false;
+    }
+
+    private int pxToDp(int px, Context context) {
+        float d = context.getResources().getDisplayMetrics().density;
+        return (int)(px * d);
+    }
+
+    private static boolean isTablet(Context context) {
+        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+        return (xlarge || large);
     }
 }
