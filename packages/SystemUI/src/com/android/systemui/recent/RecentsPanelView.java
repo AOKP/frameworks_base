@@ -41,6 +41,7 @@ import android.os.RemoteException;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -343,6 +344,25 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             mRecentsNoApps.setAlpha(1f);
             mRecentsNoApps.setVisibility(noApps ? View.VISIBLE : View.INVISIBLE);
             mClearRecents.setVisibility(noApps ? View.GONE : View.VISIBLE);
+            // Set margins programicaly if there is no HW buttons
+            if (!noApps && !hasHWbuttons()) {
+                final Configuration config = getResources().getConfiguration();
+                FrameLayout.LayoutParams imgViewParams = new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT);
+                if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    imgViewParams.setMargins(15, 0, 0, 65);
+                } else {
+                    // phablet or tablet
+                    if (isSW600DPScreen(mContext)) {
+                        imgViewParams.setMargins(0, 65, 15, 0);
+                    // phone
+                    } else {
+                        imgViewParams.setMargins(0, 65, 65, 0);
+                    }
+                }
+                mClearRecents.setLayoutParams(imgViewParams);
+            }
             onAnimationEnd(null);
             setFocusable(true);
             setFocusableInTouchMode(true);
@@ -821,5 +841,35 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             bottom += getBottomPaddingOffset();
         }
         mRecentsContainer.drawFadedEdges(canvas, left, right, top, bottom);
+    }
+
+    private boolean hasHWbuttons() {
+        int KEY_MASK_HOME = 0x01;
+        int KEY_MASK_MENU = 0x04;
+        int KEY_MASK_ASSIST = 0x08;
+        int KEY_MASK_APP_SWITCH = 0x10;
+        int hardwareKeyMask = mContext.getResources()
+                .getInteger(com.android.internal.R.integer.config_deviceHardwareKeys);
+        boolean HasMenu = (hardwareKeyMask & KEY_MASK_MENU) != 0;
+        boolean HasHome = (hardwareKeyMask & KEY_MASK_HOME) != 0;
+        boolean HasAssist = (hardwareKeyMask & KEY_MASK_ASSIST) != 0;
+        boolean HasAppSwitch = (hardwareKeyMask & KEY_MASK_APP_SWITCH) != 0;
+
+        if (HasMenu || HasHome || HasAssist || HasAppSwitch) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isSW600DPScreen(Context context) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int widthPixels = displayMetrics.widthPixels;
+        int heightPixels = displayMetrics.heightPixels;
+        float density = displayMetrics.density;
+        if (widthPixels < heightPixels) {
+            return ((widthPixels / density) >= 600);
+        } else {
+            return ((heightPixels / density) >= 600);
+        }
     }
 }
