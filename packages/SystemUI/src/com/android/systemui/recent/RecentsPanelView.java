@@ -343,6 +343,26 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             mRecentsNoApps.setAlpha(1f);
             mRecentsNoApps.setVisibility(noApps ? View.VISIBLE : View.INVISIBLE);
             mClearRecents.setVisibility(noApps ? View.GONE : View.VISIBLE);
+            // Set margins programicaly if there is no HW buttons
+            if (!noApps && !hasHWbuttons()) {
+                final Configuration config = getResources().getConfiguration();
+                if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    mClearRecents.setMargins(15, 0, 0, 65);
+                } else {
+                    int uiMode = Settings.System.getInt(context.getContentResolver(),
+                                    Settings.System.CURRENT_UI_MODE, 0);
+                    // phablet
+                    if (uiMode == 2) {
+                        mClearRecents.setMargins(0, 65, 15, 0);
+                    // tablet
+                    else if (uiMode == 1) {
+                        mClearRecents.setMargins(0, 15, 15, 0);
+                    // phone
+                    } else {
+                        mClearRecents.setMargins(0, 65, 65, 0);
+                    }
+                }
+            }
             onAnimationEnd(null);
             setFocusable(true);
             setFocusableInTouchMode(true);
@@ -821,5 +841,22 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             bottom += getBottomPaddingOffset();
         }
         mRecentsContainer.drawFadedEdges(canvas, left, right, top, bottom);
+    }
+
+    private boolean hasHWbuttons() {
+        private static final int KEY_MASK_HOME = 0x01;
+        private static final int KEY_MASK_MENU = 0x04;
+        private static final int KEY_MASK_ASSIST = 0x08;
+        private static final int KEY_MASK_APP_SWITCH = 0x10;
+        int hardwareKeyMask = getActivity().getResources()
+                .getInteger(com.android.internal.R.integer.config_deviceHardwareKeys);
+        mHasMenu = (hardwareKeyMask & KEY_MASK_MENU) != 0;
+        mHasHome = (hardwareKeyMask & KEY_MASK_HOME) != 0;
+        mHasAssist = (hardwareKeyMask & KEY_MASK_ASSIST) != 0;
+        mHasAppSwitch = (hardwareKeyMask & KEY_MASK_APP_SWITCH) != 0;
+
+        if (mHasMenu || mHasHome || mHasAssist || mHasAppSwitch) {
+            return true;
+        }
     }
 }
