@@ -45,6 +45,7 @@ import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -384,6 +385,43 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
             mRecentsNoApps.setAlpha(1f);
             mRecentsNoApps.setVisibility(noApps ? View.VISIBLE : View.INVISIBLE);
             mClearRecents.setVisibility(noApps ? View.GONE : View.VISIBLE);
+            // Set margins programicaly if there is no HW buttons
+            if (!noApps && !hasHWbuttons()) {
+                final Configuration config = getResources().getConfiguration();
+                ViewGroup.MarginLayoutParams imgViewParams = (ViewGroup.MarginLayoutParams) mClearRecents.getLayoutParams();
+                int navbarHeight = Settings.AOKP.getInt(mContext.getContentResolver(),
+                                Settings.AOKP.NAVIGATION_BAR_HEIGHT, 0);
+                int navbarHeightT = Settings.AOKP.getInt(mContext.getContentResolver(),
+                                Settings.AOKP.NAVIGATION_BAR_HEIGHT_LANDSCAPE, 0);
+                int navbarWidth = Settings.AOKP.getInt(mContext.getContentResolver(),
+                                Settings.AOKP.NAVIGATION_BAR_WIDTH, 0);
+                int marginSmall = dpToPixels(15, mContext);
+                int marginMedium = dpToPixels(30, mContext);
+                navbarHeight = (navbarHeight > 0) ?
+                        dpToPixels(navbarHeight, mContext) :
+                        mContext.getResources().getDimensionPixelSize(
+                                com.android.internal.R.dimen.navigation_bar_height);
+                navbarHeightT = (navbarHeightT > 0) ?
+                        dpToPixels(navbarHeightT, mContext) :
+                        mContext.getResources().getDimensionPixelSize(
+                                com.android.internal.R.dimen.navigation_bar_height_landscape);
+                navbarWidth = (navbarWidth > 0) ?
+                        dpToPixels(navbarWidth, mContext) :
+                        mContext.getResources().getDimensionPixelSize(
+                                com.android.internal.R.dimen.navigation_bar_width);
+                if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    imgViewParams.setMargins(marginSmall, 0, 0, navbarHeight + marginSmall);
+                } else {
+                    // phablet or tablet
+                    if (isTablet(mContext)) {
+                        imgViewParams.setMargins(0, 0, marginSmall, navbarHeightT + marginSmall);
+                    // phone
+                    } else {
+                        imgViewParams.setMargins(0, 0, navbarWidth + marginSmall, marginSmall);
+                    }
+                }
+                mClearRecents.setLayoutParams(imgViewParams);
+            }
             onAnimationEnd(null);
             setFocusable(true);
             setFocusableInTouchMode(true);
@@ -894,9 +932,9 @@ public class RecentsPanelView extends FrameLayout implements OnItemClickListener
         return (hardwareKeyMask != 0);
     }
 
-    private int pxToDp(int px, Context context) {
+    private int dpToPixels(int dp, Context context) {
         float d = context.getResources().getDisplayMetrics().density;
-        return (int)(px * d);
+        return (int)(dp * d);
     }
 
     private static boolean isTablet(Context context) {
