@@ -40,8 +40,10 @@ import android.os.RemoteException;
 import android.provider.Settings;
 import android.provider.Settings.AOKP;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.DisplayInfo;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
@@ -573,11 +575,8 @@ public class NavigationBarView extends LinearLayout {
             lightsOut.removeAllViews();
 
             if (tablet) {
-                addSeparator(navButtons, landscape, 0, 1f);
-                addSeparator(lightsOut, landscape, 0, 1f);
-            } else {
-                addSeparator(navButtons, landscape, separatorSize, 0f);
-                addSeparator(lightsOut, landscape, separatorSize, 0f);
+                addSeparator(navButtons, landscape, 0, 0.5f);
+                addSeparator(lightsOut, landscape, 0, 0.5f);
             }
 
             // legacy menu button
@@ -619,11 +618,8 @@ public class NavigationBarView extends LinearLayout {
             }
 
             if (tablet) {
-                addSeparator(navButtons, landscape, 0, 1f);
-                addSeparator(lightsOut, landscape, 0, 1f);
-            } else {
-                addSeparator(navButtons, landscape, separatorSize, 0f);
-                addSeparator(lightsOut, landscape, separatorSize, 0f);
+                addSeparator(navButtons, landscape, 0, 0.5f);
+                addSeparator(lightsOut, landscape, 0, 0.5f);
             }
         }
         invalidate();
@@ -891,9 +887,19 @@ public class NavigationBarView extends LinearLayout {
     }
 
     public static boolean isTablet(Context context) {
-        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
-        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
-        return (xlarge || large);
+        boolean tablet = false;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayInfo outDisplayInfo = new DisplayInfo();
+        wm.getDefaultDisplay().getDisplayInfo(outDisplayInfo);
+        int shortSize = Math.min(outDisplayInfo.logicalHeight, outDisplayInfo.logicalWidth);
+        int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT
+                / outDisplayInfo.logicalDensityDpi;
+
+        if (shortSizeDp >= 600) {
+            tablet = true;
+        }
+
+        return tablet;
     }
 
 }
