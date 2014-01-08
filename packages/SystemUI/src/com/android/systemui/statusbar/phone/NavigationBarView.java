@@ -38,10 +38,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.provider.Settings;
-import android.provider.Settings.AOKP;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
+import android.view.DisplayInfo;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
@@ -53,6 +54,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
+
+import com.android.internal.widget.LockPatternUtils;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.DelegateViewHelper;
@@ -72,6 +75,8 @@ public class NavigationBarView extends LinearLayout {
 
     // slippery nav bar when everything is disabled, e.g. during setup
     final static boolean SLIPPERY_WHEN_DISABLED = true;
+
+    private LockPatternUtils mLockUtils;
 
     final Display mDisplay;
     View mCurrentView = null;
@@ -155,8 +160,8 @@ public class NavigationBarView extends LinearLayout {
         public void onBackAltCleared() {
             // When dismissing ime during unlock, force the back button to run the same appearance
             // animation as home (if we catch this condition early enough).
-            if (!mBackTransitioning && getBackButton() != null && getBackButton().getVisibility() == VISIBLE
-                    && mHomeAppearing && getHomeButton() != null && getHomeButton().getAlpha() == 0) {
+            if (!mBackTransitioning && getBackButton().getVisibility() == VISIBLE
+                    && mHomeAppearing && getHomeButton().getAlpha() == 0) {
                 getBackButton().setAlpha(0);
                 ValueAnimator a = ObjectAnimator.ofFloat(getBackButton(), "alpha", 0, 1);
                 a.setStartDelay(mStartDelay);
@@ -239,6 +244,8 @@ public class NavigationBarView extends LinearLayout {
 
         mCameraDisabledByDpm = isCameraDisabledByDpm();
         watchForDevicePolicyChanges();
+
+        mLockUtils = new LockPatternUtils(context);
     }
 
     private void watchForDevicePolicyChanges() {
@@ -414,7 +421,8 @@ public class NavigationBarView extends LinearLayout {
         }
 
         final boolean showSearch = disableHome && !disableSearch;
-        final boolean showCamera = showSearch && !mCameraDisabledByDpm;
+        final boolean showCamera = showSearch && !mCameraDisabledByDpm
+                && mLockUtils.getCameraEnabled();
         setVisibleOrGone(getSearchLight(), showSearch);
         setVisibleOrGone(getCameraButton(), showCamera);
 
@@ -503,7 +511,7 @@ public class NavigationBarView extends LinearLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
-        mContext.getContentResolver().registerContentObserver(Settings.AOKP.getUriFor(AOKP.NAVIGATION_BAR_BUTTONS),
+        mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_BUTTONS),
                 false, mSettingsObserver);
     }
 
@@ -516,7 +524,7 @@ public class NavigationBarView extends LinearLayout {
 
     private void readUserConfig() {
         mNavButtons.clear();
-        String buttons = Settings.AOKP.getString(getContext().getContentResolver(), Settings.AOKP.NAVIGATION_BAR_BUTTONS);
+        String buttons = Settings.System.getString(getContext().getContentResolver(), Settings.System.NAVIGATION_BAR_BUTTONS);
         if (buttons == null || buttons.isEmpty()) {
             // use default buttons
             mNavButtons.add(new AwesomeButtonInfo(
@@ -573,11 +581,8 @@ public class NavigationBarView extends LinearLayout {
             lightsOut.removeAllViews();
 
             if (tablet) {
-                addSeparator(navButtons, landscape, 0, 1f);
-                addSeparator(lightsOut, landscape, 0, 1f);
-            } else {
-                addSeparator(navButtons, landscape, separatorSize, 0f);
-                addSeparator(lightsOut, landscape, separatorSize, 0f);
+                addSeparator(navButtons, landscape, 0, 0.5f);
+                addSeparator(lightsOut, landscape, 0, 0.5f);
             }
 
             // legacy menu button
@@ -619,11 +624,8 @@ public class NavigationBarView extends LinearLayout {
             }
 
             if (tablet) {
-                addSeparator(navButtons, landscape, 0, 1f);
-                addSeparator(lightsOut, landscape, 0, 1f);
-            } else {
-                addSeparator(navButtons, landscape, separatorSize, 0f);
-                addSeparator(lightsOut, landscape, separatorSize, 0f);
+                addSeparator(navButtons, landscape, 0, 0.5f);
+                addSeparator(lightsOut, landscape, 0, 0.5f);
             }
         }
         invalidate();
@@ -891,9 +893,19 @@ public class NavigationBarView extends LinearLayout {
     }
 
     public static boolean isTablet(Context context) {
-        boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
-        boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
-        return (xlarge || large);
+        boolean tablet = false;
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayInfo outDisplayInfo = new DisplayInfo();
+        wm.getDefaultDisplay().getDisplayInfo(outDisplayInfo);
+        int shortSize = Math.min(outDisplayInfo.logicalHeight, outDisplayInfo.logicalWidth);
+        int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT
+                / outDisplayInfo.logicalDensityDpi;
+
+        if (shortSizeDp >= 600) {
+            tablet = true;
+        }
+
+        return tablet;
     }
 
 }
