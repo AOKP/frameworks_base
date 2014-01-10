@@ -91,14 +91,14 @@
                 android:orientation="horizontal"
                 android:gravity="center"
                 >
-                <include layout="@layout/signal_cluster_view" 
+                <include layout="@layout/signal_cluster_view"
                     android:id="@+id/signal_cluster"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     />
                 <com.android.systemui.statusbar.policy.BatteryTextMeterView
                     android:id="@+id/battery_text"
-                    android:textAppearance="@style/TextApperance.StatusBar.BatteryText"
+                    android:textAppearance="@style/BatteryText"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:layout_marginStart="4dip"
