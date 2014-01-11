@@ -5,4 +5,16 @@
     <dimen name="navigation_tablet_key_width">128dip</dimen>
     <dimen name="navigation_tablet_key_padding_land">42dip</dimen>
     <dimen name="navigation_tablet_key_width_land">162dip</dimen>
+
+    <!-- The fixed height of each row of toggles -->
+    <dimen name="toggle_row_height">38dp</dimen>
+
+    <!-- The fixed width of traditional toggles -->
+    <dimen name="toggle_traditional_width">64dp</dimen>
+
+     <!-- The fixed height of traditional toggles -->
+    <dimen name="toggle_traditional_height">64dp</dimen>
+
+    <!-- The fixed height of traditional toggles -->
+    <dimen name="toggle_traditional_padding">6dp</dimen>
 </resources>
