@@ -6981,11 +6981,16 @@ public final class Settings {
         public static final String LOCKSCREEN_SEE_THROUGH = "lockscreen_see_through";
 
         /**
-         * Weather to minimize lockscreen challenge on screen turned on
+         * Whether to minimize lockscreen challenge on screen turned on
          * @hide
          */
         public static final String LOCKSCREEN_MINIMIZE_LOCKSCREEN_CHALLENGE = "lockscreen_minimize_lockscreen_challenge";
 
+        /**
+         * Whether to show internet speed in status bar
+         * @hide
+         */
+        public static final String STATUS_BAR_TRAFFIC = "status_bar_traffic";
     }
 
     /**
