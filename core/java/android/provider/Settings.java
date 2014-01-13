@@ -6925,6 +6925,12 @@ public final class Settings {
         public static final String VIBRATE_NOTIF_EXPAND = "vibrate_notif_expand";
 
         /**
+         * Show the pending notification counts as overlays on the statusbar
+         * @hide
+         */
+        public static final String STATUSBAR_NOTIF_COUNT = "status_bar_notif_count";
+
+        /**
          * The hostname for this device
          * @hide
          */
