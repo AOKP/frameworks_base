@@ -6986,6 +6986,12 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_MINIMIZE_LOCKSCREEN_CHALLENGE = "lockscreen_minimize_lockscreen_challenge";
 
+        /**
+         * Whether to show screenrecord option in power menu
+         * @hide
+         */
+        public static final String SCREENRECORD_IN_POWER_MENU = "screenrecord_in_power_menu";
+
     }
 
     /**
