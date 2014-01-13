@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:singleLine="true"
-            android:textAppearance="@style/TextAppearance.StatusBar.Expanded.Clock"
+            android:textAppearance="@style/TextAppearance.StatusBar.Expanded.ClockStock"
             android:layout_centerVertical="true"
             />
 
