@@ -2773,7 +2773,9 @@ public class MediaFocusControl implements OnFinished {
         synchronized (mMainRemote) {
             if (mHasRemotePlayback != hasRemotePlayback) {
                 mHasRemotePlayback = hasRemotePlayback;
-                mVolumeController.postRemoteSliderVisibility(hasRemotePlayback);
+                if (mVolumeController != null) {
+                    mVolumeController.postRemoteSliderVisibility(hasRemotePlayback);
+                }
             }
         }
     }
