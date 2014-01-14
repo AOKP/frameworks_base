@@ -18,7 +18,8 @@
 -->
 <resources>
 
-    <!-- Network Stats -->
     <color name="status_bar_network_stats_color">#ffffffff</color>
+    <color name=status_bar_clock_color">#ffffffff</color>
+    <color name="status_bar_battery_color">#ffffffff</color>
 
 </resources>
