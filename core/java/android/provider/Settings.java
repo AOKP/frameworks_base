@@ -7014,6 +7014,12 @@ public final class Settings {
          */
         public static final String LOCKSCREEN_MINIMIZE_LOCKSCREEN_CHALLENGE = "lockscreen_minimize_lockscreen_challenge";
 
+        /**
+         * Key to store Torch state.
+         * @hide
+         */
+        public static final String TORCH_STATE = "torch_state";
+
     }
 
     /**
