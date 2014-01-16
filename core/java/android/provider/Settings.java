@@ -756,7 +756,7 @@ public final class Settings {
     /**
      * @hide - Private call() method on SettingsProvider to read from 'system' table.
      */
-    public static final String CALL_METHOD_GET_SYSTEM = "GET_system";
+    public static final String CALL_METHOD_GET_SYSTEM = "GET_system"
 
     /**
      * @hide - Private call() method on SettingsProvider to read from 'secure' table.
@@ -7090,6 +7090,28 @@ public final class Settings {
          * @hide
          */
         public static final String DOUBLE_TAP_SLEEP_GESTURE = "double_tap_sleep_gesture";
+
+        /**
+         * Should Dialer suggest nearby phone numbers
+         *
+         * @hide
+         */
+        public static final String ENABLE_DIALER_SUGGESTIONS = "enable_dialer_suggestions";
+
+        /**
+         * Should Dialer reverse look up names for unknown phone numbers
+         *
+         * @hide
+         */
+        public static final String ENABLE_DIALER_REVERSE_LOOKUP = "enable_dialer_reverse_lookup";
+
+        /**
+         * Should Flip to Silence be used
+         *
+         * @hide
+         */
+        public static final String FLIP_ACTION_KEY = "flip_action";
+
     }
 
     /**
