@@ -3090,6 +3090,28 @@ public final class Settings {
         }
 
         /**
+         * Should Dialer suggest nearby phone numbers
+         *
+         * @hide
+         */
+        public static final String ENABLE_DIALER_SUGGESTIONS = "enable_dialer_suggestions";
+
+        /**
+         * Should Dialer reverse look up names for unknown phone numbers
+         *
+         * @hide
+         */
+        public static final String ENABLE_DIALER_REVERSE_LOOKUP = "enable_dialer_reverse_lookup";
+
+        /**
+         * Should Flip to Silence be used
+         *
+         * @hide
+         */
+        public static final String FLIP_ACTION_KEY = "flip_action";
+
+
+        /**
          * Convenience function for retrieving a single secure settings value
          * as a {@code long}.  Note that internally setting values are always
          * stored as strings; this function converts the string to a {@code long}
