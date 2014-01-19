@@ -7651,6 +7651,14 @@ public final class Settings {
          */
         public static final String LISTVIEW_INTERPOLATOR = "listview_interpolator";
 
+        /**
+         * Goodbye fullscreen keyboard
+         *
+         * @hide
+         */
+
+       public static final String FULLSCREEN_KEYBOARD = "fullscreen_keyboard";
+
     }
 
     /**
