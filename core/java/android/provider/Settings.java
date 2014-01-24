@@ -7385,6 +7385,76 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
+ 
+        /**
+         *
+         * Smooth Progress Bar Mirror
+         * @hide
+         */
+         public static final String PROGRESSBAR_MIRROR = "progressbar_mirror";
+
+        /**
+         *
+         * Smooth Progress Bar Reverse
+         * @hide
+         */
+         public static final String PROGRESSBAR_REVERSE = "progressbar_reverse";
+
+        /**
+         *
+         * Smooth Progress Bar Speed
+         * @hide
+         */
+         public static final String PROGRESSBAR_SPEED = "progressbar_speed";
+
+        /**
+         *
+         * Smooth Progress Bar Width
+         * @hide
+         */
+         public static final String PROGRESSBAR_WIDTH = "progressbar_width";
+
+         /**
+         *
+         * Smooth Progress Bar Length
+         * @hide
+         */
+         public static final String PROGRESSBAR_LENGTH = "progressbar_length";
+
+         /**
+         *
+         * Smooth Progress Bar Count
+         * @hide
+         */
+         public static final String PROGRESSBAR_COUNT = "progressbar_count";
+
+         /**
+         *
+         * Smooth Progress Bar Color_1
+         * @hide
+         */
+         public static final String PROGRESSBAR_COLOR_1 = "progressbar_color_1";
+
+         /**
+         *
+         * Smooth Progress Bar Color_2
+         * @hide
+         */
+         public static final String PROGRESSBAR_COLOR_2 = "progressbar_color_2";
+
+         /**
+         *
+         * Smooth Progress Bar Color_3
+         * @hide
+         */
+         public static final String PROGRESSBAR_COLOR_3 = "progressbar_color_3";
+
+         /**
+         *
+         * Smooth Progress Bar Color_4
+         * @hide
+         */
+         public static final String PROGRESSBAR_COLOR_4 = "progressbar_color_4";
 
         /**
         * ToastAnimations
