@@ -58,6 +58,8 @@ public class AwesomeAction {
     public final static String TAG = "AwesomeAction";
     private final static String SysUIPackage = "com.android.systemui";
 
+    static int mBackKillTimeout;
+
     private AwesomeAction() {
     }
 
@@ -68,6 +70,8 @@ public class AwesomeAction {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                mBackKillTimeout = mContext.getResources().getInteger(
+                        com.android.internal.R.integer.config_backKillTimeout);
                 AwesomeConstant AwesomeEnum = fromString(action);
                 AudioManager am;
                 switch (AwesomeEnum) {
@@ -103,7 +107,7 @@ public class AwesomeAction {
                         break;
                     case ACTION_KILL:
                         KillTask mKillTask = new KillTask(mContext);
-                        mHandler.post(mKillTask);
+                        mHandler.postDelayed(mKillTask, mBackKillTimeout);
                         break;
                     case ACTION_APP_WINDOW:
                         Intent appWindow = new Intent();
