@@ -76,4 +76,8 @@
     <java-symbol type="string" name="config_deviceKeyHandlerLib" />
     <java-symbol type="string" name="config_deviceKeyHandlerClass" />
 
+    <!-- Kill App -->
+    <java-symbol type="string" name="app_killed_message" />
+    <java-symbol type="integer" name="config_backKillTimeout" />
+
 </resources>
