@@ -66,6 +66,7 @@ import android.os.UEventObserver;
 import android.os.UserHandle;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.server.wm.WindowManagerService;
 import android.service.dreams.DreamService;
 import android.service.dreams.IDreamManager;
 import com.android.internal.os.DeviceKeyHandler;
@@ -229,6 +230,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     Context mUiContext;
     IWindowManager mWindowManager;
     WindowManagerFuncs mWindowManagerFuncs;
+    WindowManagerService mWindowManagerService;
     PowerManager mPowerManager;
     IStatusBarService mStatusBarService;
     boolean mPreloadedRecentApps;
@@ -260,6 +262,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     int mStatusBarHeight;
     WindowState mNavigationBar = null;
     boolean mHasNavigationBar = false;
+    boolean mEnableNavigationBar = false;
     boolean mCanHideNavigationBar = false;
     boolean mNavigationBarCanMove = false; // can the navigation bar ever move to the side?
     boolean mNavigationBarOnBottom = true; // is the navigation bar on the bottom *right now*?
@@ -625,6 +628,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.DOUBLE_TAP_VOLUME_KEYS), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.ENABLE_NAVIGATION_BAR), false, this,
                     UserHandle.USER_ALL);
 
             updateSettings();
@@ -1352,6 +1358,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         } else if ("0".equals(navBarOverride)) {
             mHasNavigationBar = true;
         }
+        // Allow an AOKP Settings value to override this as well.
+        if (mEnableNavigationBar) {
+            mHasNavigationBar = true;
+        }
 
         // For demo purposes, allow the rotation of the HDMI display to be controlled.
         // By default, HDMI locks rotation to landscape.
@@ -1407,6 +1417,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR,
                     Settings.Secure.INCALL_POWER_BUTTON_BEHAVIOR_DEFAULT,
                     UserHandle.USER_CURRENT);
+
+            mEnableNavigationBar = Settings.AOKP.getInt(resolver,
+                    Settings.AOKP.ENABLE_NAVIGATION_BAR, 0) == 1;
+            if (mEnableNavigationBar) {
+                mHasNavigationBar = true;
+            }
 
             // Configure rotation lock.
             int userRotation = Settings.System.getIntForUser(resolver,
