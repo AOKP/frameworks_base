@@ -2925,6 +2925,15 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             }
             loadDimens();
         }
+
+
+        // Update the QuickSettings container
+        if (mQS != null) mQS.updateResources();
+        if (mNavigationBarView != null)  {
+            mNavigationBarView.updateResources();
+            updateSearchPanel();
+        }
+
     }
 
     protected void loadDimens() {
