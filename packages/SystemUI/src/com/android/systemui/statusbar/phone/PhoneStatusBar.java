@@ -111,6 +111,7 @@ import com.android.systemui.statusbar.policy.RotationLockController;
 import com.android.systemui.statusbar.toggles.ToggleManager;
 
 import com.android.systemui.aokp.AokpSwipeRibbon;
+import com.android.systemui.aokp.SearchPanelSwipeView;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -355,6 +356,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
     private AokpSwipeRibbon mAokpSwipeRibbonLeft;
     private AokpSwipeRibbon mAokpSwipeRibbonRight;
+    private SearchPanelSwipeView mSearchPanelSwipeView;
 
     private final Runnable mAutohide = new Runnable() {
         @Override
@@ -475,6 +477,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                         checkUserAutohide(v, event);
                         return false;
                     }});
+            } else if (!showNav) {
+                updateSearchPanel();
+                mSearchPanelSwipeView = new SearchPanelSwipeView(mContext, mSearchPanelView, this);
+                mWindowManager.addView(mSearchPanelSwipeView, mSearchPanelSwipeView.getGesturePanelLayoutParams());
             }
         } catch (RemoteException ex) {
             // no window manager? good luck with that
