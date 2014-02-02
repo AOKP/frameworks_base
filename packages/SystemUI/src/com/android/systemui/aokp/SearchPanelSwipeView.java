@@ -6,6 +6,7 @@ import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.DelegateViewHelper;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
@@ -25,12 +26,11 @@ public class SearchPanelSwipeView extends LinearLayout{
     private ImageView mDragButton;
     private DelegateViewHelper mDelegateHelper;
 
-    public SearchPanelSwipeView(Context context, AOKPSearchPanelView searchPanelView, BaseStatusBar phoneStatusBar) {
+    public SearchPanelSwipeView(Context context, BaseStatusBar bar) {
         super(context);
         mContext = context;
         mDelegateHelper = new DelegateViewHelper(this);
-        mDelegateHelper.setDelegateView(searchPanelView);
-        mDelegateHelper.setBar(phoneStatusBar);
+        setBar(bar);
         mDragButton = new ImageView(mContext);
         res = mContext.getResources();
         mGestureHeight = res.getDimensionPixelSize(R.dimen.ribbon_drag_handle_height);
@@ -54,35 +54,67 @@ public class SearchPanelSwipeView extends LinearLayout{
     }
 
     public void setIntialTouchArea() {
-        mDelegateHelper.setInitialTouchRegion(mDragButton);
+        mDelegateHelper.setInitialTouchRegion(this);
     }
+
+    public void setDelegateView(AOKPSearchPanelView searchPanelView) {
+        mDelegateHelper.setDelegateView(searchPanelView);
+    }
+
+    public void setBar(BaseStatusBar bar) {
+        mDelegateHelper.setBar(bar);
+    }
+
     private int getGravity() {
-        return Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+        if (isScreenPortrait()) {
+            return Gravity.CENTER_HORIZONTAL | Gravity.BOTTOM;
+        } else {
+            return Gravity.CENTER_VERTICAL | Gravity.RIGHT;
+        }
     }
 
     public WindowManager.LayoutParams getGesturePanelLayoutParams() {
-        WindowManager.LayoutParams lp  = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-                | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                PixelFormat.TRANSLUCENT);
+        WindowManager.LayoutParams lp;
+        if (isScreenPortrait()) {
+            lp  = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                    PixelFormat.TRANSLUCENT);
+        } else {
+            lp  = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+                    | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                    | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                    PixelFormat.TRANSLUCENT);
+        }
         lp.gravity = getGravity();
         lp.setTitle("SwipePanelSwipeView");
         return lp;
     }
 
-    private void updateLayout() {
+    public void updateLayout() {
         LinearLayout.LayoutParams dragParams;
         float dragHeight = (mGestureHeight * (mButtonHeight * 0.01f));
         removeAllViews();
         mDragButton.setBackgroundColor(Color.BLACK);
-        dragParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) dragHeight);
-        setOrientation(HORIZONTAL);
-        mDragButton.setScaleType(ImageView.ScaleType.FIT_XY);
+        if (isScreenPortrait()) {
+            mDelegateHelper.setSwapXY(false);
+            dragParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) dragHeight);
+        } else {
+            mDelegateHelper.setSwapXY(true);
+            dragParams = new LinearLayout.LayoutParams((int) dragHeight, LinearLayout.LayoutParams.MATCH_PARENT);
+        }
         mDragButton.setVisibility(View.INVISIBLE);
         addView(mDragButton,dragParams);
         invalidate();
+    }
+
+    public boolean isScreenPortrait() {
+        return res.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 }
