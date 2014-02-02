@@ -1259,6 +1259,12 @@ public class NotificationManagerService extends INotificationManager.Stub
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(ENABLED_NOTIFICATION_LISTENERS_URI,
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.NOTIFICATION_LIGHT_OFF), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.NOTIFICATION_LIGHT_ON), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.NOTIFICATION_LIGHT_COLOR), false, this);
             update(null);
         }
 
@@ -1279,6 +1285,22 @@ public class NotificationManagerService extends INotificationManager.Stub
             if (uri == null || ENABLED_NOTIFICATION_LISTENERS_URI.equals(uri)) {
                 rebindListenerServices();
             }
+
+            Resources resources = mContext.getResources();
+            mDefaultNotificationColor = Settings.System
+                    .getInt(mContext.getContentResolver(),
+                            Settings.System.NOTIFICATION_LIGHT_COLOR,
+                            resources.getColor(com.android.internal.R.color.config_defaultNotificationColor));
+            
+            mDefaultNotificationLedOff = Settings.System
+                    .getInt(mContext.getContentResolver(),
+                            Settings.System.NOTIFICATION_LIGHT_OFF,
+                            resources.getInteger(com.android.internal.R.integer.config_defaultNotificationLedOff));
+
+            mDefaultNotificationLedOn = Settings.System
+                    .getInt(mContext.getContentResolver(),
+                            Settings.System.NOTIFICATION_LIGHT_ON,
+                            resources.getInteger(com.android.internal.R.integer.config_defaultNotificationLedOn));
         }
     }
 
