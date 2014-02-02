@@ -132,4 +132,8 @@
   <java-symbol type="anim" name="slide_in_up_ribbon" />
   <java-symbol type="anim" name="slide_out_down_ribbon" />
   <java-symbol type="anim" name="no_animation" />
+
+  <!-- WiFi turn off notification -->
+  <java-symbol type="string" name="notify_turn_wifi_off_title" />
+  <java-symbol type="drawable" name="ic_stat_turn_wifi_off" />
 </resources>
