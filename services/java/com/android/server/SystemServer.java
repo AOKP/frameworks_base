@@ -26,7 +26,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
+import android.content.pm.ThemeUtils;
 import android.content.res.Configuration;
+
+import android.content.res.CustomTheme;
+import android.database.ContentObserver;
+
 import android.media.AudioService;
 import android.net.wifi.p2p.WifiP2pService;
 import android.os.Environment;
@@ -362,6 +367,8 @@ class ServerThread {
         PrintManagerService printManager = null;
         MediaRouterService mediaRouter = null;
         GestureService gestureService = null;
+        ThemeService themeService = null;
+        EdgeGestureService edgeGestureService = null;
 
         // Bring up services needed for UI.
         if (factoryTest != SystemServer.FACTORY_TEST_LOW_LEVEL) {
@@ -822,6 +829,13 @@ class ServerThread {
                 reportWtf("starting Print Service", e);
             }
 
+            try {
+                Slog.i(TAG, "Theme Service");
+                themeService = new ThemeService(context);
+                ServiceManager.addService(Context.THEME_SERVICE, themeService);
+            } catch (Throwable e) {
+                reportWtf("starting Theme Service", e);
+            }
             if (!disableNonCoreServices) {
                 try {
                     Slog.i(TAG, "Media Router Service");
@@ -832,12 +846,42 @@ class ServerThread {
                 }
             }
 
+
             try {
                 Slog.i(TAG, "AssetRedirectionManager Service");
                 ServiceManager.addService("assetredirection", new AssetRedirectionManagerService(context));
             } catch (Throwable e) {
                 Slog.e(TAG, "Failure starting AssetRedirectionManager Service", e);
             }
+
+
+            try {
+                Slog.i(TAG, "EdgeGesture service");
+                edgeGestureService = new EdgeGestureService(context, inputManager);
+                ServiceManager.addService("edgegestureservice", edgeGestureService);
+            } catch (Throwable e) {
+                Slog.e(TAG, "Failure starting EdgeGesture service", e);
+            }
+        }
+
+        // make sure the ADB_ENABLED setting value matches the secure property value
+        Settings.Secure.putInt(mContentResolver, Settings.Secure.ADB_PORT,
+                Integer.parseInt(SystemProperties.get("service.adb.tcp.port", "-1")));
+
+        // register observer to listen for settings changes
+        mContentResolver.registerContentObserver(
+            Settings.Secure.getUriFor(Settings.Secure.ADB_PORT),
+            false, new AdbPortObserver());
+        if (!TextUtils.isEmpty(context.getString(
+                com.android.internal.R.string.config_perf_profile_prop))) {
+            PerformanceProfileObserver observer = new PerformanceProfileObserver(context);
+            mContentResolver.registerContentObserver(
+                    Settings.System.getUriFor(Settings.System.PERFORMANCE_PROFILE),
+                    false, observer);
+
+            // Sync the system property with the current setting
+            observer.setSystemSetting();
+
         }
 
         // Before things start rolling, be sure we have decided whether
@@ -936,6 +980,7 @@ class ServerThread {
         filter.addAction(Intent.ACTION_APP_LAUNCH_FAILURE_RESET);
         filter.addAction(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addAction(ThemeUtils.ACTION_THEME_CHANGED);
         filter.addCategory(Intent.CATEGORY_THEME_PACKAGE_INSTALLED_STATE_CHANGE);
         filter.addDataScheme("package");
         context.registerReceiver(new AppsLaunchFailureReceiver(), filter);
@@ -968,6 +1013,7 @@ class ServerThread {
         final TelephonyRegistry telephonyRegistryF = telephonyRegistry;
         final PrintManagerService printManagerF = printManager;
         final MediaRouterService mediaRouterF = mediaRouter;
+        final IPackageManager pmf = pm;
 
         // We now tell the activity manager it is okay to run third party
         // code.  It will call back into us once it has gotten to the state
@@ -1121,6 +1167,15 @@ class ServerThread {
                 } catch (Throwable e) {
                     reportWtf("Notifying MediaRouterService running", e);
                 }
+
+                try {
+                    CustomTheme customTheme = CustomTheme.getBootTheme(contextF.getContentResolver());
+                    String iconPkg = customTheme.getIconPackPkgName();
+                    pmf.updateIconMapping(iconPkg);
+                } catch (Throwable e) {
+                    reportWtf("Icon Mapping failed", e);
+                }
+
             }
         });
 

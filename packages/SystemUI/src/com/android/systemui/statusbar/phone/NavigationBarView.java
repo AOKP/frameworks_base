@@ -320,6 +320,43 @@ public class NavigationBarView extends LinearLayout {
         return mCurrentView.findViewById(R.id.camera_button);
     }
 
+
+    private void getIcons(Resources res) {
+        mBackIcon = res.getDrawable(R.drawable.ic_sysbar_back);
+        mBackLandIcon = res.getDrawable(R.drawable.ic_sysbar_back_land);
+        mBackAltIcon = res.getDrawable(R.drawable.ic_sysbar_back_ime);
+        mBackAltLandIcon = res.getDrawable(R.drawable.ic_sysbar_back_ime_land);
+        mRecentIcon = res.getDrawable(R.drawable.ic_sysbar_recent);
+        mRecentLandIcon = res.getDrawable(R.drawable.ic_sysbar_recent_land);
+    }
+
+    public void updateResources() {
+        getIcons(mContext.getResources());
+        for (int i = 0; i < mRotatedViews.length; i++) {
+            ViewGroup container = (ViewGroup) mRotatedViews[i];
+            if (container != null) {
+                updateKeyButtonViewResources(container);
+            }
+        }
+    }
+
+    private void updateKeyButtonViewResources(ViewGroup container) {
+        ViewGroup midNavButtons = (ViewGroup) container.findViewById(R.id.mid_nav_buttons);
+        if (midNavButtons != null) {
+            final int nChildern = midNavButtons.getChildCount();
+            for (int i = 0; i < nChildern; i++) {
+                final View child = midNavButtons.getChildAt(i);
+                if (child instanceof KeyButtonView) {
+                    ((KeyButtonView) child).updateResources();
+                }
+            }
+        }
+        KeyButtonView kbv = (KeyButtonView) findViewById(R.id.six);
+        if (kbv != null) {
+            kbv.updateResources();
+        }
+    }
+
     @Override
     public void setLayoutDirection(int layoutDirection) {
 
