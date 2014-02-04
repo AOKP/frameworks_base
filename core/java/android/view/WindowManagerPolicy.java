@@ -573,6 +573,7 @@ public interface WindowManagerPolicy {
         public void shutdown(boolean confirm);
         public void reboot(boolean confirm);
         public void rebootSafeMode(boolean confirm);
+        public void rebootTile();
 
         /**
          * Reboot with a custom reason.
@@ -1754,4 +1755,12 @@ public interface WindowManagerPolicy {
      * @return true if ready; false otherwise.
      */
     boolean canDismissBootAnimation();
+
+    /**
+     * Toggle global menu
+     *
+     * @hide
+     */
+    public void toggleGlobalMenu();
+
 }
