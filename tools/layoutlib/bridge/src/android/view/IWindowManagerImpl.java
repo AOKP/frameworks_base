@@ -601,4 +601,9 @@ public class IWindowManagerImpl implements IWindowManager {
     public Bitmap screenshotWallpaper() throws RemoteException {
         return null;
     }
+
+    /* @hide */
+    @Override
+    public void toggleGlobalMenu() {
+    }
 }
