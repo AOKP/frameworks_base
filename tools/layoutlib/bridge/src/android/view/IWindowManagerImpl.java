@@ -511,4 +511,9 @@ public class IWindowManagerImpl implements IWindowManager {
         // TODO Auto-generated method stub
         return null;
     }
+
+    /* @hide */
+    @Override
+    public void toggleGlobalMenu() {
+    }
 }
