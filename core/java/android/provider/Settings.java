@@ -6690,6 +6690,7 @@ public final class Settings {
             "left_ribbon_animation_type",
             "left_ribbon_animation_duration",
             "left_ribbon_margin",
+            "left_ribbon_icon_gravity",
         };
 
         /**
@@ -6711,6 +6712,7 @@ public final class Settings {
             "right_ribbon_animation_type",
             "right_ribbon_animation_duration",
             "right_ribbon_margin",
+            "right_ribbon_icon_gravity",
         };
 
         /**
