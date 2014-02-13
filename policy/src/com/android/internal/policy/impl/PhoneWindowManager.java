@@ -675,9 +675,18 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             updateSettings();
         }
 
-        @Override public void onChange(boolean selfChange) {
+        @Override
+        public void onChange(boolean selfChange) {
             updateSettings();
             updateRotation(false);
+            updateKeyAssignments();
+        }
+
+        @Override
+        public void onChange(boolean onChange, android.net.Uri uri) {
+            updateSettings();
+            updateRotation(false);
+            updateKeyAssignments();
         }
     }
 
@@ -1511,6 +1520,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
             mVolumeKeysDoubleTapEnabled = Settings.AOKP.getBooleanForUser(resolver,
                     Settings.AOKP.DOUBLE_TAP_VOLUME_KEYS, true, UserHandle.USER_CURRENT);
+
 
             mVolumeWakeScreen = Settings.AOKP.getBoolean(resolver,
                     Settings.AOKP.VOLUME_WAKE_SCREEN, false);
