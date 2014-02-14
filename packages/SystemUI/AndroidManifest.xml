@@ -85,6 +85,7 @@
 
     <!-- USB Tether toggle , 2G/4G toggles -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CONNECTIVITY_INTERNAL" />
 
     <!-- Screen recording -->
     <uses-permission  android:name="android.permission.ACCESS_SURFACE_FLINGER" />
