@@ -102,12 +102,15 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
     private static final int STREAM_MASTER = -100;
     // Pseudo stream type for remote volume is defined in AudioService.STREAM_REMOTE_MUSIC
 
+    public static final int VOLUME_OVERLAY_EXPANDABLE = 1;
+
     protected Context mContext;
     private AudioManager mAudioManager;
     protected AudioService mAudioService;
     private boolean mRingIsSilent;
     private boolean mShowCombinedVolumes;
     private boolean mVoiceCapable;
+    private int mCurrentOverlayStyle = -1;
 
     // True if we want to play tones on the system stream when the master stream is specified.
     private final boolean mPlayMasterStreamTones;
@@ -271,7 +274,7 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
 
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = mView = inflater.inflate(R.layout.volume_adjust, null);
+        mView = inflater.inflate(R.layout.volume_adjust, null);
         mView.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                 resetTimeout();
@@ -330,6 +333,9 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
             mMoreButton.setOnClickListener(this);
         }
 
+        int chosenStyle = VOLUME_OVERLAY_EXPANDABLE;
+        changeOverlayStyle(chosenStyle);
+
         boolean masterVolumeOnly = context.getResources().getBoolean(
                 com.android.internal.R.bool.config_useMasterVolume);
         boolean masterVolumeKeySounds = mContext.getResources().getBoolean(
@@ -337,7 +343,22 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
 
         mPlayMasterStreamTones = masterVolumeOnly && masterVolumeKeySounds;
 
+        mMoreButton.setOnClickListener(this);
         listenToRingerMode();
+    }
+
+   private void changeOverlayStyle(int newStyle) {
+       Log.i("VolumePanel", "changeOverlayStyle : " + newStyle);
+       // Don't change to the same style
+       if (newStyle == mCurrentOverlayStyle) return;
+       switch (newStyle) {
+           case VOLUME_OVERLAY_EXPANDABLE :
+               mMoreButton.setVisibility(View.VISIBLE);
+               mDivider.setVisibility(View.VISIBLE);
+               mShowCombinedVolumes = true;
+               mCurrentOverlayStyle = VOLUME_OVERLAY_EXPANDABLE;
+               break;
+       }
     }
 
     public void setLayoutDirection(int layoutDirection) {
@@ -420,6 +441,7 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
             sc.icon.setTag(sc);
             sc.icon.setContentDescription(res.getString(streamRes.descRes));
             sc.iconRes = streamRes.iconRes;
+            sc.icon.setOnClickListener(this);
             sc.iconMuteRes = streamRes.iconMuteRes;
             sc.icon.setImageResource(sc.iconRes);
             sc.seekbarView = (SeekBar) sc.group.findViewById(R.id.seekbar);
@@ -495,10 +517,22 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
     private void expand() {
         final int count = mSliderGroup.getChildCount();
         for (int i = 0; i < count; i++) {
-            mSliderGroup.getChildAt(i).setVisibility(View.VISIBLE);
+           if (mSliderGroup.getChildAt(i).getVisibility() != View.VISIBLE) {
+               mSliderGroup.getChildAt(i).setVisibility(View.VISIBLE);
+           }
+       }
+       mMoreButton.setVisibility(View.GONE);
+       mDivider.setVisibility(View.GONE);
+   }
+
+   private void hideSlider(int mActiveStreamType) {
+       final int count = mSliderGroup.getChildCount();
+       for (int i = 0; i < count; i++) {
+           StreamControl sc = (StreamControl) mSliderGroup.getChildAt(i).getTag();
+           if (mActiveStreamType == sc.streamType) {
+              mSliderGroup.getChildAt(i).setVisibility(View.GONE);
+            }
         }
-        mMoreButton.setVisibility(View.INVISIBLE);
-        mDivider.setVisibility(View.INVISIBLE);
     }
 
     private void collapse() {
@@ -598,7 +632,10 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
 
         if ((flags & AudioManager.FLAG_SHOW_UI) != 0) {
             synchronized (this) {
-                if (mActiveStreamType != streamType) {
+                if (streamType != mActiveStreamType) {
+                   if (mCurrentOverlayStyle == VOLUME_OVERLAY_EXPANDABLE) {
+                       hideSlider(mActiveStreamType);
+                   }
                     reorderSliders(streamType);
                 }
                 onShowVolumeChanged(streamType, flags);
@@ -1058,6 +1095,12 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
     public void onClick(View v) {
         if (v == mMoreButton) {
             expand();
+       } else if (v instanceof ImageView) {
+           Intent volumeSettings = new Intent(android.provider.Settings.ACTION_SOUND_SETTINGS);
+           volumeSettings.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+           forceTimeout();
+           mContext.startActivity(volumeSettings);
+           return;
         }
         resetTimeout();
     }
