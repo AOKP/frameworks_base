@@ -3916,7 +3916,11 @@ public class PackageManagerService extends IPackageManager.Stub {
                             public void run() {
                                 if (!isFirstBoot()) {
                                     i[0]++;
+
                                     postBootMessageUpdate(i[0], pkgsSize, p);
+
+                                    postBootMessageUpdate(i[0], pkgsSize);
+
                                 }
                                 performDexOptLI(p, false, false, true);
                             }
@@ -3924,7 +3928,11 @@ public class PackageManagerService extends IPackageManager.Stub {
                     } else {
                         if (!isFirstBoot()) {
                             i[0]++;
+
                             postBootMessageUpdate(i[0], pkgsSize, p);
+
+                            postBootMessageUpdate(i[0], pkgsSize);
+
                         }
                     }
                 }
@@ -3940,6 +3948,7 @@ public class PackageManagerService extends IPackageManager.Stub {
         }
     }
 
+
     private void postBootMessageUpdate(int n, int total, PackageParser.Package pkg) {
         try {
             // give the packagename to the PhoneWindowManager
@@ -3954,6 +3963,14 @@ public class PackageManagerService extends IPackageManager.Stub {
                     mContext.getResources().getString(
                     com.android.internal.R.string.android_upgrading_apk,
                     n, total), true);
+
+    private void postBootMessageUpdate(int n, int total) {
+        try {
+            ActivityManagerNative.getDefault().showBootMessage(
+                    mContext.getResources().getString(
+                            com.android.internal.R.string.android_upgrading_apk,
+                            n, total), true);
+
         } catch (RemoteException e) {
         }
     }
