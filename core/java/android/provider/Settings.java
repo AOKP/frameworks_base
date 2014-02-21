@@ -7230,6 +7230,12 @@ public final class Settings {
          */
         public static final String BATTERY_ARC_LOCKSCREEN_HANDLE = "battery_arc_lockscreen_handle";
 
+        /**
+         * Enable battery charging LED
+         * @hide
+         */
+        public static final String BATTERY_CHARGING_LED_ENABLED = "battery_charging_led_enabled";
+
     }
 
     /**
