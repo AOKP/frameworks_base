@@ -7338,6 +7338,12 @@ public final class Settings {
          */
         public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
 
+        /**
+        * ToastAnimations
+        * @hide
+        */
+        public static final String TOAST_ANIMATION = "toast_animation";
+
     }
 
     /**
