@@ -148,11 +148,6 @@ please see styles_device_defaults.xml.
         <item name="windowExitAnimation">@anim/shrink_fade_out_center</item>
     </style>
 
-    <style name="Animation.Toast">
-        <item name="windowEnterAnimation">@anim/toast_enter</item>
-        <item name="windowExitAnimation">@anim/toast_exit</item>
-    </style>
-
     <style name="Animation.DropDownDown">
         <item name="windowEnterAnimation">@anim/grow_fade_in</item>
         <item name="windowExitAnimation">@anim/shrink_fade_out</item>
