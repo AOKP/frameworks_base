@@ -125,32 +125,35 @@ public class FavoriteUserToggle extends BaseToggle {
                             ContactsContract.Contacts.CONTENT_LOOKUP_URI, lookupKey);
                     Uri res = ContactsContract.Contacts.lookupContact(
                             mContext.getContentResolver(), lookupUri);
-                    String[] projection = new String[] {
-                            ContactsContract.Contacts.DISPLAY_NAME,
-                            ContactsContract.Contacts.PHOTO_URI,
-                            ContactsContract.Contacts.LOOKUP_KEY
-                    };
 
-                    final Cursor cursor = mContext.getContentResolver().query(res, projection,
-                            null, null, null);
-                    if (cursor != null) {
-                        try {
-                            if (cursor.moveToFirst()) {
-                                name = cursor.getString(cursor
-                                        .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                    if (res != null ) {
+                        String[] projection = new String[] {
+                                ContactsContract.Contacts.DISPLAY_NAME,
+                                ContactsContract.Contacts.PHOTO_URI,
+                                ContactsContract.Contacts.LOOKUP_KEY
+                        };
+
+                        final Cursor cursor = mContext.getContentResolver().query(res, projection,
+                                null, null, null);
+                        if (cursor != null) {
+                            try {
+                                if (cursor.moveToFirst()) {
+                                    name = cursor.getString(cursor
+                                            .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                                }
+                            } finally {
+                                cursor.close();
                             }
-                        } finally {
-                            cursor.close();
                         }
-                    }
-                    InputStream input = ContactsContract.Contacts.
-                            openContactPhotoInputStream(mContext.getContentResolver(), res, true);
-                    if (input != null) {
-                        rawAvatar = BitmapFactory.decodeStream(input);
-                    }
+                        InputStream input = ContactsContract.Contacts.
+                                openContactPhotoInputStream(mContext.getContentResolver(), res, true);
+                        if (input != null) {
+                            rawAvatar = BitmapFactory.decodeStream(input);
+                        }
 
-                    if (rawAvatar != null) {
-                        avatar = new BitmapDrawable(mContext.getResources(), rawAvatar);
+                        if (rawAvatar != null) {
+                            avatar = new BitmapDrawable(mContext.getResources(), rawAvatar);
+                        }
                     }
                 }
                 return new Pair<String, Drawable>(name, avatar);
