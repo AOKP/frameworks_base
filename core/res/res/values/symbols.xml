@@ -991,6 +991,8 @@
   <java-symbol type="array" name="config_callBarringMMI" />
 
   <java-symbol type="drawable" name="default_wallpaper" />
+  <java-symbol type="drawable" name="ic_lock_expanded_desktop" />
+  <java-symbol type="drawable" name="ic_lock_expanded_desktop_off" />
   <java-symbol type="drawable" name="indicator_input_error" />
   <java-symbol type="drawable" name="overscroll_edge" />
   <java-symbol type="drawable" name="overscroll_glow" />
