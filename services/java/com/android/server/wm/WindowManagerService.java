@@ -10249,6 +10249,11 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     @Override
+    public boolean wantsNavigationBar() {
+        return mPolicy.wantsNavigationBar();
+    }
+
+    @Override
     public void lockNow(Bundle options) {
         mPolicy.lockNow(options);
     }

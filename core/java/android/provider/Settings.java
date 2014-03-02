@@ -7123,6 +7123,12 @@ public final class Settings {
         public static final String VOLUME_WAKE_SCREEN = "volume_wake_screen";
 
         /**
+         * Whether to enable the navbar for hw key devices
+         * @hide
+         */
+        public static final String ENABLE_NAVIGATION_BAR = "enable_navigation_bar";
+
+        /**
          * @hide
          */
         public static final String NAVIGATION_BAR_BUTTONS = "navigation_bar_buttons";
@@ -7217,6 +7223,19 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_ADJUST_SOUNDS_ENABLED = "volume_adjust_sounds_enabled";
+
+        /**
+         * Whether or not to show circle battery around the lockscreen handle
+         * @hide
+         */
+        public static final String BATTERY_ARC_LOCKSCREEN_HANDLE = "battery_arc_lockscreen_handle";
+
+        /**
+         * Enable battery charging LED
+         * @hide
+         */
+        public static final String BATTERY_CHARGING_LED_ENABLED = "battery_charging_led_enabled";
+
     }
 
     /**

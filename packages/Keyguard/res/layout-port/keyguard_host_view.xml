@@ -83,6 +83,7 @@
         </com.android.keyguard.KeyguardSecurityContainer>
 
         <ImageButton
+              android:id="@+id/expand_challenge_handle"
               android:layout_width="match_parent"
               android:layout_height="@dimen/kg_widget_pager_bottom_padding"
               androidprv:layout_childType="expandChallengeHandle"
@@ -90,6 +91,7 @@
               android:background="@null"
               android:src="@drawable/keyguard_expand_challenge_handle"
               android:scaleType="center"
+              android:hapticFeedbackEnabled="true"
               android:contentDescription="@string/keyguard_accessibility_expand_lock_area" />
 
     </com.android.keyguard.SlidingChallengeLayout>
