@@ -4315,6 +4315,46 @@ public final class Settings {
         public static final int INCALL_POWER_BUTTON_BEHAVIOR_SCREEN_OFF = 0x1;
 
         /**
+         * Whether to show the battery bar
+         *
+         * @hide
+         */
+        public static final String STATUSBAR_BATTERY_BAR = "statusbar_battery_bar";
+
+        /**
+         * @hide
+         */
+        public static final String STATUSBAR_BATTERY_BAR_COLOR = "statusbar_battery_bar_color";
+
+        /**
+         * thickness of the batteyr bar (in dp)
+         *
+         * @hide
+         */
+        public static final String STATUSBAR_BATTERY_BAR_THICKNESS = "statusbar_battery_bar_thickness";
+
+        /**
+         * 0 = regular
+         * 1 = mirrored from center
+         *
+         * @hide
+         */
+        public static final String STATUSBAR_BATTERY_BAR_STYLE = "statusbar_battery_bar_style";
+
+        /**
+         * whether to show charging animation
+         *
+         * @hide
+         */
+        public static final String STATUSBAR_BATTERY_BAR_ANIMATE = "statusbar_battery_bar_animate";
+
+        /**
+         * Option to display navigation bar
+         * @hide
+         */
+        public static final String KONSTA_NAVBAR = "konsta_navbar";
+
+        /**
          * INCALL_POWER_BUTTON_BEHAVIOR value for "hang up".
          * @hide
          */
