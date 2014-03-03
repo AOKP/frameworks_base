@@ -1,0 +1,139 @@
+commit c62774a1e99258e7472f9020f93980968abb8428
+Author: Roman Birg <romanbirg@gmail.com>
+Date:   Thu Jan 16 10:59:55 2014 +0100
+
+    [1/2] Navigation bar width & height
+    
+    Change-Id: I68d5b37e30733771a8db80329bf7a73c91b91d5b
+    Signed-off-by: kecinzer <kecinzer@gmail.com>
+
+diff --git a/core/java/android/provider/Settings.java b/core/java/android/provider/Settings.java
+index dcc0582..cefc20a 100644
+--- a/core/java/android/provider/Settings.java
++++ b/core/java/android/provider/Settings.java
+@@ -7128,6 +7128,21 @@ public final class Settings {
+         public static final String NAVIGATION_BAR_BUTTONS = "navigation_bar_buttons";
+ 
+         /**
++         * @hide
++         */
++        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
++
++        /**
++         * @hide
++         */
++        public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
++
++        /**
++         * @hide
++         */
++        public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
++
++        /**
+          * Whether volume up/down can be long pressed to skip tracks
+          * @hide
+          */
+diff --git a/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java b/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+index 85a1ae3..ecfaf39 100644
+--- a/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
++++ b/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+@@ -267,6 +267,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+     boolean mNavigationBarOnBottom = true; // is the navigation bar on the bottom *right now*?
+     int[] mNavigationBarHeightForRotation = new int[4];
+     int[] mNavigationBarWidthForRotation = new int[4];
++    int mUserNavBarHeight;
++    int mUserNavBarHeightLand;
++    int mUserNavBarWidth;
+ 
+     WindowState mKeyguard = null;
+     KeyguardServiceDelegate mKeyguardDelegate;
+@@ -671,6 +674,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+             resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                     Settings.AOKP.DOUBLE_TAP_VOLUME_KEYS), false, this,
+                     UserHandle.USER_ALL);
++            resolver.registerContentObserver(Settings.AOKP.getUriFor(
++                    Settings.AOKP.NAVIGATION_BAR_HEIGHT), false, this,
++                    UserHandle.USER_ALL);
++            resolver.registerContentObserver(Settings.AOKP.getUriFor(
++                    Settings.AOKP.NAVIGATION_BAR_HEIGHT_LANDSCAPE), false, this,
++                    UserHandle.USER_ALL);
++            resolver.registerContentObserver(Settings.AOKP.getUriFor(
++                    Settings.AOKP.NAVIGATION_BAR_WIDTH), false, this,
++                    UserHandle.USER_ALL);
+ 
+             updateSettings();
+         }
+@@ -1408,17 +1420,26 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+         // Height of the navigation bar when presented horizontally at bottom
+         mNavigationBarHeightForRotation[mPortraitRotation] =
+         mNavigationBarHeightForRotation[mUpsideDownRotation] =
+-                res.getDimensionPixelSize(com.android.internal.R.dimen.navigation_bar_height);
++                (mUserNavBarHeight > 0) ?
++                        dpToPixels(mUserNavBarHeight, mContext) :
++                        res.getDimensionPixelSize(
++                                com.android.internal.R.dimen.navigation_bar_height);
+         mNavigationBarHeightForRotation[mLandscapeRotation] =
+-        mNavigationBarHeightForRotation[mSeascapeRotation] = res.getDimensionPixelSize(
+-                com.android.internal.R.dimen.navigation_bar_height_landscape);
++        mNavigationBarHeightForRotation[mSeascapeRotation] =
++                (mUserNavBarHeightLand > 0) ?
++                        dpToPixels(mUserNavBarHeightLand, mContext) :
++                        res.getDimensionPixelSize(
++                                com.android.internal.R.dimen.navigation_bar_height_landscape);
+ 
+         // Width of the navigation bar when presented vertically along one side
+         mNavigationBarWidthForRotation[mPortraitRotation] =
+         mNavigationBarWidthForRotation[mUpsideDownRotation] =
+         mNavigationBarWidthForRotation[mLandscapeRotation] =
+         mNavigationBarWidthForRotation[mSeascapeRotation] =
+-                res.getDimensionPixelSize(com.android.internal.R.dimen.navigation_bar_width);
++                (mUserNavBarWidth > 0) ?
++                        dpToPixels(mUserNavBarWidth, mContext) :
++                        res.getDimensionPixelSize(
++                                com.android.internal.R.dimen.navigation_bar_width);
+ 
+         // SystemUI (status bar) layout policy
+         int shortSizeDp = shortSize * DisplayMetrics.DENSITY_DEFAULT / density;
+@@ -1480,6 +1501,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+     }
+ 
+     public void updateSettings() {
++        DisplayMetrics metrics = new DisplayMetrics();
++        WindowManager wm = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);
++        wm.getDefaultDisplay().getMetrics(metrics);
++        int density = metrics.densityDpi;
+         ContentResolver resolver = mContext.getContentResolver();
+         boolean updateRotation = false;
+         synchronized (mLock) {
+@@ -1543,6 +1568,19 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+         if (updateRotation) {
+             updateRotation(true);
+         }
++        int NavHeight = Settings.AOKP.getInt(resolver,
++                Settings.AOKP.NAVIGATION_BAR_HEIGHT, 0);
++        int NavHeightLand = Settings.AOKP.getInt(resolver,
++                Settings.AOKP.NAVIGATION_BAR_HEIGHT_LANDSCAPE, 0);
++        int NavWidth = Settings.AOKP.getInt(resolver,
++                Settings.AOKP.NAVIGATION_BAR_WIDTH, 0);
++        if (NavHeight != mUserNavBarHeight || NavHeightLand != mUserNavBarHeightLand || NavWidth != mUserNavBarWidth) {
++            mUserNavBarHeight = NavHeight;
++            mUserNavBarHeightLand = NavHeightLand;
++            mUserNavBarWidth = NavWidth;
++            if(mDisplay != null)
++                setInitialDisplaySize(mDisplay, mUnrestrictedScreenWidth, mUnrestrictedScreenHeight, density);
++        }
+     }
+ 
+     private void enablePointerLocation() {
+@@ -5920,6 +5958,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+                 && canHideNavigationBar();
+     }
+ 
++    private int dpToPixels(int dp, Context context) {
++        float d = context.getResources().getDisplayMetrics().density;
++        return (int)(dp * d);
++    }
++
+     /**
+      * @return whether the navigation or status bar can be made translucent
+      *
