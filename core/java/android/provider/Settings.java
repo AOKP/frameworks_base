@@ -4355,21 +4355,6 @@ public final class Settings {
         public static final String KONSTA_NAVBAR = "konsta_navbar";
 
         /**
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_HEIGHT = "navigation_bar_height";
-
-        /**
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_HEIGHT_LANDSCAPE = "navigation_bar_height_landscape";
-
-        /**
-         * @hide
-         */
-        public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
-
-        /**
          * INCALL_POWER_BUTTON_BEHAVIOR value for "hang up".
          * @hide
          */
