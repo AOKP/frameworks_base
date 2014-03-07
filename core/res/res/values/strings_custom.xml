@@ -94,4 +94,8 @@
 
     <!-- WiFi turn off notification -->
     <string name="notify_turn_wifi_off_title">Turn Wi-Fi off</string>
+
+    <!-- In WiFi AP notification -->
+    <string name="notify_turn_tethering_off_title">Turn Tethering off</string>
+
 </resources>
