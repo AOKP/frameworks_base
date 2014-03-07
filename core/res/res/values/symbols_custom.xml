@@ -89,6 +89,9 @@
     <java-symbol type="id" name="ribbon_label" />
     <java-symbol type="id" name="ribbon_icon" />
 
+    <!-- Wi-Fi AP Notification -->
+    <java-symbol type="string" name="notify_turn_wifi_ap_off_title" />
+
   <!--  Animations -->
   <java-symbol type="string" name="animation_fade"/>
   <java-symbol type="string" name="animation_slide_left"/>
