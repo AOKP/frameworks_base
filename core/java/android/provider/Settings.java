@@ -7236,6 +7236,12 @@ public final class Settings {
          */
         public static final String BATTERY_CHARGING_LED_ENABLED = "battery_charging_led_enabled";
 
+        /**
+         * Enable / disable navring
+         * @hide
+         */
+        public static final String ENABLE_NAVRING = "enable_navring";
+
     }
 
     /**
