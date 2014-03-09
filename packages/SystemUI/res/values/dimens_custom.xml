@@ -38,6 +38,14 @@
 
     <!-- Network stats text size -->
     <dimen name="network_stats_text_size">8dp</dimen>
-
     <dimen name="wifi_combo_margin_end">-6dp</dimen>
+
+    <!-- Notification peek dimens -->
+    <dimen name="item_padding">5dp</dimen>
+    <dimen name="small_notification_icon_size">30dp</dimen>
+    <dimen name="small_notification_icon_padding">2dp</dimen>
+    <dimen name="notification_icon_size">46dp</dimen>
+    <dimen name="notification_text_width">300dp</dimen>
+    <dimen name="clock_padding">10dp</dimen>
+    <dimen name="clock_size">15dp</dimen>
 </resources>
