@@ -154,16 +154,14 @@ public class ToggleManager {
             }
             toggleMap.put(TORCH_TOGGLE, TorchToggle.class);
             toggleMap.put(USB_TETHER_TOGGLE, UsbTetherToggle.class);
-            // if
-            // (((TelephonyManager)mContext.getSystemService(Context.TELEPHONY_SERVICE))
-            // .getPhoneType() == PhoneConstants.PHONE_TYPE_GSM) {
-            // toggleMap.put(TWOG_TOGGLE, TwoGToggle.class);
-            // }
-            // if (TelephonyManager.getLteOnCdmaModeStatic() ==
-            // PhoneConstants.LTE_ON_CDMA_TRUE
-            // || TelephonyManager.getLteOnGsmModeStatic() != 0) {
-            // toggleMap.put(LTE_TOGGLE, LteToggle.class);
-            // }
+            if (((TelephonyManager)mContext.getSystemService(Context.TELEPHONY_SERVICE))
+                    .getPhoneType() == PhoneConstants.PHONE_TYPE_GSM) {
+                toggleMap.put(TWOG_TOGGLE, TwoGToggle.class);
+            }
+            if (TelephonyManager.getLteOnCdmaModeStatic() == PhoneConstants.LTE_ON_CDMA_TRUE
+                    || TelephonyManager.getLteOnGsmModeStatic() != 0) {
+                toggleMap.put(LTE_TOGGLE, LteToggle.class);
+            }
             toggleMap.put(FAV_CONTACT_TOGGLE, FavoriteUserToggle.class);
             // toggleMap.put(NAVBAR_HIDE_TOGGLE, NavbarHideToggle.class);
             toggleMap.put(QUICKRECORD_TOGGLE, QuickRecordToggle.class);
