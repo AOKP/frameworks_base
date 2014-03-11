@@ -369,7 +369,7 @@ public class AokpSwipeRibbon extends LinearLayout implements OnItemClickListener
         mAnim = Settings.AOKP.getInt(cr, SETTINGS_AOKP[AokpRibbonHelper.RIBBON_ANIMATION_TYPE], 0);
         mAnimDur = Settings.AOKP.getInt(cr, SETTINGS_AOKP[AokpRibbonHelper.RIBBON_ANIMATION_DURATION], 50);
         int size = Settings.AOKP.getInt(mContext.getContentResolver(), SETTINGS_AOKP[AokpRibbonHelper.RIBBON_SIZE], 30);
-        mWidth = (int) (((size * 0.01f) * 150) + 125);
+        mWidth = (int) (((size * 0.01f) * 150) + 80);
         int margin = Settings.AOKP.getInt(mContext.getContentResolver(), SETTINGS_AOKP[AokpRibbonHelper.RIBBON_MARGIN], 5);
         mMargin = (int) ((margin * 0.01f) * 200);
         // -------------------------
