@@ -12,10 +12,12 @@ import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.widget.LinearLayout;
 
+import com.android.systemui.R;
+
 public class LinearColorBar extends LinearLayout {
-    static final int LEFT_COLOR = 0xff0099cc;
-    static final int MIDDLE_COLOR = 0xff0099cc;
-    static final int RIGHT_COLOR = 0xff888888;
+    private int mLeftColor;
+    private int mMiddleColor;
+    private int mRightColor;
 
     private float mRedRatio;
     private float mYellowRatio;
@@ -36,6 +38,11 @@ public class LinearColorBar extends LinearLayout {
 
     public LinearColorBar(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        mLeftColor = getResources().getColor(R.color.linear_color_bar_left_color);
+        mMiddleColor = getResources().getColor(R.color.linear_color_bar_middle_color);
+        mRightColor = getResources().getColor(R.color.linear_color_bar_right_color);
+
         setWillNotDraw(false);
         mPaint.setStyle(Paint.Style.FILL);
         mColorGradientPaint.setStyle(Paint.Style.FILL);
@@ -45,7 +52,6 @@ public class LinearColorBar extends LinearLayout {
                 ? 2 : 1;
         mEdgeGradientPaint.setStrokeWidth(mLineWidth);
         mEdgeGradientPaint.setAntiAlias(true);
-        
     }
 
     public void setRatios(float red, float yellow, float green) {
@@ -70,10 +76,10 @@ public class LinearColorBar extends LinearLayout {
         mRect.bottom = getHeight();
         if (mShowingGreen) {
             mColorGradientPaint.setShader(new LinearGradient(
-                    0, 0, 0, off-2, RIGHT_COLOR&0xffffff, RIGHT_COLOR, Shader.TileMode.CLAMP));
+                    0, 0, 0, off-2, mRightColor&0xffffff, mRightColor, Shader.TileMode.CLAMP));
         } else {
             mColorGradientPaint.setShader(new LinearGradient(
-                    0, 0, 0, off-2, MIDDLE_COLOR&0xffffff, MIDDLE_COLOR, Shader.TileMode.CLAMP));
+                    0, 0, 0, off-2, mMiddleColor&0xffffff, mMiddleColor, Shader.TileMode.CLAMP));
         }
         mEdgeGradientPaint.setShader(new LinearGradient(
                 0, 0, 0, off/2, 0x00a0a0a0, 0xffa0a0a0, Shader.TileMode.CLAMP));
@@ -144,7 +150,7 @@ public class LinearColorBar extends LinearLayout {
         if (left < right) {
             mRect.left = left;
             mRect.right = right;
-            mPaint.setColor(LEFT_COLOR);
+            mPaint.setColor(mLeftColor);
             canvas.drawRect(mRect, mPaint);
             width -= (right-left);
             left = right;
@@ -155,7 +161,7 @@ public class LinearColorBar extends LinearLayout {
         if (left < right) {
             mRect.left = left;
             mRect.right = right;
-            mPaint.setColor(MIDDLE_COLOR);
+            mPaint.setColor(mMiddleColor);
             canvas.drawRect(mRect, mPaint);
             width -= (right-left);
             left = right;
@@ -166,7 +172,7 @@ public class LinearColorBar extends LinearLayout {
         if (left < right) {
             mRect.left = left;
             mRect.right = right;
-            mPaint.setColor(RIGHT_COLOR);
+            mPaint.setColor(mRightColor);
             canvas.drawRect(mRect, mPaint);
         }
     }
