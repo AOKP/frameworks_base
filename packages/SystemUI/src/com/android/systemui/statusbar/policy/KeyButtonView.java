@@ -276,7 +276,6 @@ public class KeyButtonView extends ImageView {
                 if (hasSingleTapAction()) {
                     removeCallbacks(mSingleTap);
                 }
-                performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
                 long diff = mDownTime - mUpTime; // difference between last up and now
                 if (hasDoubleTapAction() && diff <= mDoubleTapTimeout) {
                     doDoubleTap();
@@ -345,6 +344,7 @@ public class KeyButtonView extends ImageView {
     }
 
     private void doSinglePress() {
+        performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
         if (callOnClick()) {
             // cool
             sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
