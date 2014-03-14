@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import libcore.icu.ICU;
 import libcore.icu.LocaleData;
 
 /**
@@ -67,6 +68,12 @@ public class Clock extends TextView implements DemoMode {
     public static final int WEEKDAY_STYLE_NORMAL = 2;
 
     protected int mWeekdayStyle = WEEKDAY_STYLE_GONE;
+
+    public static final int DATE_STYLE_GONE   = 0;
+    public static final int DATE_STYLE_SMALL  = 1;
+    public static final int DATE_STYLE_NORMAL = 2;
+
+    protected int mDateStyle = DATE_STYLE_GONE;
 
     public static final int STYLE_HIDE_CLOCK     = 0;
     public static final int STYLE_CLOCK_RIGHT    = 1;
@@ -128,6 +135,9 @@ public class Clock extends TextView implements DemoMode {
                     false, mSettingsObserver);
             resolver.registerContentObserver(Settings.AOKP
                     .getUriFor(Settings.AOKP.STATUSBAR_CLOCK_WEEKDAY),
+                    false, mSettingsObserver);
+            resolver.registerContentObserver(Settings.AOKP
+                    .getUriFor(Settings.AOKP.STATUSBAR_CLOCK_DATE),
                     false, mSettingsObserver);
         }
 
@@ -195,7 +205,16 @@ public class Clock extends TextView implements DemoMode {
         }
 
         String todayIs = null;
+        String todayDate = null;
         String result = sdf.format(mCalendar.getTime());
+
+        if (mDateStyle != DATE_STYLE_GONE) {
+            final Locale l = Locale.getDefault();
+            todayDate = (new SimpleDateFormat(ICU.getBestDateTimePattern(
+                    context.getString(R.string.system_ui_date_pattern),
+                    l.toString()), l)).format(mCalendar.getTime()) + " ";
+            result = todayDate + result;
+        }
 
         if (mWeekdayStyle != WEEKDAY_STYLE_GONE) {
             todayIs = (new SimpleDateFormat("E")).format(mCalendar.getTime()) + " ";
@@ -227,17 +246,24 @@ public class Clock extends TextView implements DemoMode {
                 }
             }
         }
-        if (mWeekdayStyle != WEEKDAY_STYLE_NORMAL) {
-            if (todayIs != null) {
-                if (mWeekdayStyle == WEEKDAY_STYLE_GONE) {
-                    formatted.delete(result.indexOf(todayIs), result.lastIndexOf(todayIs)+todayIs.length());
-                } else {
-                    if (mWeekdayStyle == WEEKDAY_STYLE_SMALL) {
-                        CharacterStyle style = new RelativeSizeSpan(0.7f);
-                        formatted.setSpan(style, result.indexOf(todayIs), result.lastIndexOf(todayIs)+todayIs.length(),
-                                          Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                    }
-                }
+        if (mWeekdayStyle == WEEKDAY_STYLE_SMALL && todayIs != null) {
+            if (todayDate == null || mDateStyle != DATE_STYLE_SMALL) {
+                CharacterStyle style = new RelativeSizeSpan(0.7f);
+                formatted.setSpan(style, result.indexOf(todayIs),
+                        result.lastIndexOf(todayIs)+todayIs.length(),
+                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            }
+        }
+        if (mDateStyle == DATE_STYLE_SMALL && todayDate != null) {
+            CharacterStyle style = new RelativeSizeSpan(0.7f);
+            if (mWeekdayStyle == WEEKDAY_STYLE_SMALL && todayIs != null) {
+                formatted.setSpan(style, result.indexOf(todayIs+todayDate),
+                        result.lastIndexOf(todayIs+todayDate)+todayIs.length()+todayDate.length(),
+                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+            } else {
+                formatted.setSpan(style, result.indexOf(todayDate),
+                        result.lastIndexOf(todayDate)+todayDate.length(),
+                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
             }
         }
         return formatted;
@@ -253,6 +279,8 @@ public class Clock extends TextView implements DemoMode {
                 Settings.AOKP.STATUSBAR_CLOCK_STYLE, STYLE_CLOCK_RIGHT);
         mWeekdayStyle = Settings.AOKP.getInt(resolver,
                 Settings.AOKP.STATUSBAR_CLOCK_WEEKDAY, WEEKDAY_STYLE_GONE);
+        mDateStyle = Settings.AOKP.getInt(resolver,
+                Settings.AOKP.STATUSBAR_CLOCK_DATE, DATE_STYLE_GONE);
         mClockColor = Settings.AOKP.getInt(resolver,
                 Settings.AOKP.STATUSBAR_CLOCK_COLOR, defaultColor);
         if (mClockColor == Integer.MIN_VALUE) {
