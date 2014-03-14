@@ -6945,6 +6945,15 @@ public final class Settings {
         public static final String STATUSBAR_CLOCK_WEEKDAY = "statusbar_clock_weekday";
 
         /**
+         * Shows date before clock time
+         * 0 - No Date
+         * 1 - Small Date
+         * 2 - Normal Date
+         * @hide
+         */
+        public static final String STATUSBAR_CLOCK_DATE = "statusbar_clock_date";
+
+        /**
          * Setting for animation controls
          *
          * @hide
