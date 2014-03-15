@@ -7127,6 +7127,13 @@ public final class Settings {
         public static final String STATUSBAR_NOTIF_COUNT = "status_bar_notif_count";
 
         /**
+         * smart phone caller
+         *
+         * @hide
+         */
+        public static final String SMART_PHONE_CALLER = "smart_phone_caller";
+
+        /**
          * The hostname for this device
          * @hide
          */
