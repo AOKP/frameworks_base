@@ -3234,6 +3234,12 @@ public final class Settings {
             return putStringForUser(cr, name, Float.toString(value), userHandle);
         }
 
+        /** 
+         * Weather to allow headsethook to launch voice commands
+         * @hide
+         */
+        public static final String HEADSETHOOK_LAUNCH_VOICE = "headsethook_launch_voice";
+
         /**
          * @deprecated Use {@link android.provider.Settings.Global#DEVELOPMENT_SETTINGS_ENABLED}
          * instead
@@ -3342,6 +3348,13 @@ public final class Settings {
          * List of system input methods that are currently disabled.  This is a string
          * containing the IDs of all disabled input methods, each ID separated
          * by ':'.
+         * @hide
+         */
+        public static final String SMART_PHONE_CALLER = "smart_phone_caller";
+
+        /**
+         * Should Dialer suggest nearby phone numbers
+         *
          * @hide
          */
         public static final String DISABLED_SYSTEM_INPUT_METHODS = "disabled_system_input_methods";
