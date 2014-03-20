@@ -941,12 +941,14 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mNotificationPanelDebugText.setVisibility(View.VISIBLE);
         }
 
+        addAppCircleSidebar();
+        addGestureAnywhereView();
+
         try {
             boolean showNav = mWindowManagerService.hasNavigationBar();
             if (DEBUG) Log.v(TAG, "hasNavigationBar=" + showNav);
             if (showNav) {
                 createNavigationBarView(context);
-                addGestureAnywhereView();
             }
 
         } catch (RemoteException ex) {
