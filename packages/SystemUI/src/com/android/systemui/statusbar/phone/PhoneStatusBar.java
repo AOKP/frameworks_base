@@ -803,7 +803,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         mStatusBarWindow = new StatusBarWindowView(mContext, null);
         mStatusBarWindow.setService(this);
-        
+
         super.start(); // calls createAndAddWindows()
 
         mMediaSessionManager
@@ -926,6 +926,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mNotificationPanelDebugText.setVisibility(View.VISIBLE);
         }
 
+        if (!mRecreating) {
+            addGestureAnywhereView();
+            addAppCircleSidebar();
+        }
+
         try {
             boolean showNav = mWindowManagerService.hasNavigationBar();
             if (DEBUG) Log.v(TAG, "hasNavigationBar=" + showNav);
@@ -934,7 +939,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     (NavigationBarView) View.inflate(context, R.layout.navigation_bar, null);
                 mNavigationBarView.updateResources(getNavbarThemedResources());
 
-	        addGestureAnywhereView();
+            addGestureAnywhereView();
 
                 mNavigationBarView.setDisabledFlags(mDisabled1);
                 mNavigationBarView.setBar(this);
