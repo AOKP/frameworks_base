@@ -1156,6 +1156,7 @@ final class ActivityStack {
                         // At this point, nothing else needs to be shown
                         if (DEBUG_VISBILITY) Slog.v(TAG, "Fullscreen: at " + r);
                         behindFullscreen = true;
+                        showHomeBehindStack = false;
                     } else if (isActivityOverHome(r)) {
                         if (DEBUG_VISBILITY) Slog.v(TAG, "Showing home: at " + r);
                         showHomeBehindStack = true;
@@ -2644,6 +2645,9 @@ final class ActivityStack {
             boolean setState) {
         if (mResumedActivity == r) {
             mResumedActivity = null;
+        }
+        if (mPausingActivity == r) {
+            mPausingActivity = null;
         }
         if (mService.mFocusedActivity == r) {
             mService.mFocusedActivity = null;
