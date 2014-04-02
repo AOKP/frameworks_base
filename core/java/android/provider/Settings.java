@@ -7266,6 +7266,12 @@ public final class Settings {
          */
         public static final String ENABLE_NAVRING = "enable_navring";
 
+        /**
+         * Setting to show the battery percentage text
+         * @hide
+         */
+        public static final String STATUS_BAR_BATTERY_STYLE = "status_bar_battery_style";
+
     }
 
     /**
