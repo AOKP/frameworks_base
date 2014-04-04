@@ -14,4 +14,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources/>
+<resources>
+  <string name="title_standalone">Fájlok</string>
+  <string name="toast_success_delete">Fájlok törölve</string>
+  <string name="dialog_delete_confirm_title">Törlöd a fájlokat?</string>
+  <string name="menu_copy">Másolás</string>
+  <string name="menu_cut">Kivágás</string>
+  <string name="menu_paste">Beillesztés</string>
+  <string name="copy_in_progress">Másolás...</string>
+  <string name="delete_in_progress">Törlés...</string>
+  <string name="ok">OK</string>
+  <string name="cancel">Mégse</string>
+</resources>

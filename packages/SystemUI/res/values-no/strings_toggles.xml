@@ -15,4 +15,42 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="toggle_USER">Gjeldende bruker</string>
+  <string name="toggle_BRIGHTNESS">Lysstyrke</string>
+  <string name="toggle_VOLUME">Volum</string>
+  <string name="toggle_SETTINGS">Innstillinger</string>
+  <string name="toggle_WIFI">WiFi</string>
+  <string name="toggle_SIGNAL">Signalstyrke</string>
+  <string name="toggle_ROTATE">Automatisk rotering</string>
+  <string name="toggle_CLOCK">Klokke</string>
+  <string name="toggle_GPS">GPS</string>
+  <string name="toggle_LOCATION">Posisjon</string>
+  <string name="toggle_IME">IME</string>
+  <string name="toggle_BATTERY">Batteri</string>
+  <string name="toggle_AIRPLANE_MODE">Flymodus</string>
+  <string name="toggle_BLUETOOTH">Bluetooth</string>
+  <string name="toggle_SWAGGER">Spradebass</string>
+  <string name="toggle_VIBRATE">Vibrering</string>
+  <string name="toggle_SILENT">Stille</string>
+  <string name="toggle_FCHARGE">Hurtiglading</string>
+  <string name="toggle_SYNC">Synkronisering</string>
+  <string name="toggle_NFC">NFC</string>
+  <string name="toggle_TORCH">Lommelykt</string>
+  <string name="toggle_WIFITETHER">WiFi nettdeling</string>
+  <string name="toggle_USBTETHER">USB nettdeling</string>
+  <string name="toggle_2G">2G</string>
+  <string name="toggle_LTE">LTE</string>
+  <string name="toggle_FAVCONTACT">Favorittkontakt</string>
+  <string name="toggle_NAVBARHIDE">Skjul navigasjonsfelt</string>
+  <string name="toggle_SLEEP">Hvilemodus</string>
+  <string name="toggle_REBOOT">Omstart</string>
+  <string name="toggle_WIRELESSADB">Trådløs ADB</string>
+  <string name="toggle_IMMERSIVE_MODE">Fullskjermsmodus</string>
+  <string name="quick_settings_swagger">Spradebass</string>
+  <string name="quick_settings_swaggersun">Spradebassøndag</string>
+  <string name="quick_settings_fbgt">FBGT</string>
+  <string name="quick_settings_playing">Spiller av...</string>
+  <string name="quick_settings_reboot">Omstart</string>
+  <string name="quick_settings_reboot_message">Restarter systemet</string>
+</resources>

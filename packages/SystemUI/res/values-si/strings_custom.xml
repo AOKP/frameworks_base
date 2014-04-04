@@ -22,7 +22,7 @@
   <string name="screenrecord_notif_ticker">තිරය රෙකෝඩනය වෙමින් පවතී</string>
   <string name="screenrecord_notif_title">තිරය රෙකෝඩනය වෙමින්</string>
   <string name="screenrecord_notif_stop">නවත්වන්න</string>
-  <string name="screenrecord_notif_pointer">ටොගලයේ ලක්ෂ්‍යය</string>
+  <string name="screenrecord_notif_pointer">ටොගල දර්ශකය</string>
   <string name="screenrecord_notif_error">තිරය රෙකෝඩ් කිරීමට අපොහොසත්වුනි</string>
   <string name="battery_percent_format"><xliff:g id="number">%d%%</xliff:g></string>
   <string name="status_bar_notification_hide_icon_packages">යෙදුමේ අයිකනය නොපෙන්වන්න</string>

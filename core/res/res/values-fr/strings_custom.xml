@@ -19,7 +19,7 @@
 -->
 <resources>
   <string name="reboot">Redémarrer</string>
-  <string name="reboot_recovery">Recovery</string>
+  <string name="reboot_recovery">Récupération</string>
   <string name="reboot_download">Téléchargement</string>
   <string name="reboot_bootloader">Bootloader</string>
   <string name="reboot_progress">L\'appareil redémarre</string>

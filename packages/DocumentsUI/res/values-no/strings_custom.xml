@@ -14,4 +14,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources/>
+<resources>
+  <string name="title_standalone">Filer</string>
+  <string name="toast_success_delete">Filene er slettet</string>
+  <string name="dialog_delete_confirm_title">Ønsker du å slette filene?</string>
+  <string name="menu_copy">Kopier</string>
+  <string name="menu_cut">Klipp ut</string>
+  <string name="menu_paste">Lim inn</string>
+  <string name="copy_in_progress">Kopierer...</string>
+  <string name="delete_in_progress">Sletter...</string>
+  <string name="ok">OK</string>
+  <string name="cancel">Avbryt</string>
+</resources>
