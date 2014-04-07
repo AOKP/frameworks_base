@@ -95,6 +95,9 @@
   <string name="quick_settings_lte_off_label">LTE Deshabilitado</string>
   <string name="quick_settings_gps_on_label">GPS Habilitado</string>
   <string name="quick_settings_gps_off_label">GPS Deshabilitado</string>
+  <string name="quick_settings_location_high_accuracy_label">Alta precisión</string>
+  <string name="quick_settings_location_battery_saving_label">Ahorro de batería</string>
+  <string name="quick_settings_location_device_only_label">Sólo dispositivo</string>
   <string name="quick_settings_data_on_label">Datos Habilitados</string>
   <string name="quick_settings_data_off_label">Datos Deshabilitados</string>
   <string name="quick_settings_navbar_hide_on_label">Barra de navegación Habilitada</string>

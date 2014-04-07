@@ -37,7 +37,7 @@
   <string name="action_ime">Apri selettore di immissione testo</string>
   <string name="action_kill">Termina processo</string>
   <string name="action_lastapp">Ultima applicazione</string>
-  <string name="action_power">Accendi</string>
+  <string name="action_power">Menu Power</string>
   <string name="action_notifications">Notifiche</string>
   <string name="action_assist">Ricerca (Google Now)</string>
   <string name="action_clockoptions">Opzioni Orologio</string>

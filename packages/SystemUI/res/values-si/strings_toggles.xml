@@ -95,6 +95,9 @@
   <string name="quick_settings_lte_off_label">LTE අක්‍රීයයි</string>
   <string name="quick_settings_gps_on_label">GPS</string>
   <string name="quick_settings_gps_off_label">GPS අක්‍රීයයි</string>
+  <string name="quick_settings_location_high_accuracy_label">ඉහළ නිරවද්‍යතාව</string>
+  <string name="quick_settings_location_battery_saving_label">බැටරි සුරැකීම</string>
+  <string name="quick_settings_location_device_only_label">සංවේදක පමණි</string>
   <string name="quick_settings_data_on_label">දත්ත</string>
   <string name="quick_settings_data_off_label">දත්ත අක්‍රීයයි</string>
   <string name="quick_settings_navbar_hide_on_label">සංචාලන තීරුව නොපෙනේ</string>

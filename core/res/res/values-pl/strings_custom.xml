@@ -36,7 +36,7 @@
   <string name="action_menu">Menu</string>
   <string name="action_ime">Otwórz przełącznik metod wprowadzania</string>
   <string name="action_kill">Zabij zadanie</string>
-  <string name="action_lastapp">Ostatnia aplikacjia</string>
+  <string name="action_lastapp">Ostatnia aplikacja</string>
   <string name="action_power">Menu Zasilania</string>
   <string name="action_notifications">Powiadomienia</string>
   <string name="action_assist">Szukaj (Google Now)</string>

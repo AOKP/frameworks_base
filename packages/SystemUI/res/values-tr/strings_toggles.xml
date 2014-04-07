@@ -95,6 +95,9 @@
   <string name="quick_settings_lte_off_label">LTE Kapalı</string>
   <string name="quick_settings_gps_on_label">GPS Açık</string>
   <string name="quick_settings_gps_off_label">GPS Kapalı</string>
+  <string name="quick_settings_location_high_accuracy_label">Yüksek doğruluk</string>
+  <string name="quick_settings_location_battery_saving_label">Pil tasarrufu</string>
+  <string name="quick_settings_location_device_only_label">Sadece cihaz</string>
   <string name="quick_settings_data_on_label">Veri Açık</string>
   <string name="quick_settings_data_off_label">Veri Kapalı</string>
   <string name="quick_settings_navbar_hide_on_label">Yazılımsal Tuşu Gizle Açık</string>

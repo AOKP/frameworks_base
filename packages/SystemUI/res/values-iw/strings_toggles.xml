@@ -60,4 +60,8 @@
   <string name="quick_settings_sleep">שינה</string>
   <string name="quick_settings_reboot">אתחול</string>
   <string name="quick_settings_reboot_message">המכשיר שלך מאתחל</string>
+  <string name="quick_settings_adb_on"><xliff:g id="ip" example="192.168.1.5">%s</xliff:g></string>
+  <string name="quick_settings_volume">עוצמת קול</string>
+  <string name="quick_settings_vibrate_on_label">רטט פועל</string>
+  <string name="quick_settings_vibrate_off_label">רטט כבוי</string>
 </resources>

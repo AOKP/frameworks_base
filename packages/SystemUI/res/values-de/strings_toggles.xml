@@ -95,6 +95,9 @@
   <string name="quick_settings_lte_off_label">LTE aus</string>
   <string name="quick_settings_gps_on_label">GPS an</string>
   <string name="quick_settings_gps_off_label">GPS aus</string>
+  <string name="quick_settings_location_high_accuracy_label">Hohe Genauigkeit</string>
+  <string name="quick_settings_location_battery_saving_label">Energiesparmodus</string>
+  <string name="quick_settings_location_device_only_label">Nur Gerät</string>
   <string name="quick_settings_data_on_label">Datenverbindung an</string>
   <string name="quick_settings_data_off_label">Datenverbindung aus</string>
   <string name="quick_settings_navbar_hide_on_label">Navbar verstecken an</string>

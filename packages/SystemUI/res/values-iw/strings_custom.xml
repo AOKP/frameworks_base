@@ -24,10 +24,23 @@
   <string name="screenrecord_notif_stop">הפסק</string>
   <string name="screenrecord_notif_pointer">מצביע דו-מצבי</string>
   <string name="screenrecord_notif_error">אין אפשרות להקליט מסך</string>
+  <string name="battery_percent_format"><xliff:g id="number">%d%%</xliff:g></string>
   <string name="status_bar_notification_hide_icon_packages">הסתרת סמלי יישום</string>
   <string name="memory">RAM</string>
+  <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> פנוי</string>
+  <string name="service_foreground_processes"><xliff:g id="MEMORY">%1$s</xliff:g> בשימוש</string>
+  <string name="service_process_name"><xliff:g id="process">%1$s</xliff:g></string>
+  <string name="service_client_name"><xliff:g id="client_name">%1$s</xliff:g></string>
   <string name="service_started_by_app">הופעל ע\"י אפליקציה</string>
+  <string name="running_processes_item_description_s_s">תהליך <xliff:g id="numprocess">%1$d</xliff:g> ושירות <xliff:g id="numservices">%2$d</xliff:g></string>
+  <string name="running_processes_item_description_s_p"><xliff:g id="numprocess">%1$d</xliff:g> תהליך ו-<xliff:g id="numservices">%2$d</xliff:g> שירותים</string>
+  <string name="running_processes_item_description_p_s"><xliff:g id="numprocess">%1$d</xliff:g> תהליכים ושירות <xliff:g id="numservices">%2$d</xliff:g></string>
+  <string name="running_processes_item_description_p_p"><xliff:g id="numprocess">%1$d</xliff:g> תהליכים ו-<xliff:g id="numservices">%2$d</xliff:g> שירותים</string>
+  <string name="running_process_item_user_label">משתמש: <xliff:g id="user_name">%1$s</xliff:g></string>
   <string name="permdesc_screenshot">לכידת צילום מסך</string>
+  <string name="permlab_screenshot">אפשר ליישום לצלם מסך. זה מוגן על ידי SystemUI.</string>
+  <string name="screenshot_toast">צילום מסך ב-%1$d שניות</string>
+  <string name="permdesc_screenrecord">צילם מסך</string>
   <string name="app_window">חלון היישום</string>
   <string name="close">סגור</string>
 </resources>
