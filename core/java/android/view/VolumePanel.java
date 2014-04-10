@@ -151,7 +151,7 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
                 R.string.volume_alarm,
                 R.drawable.ic_audio_alarm,
                 R.drawable.ic_audio_alarm_mute,
-                false),
+                true),
         MediaStream(AudioManager.STREAM_MUSIC,
                 R.string.volume_icon_description_media,
                 R.drawable.ic_audio_vol,
@@ -320,8 +320,8 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
         mVibrator = (Vibrator)context.getSystemService(Context.VIBRATOR_SERVICE);
 
         mVoiceCapable = context.getResources().getBoolean(R.bool.config_voice_capable);
-        mShowCombinedVolumes = !mVoiceCapable && !useMasterVolume;
-        // If we don't want to show multiple volumes, hide the settings button and divider
+        mShowCombinedVolumes = true;
+        // We always want to show multiple volumes
         if (!mShowCombinedVolumes) {
             mMoreButton.setVisibility(View.GONE);
             mDivider.setVisibility(View.GONE);
@@ -408,9 +408,6 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
         for (int i = 0; i < STREAMS.length; i++) {
             StreamResources streamRes = STREAMS[i];
             int streamType = streamRes.streamType;
-            if (mVoiceCapable && streamRes == StreamResources.NotificationStream) {
-                streamRes = StreamResources.RingerStream;
-            }
             StreamControl sc = new StreamControl();
             sc.streamType = streamType;
             sc.group = (ViewGroup) inflater.inflate(R.layout.volume_adjust_item, null);
@@ -496,8 +493,8 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
         for (int i = 0; i < count; i++) {
             mSliderGroup.getChildAt(i).setVisibility(View.VISIBLE);
         }
-        mMoreButton.setVisibility(View.INVISIBLE);
-        mDivider.setVisibility(View.INVISIBLE);
+        mMoreButton.setVisibility(View.GONE);
+        mDivider.setVisibility(View.GONE);
     }
 
     private void collapse() {
