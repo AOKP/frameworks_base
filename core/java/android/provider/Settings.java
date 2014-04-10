@@ -4329,6 +4329,33 @@ public final class Settings {
         public static final String HEADS_UP_FORCE_ALL = "heads_up_force_all";
 
         /**
+         * Option to launch slim actions in floating mode
+         * @hide
+         */
+        public static final String SLIM_ACTION_FLOATS = "slim_action_floats";
+
+        /**
+         * Control the use of floating windows
+         * 0 = off
+         * 1 = on, duh
+         * @hide
+         */
+        public static final String FLOATING_WINDOW_MODE = "floating_window_mode";
+
+        /**
+         * Launch gesture anywhere in floating window or not
+         * @hide
+         */
+        public static final String GESTURE_ANYWHERE_FLOATING = "gesture_anywhere_floating";
+
+        /**
+         * Whether to display a menu containing 'Wipe data', 'Force close' and other options
+         * in the notification area and in the recent app list
+         * @hide
+         */
+        public static final String DEVELOPMENT_SHORTCUT = "development_shortcut";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
