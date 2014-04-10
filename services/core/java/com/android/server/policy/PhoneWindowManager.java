@@ -2920,7 +2920,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
 
             PhoneWindow win = new PhoneWindow(context);
-            win.setIsStartingWindow(true);
             final TypedArray ta = win.getWindowStyle();
             if (ta.getBoolean(
                         com.android.internal.R.styleable.Window_windowDisablePreview, false)
@@ -4747,6 +4746,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 (win.getAttrs().flags & WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM) != 0;
         boolean notFocusableForIm = notFocusable ^ altFocusableIm;
         return !notFocusableForIm;
+    }
+
+    public Rect getContentRect() {
+        return new Rect(mContentLeft, mContentTop, mContentRight, mContentBottom);
     }
 
     /** {@inheritDoc} */
