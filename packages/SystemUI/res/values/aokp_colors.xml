@@ -27,4 +27,10 @@
     <!-- Weather Temperature Status Bar Icon -->
     <color name="status_bar_temp_text_color">#FFFFFFFF</color>
 
+    <!-- App sidebar trigger region color -->
+    <color name="trigger_region_color">#8015a0e5</color>
+    <!-- App sidebar item text color -->
+    <color name="sidebar_item_text_color">#ffffffff</color>
+    <!-- App sidebar item text shadow color -->
+    <color name="sidebar_item_text_shadow_color">#ff000000</color>
 </resources>
