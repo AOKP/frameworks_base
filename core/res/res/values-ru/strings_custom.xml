@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">Увеличение (справа)</string>
   <string name="notify_turn_wifi_off_title">Выключить Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">Выключить раздачу</string>
+  <string name="permlab_preventpower">Блок. кнопки питания</string>
+  <string name="permdesc_preventpower">Позволяет приложению переопределить кнопку питания</string>
 </resources>

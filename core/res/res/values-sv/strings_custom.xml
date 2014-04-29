@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">Växa åt (Höger)</string>
   <string name="notify_turn_wifi_off_title">Inaktivera Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">Inaktivera delning</string>
+  <string name="permlab_preventpower">förhindra avstängningsknapp</string>
+  <string name="permdesc_preventpower">Tillåter ett program att åsidosätta avstängninsknappen</string>
 </resources>

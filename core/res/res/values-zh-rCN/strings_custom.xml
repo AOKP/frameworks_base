@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">缩放（右侧）</string>
   <string name="notify_turn_wifi_off_title">关闭 Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">关闭网络共享</string>
+  <string name="permlab_preventpower">阻止电源键</string>
+  <string name="permdesc_preventpower">允许应用程序覆盖电源键的行为定义</string>
 </resources>

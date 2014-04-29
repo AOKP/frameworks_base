@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">වැඩිවෙන්න (දකුණින්)</string>
   <string name="notify_turn_wifi_off_title">Wi-Fi අක්‍රීය කරන්න</string>
   <string name="notify_turn_tethering_off_title">දිගේලි කිරීම අක්‍රීය කරන්න</string>
+  <string name="permlab_preventpower">බල යතුර වලක්වන්න</string>
+  <string name="permdesc_preventpower">යෙදුමකට බල යතුර අතික්‍රමණය සඳහා අවසර දෙන්න</string>
 </resources>

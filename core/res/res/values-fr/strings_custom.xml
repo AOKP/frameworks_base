@@ -72,6 +72,8 @@
   <string name="animation_grow_shrink_bottom">Agrandir en (bas)</string>
   <string name="animation_grow_shrink_left">Agrandir à (gauche)</string>
   <string name="animation_grow_shrink_right">Agrandir à (droite)</string>
-  <string name="notify_turn_wifi_off_title">Couper le Wi-Fi</string>
+  <string name="notify_turn_wifi_off_title">Désactiver le Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">Désactiver le Partage de Connexion</string>
+  <string name="permlab_preventpower">outrepasser le bouton d\'alimentation</string>
+  <string name="permdesc_preventpower">Permet à une application de remplacer le bouton Power</string>
 </resources>

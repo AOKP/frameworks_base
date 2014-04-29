@@ -51,9 +51,11 @@
   <string name="toggle_CUSTOM">התאמה אישית</string>
   <string name="toggle_STAYAWAKE">הישאר ער</string>
   <string name="toggle_WIRELESSADB">ADB אלחוטי</string>
+  <string name="toggle_SCREENRECORD">הקלטת מסך</string>
   <string name="quick_settings_swagger">Swagger</string>
   <string name="quick_settings_fbgt">FBGT</string>
   <string name="quick_settings_recording">הקלטה...</string>
+  <string name="quick_settings_recordingcap">הקלטה הוצלחה</string>
   <string name="quick_settings_playing">מנגן...</string>
   <string name="quick_settings_quickrecord">הקלטה מהירה</string>
   <string name="quick_settings_nofile">לחיצה ממושכת בכדי להקליט</string>
@@ -61,7 +63,26 @@
   <string name="quick_settings_reboot">אתחול</string>
   <string name="quick_settings_reboot_message">המכשיר שלך מאתחל</string>
   <string name="quick_settings_adb_on"><xliff:g id="ip" example="192.168.1.5">%s</xliff:g></string>
+  <string name="quick_settings_adb_off">ADB דרך רשת כבוי</string>
   <string name="quick_settings_volume">עוצמת קול</string>
   <string name="quick_settings_vibrate_on_label">רטט פועל</string>
   <string name="quick_settings_vibrate_off_label">רטט כבוי</string>
+  <string name="quick_settings_fcharge_on_label">טעינה מהירה פעילה</string>
+  <string name="quick_settings_fcharge_off_label">טעינה מהירה מכובת</string>
+  <string name="quick_settings_torch_on_label">פנס דלוק</string>
+  <string name="quick_settings_torch_off_label">פנס כבוי</string>
+  <string name="quick_settings_nfc_on_label">NFC דלוק</string>
+  <string name="quick_settings_nfc_off_label">NFC כבוי</string>
+  <string name="quick_settings_twog_on_label">2G דלוק</string>
+  <string name="quick_settings_twog_off_label">2G כבוי</string>
+  <string name="quick_settings_lte_on_label">LTE דלוק</string>
+  <string name="quick_settings_lte_off_label">LTE כבוי</string>
+  <string name="quick_settings_gps_on_label">GPS דלוק</string>
+  <string name="quick_settings_gps_off_label">GPS כבוי</string>
+  <string name="quick_settings_location_high_accuracy_label">רמת דיוק גבוהה</string>
+  <string name="quick_settings_location_battery_saving_label">חיסכון בסוללה</string>
+  <string name="quick_settings_location_device_only_label">רק המכשיר</string>
+  <string name="quick_settings_screenshot">צילום מסך</string>
+  <string name="quick_settings_screenrecord">הקלטת מסך</string>
+  <string name="quick_settings_clock_alarm_off">שעון מעורר מושבת</string>
 </resources>

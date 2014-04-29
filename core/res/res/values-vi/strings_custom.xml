@@ -17,4 +17,63 @@
  * limitations under the License.
  */
 -->
-<resources/>
+<resources>
+  <string name="reboot">Khởi động lại</string>
+  <string name="reboot_recovery">Phục hồi</string>
+  <string name="reboot_download">Tải xuống</string>
+  <string name="reboot_bootloader">Bootloader</string>
+  <string name="reboot_progress">Thiết bị của bạn khởi động lại</string>
+  <string name="rotation_lock_toggled">Đã chuyển đổi khoá xoay màn hình</string>
+  <string name="immersive_mode">Chế độ hiện thực ảo</string>
+  <string name="immersive_mode_on">Chế độ hiện thực ảo đang BẬT</string>
+  <string name="immersive_mode_off">Chế độ hiện thực ảo đang TẮT</string>
+  <string name="action_home">Nhà riêng</string>
+  <string name="action_back">Quay lại</string>
+  <string name="action_recents">Gần đây</string>
+  <string name="action_recents_gb">Gần đây (kiểu GB)</string>
+  <string name="action_search">Tìm</string>
+  <string name="action_screenshot">Chụp ảnh màn hình</string>
+  <string name="action_menu">Menu</string>
+  <string name="action_ime">Mở bộ chuyển IME</string>
+  <string name="action_kill">Dừng tác vụ</string>
+  <string name="action_lastapp">Ứng dụng cuối</string>
+  <string name="action_power">Nguồn</string>
+  <string name="action_notifications">Thông báo</string>
+  <string name="action_assist">Tìm (Google Now)</string>
+  <string name="action_clockoptions">Tùy chọn đồng hồ</string>
+  <string name="action_voiceassist">Tìm kiếm bằng giọng nói</string>
+  <string name="action_torch">Đèn pin</string>
+  <string name="action_silent">Chuông/Im lặng</string>
+  <string name="action_vib">Chuông/rung</string>
+  <string name="action_silent_vib">Chuông/rung/im lặng</string>
+  <string name="action_event">Sự kiện</string>
+  <string name="action_today">Hôm nay</string>
+  <string name="action_alarm">Báo thức</string>
+  <string name="action_unlock">Mở khóa</string>
+  <string name="action_camera">Máy ảnh</string>
+  <string name="action_null">Trống</string>
+  <string name="action_widgets">Widget đ.hướng</string>
+  <string name="action_app_window">Widget ứ.dụng</string>
+  <string name="action_ribbon">Dải băng AOKP</string>
+  <string name="action_app">Tuỳ biến Ứ.dụng/Lối tắt</string>
+  <string name="app_killed_message">Đã dừng ứng dụng</string>
+  <string name="global_action_screenshot">Chụp ảnh màn hình</string>
+  <string name="animation_fade">Mờ dần</string>
+  <string name="animation_slide_right">Trượt qua phải</string>
+  <string name="animation_slide_left">Trượt qua trái</string>
+  <string name="animation_slide_right_no_fade">Trượt qua phải (không mờ dần)</string>
+  <string name="animation_slide_left_no_fade">Trượt qua trái (không mờ dần)</string>
+  <string name="animation_slide_up">Trượt dưới cùng</string>
+  <string name="animation_slide_down">Trượt trên cùng</string>
+  <string name="animation_default">Mặc định</string>
+  <string name="animation_translucent">Mờ</string>
+  <string name="animation_grow_shrink">Lớn dần (Trên cùng)</string>
+  <string name="animation_grow_shrink_center">Lớn dần (Trung tâm)</string>
+  <string name="animation_grow_shrink_bottom">Lớn dần (Dưới cùng)</string>
+  <string name="animation_grow_shrink_left">Lớn dần (Bên trái)</string>
+  <string name="animation_grow_shrink_right">Lớn dần (Bên phải)</string>
+  <string name="notify_turn_wifi_off_title">Tắt Wi-Fi</string>
+  <string name="notify_turn_tethering_off_title">Tắt chia sẻ kết nối</string>
+  <string name="permlab_preventpower">chặn nút nguồn</string>
+  <string name="permdesc_preventpower">Cho phép ứng dụng ghi đè lên nút nguồn</string>
+</resources>

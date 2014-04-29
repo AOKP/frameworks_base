@@ -66,7 +66,7 @@
   <string name="quick_settings_sleep">Veille</string>
   <string name="quick_settings_reboot">Redémarrer</string>
   <string name="quick_settings_reboot_message">L\'appareil redémarre</string>
-  <string name="quick_settings_stayawake_on">Rester évéillé Activée</string>
+  <string name="quick_settings_stayawake_on">Rester éveillé Activée</string>
   <string name="quick_settings_stayawake_off">Rester éveillé Désactivée</string>
   <string name="quick_settings_adb_on"><xliff:g id="ip" example="192.168.1.5">%s</xliff:g></string>
   <string name="quick_settings_adb_off">ADB sans fil Désactivée</string>
@@ -95,6 +95,9 @@
   <string name="quick_settings_lte_off_label">LTE Désactivée</string>
   <string name="quick_settings_gps_on_label">GPS Activé</string>
   <string name="quick_settings_gps_off_label">GPS Désactivé</string>
+  <string name="quick_settings_location_high_accuracy_label">Précision améliorée</string>
+  <string name="quick_settings_location_battery_saving_label">Économie de la batterie</string>
+  <string name="quick_settings_location_device_only_label">Appareil uniquement</string>
   <string name="quick_settings_data_on_label">Données Activées</string>
   <string name="quick_settings_data_off_label">Données Désactivées</string>
   <string name="quick_settings_navbar_hide_on_label">NavBar cachée</string>

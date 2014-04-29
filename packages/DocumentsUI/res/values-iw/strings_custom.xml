@@ -25,6 +25,14 @@
   <string name="delete_in_progress">מוחק...</string>
   <string name="ok">אישור</string>
   <string name="cancel">ביטול</string>
+  <plurals name="files_copied">
+    <item quantity="one">הקובץ הוכנס ללוח</item>
+    <item quantity="other">%d קבצים הושמו בלוח</item>
+  </plurals>
+  <plurals name="files_pasted">
+    <item quantity="one">הקובץ כבר הודבק. ייתכן שתהליך העלאה מסתיים ברקע.</item>
+    <item quantity="other">%d קבצים הודבקו העלאה יכולה להסתיים ברקע.</item>
+  </plurals>
   <plurals name="dialog_delete_confirm_message">
     <item quantity="one">קובץ זה ימחק סופית!</item>
     <item quantity="other">קובץ זה ימחק סופית!</item>

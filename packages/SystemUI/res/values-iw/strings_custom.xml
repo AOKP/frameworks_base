@@ -41,6 +41,7 @@
   <string name="permlab_screenshot">אפשר ליישום לצלם מסך. זה מוגן על ידי SystemUI.</string>
   <string name="screenshot_toast">צילום מסך ב-%1$d שניות</string>
   <string name="permdesc_screenrecord">צילם מסך</string>
+  <string name="permlab_screenrecord">אפשר ליישום ללכוד הקלטת מסך. זה מוגן על ידי SystemUI.</string>
   <string name="app_window">חלון היישום</string>
   <string name="close">סגור</string>
 </resources>

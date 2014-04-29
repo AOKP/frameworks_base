@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">Růst (vpravo)</string>
   <string name="notify_turn_wifi_off_title">Vypnout Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">Vypnout Tethering</string>
+  <string name="permlab_preventpower">přemapovat tlačítko napájení</string>
+  <string name="permdesc_preventpower">Umožnit aplikaci přemapovat tlačítko napájení</string>
 </resources>

@@ -19,9 +19,9 @@
 -->
 <resources>
   <string name="reboot">Reiniciar</string>
-  <string name="reboot_recovery">Modo Recuperación</string>
+  <string name="reboot_recovery">Recovery</string>
   <string name="reboot_download">Modo Descarga</string>
-  <string name="reboot_bootloader">Modo Bootloader</string>
+  <string name="reboot_bootloader">Bootloader</string>
   <string name="reboot_progress">El dispositivo se está reiniciando</string>
   <string name="rotation_lock_toggled">Girar automáticamente</string>
   <string name="immersive_mode">Modo inmersivo</string>
@@ -30,7 +30,7 @@
   <string name="action_home">Inicio</string>
   <string name="action_back">Atrás</string>
   <string name="action_recents">Recientes</string>
-  <string name="action_recents_gb">Recientes</string>
+  <string name="action_recents_gb">Recientes (estilo GB)</string>
   <string name="action_search">Buscar</string>
   <string name="action_screenshot">Captura de pantalla</string>
   <string name="action_menu">Menú</string>
@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">Crecer (Derecha)</string>
   <string name="notify_turn_wifi_off_title">Apagar Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">Desactivar Tethering</string>
+  <string name="permlab_preventpower">Prevenir tecla encendido/apagado</string>
+  <string name="permdesc_preventpower">Permitir a una aplicación reemplazar la tecla de encendido/apagado</string>
 </resources>

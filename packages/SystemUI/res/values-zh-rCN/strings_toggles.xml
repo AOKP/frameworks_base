@@ -95,6 +95,9 @@
   <string name="quick_settings_lte_off_label">仅使用LTE网络已关闭</string>
   <string name="quick_settings_gps_on_label">GPS：打开</string>
   <string name="quick_settings_gps_off_label">GPS：关闭</string>
+  <string name="quick_settings_location_high_accuracy_label">高精确度</string>
+  <string name="quick_settings_location_battery_saving_label">节省电量</string>
+  <string name="quick_settings_location_device_only_label">仅设备</string>
   <string name="quick_settings_data_on_label">数据网络：打开</string>
   <string name="quick_settings_data_off_label">数据网络：关闭</string>
   <string name="quick_settings_navbar_hide_on_label">已隐藏导航栏</string>

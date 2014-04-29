@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">拡大縮小(右)</string>
   <string name="notify_turn_wifi_off_title">Wi-Fiをオフにしました</string>
   <string name="notify_turn_tethering_off_title">テザリングをオフにしました</string>
+  <string name="permlab_preventpower">電源キーの動作の上書きを防止</string>
+  <string name="permdesc_preventpower">アプリによる電源キーの動作の上書きを許可</string>
 </resources>

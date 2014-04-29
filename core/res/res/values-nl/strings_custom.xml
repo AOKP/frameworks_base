@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">Ingroeien (Rechts)</string>
   <string name="notify_turn_wifi_off_title">Wi-Fi uitschakelen</string>
   <string name="notify_turn_tethering_off_title">Tethering uitschakelen</string>
+  <string name="permlab_preventpower">uit-knop voorkomen</string>
+  <string name="permdesc_preventpower">Hiermee kan een app de uit-knop overschrijven</string>
 </resources>

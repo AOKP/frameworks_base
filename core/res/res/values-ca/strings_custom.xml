@@ -17,4 +17,10 @@
  * limitations under the License.
  */
 -->
-<resources/>
+<resources>
+  <string name="reboot">Reinicia</string>
+  <string name="reboot_recovery">Recupera</string>
+  <string name="reboot_download">Baixa</string>
+  <string name="reboot_bootloader">Gestor d\'engegada</string>
+  <string name="reboot_progress">El dispositiu s\'està reiniciant</string>
+</resources>

@@ -27,7 +27,7 @@
   <string name="cancel">Anuluj</string>
   <plurals name="files_copied">
     <item quantity="one">Plik został umieszczony w schowku</item>
-    <item quantity="few">Plik został zapisany w schowku</item>
+    <item quantity="few">%d pliki został zapisany w schowku</item>
     <item quantity="other">%d plików zostało umieszczonych w schowku</item>
   </plurals>
   <plurals name="files_pasted">

@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">Aumentar (Direita)</string>
   <string name="notify_turn_wifi_off_title">Desligue o Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">Desligue o Tethering</string>
+  <string name="permlab_preventpower">evitar a tecla de alimentação</string>
+  <string name="permdesc_preventpower">Permite que um aplicativo substitua o botão Liga/Desliga</string>
 </resources>

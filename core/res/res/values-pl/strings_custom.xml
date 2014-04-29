@@ -24,9 +24,9 @@
   <string name="reboot_bootloader">Restart do bootloadera</string>
   <string name="reboot_progress">Twoje urządzenie restartuje się</string>
   <string name="rotation_lock_toggled">Blokada obrotu ekranu przełączona</string>
-  <string name="immersive_mode">Tryb imersyjny</string>
-  <string name="immersive_mode_on">Tryb imersyjny jest włączony</string>
-  <string name="immersive_mode_off">Tryb imersyjny jest wyłączony</string>
+  <string name="immersive_mode">Tryb maksymalizacji</string>
+  <string name="immersive_mode_on">Tryb maksymalizacji jest włączony</string>
+  <string name="immersive_mode_off">Tryb maksymalizacji jest wyłączony</string>
   <string name="action_home">Strona startowa</string>
   <string name="action_back">Wstecz</string>
   <string name="action_recents">Ostatnio uruchomione</string>
@@ -47,7 +47,7 @@
   <string name="action_vib">Dzwonek/Wibracje</string>
   <string name="action_silent_vib">Dzwonek/Wibracje/Cichy</string>
   <string name="action_event">Wydarzenie</string>
-  <string name="action_today">Dziś</string>
+  <string name="action_today">Dzisiaj</string>
   <string name="action_alarm">Alarm</string>
   <string name="action_unlock">Odblokuj</string>
   <string name="action_camera">Aparat</string>
@@ -72,6 +72,8 @@
   <string name="animation_grow_shrink_bottom">Wyrośnij (Z dołu)</string>
   <string name="animation_grow_shrink_left">Wyrośnij (Z lewej)</string>
   <string name="animation_grow_shrink_right">Wyrośnij (Z prawej)</string>
-  <string name="notify_turn_wifi_off_title">Wyłącz WiFi</string>
+  <string name="notify_turn_wifi_off_title">Wyłącz Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">Wyłącz Tethering</string>
+  <string name="permlab_preventpower">zablokuj klawisz zasilania</string>
+  <string name="permdesc_preventpower">Pozwala aplikacji na przejęcie kontroli nad klawiszem zasilania</string>
 </resources>

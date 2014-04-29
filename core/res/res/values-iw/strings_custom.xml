@@ -61,6 +61,7 @@
   <string name="animation_fade">דועך</string>
   <string name="animation_slide_right">החלק מימין</string>
   <string name="animation_slide_left">החלק משמאל</string>
+  <string name="animation_slide_down">החלק למעלה</string>
   <string name="animation_default">ברירת מחדל</string>
   <string name="animation_translucent">שקוף</string>
   <string name="notify_turn_wifi_off_title">כבה WiFi</string>

@@ -15,4 +15,48 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="toggle_USER">Người dùng hiện tại</string>
+  <string name="toggle_BRIGHTNESS">Độ sáng</string>
+  <string name="toggle_VOLUME">Âm lượng</string>
+  <string name="toggle_SETTINGS">Cài đặt</string>
+  <string name="toggle_WIFI">WiFi</string>
+  <string name="toggle_SIGNAL">Tín hiệu</string>
+  <string name="toggle_ROTATE">Tự động xoay</string>
+  <string name="toggle_CLOCK">Đồng hồ</string>
+  <string name="toggle_GPS">GPS</string>
+  <string name="toggle_LOCATION">Vị trí</string>
+  <string name="toggle_IME">IME</string>
+  <string name="toggle_BATTERY">Pin</string>
+  <string name="toggle_AIRPLANE_MODE">Chế độ trên máy bay</string>
+  <string name="toggle_BLUETOOTH">Bluetooth</string>
+  <string name="toggle_SWAGGER">Swagger</string>
+  <string name="toggle_VIBRATE">Rung</string>
+  <string name="toggle_SILENT">Im lặng</string>
+  <string name="toggle_FCHARGE">Sạc nhanh</string>
+  <string name="toggle_SYNC">Đồng bộ</string>
+  <string name="toggle_NFC">NFC</string>
+  <string name="toggle_TORCH">Đèn pin</string>
+  <string name="toggle_WIFITETHER">Chia sẻ kết nối WiFi</string>
+  <string name="toggle_USBTETHER">Chi sẻ kết nối USB</string>
+  <string name="toggle_2G">2G</string>
+  <string name="toggle_LTE">LTE</string>
+  <string name="toggle_FAVCONTACT">Liên hệ yêu thích</string>
+  <string name="toggle_SOUNDSTATE">Kiểu âm thanh</string>
+  <string name="toggle_NAVBARHIDE">Ẩn thanh điều hướng</string>
+  <string name="toggle_QUICKRECORD">Ghi nhanh</string>
+  <string name="toggle_QUIETHOURS">Giờ yên tĩnh</string>
+  <string name="toggle_SLEEP">Thời gian sáng</string>
+  <string name="toggle_STATUSBAR">Thanh trạng thái</string>
+  <string name="toggle_SCREENSHOT">Chụp ảnh màn hình</string>
+  <string name="toggle_REBOOT">Khởi động lại</string>
+  <string name="toggle_CUSTOM">Tùy chỉnh</string>
+  <string name="toggle_STAYAWAKE">Không khóa màn hình</string>
+  <string name="toggle_WIRELESSADB">ADB không dây</string>
+  <string name="toggle_IMMERSIVE_MODE">Chế độ hiện thực ảo</string>
+  <string name="toggle_SCREENRECORD">Quay màn hình</string>
+  <string name="quick_settings_swagger">Swagger</string>
+  <string name="quick_settings_swaggersun">Swagger Sunday</string>
+  <string name="quick_settings_fbgt">FBGT</string>
+  <string name="quick_settings_recording">Đang ghi...</string>
+</resources>

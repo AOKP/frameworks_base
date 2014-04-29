@@ -74,4 +74,6 @@
   <string name="animation_grow_shrink_right">Wachsen nach (Rechts)</string>
   <string name="notify_turn_wifi_off_title">W-LAN deaktivieren</string>
   <string name="notify_turn_tethering_off_title">Tethering deaktivieren</string>
+  <string name="permlab_preventpower">Ein/Aus-Taste umbelegen</string>
+  <string name="permdesc_preventpower">Ermöglicht es einer Anwendung, die Power-Taste zu überschreiben</string>
 </resources>
