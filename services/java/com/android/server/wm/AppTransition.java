@@ -911,7 +911,6 @@ public class AppTransition implements Dump {
         mExitOnly = Settings.AOKP.getBoolean(resolver, Settings.AOKP.ANIMATION_CONTROLS_EXIT_ONLY, true);
         mReverseExit = Settings.AOKP.getBoolean(resolver, Settings.AOKP.ANIMATION_CONTROLS_REVERSE_EXIT, false);
 
-        int temp = Settings.AOKP.getInt(resolver, Settings.AOKP.ANIMATION_CONTROLS_DURATION, 0);
-        mAnimationDuration = temp * 15;
+        mAnimationDuration = Settings.AOKP.getInt(resolver, Settings.AOKP.ANIMATION_CONTROLS_DURATION, 25);
     }
 }
