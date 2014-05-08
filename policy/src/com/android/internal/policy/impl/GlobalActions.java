@@ -401,14 +401,6 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
              });
          }
 
-            // next: airplane mode
-         if (mAirplaneOption != 0) {
-            mItems.add(mAirplaneModeOn);
-         }
-         if (mImmersiveOption != 0) {
-            mItems.add(mImmersiveModeOn);
-         }
-
         if (mScreenrecordOption != 0) {
             // next: screenrecord
             mItems.add(
@@ -426,6 +418,14 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                         return true;
                     }
              });
+         }
+
+            // next: airplane mode
+         if (mAirplaneOption != 0) {
+            mItems.add(mAirplaneModeOn);
+         }
+         if (mImmersiveOption != 0) {
+            mItems.add(mImmersiveModeOn);
          }
 
         // next: bug report, if enabled
