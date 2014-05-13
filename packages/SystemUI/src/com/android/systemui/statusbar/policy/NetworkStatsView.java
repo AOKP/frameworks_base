@@ -43,6 +43,7 @@ public class NetworkStatsView extends LinearLayout {
     // state variables
     private boolean mAttached;      // whether or not attached to a window
     private boolean mActivated;     // whether or not activated due to system settings
+    private boolean mHideOnNoActivity;
 
     private TextView mTextViewTx;
     private TextView mTextViewRx;
@@ -96,6 +97,8 @@ public class NetworkStatsView extends LinearLayout {
                     Settings.AOKP.STATUS_BAR_NETWORK_STATS_UPDATE_INTERVAL), false, this);
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.STATUS_BAR_NETWORK_STATS_TEXT_COLOR), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.STATUS_BAR_NETWORK_STATS_HIDE), false, this);
             onChange(true);
         }
 
@@ -118,6 +121,9 @@ public class NetworkStatsView extends LinearLayout {
 
             mActivated = (Settings.AOKP.getInt(mContext.getContentResolver(),
                     Settings.AOKP.STATUS_BAR_NETWORK_STATS, 0)) == 1 && networkAvailable;
+
+            mHideOnNoActivity = (Settings.AOKP.getInt(mContext.getContentResolver(),
+                    Settings.AOKP.STATUS_BAR_NETWORK_STATS_HIDE, 0)) == 1;
 
             mRefreshInterval = Settings.AOKP.getLong(mContext.getContentResolver(),
                     Settings.AOKP.STATUS_BAR_NETWORK_STATS_UPDATE_INTERVAL, 500);
@@ -212,6 +218,9 @@ public class NetworkStatsView extends LinearLayout {
         mLastUpdateTime = currentTimeMillis;
         setTextViewSpeed(mTextViewTx, deltaBytesTx, deltaT);
         setTextViewSpeed(mTextViewRx, deltaBytesRx, deltaT);
+
+        setVisibility(mHideOnNoActivity && (deltaBytesRx == 0 && deltaBytesTx == 0) ?
+                View.GONE : View.VISIBLE);
 
         mHandler.removeCallbacks(mUpdateRunnable);
         mHandler.postDelayed(mUpdateRunnable, mRefreshInterval);
