@@ -1,4 +1,4 @@
-/*
+#/*
  * Copyright (C) 2006 The Android Open Source Project
  * This code has been modified. Portions copyright (C) 2013, ParanoidAndroid Project.
  *
@@ -7273,6 +7273,12 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_NETWORK_STATS_TEXT_COLOR = "status_bar_network_stats_text_color";
+
+        /**
+         * Whether to hide the network status in the status bar with no activity
+         * @hide
+         */
+        public static final String STATUS_BAR_NETWORK_STATS_HIDE = "status_bar_network_stats_hide";
 
         /**
          * Whether the phone ringtone should be played in an increasing manner
