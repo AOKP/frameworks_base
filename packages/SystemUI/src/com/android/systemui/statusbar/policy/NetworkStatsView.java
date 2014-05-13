@@ -213,6 +213,8 @@ public class NetworkStatsView extends LinearLayout {
         setTextViewSpeed(mTextViewTx, deltaBytesTx, deltaT);
         setTextViewSpeed(mTextViewRx, deltaBytesRx, deltaT);
 
+        setVisibility((deltaBytesRx == 0 && deltaBytesTx == 0) ? View.GONE : View.VISIBLE);
+
         mHandler.removeCallbacks(mUpdateRunnable);
         mHandler.postDelayed(mUpdateRunnable, mRefreshInterval);
     }
