@@ -208,10 +208,16 @@ public class NetworkStatsView extends LinearLayout {
         if (deltaBytesTx < 0)
             deltaBytesTx = 0;
 
-        final float deltaT = (currentTimeMillis - mLastUpdateTime) / 1000f;
         mLastUpdateTime = currentTimeMillis;
-        setTextViewSpeed(mTextViewTx, deltaBytesTx, deltaT);
-        setTextViewSpeed(mTextViewRx, deltaBytesRx, deltaT);
+
+        if (deltaBytesRx == 0 && deltaBytesTx == 0) {
+            setVisibility(View.GONE);
+        } else {
+            final float deltaT = (currentTimeMillis - mLastUpdateTime) / 1000f;
+            setTextViewSpeed(mTextViewTx, deltaBytesTx, deltaT);
+            setTextViewSpeed(mTextViewRx, deltaBytesRx, deltaT);
+            setVisibility(View.VISIBLE);
+        }
 
         mHandler.removeCallbacks(mUpdateRunnable);
         mHandler.postDelayed(mUpdateRunnable, mRefreshInterval);
