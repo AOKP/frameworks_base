@@ -58,6 +58,7 @@
   <string name="action_app">App/contextual personalizado</string>
   <string name="app_killed_message">Aplicación finalizada</string>
   <string name="global_action_screenshot">Captura de pantalla</string>
+  <string name="global_action_screenrecord">Grabación de pantalla</string>
   <string name="animation_fade">Desvanecer</string>
   <string name="animation_slide_right">Deslizar a la derecha</string>
   <string name="animation_slide_left">Deslizar a la izquierda</string>

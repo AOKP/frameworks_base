@@ -15,23 +15,23 @@
      limitations under the License.
 -->
 <resources>
-  <string name="title_standalone">Tập tin</string>
-  <string name="toast_success_delete">Tập tin đã được xoá</string>
-  <string name="dialog_delete_confirm_title">Xoá tập tin?</string>
-  <string name="menu_copy">Chép</string>
-  <string name="menu_cut">Cắt</string>
-  <string name="menu_paste">Dán</string>
-  <string name="copy_in_progress">Đang chép...</string>
-  <string name="delete_in_progress">Đang xoá...</string>
-  <string name="ok">OK</string>
-  <string name="cancel">Huỷ</string>
+  <string name="title_standalone">檔案</string>
+  <string name="toast_success_delete">檔案已刪除</string>
+  <string name="dialog_delete_confirm_title">刪除檔案？</string>
+  <string name="menu_copy">複製</string>
+  <string name="menu_cut">剪下</string>
+  <string name="menu_paste">貼上</string>
+  <string name="copy_in_progress">複製中 ...</string>
+  <string name="delete_in_progress">正在刪除...</string>
+  <string name="ok">確定</string>
+  <string name="cancel">取消</string>
   <plurals name="files_copied">
-    <item quantity="other">%d tập tin đã được đưa vào clipboard</item>
+    <item quantity="other">%d 檔案已被放在剪貼板</item>
   </plurals>
   <plurals name="files_pasted">
-    <item quantity="other">%d tập tin đã được dán. Quá trình tải lên có thể kết thúc dưới nền.</item>
+    <item quantity="other">%d 已被貼上。上傳可能在背後完成。</item>
   </plurals>
   <plurals name="dialog_delete_confirm_message">
-    <item quantity="other">Việc này sẽ xoá vĩnh viễn %d tập tin đã chọn!</item>
+    <item quantity="other">這個檔案將會被永久刪除！</item>
   </plurals>
 </resources>

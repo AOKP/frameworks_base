@@ -58,6 +58,7 @@
   <string name="action_app">Tuỳ biến Ứ.dụng/Lối tắt</string>
   <string name="app_killed_message">Đã dừng ứng dụng</string>
   <string name="global_action_screenshot">Chụp ảnh màn hình</string>
+  <string name="global_action_screenrecord">Quay màn hình</string>
   <string name="animation_fade">Mờ dần</string>
   <string name="animation_slide_right">Trượt qua phải</string>
   <string name="animation_slide_left">Trượt qua trái</string>
@@ -76,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">Tắt chia sẻ kết nối</string>
   <string name="permlab_preventpower">chặn nút nguồn</string>
   <string name="permdesc_preventpower">Cho phép ứng dụng ghi đè lên nút nguồn</string>
+  <string name="permlab_setKeyguardWallpaper">đặt nền màn hình khoá</string>
+  <string name="permdesc_setKeyguardWallpaper">Cho phép một ứng dụng thay đổi hình nền màn hình khoá.</string>
 </resources>

@@ -19,7 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="accessibility_data_connection_HP">HSPA+</string>
-  <string name="screenrecord_notif_ticker">Bildschirm wird aufgezeichnet</string>
+  <string name="screenrecord_notif_ticker">Bildschirminhalt wird aufgezeichnet</string>
   <string name="screenrecord_notif_title">Bildschirmaufzeichnung</string>
   <string name="screenrecord_notif_stop">Beenden</string>
   <string name="screenrecord_notif_pointer">Zeiger einblenden</string>

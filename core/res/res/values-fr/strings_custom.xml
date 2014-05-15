@@ -19,7 +19,7 @@
 -->
 <resources>
   <string name="reboot">Redémarrer</string>
-  <string name="reboot_recovery">Récupération</string>
+  <string name="reboot_recovery">Recovery</string>
   <string name="reboot_download">Téléchargement</string>
   <string name="reboot_bootloader">Bootloader</string>
   <string name="reboot_progress">L\'appareil redémarre</string>
@@ -58,6 +58,7 @@
   <string name="action_app">Application/raccourci personnalisé</string>
   <string name="app_killed_message">Application tuée</string>
   <string name="global_action_screenshot">Capture d\'écran</string>
+  <string name="global_action_screenrecord">Capture vidéo</string>
   <string name="animation_fade">Fondu</string>
   <string name="animation_slide_right">Glissez à droite</string>
   <string name="animation_slide_left">Glissez à gauche</string>
@@ -76,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">Désactiver le Partage de Connexion</string>
   <string name="permlab_preventpower">outrepasser le bouton d\'alimentation</string>
   <string name="permdesc_preventpower">Permet à une application de remplacer le bouton Power</string>
+  <string name="permlab_setKeyguardWallpaper">Définir le fond d\'écran du clavier de verrouillage</string>
+  <string name="permdesc_setKeyguardWallpaper">Autorise une application à changer le fond de l\'écran de verrouillage.</string>
 </resources>

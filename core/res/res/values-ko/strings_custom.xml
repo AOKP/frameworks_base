@@ -58,6 +58,7 @@
   <string name="action_app">사용자 정의 앱/바로가기</string>
   <string name="app_killed_message">애플리케이션 종료됨</string>
   <string name="global_action_screenshot">스크린샷</string>
+  <string name="global_action_screenrecord">화면 기록</string>
   <string name="animation_fade">페이드</string>
   <string name="animation_slide_right">오른쪽에서 슬라이드</string>
   <string name="animation_slide_left">왼쪽에서 슬라이드</string>
@@ -76,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">테더링 OFF</string>
   <string name="permlab_preventpower">전원 키를 방지</string>
   <string name="permdesc_preventpower">응용 프로그램이 전원 키를 대체 할 수 있습니다</string>
+  <string name="permlab_setKeyguardWallpaper">keyguard 배경설정</string>
+  <string name="permdesc_setKeyguardWallpaper">앱으로 잠금화면 배경을 변경할 수 있습니다.</string>
 </resources>

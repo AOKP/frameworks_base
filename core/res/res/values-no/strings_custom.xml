@@ -32,7 +32,7 @@
   <string name="action_recents">Nylige</string>
   <string name="action_recents_gb">Nylige apper (GB-stil)</string>
   <string name="action_search">Søk</string>
-  <string name="action_screenshot">Skjermbilde</string>
+  <string name="action_screenshot">Skjermdump</string>
   <string name="action_menu">Meny</string>
   <string name="action_ime">Åpne IME-velger</string>
   <string name="action_kill">Avslutt oppgave</string>
@@ -57,13 +57,13 @@
   <string name="action_ribbon">AOKP Bånd</string>
   <string name="action_app">Egendefinert App/Snarvei</string>
   <string name="app_killed_message">Program avsluttet</string>
-  <string name="global_action_screenshot">Skjermbilde</string>
-  <string name="animation_fade">Fade</string>
+  <string name="global_action_screenshot">Skjermdump</string>
+  <string name="animation_fade">Nedtoning</string>
   <string name="animation_slide_right">Skli inn mot høyre</string>
-  <string name="animation_slide_left">Skli inn mot venstre</string>
+  <string name="animation_slide_left">Skli inn fra venstre</string>
   <string name="animation_slide_right_no_fade">Skli inn mot høyre (ingen fade)</string>
   <string name="animation_slide_left_no_fade">Skli inn mot venstre (ingen fade)</string>
-  <string name="animation_slide_up">Skli inn mot bunnen</string>
+  <string name="animation_slide_up">Skli inn fra bunnen</string>
   <string name="animation_slide_down">Skli inn fra toppen</string>
   <string name="animation_default">Standard</string>
   <string name="animation_translucent">Gjennomsiktig</string>

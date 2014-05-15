@@ -58,6 +58,7 @@
   <string name="action_app">Własna aplikacja/skrót</string>
   <string name="app_killed_message">Aplikacja zabita</string>
   <string name="global_action_screenshot">Zrzut ekranu</string>
+  <string name="global_action_screenrecord">Nagrywanie Ekranu</string>
   <string name="animation_fade">Zanikanie</string>
   <string name="animation_slide_right">Wjazd w prawo</string>
   <string name="animation_slide_left">Wjazd w lewo</string>
@@ -76,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">Wyłącz Tethering</string>
   <string name="permlab_preventpower">zablokuj klawisz zasilania</string>
   <string name="permdesc_preventpower">Pozwala aplikacji na przejęcie kontroli nad klawiszem zasilania</string>
+  <string name="permlab_setKeyguardWallpaper">Ustawianie tła ekranu blokady</string>
+  <string name="permdesc_setKeyguardWallpaper">Zezwól aplikacji na zmianę tła ekranu blokady.</string>
 </resources>

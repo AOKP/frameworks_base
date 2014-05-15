@@ -21,8 +21,8 @@
   <string name="accessibility_data_connection_HP">HSPA+</string>
   <string name="screenrecord_notif_ticker">Écran est en cours d\'enregistrement</string>
   <string name="screenrecord_notif_title">Capture vidéo</string>
-  <string name="screenrecord_notif_stop">Interrompre</string>
-  <string name="screenrecord_notif_pointer">Tuile</string>
+  <string name="screenrecord_notif_stop">Arrêter</string>
+  <string name="screenrecord_notif_pointer">Afficher le pointeur</string>
   <string name="screenrecord_notif_error">Impossible d\'enregistrer l\'écran</string>
   <string name="battery_percent_format"><xliff:g id="number">%d%%</xliff:g></string>
   <string name="status_bar_notification_hide_icon_packages">Masquer les icônes des applications</string>
@@ -44,7 +44,7 @@
   <string name="permdesc_screenshot">Capture d\'écran</string>
   <string name="permlab_screenshot">Permet à l\'application de prendre une capture une capture d\'écran. Celle-ci est protégée par SystemUI.</string>
   <string name="screenshot_toast">Capture d\'écran dans %1$d secondes</string>
-  <string name="permdesc_screenrecord">Enregistrement de l\'écran</string>
+  <string name="permdesc_screenrecord">Capture vidéo</string>
   <string name="permlab_screenrecord">Permet à l\'application d\'enregistrer l\'écran. Ceci est protégé par SystemUI.</string>
   <string name="app_window">Fenêtre des applications</string>
   <string name="close">Fermer</string>

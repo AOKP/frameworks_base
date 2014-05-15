@@ -17,4 +17,35 @@
  * limitations under the License.
  */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_data_connection_HP">HSPA+</string>
+  <string name="screenrecord_notif_ticker">Màn hình bắt đầu được quay</string>
+  <string name="screenrecord_notif_title">Đang quay màn hình</string>
+  <string name="screenrecord_notif_stop">Dừng</string>
+  <string name="screenrecord_notif_pointer">Con trỏ chuyển đổi</string>
+  <string name="screenrecord_notif_error">Không thể quay màn hình</string>
+  <string name="battery_percent_format"><xliff:g id="number">%d%%</xliff:g></string>
+  <string name="status_bar_notification_hide_icon_packages">Ẩn biểu tượng ứng dụng</string>
+  <string name="memory">RAM</string>
+  <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> còn trống</string>
+  <string name="service_foreground_processes"><xliff:g id="memory">%1$s</xliff:g> đã dùng</string>
+  <string name="service_process_name"><xliff:g id="process">%1$s</xliff:g></string>
+  <string name="service_client_name"><xliff:g id="client_name">%1$s</xliff:g></string>
+  <string name="service_started_by_app">Khởi động bởi ứng dụng.</string>
+  <string name="running_processes_item_description_s_s"><xliff:g id="numprocess">%1$d</xliff:g>
+        process and <xliff:g id="numservices">%2$d</xliff:g> dịch vụ</string>
+  <string name="running_processes_item_description_s_p"><xliff:g id="numprocess">%1$d</xliff:g>
+        process and <xliff:g id="numservices">%2$d</xliff:g> dịch vụ</string>
+  <string name="running_processes_item_description_p_s"><xliff:g id="numprocess">%1$d</xliff:g>
+        processes and <xliff:g id="numservices">%2$d</xliff:g> dịch vụ</string>
+  <string name="running_processes_item_description_p_p"><xliff:g id="numprocess">%1$d</xliff:g>
+        processes and <xliff:g id="numservices">%2$d</xliff:g> dịch vụ</string>
+  <string name="running_process_item_user_label">Người dùng: <xliff:g id="user_name">%1$s</xliff:g></string>
+  <string name="permdesc_screenshot">Chụp màn hình</string>
+  <string name="permlab_screenshot">Cho phép ứng dụng chụp ảnh màn hình. Điều này được bảo vệ bởi SystemUI.</string>
+  <string name="screenshot_toast">Chụp màn hình trong %1$d giây</string>
+  <string name="permdesc_screenrecord">Quay phim màn hình</string>
+  <string name="permlab_screenrecord">Cho phép ứng dụng quay màn hình. Điều này được bảo vệ bởi SystemUI.</string>
+  <string name="app_window">Cửa sổ ứng dụng</string>
+  <string name="close">Đóng</string>
+</resources>

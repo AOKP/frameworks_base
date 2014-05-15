@@ -58,6 +58,7 @@
   <string name="action_app">රිසිකළ යෙදුම/කෙටි මග</string>
   <string name="app_killed_message">යෙදුම නසා දමන ලදී</string>
   <string name="global_action_screenshot">තිර සේයාව</string>
+  <string name="global_action_screenrecord">තිර රෙකෝඩනය</string>
   <string name="animation_fade">මැලවෙනවා</string>
   <string name="animation_slide_right">දකුණින් රූටන්න</string>
   <string name="animation_slide_left">වමින් රූටන්න</string>
@@ -76,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">දිගේලි කිරීම අක්‍රීය කරන්න</string>
   <string name="permlab_preventpower">බල යතුර වලක්වන්න</string>
   <string name="permdesc_preventpower">යෙදුමකට බල යතුර අතික්‍රමණය සඳහා අවසර දෙන්න</string>
+  <string name="permlab_setKeyguardWallpaper">අගුළු තිරයේ බිතුපත සකසන්න</string>
+  <string name="permdesc_setKeyguardWallpaper">අගුළු තිරයේ බිතුපත වෙනස්කිරීම සඳහා යෙදුමකට අවසර දෙන්න.</string>
 </resources>

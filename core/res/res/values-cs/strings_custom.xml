@@ -58,6 +58,7 @@
   <string name="action_app">Vlastní aplikace/zástupce</string>
   <string name="app_killed_message">Aplikace ukončena</string>
   <string name="global_action_screenshot">Snímek obrazovky</string>
+  <string name="global_action_screenrecord">Videozáznam obrazovky</string>
   <string name="animation_fade">Slábnutí</string>
   <string name="animation_slide_right">Zasunutí vpravo</string>
   <string name="animation_slide_left">Zasunutí vlevo</string>

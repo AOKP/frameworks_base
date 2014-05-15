@@ -58,6 +58,7 @@
   <string name="action_app">Applicazione personalizzata/Collegamento</string>
   <string name="app_killed_message">Applicazione terminata</string>
   <string name="global_action_screenshot">Screenshot</string>
+  <string name="global_action_screenrecord">Registrazione schermo</string>
   <string name="animation_fade">Dissolvenza</string>
   <string name="animation_slide_right">Scorri verso destra</string>
   <string name="animation_slide_left">Scorri verso sinistra</string>
@@ -76,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">Disattiva Tethering</string>
   <string name="permlab_preventpower">disattiva il tasto power</string>
   <string name="permdesc_preventpower">Permetti ad una applicazione di ignorare il tasto power</string>
+  <string name="permlab_setKeyguardWallpaper">imposta sfondo sblocco schermo</string>
+  <string name="permdesc_setKeyguardWallpaper">Consente a un\'app di cambiare lo sfondo della schermata di sblocco.</string>
 </resources>

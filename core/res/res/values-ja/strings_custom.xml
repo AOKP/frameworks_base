@@ -58,6 +58,7 @@
   <string name="action_app">アプリ/ショートカット</string>
   <string name="app_killed_message">アプリを終了しました。</string>
   <string name="global_action_screenshot">スクリーンショット</string>
+  <string name="global_action_screenrecord">画面の録画</string>
   <string name="animation_fade">フェード</string>
   <string name="animation_slide_right">右にスライド</string>
   <string name="animation_slide_left">左にスライド</string>
@@ -76,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">テザリングをオフにしました</string>
   <string name="permlab_preventpower">電源キーの動作の上書きを防止</string>
   <string name="permdesc_preventpower">アプリによる電源キーの動作の上書きを許可</string>
+  <string name="permlab_setKeyguardWallpaper">ロック画面壁紙の設定</string>
+  <string name="permdesc_setKeyguardWallpaper">アプリによるロック画面壁紙の変更を許可する</string>
 </resources>
