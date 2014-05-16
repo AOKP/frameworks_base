@@ -5313,13 +5313,13 @@ public class PackageManagerService extends IPackageManager.Stub {
 
             // Generate Idmaps and res tables if pkg is a theme
             for(String target : pkg.mOverlayTargets) {
+                insertIntoOverlayMap(target, pkg);
                 if (!shouldCreateIdmap(mPackages.get(target), pkg)) {
                     continue;
                 }
                 if (pkg.mIsLegacyThemeApk) {
                     if (target != null) {
                         try {
-                            insertIntoOverlayMap(target, pkg);
                             generateIdmapForLegacyTheme(target, pkg);
                         } catch (Exception e) {
                             mLastScanError = PackageManager.INSTALL_FAILED_INTERNAL_ERROR;
@@ -5341,7 +5341,6 @@ public class PackageManagerService extends IPackageManager.Stub {
                     }
                     ThemeUtils.createResourcesDirIfNotExists(target, pkg.applicationInfo.publicSourceDir);
                     compileResources(target, pkg);
-                    insertIntoOverlayMap(target, pkg);
                     generateIdmap(target, pkg);
                 } catch(Exception e) {
                     mLastScanError = PackageManager.INSTALL_FAILED_INTERNAL_ERROR;
