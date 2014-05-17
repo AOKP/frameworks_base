@@ -187,6 +187,13 @@ interface ITelephony {
     boolean handlePinMmi(String dialString);
 
     /**
+     * Toggle mobile network modes
+     * @param networkState {RILConstants.NETWORK_MODE}
+     * {@hide}
+     */
+    void toggleMobileNetwork(int networkState);
+
+    /**
      * Toggles the radio on or off.
      */
     void toggleRadioOnOff();
