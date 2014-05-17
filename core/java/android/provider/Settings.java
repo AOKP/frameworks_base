@@ -7223,6 +7223,14 @@ public final class Settings {
         public static final String LOCATION_MODES_TOGGLE = "location_modes_toggle";
 
         /**
+         * Network modes toggle
+         * States of network devided by |
+         * Like 9|0|1
+         * @hide
+         */
+        public static final String NETWORK_MODES_TOGGLE = "network_modes_toggle";
+
+        /**
          * Whether to enable the navbar for hw key devices
          * @hide
          */
