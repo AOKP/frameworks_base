@@ -44,9 +44,12 @@ public class NetworkStatsView extends LinearLayout {
     private boolean mAttached;      // whether or not attached to a window
     private boolean mActivated;     // whether or not activated due to system settings
     private boolean mHideOnNoActivity;
+    private boolean mFlipStatsPositions;
 
     private TextView mTextViewTx;
     private TextView mTextViewRx;
+    private View mLayoutTx;
+    private View mLayoutRx;
     private long mLastTx;
     private long mLastRx;
     private long mRefreshInterval;
@@ -99,6 +102,8 @@ public class NetworkStatsView extends LinearLayout {
                     Settings.AOKP.STATUS_BAR_NETWORK_STATS_TEXT_COLOR), false, this);
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.STATUS_BAR_NETWORK_STATS_HIDE), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.STATUS_BAR_NETWORK_STATS_FLIP), false, this);
             onChange(true);
         }
 
@@ -124,6 +129,15 @@ public class NetworkStatsView extends LinearLayout {
 
             mHideOnNoActivity = (Settings.AOKP.getInt(mContext.getContentResolver(),
                     Settings.AOKP.STATUS_BAR_NETWORK_STATS_HIDE, 0)) == 1;
+
+            mFlipStatsPositions = (Settings.AOKP.getInt(mContext.getContentResolver(),
+                    Settings.AOKP.STATUS_BAR_NETWORK_STATS_FLIP, 0)) == 1;
+
+            if (mFlipStatsPositions) {
+                mLayoutTx.bringToFront();
+            } else {
+                mLayoutRx.bringToFront();
+            }
 
             mRefreshInterval = Settings.AOKP.getLong(mContext.getContentResolver(),
                     Settings.AOKP.STATUS_BAR_NETWORK_STATS_UPDATE_INTERVAL, 500);
@@ -157,6 +171,8 @@ public class NetworkStatsView extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        mLayoutTx = findViewById(R.id.layout_tx);
+        mLayoutRx = findViewById(R.id.layout_rx);
         mTextViewTx = (TextView) findViewById(R.id.bytes_tx);
         mTextViewRx = (TextView) findViewById(R.id.bytes_rx);
     }
@@ -216,6 +232,7 @@ public class NetworkStatsView extends LinearLayout {
 
         final float deltaT = (currentTimeMillis - mLastUpdateTime) / 1000f;
         mLastUpdateTime = currentTimeMillis;
+
         setTextViewSpeed(mTextViewTx, deltaBytesTx, deltaT);
         setTextViewSpeed(mTextViewRx, deltaBytesRx, deltaT);
 
