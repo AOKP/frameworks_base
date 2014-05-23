@@ -15,4 +15,38 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="toggle_USER">المستعمل الحالي</string>
+  <string name="toggle_BRIGHTNESS">السطوع</string>
+  <string name="toggle_VOLUME">مستوى الصوت</string>
+  <string name="toggle_SETTINGS">الإعدادات</string>
+  <string name="toggle_WIFI">WiFi</string>
+  <string name="toggle_SIGNAL">إشارة</string>
+  <string name="toggle_ROTATE">تدوير تلقائي</string>
+  <string name="toggle_CLOCK">الساعة</string>
+  <string name="toggle_GPS">نظام تحديد المواقع</string>
+  <string name="toggle_LOCATION">الموقع</string>
+  <string name="toggle_IME">IME</string>
+  <string name="toggle_BATTERY">البطارية</string>
+  <string name="toggle_AIRPLANE_MODE">وضع الطائرة</string>
+  <string name="toggle_BLUETOOTH">بلوتوث</string>
+  <string name="toggle_VIBRATE">هزاز</string>
+  <string name="toggle_SILENT">صامت</string>
+  <string name="toggle_FCHARGE">شحن سريع</string>
+  <string name="toggle_SYNC">مزامنة</string>
+  <string name="toggle_NFC">NFC</string>
+  <string name="toggle_TORCH">الشعلة</string>
+  <string name="toggle_2G">2G</string>
+  <string name="toggle_LTE">LTE</string>
+  <string name="toggle_FAVCONTACT">الاتصال المفضل</string>
+  <string name="toggle_SOUNDSTATE">حالة الصوت</string>
+  <string name="toggle_NAVBARHIDE">إخفاء شريط التنقل</string>
+  <string name="toggle_QUICKRECORD">سجل سريعة</string>
+  <string name="toggle_QUIETHOURS">ساعات هادئة</string>
+  <string name="toggle_SLEEP">النوم</string>
+  <string name="toggle_STATUSBAR">شريط الحالة</string>
+  <string name="toggle_SCREENSHOT">لقطة للشاشة</string>
+  <string name="toggle_REBOOT">إعادة التشغيل</string>
+  <string name="toggle_CUSTOM">مخصص</string>
+  <string name="toggle_STAYAWAKE">البقاء في الوضع نشط</string>
+</resources>

@@ -14,17 +14,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">Ficheiros</string>
   <string name="toast_success_delete">Ficheiros eliminados</string>
   <string name="dialog_delete_confirm_title">Eliminar ficheiros?</string>
   <string name="menu_copy">Copiar</string>
   <string name="menu_cut">Cortar</string>
   <string name="menu_paste">Colar</string>
-  <string name="copy_in_progress">A copiar...</string>
-  <string name="delete_in_progress">A Eliminar...</string>
-  <string name="ok">OK</string>
-  <string name="cancel">Cancelar</string>
   <plurals name="files_copied">
     <item quantity="one">O ficheiro foi colocado na área de transferência</item>
     <item quantity="other">%d ficheiros foram colocados na área de transferência</item>
@@ -33,8 +29,12 @@
     <item quantity="one">O ficheiro foi colado. O seu upload pode estar a terminar em segundo plano.</item>
     <item quantity="other">%d ficheiros foram colados. O seu upload pode estar a terminar em segundo plano.</item>
   </plurals>
+  <string name="copy_in_progress">A copiar...</string>
+  <string name="delete_in_progress">A Eliminar...</string>
   <plurals name="dialog_delete_confirm_message">
     <item quantity="one">Este ficheiro será eliminado permanentemente!</item>
     <item quantity="other">Isto irá eliminar permanentemente os %d ficheiros seleccionados!</item>
   </plurals>
+  <string name="ok">OK</string>
+  <string name="cancel">Cancelar</string>
 </resources>

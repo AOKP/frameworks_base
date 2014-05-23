@@ -14,24 +14,24 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">Dosyalar</string>
-  <string name="toast_success_delete">Silinmiş dosyalar</string>
+  <string name="toast_success_delete">Dosyalar silindi</string>
   <string name="dialog_delete_confirm_title">Dosyaları sil?</string>
   <string name="menu_copy">Kopyala</string>
   <string name="menu_cut">Kes</string>
   <string name="menu_paste">Yapıştır</string>
-  <string name="copy_in_progress">Kopyalanıyor...</string>
-  <string name="delete_in_progress">Siliniyor...</string>
-  <string name="ok">Tamam</string>
-  <string name="cancel">İptal</string>
   <plurals name="files_copied">
     <item quantity="other">Dosya panoya yerleştirildi</item>
   </plurals>
   <plurals name="files_pasted">
     <item quantity="other">%d dosyaları yapıştırıldı. Yükleme arka planda devam ediyor olabilir.</item>
   </plurals>
+  <string name="copy_in_progress">Kopyalanıyor...</string>
+  <string name="delete_in_progress">Siliniyor...</string>
   <plurals name="dialog_delete_confirm_message">
     <item quantity="other">Bu dosya kalıcı olarak silinecek!</item>
   </plurals>
+  <string name="ok">Tamam</string>
+  <string name="cancel">İptal</string>
 </resources>

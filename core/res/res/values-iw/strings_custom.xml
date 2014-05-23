@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">הפעלה מחדש</string>
   <string name="reboot_recovery">מצב שחזור</string>
   <string name="reboot_download">הורדה</string>

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">Neustart</string>
   <string name="reboot_recovery">Recovery</string>
   <string name="reboot_download">Download</string>
@@ -58,6 +58,7 @@
   <string name="action_app">Benutzerdefinierte Anwendung/Verknüpfung</string>
   <string name="app_killed_message">Anwendung beendet</string>
   <string name="global_action_screenshot">Bildschirmfoto</string>
+  <string name="global_action_screenrecord">Bildschirmaufnahme</string>
   <string name="animation_fade">Ausblenden</string>
   <string name="animation_slide_right">von rechts</string>
   <string name="animation_slide_left">von links</string>
@@ -76,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">Tethering deaktivieren</string>
   <string name="permlab_preventpower">Ein/Aus-Taste umbelegen</string>
   <string name="permdesc_preventpower">Ermöglicht es einer Anwendung, die Power-Taste zu überschreiben</string>
+  <string name="permlab_setKeyguardWallpaper">Sperrbildschirm-Hintergrund setzen</string>
+  <string name="permdesc_setKeyguardWallpaper">Ermöglicht einer App, den Sperrbildschirm-Hintergrund zu ändern.</string>
 </resources>

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">Yeniden Başlat</string>
   <string name="reboot_recovery">Kurtarma</string>
   <string name="reboot_download">İndir</string>

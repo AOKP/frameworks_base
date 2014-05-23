@@ -14,4 +14,15 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="title_standalone">الملفات</string>
+  <string name="toast_success_delete">الملفات المحذوفة</string>
+  <string name="dialog_delete_confirm_title">حذف الملفات؟</string>
+  <string name="menu_copy">نسخ</string>
+  <string name="menu_cut">قص</string>
+  <string name="menu_paste">لصق</string>
+  <string name="copy_in_progress">نسخ...</string>
+  <string name="delete_in_progress">مسح...</string>
+  <string name="ok">موافق</string>
+  <string name="cancel">إلغاء</string>
+</resources>

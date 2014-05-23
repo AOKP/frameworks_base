@@ -15,4 +15,54 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="toggle_USER">現在使用者</string>
+  <string name="toggle_BRIGHTNESS">亮度</string>
+  <string name="toggle_VOLUME">音量</string>
+  <string name="toggle_SETTINGS">設定</string>
+  <string name="toggle_WIFI">WiFi</string>
+  <string name="toggle_SIGNAL">訊號</string>
+  <string name="toggle_ROTATE">自動旋轉</string>
+  <string name="toggle_CLOCK">時鐘</string>
+  <string name="toggle_GPS">GPS</string>
+  <string name="toggle_LOCATION">定位</string>
+  <string name="toggle_IME">IME</string>
+  <string name="toggle_BATTERY">電池</string>
+  <string name="toggle_AIRPLANE_MODE">飛航模式</string>
+  <string name="toggle_BLUETOOTH">藍牙</string>
+  <string name="toggle_SWAGGER">Swagger</string>
+  <string name="toggle_VIBRATE">震動</string>
+  <string name="toggle_SILENT">靜音</string>
+  <string name="toggle_FCHARGE">快速充電</string>
+  <string name="toggle_SYNC">同步處理</string>
+  <string name="toggle_NFC">NFC</string>
+  <string name="toggle_TORCH">手電筒</string>
+  <string name="toggle_WIFITETHER">WiFI 分享</string>
+  <string name="toggle_USBTETHER">USB 網路共享</string>
+  <string name="toggle_2G">2G</string>
+  <string name="toggle_LTE">LTE</string>
+  <string name="toggle_FAVCONTACT">最愛聯絡人</string>
+  <string name="toggle_SOUNDSTATE">音量狀態</string>
+  <string name="toggle_NAVBARHIDE">隱藏導覽列</string>
+  <string name="toggle_QUICKRECORD">快速錄音</string>
+  <string name="toggle_QUIETHOURS">靜音時段</string>
+  <string name="toggle_SLEEP">休眠</string>
+  <string name="toggle_STATUSBAR">狀態列</string>
+  <string name="toggle_SCREENSHOT">螢幕截圖</string>
+  <string name="toggle_REBOOT">重新開機</string>
+  <string name="toggle_CUSTOM">自訂</string>
+  <string name="toggle_STAYAWAKE">保持清醒</string>
+  <string name="toggle_WIRELESSADB">無線 ADB</string>
+  <string name="toggle_IMMERSIVE_MODE">全螢幕模式</string>
+  <string name="toggle_SCREENRECORD">螢幕錄影</string>
+  <string name="quick_settings_swagger">Swagger</string>
+  <string name="quick_settings_swaggersun">Swagger Sunday</string>
+  <string name="quick_settings_recording">錄音中...</string>
+  <string name="quick_settings_recordingcap">已保存錄音</string>
+  <string name="quick_settings_playing">播放中...</string>
+  <string name="quick_settings_quickrecord">快速錄音</string>
+  <string name="quick_settings_nofile">長按以錄音</string>
+  <string name="quick_settings_sleep">休眠</string>
+  <string name="quick_settings_reboot">重新開機</string>
+  <string name="quick_settings_reboot_message">您的裝置正在重新開機</string>
+</resources>

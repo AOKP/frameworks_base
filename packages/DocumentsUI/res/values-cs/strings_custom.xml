@@ -14,17 +14,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">Soubory</string>
   <string name="toast_success_delete">Soubory odstraněny</string>
   <string name="dialog_delete_confirm_title">Odstranit soubory?</string>
   <string name="menu_copy">Kopírovat</string>
   <string name="menu_cut">Vyjmout</string>
   <string name="menu_paste">Vložit</string>
-  <string name="copy_in_progress">Kopírování...</string>
-  <string name="delete_in_progress">Mazání...</string>
-  <string name="ok">OK</string>
-  <string name="cancel">Zrušit</string>
   <plurals name="files_copied">
     <item quantity="one">Soubor byl vložen do schránky</item>
     <item quantity="few">%d soubory byly vloženy do schránky</item>
@@ -35,9 +31,13 @@
     <item quantity="few">%d soubory byly vloženy. Upload může být dokončen na pozadí.</item>
     <item quantity="other">%d souborů bylo vloženo. Upload může být dokončen na pozadí.</item>
   </plurals>
+  <string name="copy_in_progress">Kopírování...</string>
+  <string name="delete_in_progress">Mazání...</string>
   <plurals name="dialog_delete_confirm_message">
     <item quantity="one">Soubor bude trvale odstraněn!</item>
     <item quantity="few">%d vybrané soubory budou trvale odstraněny!</item>
     <item quantity="other">%d vybraných souborů bude trvale odstraněno!</item>
   </plurals>
+  <string name="ok">OK</string>
+  <string name="cancel">Zrušit</string>
 </resources>

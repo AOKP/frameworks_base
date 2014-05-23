@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">Khởi động lại</string>
   <string name="reboot_recovery">Phục hồi</string>
   <string name="reboot_download">Tải xuống</string>

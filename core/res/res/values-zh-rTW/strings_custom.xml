@@ -17,13 +17,16 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">重新啟動</string>
   <string name="reboot_recovery">Recovery</string>
   <string name="reboot_download">下載</string>
   <string name="reboot_bootloader">Bootloader</string>
   <string name="reboot_progress">您的裝置正在重新啟動</string>
   <string name="rotation_lock_toggled">自動旋轉狀態已變更</string>
+  <string name="immersive_mode">全螢幕模式</string>
+  <string name="immersive_mode_on">已開啟全螢幕模式</string>
+  <string name="immersive_mode_off">已關閉全螢幕模式</string>
   <string name="action_home">主畫面</string>
   <string name="action_back">返回</string>
   <string name="action_recents">待辦事項</string>
@@ -55,6 +58,7 @@
   <string name="action_app">自訂應用程式捷徑</string>
   <string name="app_killed_message">應用程式已強制結束</string>
   <string name="global_action_screenshot">螢幕擷取</string>
+  <string name="global_action_screenrecord">螢幕錄製</string>
   <string name="animation_fade">淡入淡出</string>
   <string name="animation_slide_right">從上滑入</string>
   <string name="animation_slide_left">從左滑入</string>
@@ -66,4 +70,8 @@
   <string name="animation_translucent">半透明</string>
   <string name="notify_turn_wifi_off_title">關閉Wi-Fi</string>
   <string name="notify_turn_tethering_off_title">關閉無線網路共享模式</string>
+  <string name="permlab_preventpower">防止使用電源鍵</string>
+  <string name="permdesc_preventpower">允許應用程式覆蓋電源鍵</string>
+  <string name="permlab_setKeyguardWallpaper">設定鎖定畫面桌布</string>
+  <string name="permdesc_setKeyguardWallpaper">允許應用程式變更鎖定畫面桌布。</string>
 </resources>
