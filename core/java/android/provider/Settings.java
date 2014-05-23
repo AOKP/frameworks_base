@@ -7295,6 +7295,12 @@ public final class Settings {
         public static final String STATUS_BAR_NETWORK_STATS_HIDE = "status_bar_network_stats_hide";
 
         /**
+         * Whether to flip the network status positions in the status bar
+         * @hide
+         */
+        public static final String STATUS_BAR_NETWORK_STATS_FLIP = "status_bar_network_stats_flip";
+
+        /**
          * Whether the phone ringtone should be played in an increasing manner
          * @hide
          */
@@ -7565,7 +7571,7 @@ public final class Settings {
          * @hide
          */
         public static final String VOLUME_KEY_CURSOR_CONTROL = "volume_key_cursor_control";
- 
+
         /**
          *
          * Smooth Progress Bar Mirror
