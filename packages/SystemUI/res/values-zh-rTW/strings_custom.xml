@@ -18,11 +18,13 @@
  */
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_data_connection_HP">HSPA+</string>
   <string name="screenrecord_notif_ticker">正在錄影螢幕</string>
   <string name="screenrecord_notif_title">正在錄影螢幕</string>
   <string name="screenrecord_notif_stop">停止</string>
   <string name="status_bar_notification_hide_icon_packages">隱藏應用程式圖標</string>
   <string name="memory">記憶體</string>
+  <string name="service_started_by_app">由應用程式啟動。</string>
   <string name="permdesc_screenshot">螢幕截圖</string>
   <string name="screenshot_toast">在 %1$d 後截圖</string>
   <string name="app_window">應用程式視窗</string>

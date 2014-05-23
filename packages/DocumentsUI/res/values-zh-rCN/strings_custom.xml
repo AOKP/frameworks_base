@@ -14,24 +14,24 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">文件</string>
   <string name="toast_success_delete">文件已删除</string>
   <string name="dialog_delete_confirm_title">删除文件？</string>
   <string name="menu_copy">复制</string>
   <string name="menu_cut">剪切</string>
   <string name="menu_paste">粘贴</string>
-  <string name="copy_in_progress">正在复制...</string>
-  <string name="delete_in_progress">正在删除...</string>
-  <string name="ok">确定</string>
-  <string name="cancel">取消</string>
   <plurals name="files_copied">
     <item quantity="other">文件已放入剪贴板</item>
   </plurals>
   <plurals name="files_pasted">
     <item quantity="other">文件已粘贴。上传将在后台完成。</item>
   </plurals>
+  <string name="copy_in_progress">正在复制...</string>
+  <string name="delete_in_progress">正在删除...</string>
   <plurals name="dialog_delete_confirm_message">
     <item quantity="other">文件将被永久删除！</item>
   </plurals>
+  <string name="ok">确定</string>
+  <string name="cancel">取消</string>
 </resources>

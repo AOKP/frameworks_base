@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">Starta om</string>
   <string name="reboot_recovery">Recovery</string>
   <string name="reboot_download">Ladda ner</string>
@@ -77,4 +77,5 @@
   <string name="notify_turn_tethering_off_title">Inaktivera delning</string>
   <string name="permlab_preventpower">förhindra avstängningsknapp</string>
   <string name="permdesc_preventpower">Tillåter ett program att åsidosätta avstängninsknappen</string>
+  <string name="permdesc_setKeyguardWallpaper">Tillåter en app att ändra låsskärmens bakgrundsbild.</string>
 </resources>

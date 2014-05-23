@@ -14,17 +14,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">קבצים</string>
   <string name="toast_success_delete">קבצים שנמחקו</string>
   <string name="dialog_delete_confirm_title">למחוק קבצים?</string>
   <string name="menu_copy">העתק</string>
   <string name="menu_cut">גזור</string>
   <string name="menu_paste">הדבק</string>
-  <string name="copy_in_progress">מעתיק...</string>
-  <string name="delete_in_progress">מוחק...</string>
-  <string name="ok">אישור</string>
-  <string name="cancel">ביטול</string>
   <plurals name="files_copied">
     <item quantity="one">הקובץ הוכנס ללוח</item>
     <item quantity="other">%d קבצים הושמו בלוח</item>
@@ -33,8 +29,12 @@
     <item quantity="one">הקובץ כבר הודבק. ייתכן שתהליך העלאה מסתיים ברקע.</item>
     <item quantity="other">%d קבצים הודבקו העלאה יכולה להסתיים ברקע.</item>
   </plurals>
+  <string name="copy_in_progress">מעתיק...</string>
+  <string name="delete_in_progress">מוחק...</string>
   <plurals name="dialog_delete_confirm_message">
     <item quantity="one">קובץ זה ימחק סופית!</item>
     <item quantity="other">קובץ זה ימחק סופית!</item>
   </plurals>
+  <string name="ok">אישור</string>
+  <string name="cancel">ביטול</string>
 </resources>

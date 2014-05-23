@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">Restartovat</string>
   <string name="reboot_recovery">Recovery</string>
   <string name="reboot_download">Download</string>
@@ -77,4 +77,6 @@
   <string name="notify_turn_tethering_off_title">Vypnout Tethering</string>
   <string name="permlab_preventpower">přemapovat tlačítko napájení</string>
   <string name="permdesc_preventpower">Umožnit aplikaci přemapovat tlačítko napájení</string>
+  <string name="permlab_setKeyguardWallpaper">nastavit pozadí na zamčené obrazovce</string>
+  <string name="permdesc_setKeyguardWallpaper">Umožnit aplikaci změnit pozadí na zamčené obrazovce.</string>
 </resources>

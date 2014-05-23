@@ -14,17 +14,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">Filer</string>
   <string name="toast_success_delete">Filer borttagna</string>
   <string name="dialog_delete_confirm_title">Radera filer?</string>
   <string name="menu_copy">Kopiera</string>
   <string name="menu_cut">Klipp ut</string>
   <string name="menu_paste">Klistra in</string>
-  <string name="copy_in_progress">Kopierar...</string>
-  <string name="delete_in_progress">Raderar...</string>
-  <string name="ok">OK</string>
-  <string name="cancel">Avbryt</string>
   <plurals name="files_copied">
     <item quantity="one">Filen har placerats i Urklipp</item>
     <item quantity="other">%d filer har lagts i Urklipp</item>
@@ -33,4 +29,8 @@
     <item quantity="one">Filen har klistrats in. Uppladdningen kan slutföras i bakgrunden.</item>
     <item quantity="other">%d filer har klistrats in. Uppladdningen kan slutföras i bakgrunden.</item>
   </plurals>
+  <string name="copy_in_progress">Kopierar...</string>
+  <string name="delete_in_progress">Raderar...</string>
+  <string name="ok">OK</string>
+  <string name="cancel">Avbryt</string>
 </resources>

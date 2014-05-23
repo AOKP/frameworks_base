@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">重新啟動</string>
   <string name="reboot_recovery">修復模式</string>
   <string name="reboot_download">下載</string>
@@ -33,7 +33,7 @@
   <string name="action_recents_gb">待辦事項 (GB風格)</string>
   <string name="action_search">搜尋</string>
   <string name="action_screenshot">螢幕截圖</string>
-  <string name="action_menu">選單</string>
+  <string name="action_menu">功能表</string>
   <string name="action_ime">開啟輸入法選擇器</string>
   <string name="action_kill">強制結束程式</string>
   <string name="action_lastapp">最新應用程式</string>
@@ -78,4 +78,6 @@
   <string name="notify_turn_tethering_off_title">關閉網路共享</string>
   <string name="permlab_preventpower">防止使用電源鍵</string>
   <string name="permdesc_preventpower">允許應用程式重寫電源鍵</string>
+  <string name="permlab_setKeyguardWallpaper">設定鍵盤鎖的牆紙</string>
+  <string name="permdesc_setKeyguardWallpaper">允許應用程式來更改鎖定螢幕牆紙。</string>
 </resources>

@@ -14,17 +14,13 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">Файлы</string>
   <string name="toast_success_delete">Файлы удалены</string>
   <string name="dialog_delete_confirm_title">Удалить файлы?</string>
   <string name="menu_copy">Копировать</string>
   <string name="menu_cut">Вырезать</string>
   <string name="menu_paste">Вставить</string>
-  <string name="copy_in_progress">Копирование...</string>
-  <string name="delete_in_progress">Удаление...</string>
-  <string name="ok">OK</string>
-  <string name="cancel">Отмена</string>
   <plurals name="files_copied">
     <item quantity="one">Файл был помещён в буфер обмена</item>
     <item quantity="few">%d файлов были помещены в буфер обмена</item>
@@ -35,9 +31,13 @@
     <item quantity="few">%d файлов были вставлены. Передача может завершаться в фоновом режиме.</item>
     <item quantity="other">%d файлов были вставлены. Передача может завершаться в фоновом режиме.</item>
   </plurals>
+  <string name="copy_in_progress">Копирование...</string>
+  <string name="delete_in_progress">Удаление...</string>
   <plurals name="dialog_delete_confirm_message">
     <item quantity="one">Этот файл будет удален навсегда!</item>
     <item quantity="few">Это навсегда удалит выбранные %d файлов!</item>
     <item quantity="other">Это навсегда удалит выбранные %d файлов!</item>
   </plurals>
+  <string name="ok">OK</string>
+  <string name="cancel">Отмена</string>
 </resources>

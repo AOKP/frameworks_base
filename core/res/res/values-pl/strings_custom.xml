@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">Uruchom ponownie</string>
   <string name="reboot_recovery">Restart do recovery</string>
   <string name="reboot_download">Restart do trybu Download</string>

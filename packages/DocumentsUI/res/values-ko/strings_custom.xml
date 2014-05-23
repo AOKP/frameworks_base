@@ -14,24 +14,24 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">파일</string>
   <string name="toast_success_delete">파일이 삭제되었습니다</string>
   <string name="dialog_delete_confirm_title">파일을 삭제하겠습니까?</string>
   <string name="menu_copy">복사</string>
   <string name="menu_cut">잘라내기</string>
   <string name="menu_paste">붙여넣기</string>
-  <string name="copy_in_progress">복사 중...</string>
-  <string name="delete_in_progress">삭제 중...</string>
-  <string name="ok">확인</string>
-  <string name="cancel">취소</string>
   <plurals name="files_copied">
     <item quantity="other">%d개 파일이 클립보드에 저장되었습니다</item>
   </plurals>
   <plurals name="files_pasted">
     <item quantity="other">%d개 파일이 붙여넣기 되었습니다. 업로드는 백그라운드에서 마무리될 수도 있습니다.</item>
   </plurals>
+  <string name="copy_in_progress">복사 중...</string>
+  <string name="delete_in_progress">삭제 중...</string>
   <plurals name="dialog_delete_confirm_message">
     <item quantity="other">선택된 %d개의 파일이 완전히 삭제됩니다!</item>
   </plurals>
+  <string name="ok">확인</string>
+  <string name="cancel">취소</string>
 </resources>

@@ -17,4 +17,61 @@
  * limitations under the License.
  */
 -->
-<resources/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="reboot">إعادة تشغيل</string>
+  <string name="reboot_recovery">الريكفري</string>
+  <string name="reboot_download">التنزيل</string>
+  <string name="reboot_bootloader">Bootloader</string>
+  <string name="reboot_progress">يتم إعادة تشغيل جهازك</string>
+  <string name="rotation_lock_toggled">قفل الدوران مثبت</string>
+  <string name="immersive_mode">وضع غامرة</string>
+  <string name="immersive_mode_on">وضع غامرة يعمل</string>
+  <string name="immersive_mode_off">وضع غامرة لا يعمل</string>
+  <string name="action_home">المنزل</string>
+  <string name="action_back">رجوع</string>
+  <string name="action_recents">أحدث</string>
+  <string name="action_recents_gb">أحدث (نمط غيغابايت)</string>
+  <string name="action_search">بحث</string>
+  <string name="action_screenshot">لقطة للشاشة</string>
+  <string name="action_menu">القائمة</string>
+  <string name="action_ime">فتح مبدل IME</string>
+  <string name="action_kill">قتل المهمة</string>
+  <string name="action_lastapp">التطبيق الأخير</string>
+  <string name="action_power">طاقة</string>
+  <string name="action_notifications">الإشعارات</string>
+  <string name="action_assist">بحث (Google Now)</string>
+  <string name="action_clockoptions">خيارات الساعة</string>
+  <string name="action_voiceassist">البحث الصوتي</string>
+  <string name="action_torch">الشعلة</string>
+  <string name="action_silent">رنة/صامت</string>
+  <string name="action_vib">رنة/يهتز</string>
+  <string name="action_silent_vib">رنة/يهتز/صامت</string>
+  <string name="action_event">حدث</string>
+  <string name="action_today">اليوم</string>
+  <string name="action_alarm">المنبه</string>
+  <string name="action_unlock">فتح القفل</string>
+  <string name="action_camera">الكاميرا</string>
+  <string name="action_null">فارغة</string>
+  <string name="action_widgets">مصغرات الإتجاهات</string>
+  <string name="action_app_window">نافذة التطبيق</string>
+  <string name="action_ribbon">شريط AOKP</string>
+  <string name="action_app">تطبيق/إختصار مخصص</string>
+  <string name="app_killed_message">التطبيق قتل</string>
+  <string name="global_action_screenshot">لقطة للشاشة</string>
+  <string name="global_action_screenrecord">سجل الشاشة</string>
+  <string name="animation_fade">التلاشي</string>
+  <string name="animation_slide_right">انزلاق في اليمين</string>
+  <string name="animation_slide_left">انزلاق في اليسار</string>
+  <string name="animation_slide_right_no_fade">انزلاق في اليمين (لا تتلاشى)</string>
+  <string name="animation_slide_left_no_fade">انزلاق في اليسار (لا تتلاشى)</string>
+  <string name="animation_slide_up">الانزلاق في أسفل</string>
+  <string name="animation_slide_down">الانزلاق في الأعلى</string>
+  <string name="animation_default">افتراضي</string>
+  <string name="animation_translucent">شبه شفاف</string>
+  <string name="animation_grow_shrink">تنمو في (أعلى)</string>
+  <string name="animation_grow_shrink_center">تنمو في (الوسط)</string>
+  <string name="animation_grow_shrink_bottom">تنمو في (الأسفل)</string>
+  <string name="animation_grow_shrink_left">تنمو في (اليسار)</string>
+  <string name="animation_grow_shrink_right">تنمو في (اليمين)</string>
+  <string name="notify_turn_wifi_off_title">إيقاف تشغيل Wi-Fi</string>
+</resources>
