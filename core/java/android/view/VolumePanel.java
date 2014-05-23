@@ -409,7 +409,9 @@ public class VolumePanel extends Handler implements OnSeekBarChangeListener, Vie
             StreamResources streamRes = STREAMS[i];
             int streamType = streamRes.streamType;
             if (mVoiceCapable && streamRes == StreamResources.NotificationStream) {
-                streamRes = StreamResources.RingerStream;
+                TODO fix linked Ringer and Notification Volume
+                //streamRes = StreamResources.RingerStream;
+                continue;
             }
             StreamControl sc = new StreamControl();
             sc.streamType = streamType;
