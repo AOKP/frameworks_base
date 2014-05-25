@@ -293,8 +293,7 @@ public class ActivityManager {
 
         GfxAccelCheck = (isLowRamDeviceStatic() ||
                 !HardwareRenderer.isAvailable() ||
-                Resources.getSystem().getBoolean(com.android.internal.R.bool.config_avoidGfxAccel)) ||
-                !isForcedHighEndGfx();
+                Resources.getSystem().getBoolean(com.android.internal.R.bool.config_avoidGfxAccel));
     }
 
     /**
@@ -467,16 +466,9 @@ public class ActivityManager {
      */
     static public boolean isHighEndGfx() {
         if (GfxAccelCheck) {
-            return false;
+        return false;
         }
         return true;
-    }
-
-    /**
-     * @hide
-     */
-    public static boolean isForcedHighEndGfx() {
-        return SystemProperties.getBoolean("persist.sys.force_highendgfx", false);
     }
 
     /**
