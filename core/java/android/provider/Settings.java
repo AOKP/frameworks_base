@@ -7256,6 +7256,12 @@ public final class Settings {
         public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
 
         /**
+         * Wether navigation bar is on landscape on the bottom or on the right
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_ON_BOTTOM = "navigation_bar_on_bottom";
+
+        /**
          * Whether volume up/down can be long pressed to skip tracks
          * @hide
          */
