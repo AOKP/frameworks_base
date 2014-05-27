@@ -96,6 +96,7 @@ import com.android.systemui.BatteryMeterView;
 import com.android.systemui.BatteryCircleMeterView;
 import com.android.systemui.DemoMode;
 import com.android.systemui.EventLogTags;
+import com.android.internal.util.aokp.DeviceUtils;
 import com.android.systemui.R;
 import com.android.systemui.aokp.AokpSwipeRibbon;
 import com.android.systemui.aokp.SearchPanelSwipeView;
@@ -261,6 +262,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     // on-screen navigation buttons
     private NavigationBarView mNavigationBarView = null;
     private int mNavigationBarWindowState = WINDOW_STATE_SHOWING;
+    private boolean mNavigationBarCanMove;
 
     // the tracker view
     int mTrackingPosition; // the position of the top of the tracking view.
@@ -499,7 +501,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         } else if (!mWantsNavigationBar && mEnableNavring && !mRecreating) {
             mSearchPanelSwipeView = new SearchPanelSwipeView(mContext, this);
             mWindowManager.addView(mSearchPanelSwipeView, mSearchPanelSwipeView.getGesturePanelLayoutParams());
-            updateSearchPanel();
+            updateSearchPanel(mNavigationBarCanMove);
         }
 
         // figure out which pixel-format to use for the status bar.
@@ -762,8 +764,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     }
 
     @Override
-    protected void updateSearchPanel() {
-        super.updateSearchPanel();
+    protected void updateSearchPanel(boolean navigationBarCanMove) {
+        super.updateSearchPanel(navigationBarCanMove);
         if (mNavigationBarView != null) {
             mNavigationBarView.setDelegateView(mSearchPanelView);
         }
@@ -882,13 +884,20 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         if (mNavigationBarView.getSearchLight() != null) {
             mNavigationBarView.getSearchLight().setOnTouchListener(mHomeSearchActionListener);
         }
-        updateSearchPanel();
+        updateSearchPanel(mNavigationBarCanMove);
     }
 
     // For small-screen devices (read: phones) that lack hardware navigation buttons
     private void addNavigationBar() {
         if (DEBUG) Log.v(TAG, "addNavigationBar: about to add " + mNavigationBarView);
         if (mNavigationBarView == null) return;
+
+        mNavigationBarCanMove = DeviceUtils.isPhone(mContext) ?
+                Settings.AOKP.getIntForUser(mContext.getContentResolver(),
+                    Settings.AOKP.NAVIGATION_BAR_CAN_MOVE, 1,
+                    UserHandle.USER_CURRENT) == 1
+                : false;
+        mNavigationBarView.setNavigationBarCanMove(mNavigationBarCanMove);
 
         CustomTheme newTheme = mContext.getResources().getConfiguration().customTheme;
         if (newTheme != null &&
@@ -920,7 +929,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         if (mSearchPanelSwipeView == null || !mSearchPanelSwipeView.isAttachedToWindow()) return;
         mSearchPanelSwipeView.updateLayout();
         mWindowManager.updateViewLayout(mSearchPanelSwipeView, mSearchPanelSwipeView.getGesturePanelLayoutParams());
-        updateSearchPanel();
+        updateSearchPanel(mNavigationBarCanMove);
     }
 
     private void notifyNavigationBarScreenOn(boolean screenOn) {
@@ -2701,6 +2710,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         repositionNavigationBar();
         repositionSearchPanelSwipeView();
         updateExpandedViewPos(EXPANDED_LEAVE_ALONE);
+        updateSwapXY();
         updateShowSearchHoldoff();
     }
 
@@ -2710,6 +2720,23 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         animateCollapsePanels();
         updateNotificationIcons();
         resetUserSetupObserver();
+    }
+
+    private void updateSwapXY() {
+        if (mNavigationBarView != null
+            && mNavigationBarView.mDelegateHelper != null) {
+            if (Settings.AOKP.getIntForUser(mContext.getContentResolver(),
+                    Settings.AOKP.NAVIGATION_BAR_CAN_MOVE,
+                    DeviceUtils.isPhone(mContext) ? 1 : 0, UserHandle.USER_CURRENT) == 1) {
+                // if we are in landscape mode and NavBar
+                // can move swap the XY coordinates for NaVRing Swipe
+                mNavigationBarView.mDelegateHelper.setSwapXY((
+                        mContext.getResources().getConfiguration()
+                        .orientation == Configuration.ORIENTATION_LANDSCAPE));
+            } else {
+                mNavigationBarView.mDelegateHelper.setSwapXY(false);
+            }
+        }
     }
 
     private void resetUserSetupObserver() {
@@ -2851,7 +2878,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         if (mNavigationBarView != null)  {
             mNavigationBarView.updateResources();
-            updateSearchPanel();
+            updateSearchPanel(mNavigationBarCanMove);
         }
     }
 
@@ -3095,6 +3122,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.AOKP.STATUS_BAR_BATTERY_STYLE), false, this);
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.HIDE_BATTERY_ICON), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.NAVIGATION_BAR_CAN_MOVE), false, this);
         }
 
         @Override
@@ -3104,6 +3133,23 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            if (uri.equals(Settings.AOKP.getUriFor(
+                    Settings.AOKP.NAVIGATION_BAR_CAN_MOVE))) {
+                mNavigationBarCanMove = DeviceUtils.isPhone(mContext) ?
+                        Settings.AOKP.getIntForUser(mContext.getContentResolver(),
+                            Settings.AOKP.NAVIGATION_BAR_CAN_MOVE, 1,
+                            UserHandle.USER_CURRENT) == 1
+                        : false;
+                if (mSearchPanelView != null) {
+                    mSearchPanelView.setNavigationBarCanMove(mNavigationBarCanMove);
+                    mSearchPanelView.setDrawables();
+                }
+                if (mNavigationBarView != null) {
+                    mNavigationBarView.setNavigationBarCanMove(mNavigationBarCanMove);
+                }
+                prepareNavigationBarView();
+            }
             updateSettings();
             updateBatteryIcons();
             toggleNavigationBarOrNavRing(mWantsNavigationBar, mEnableNavring);
@@ -3171,7 +3217,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 mSearchPanelSwipeView = null;
             }
         }
-        updateSearchPanel();
+        updateSearchPanel(mNavigationBarCanMove);
     }
 
     public boolean skipToSettingsPanel() {
