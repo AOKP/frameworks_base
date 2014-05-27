@@ -94,6 +94,8 @@ public class AOKPSearchPanelView extends FrameLayout implements
     private int mTarget;
     private boolean mLongPress = false;
 
+    private boolean mNavigationBarCanMove;
+
     //need to make an intent list and an intent counter
     String[] intent;
     ArrayList<String> intentList = new ArrayList<String>();
@@ -302,7 +304,7 @@ public class AOKPSearchPanelView extends FrameLayout implements
         mContext.sendBroadcastAsUser(u, UserHandle.ALL);
     }
 
-    private void setDrawables() {
+    public void setDrawables() {
         mLongPress = false;
         mSearchPanelLock = false;
 
@@ -317,7 +319,7 @@ public class AOKPSearchPanelView extends FrameLayout implements
         int endPosOffset = 0;
         int middleBlanks = 0;
 
-        if (isScreenPortrait() || NavRingHelpers.isScreenLarge(mResources)) { // NavRing on Bottom
+        if (isScreenPortrait() || !mNavigationBarCanMove) { // NavRing on Bottom
             startPosOffset =  1;
             endPosOffset =  (mNavRingAmount) + 1;
         } else {
@@ -527,6 +529,10 @@ public class AOKPSearchPanelView extends FrameLayout implements
     public boolean isAssistantAvailable() {
         return ((SearchManager) mContext.getSystemService(Context.SEARCH_SERVICE))
                 .getAssistIntent(mContext, false, UserHandle.USER_CURRENT) != null;
+    }
+
+    public void setNavigationBarCanMove(boolean navigationBarCanMove) {
+        mNavigationBarCanMove = navigationBarCanMove;
     }
 
     public boolean isScreenPortrait() {
