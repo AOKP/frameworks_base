@@ -38,6 +38,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.provider.Settings.AOKP;
 import android.util.AttributeSet;
@@ -54,6 +55,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import com.android.internal.util.aokp.AwesomeConstants.AwesomeConstant;
+import com.android.internal.util.aokp.DeviceUtils;
 import com.android.systemui.R;
 import com.android.systemui.statusbar.BaseStatusBar;
 import com.android.systemui.statusbar.DelegateViewHelper;
@@ -107,7 +109,7 @@ public class NavigationBarView extends LinearLayout {
 
     boolean mWasNotifsButtonVisible = false;
 
-    private DelegateViewHelper mDelegateHelper;
+    protected DelegateViewHelper mDelegateHelper;
     private DeadZone mDeadZone;
     private final NavigationBarTransitions mBarTransitions;
 
@@ -765,7 +767,13 @@ public class NavigationBarView extends LinearLayout {
             mRotatedViews[i].setVisibility(View.GONE);
         }
 
-        mCurrentView = mRotatedViews[rot];
+        if (Settings.AOKP.getIntForUser(mContext.getContentResolver(),
+                Settings.AOKP.NAVIGATION_BAR_CAN_MOVE,
+                DeviceUtils.isPhone(mContext) ? 1 : 0, UserHandle.USER_CURRENT) != 1) {
+             mCurrentView = mRotatedViews[Surface.ROTATION_0];
+        } else {
+            mCurrentView = mRotatedViews[rot];
+        }
         mCurrentView.setVisibility(View.VISIBLE);
 
         mDeadZone = (DeadZone) mCurrentView.findViewById(R.id.deadzone);
