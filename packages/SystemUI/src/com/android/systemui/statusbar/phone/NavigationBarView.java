@@ -38,6 +38,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.provider.Settings.AOKP;
 import android.util.AttributeSet;
@@ -107,9 +108,11 @@ public class NavigationBarView extends LinearLayout {
 
     boolean mWasNotifsButtonVisible = false;
 
-    private DelegateViewHelper mDelegateHelper;
+    protected DelegateViewHelper mDelegateHelper;
     private DeadZone mDeadZone;
     private final NavigationBarTransitions mBarTransitions;
+
+    private boolean mNavigationBarCanMove;
 
     // workaround for LayoutTransitions leaving the nav buttons in a weird state (bug 5549288)
     final static boolean WORKAROUND_INVALID_LAYOUT = true;
@@ -620,7 +623,7 @@ public class NavigationBarView extends LinearLayout {
             navButtons.removeAllViews();
             lightsOut.removeAllViews();
 
-            if (mTablet) {
+            if (mTablet || (landscape && !mNavigationBarCanMove)) {
                 // offset menu button
                 addSeparator(navButtons, landscape, (int) mMenuButtonWidth, 0f);
                 addSeparator(lightsOut, landscape, (int) mMenuButtonWidth, 0f);
@@ -639,7 +642,7 @@ public class NavigationBarView extends LinearLayout {
                 AwesomeButtonInfo info = mNavButtons.get(j);
                 KeyButtonView button = new KeyButtonView(getContext(), null);
                 button.setButtonActions(info);
-                if (mTablet) {
+                if (mTablet || (landscape && !mNavigationBarCanMove)) {
                     if (mNavButtons.size() <= 4) {
                         // use stock tablet button spacing, even with 4 buttons it seems to work
                         int padding = getResources().getDimensionPixelSize(landscape
@@ -668,7 +671,7 @@ public class NavigationBarView extends LinearLayout {
                 addButton(navButtons, button, landscape);
                 addLightsOutButton(lightsOut, button, landscape, false);
 
-                if (!mTablet && stockThreeButtonLayout && j != (mNavButtons.size() - 1)) {
+                if ((!mTablet && (!landscape || mNavigationBarCanMove)) && stockThreeButtonLayout && j != (mNavButtons.size() - 1)) {
                     // in the case of a 'stock' 3-button layout, the buttons need to be spaced further out apart
                     addSeparator(navButtons, landscape, separatorSize, 0.5f);
                     addSeparator(lightsOut, landscape, separatorSize, 0.5f);
@@ -692,7 +695,7 @@ public class NavigationBarView extends LinearLayout {
             menuButton.setId(mMenuButtonId);
             // MENU BUTTON NOT YET ADDED ANYWHERE!
 
-            if (mTablet) {
+            if (mTablet || (landscape && !mNavigationBarCanMove)) {
                 // om nom
                 addSeparator(navButtons, landscape, 0,  stockThreeButtonLayout ? 1f : 0.5f);
                 addSeparator(lightsOut, landscape, 0,  stockThreeButtonLayout ? 1f : 0.5f);
@@ -759,13 +762,21 @@ public class NavigationBarView extends LinearLayout {
         return mVertical;
     }
 
+    public void setNavigationBarCanMove(boolean navigationBarCanMove) {
+        mNavigationBarCanMove = navigationBarCanMove;
+    }
+
     public void reorient() {
         final int rot = mDisplay.getRotation();
         for (int i = 0; i < 4; i++) {
             mRotatedViews[i].setVisibility(View.GONE);
         }
 
-        mCurrentView = mRotatedViews[rot];
+        if (!mNavigationBarCanMove) {
+            mCurrentView = mRotatedViews[Surface.ROTATION_0];
+        } else {
+            mCurrentView = mRotatedViews[rot];
+        }
         mCurrentView.setVisibility(View.VISIBLE);
 
         mDeadZone = (DeadZone) mCurrentView.findViewById(R.id.deadzone);
@@ -929,7 +940,7 @@ public class NavigationBarView extends LinearLayout {
     private void addSeparator(LinearLayout layout, boolean landscape, int size, float weight) {
         Space separator = new Space(mContext);
         separator.setLayoutParams(getLayoutParams(landscape, size, weight));
-        if (landscape && !mTablet) {
+        if (landscape && !mTablet && mNavigationBarCanMove) {
             layout.addView(separator, 0);
         } else {
             layout.addView(separator);
@@ -937,7 +948,7 @@ public class NavigationBarView extends LinearLayout {
     }
 
     private void addButton(ViewGroup root, View v, boolean landscape) {
-        if (landscape && !mTablet)
+        if (landscape && !mTablet && mNavigationBarCanMove)
             root.addView(v, 0);
         else
             root.addView(v);
@@ -951,7 +962,7 @@ public class NavigationBarView extends LinearLayout {
         addMe.setScaleType(ImageView.ScaleType.CENTER);
         addMe.setVisibility(empty ? View.INVISIBLE : View.VISIBLE);
 
-        if (landscape && !mTablet)
+        if (landscape && !mTablet && mNavigationBarCanMove)
             root.addView(addMe, 0);
         else
             root.addView(addMe);
@@ -961,7 +972,7 @@ public class NavigationBarView extends LinearLayout {
         if (weight != 0) {
             px = 0;
         }
-        return landscape && !mTablet ?
+        return landscape && !mTablet && mNavigationBarCanMove ?
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) px, weight) :
                 new LinearLayout.LayoutParams((int) px, LinearLayout.LayoutParams.MATCH_PARENT, weight);
     }
