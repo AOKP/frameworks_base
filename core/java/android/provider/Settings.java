@@ -7257,10 +7257,15 @@ public final class Settings {
 
         /**
          * NFC polling mode configuration key
-         *
          * @hide
          */
         public static final String NFC_POLLING_MODE = "nfc_polling_mode";
+
+        /**
+         * Wether navigation bar is on landscape on the bottom or on the right
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_ON_BOTTOM = "navigation_bar_on_bottom";
 
         /**
          * Whether volume up/down can be long pressed to skip tracks

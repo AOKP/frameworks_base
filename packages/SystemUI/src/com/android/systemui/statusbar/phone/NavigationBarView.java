@@ -38,6 +38,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.provider.Settings;
 import android.provider.Settings.AOKP;
 import android.util.AttributeSet;
@@ -107,9 +108,11 @@ public class NavigationBarView extends LinearLayout {
 
     boolean mWasNotifsButtonVisible = false;
 
-    private DelegateViewHelper mDelegateHelper;
+    protected DelegateViewHelper mDelegateHelper;
     private DeadZone mDeadZone;
     private final NavigationBarTransitions mBarTransitions;
+
+    private boolean mNavigationBarCanMove;
 
     // workaround for LayoutTransitions leaving the nav buttons in a weird state (bug 5549288)
     final static boolean WORKAROUND_INVALID_LAYOUT = true;
@@ -536,7 +539,6 @@ public class NavigationBarView extends LinearLayout {
                 mRotatedViews[Surface.ROTATION_180] = findViewById(R.id.rot0);
 
         mRotatedViews[Surface.ROTATION_90] = findViewById(R.id.rot90);
-
         mRotatedViews[Surface.ROTATION_270] = NAVBAR_ALWAYS_AT_RIGHT
                 ? findViewById(R.id.rot90)
                 : findViewById(R.id.rot270);
@@ -759,13 +761,21 @@ public class NavigationBarView extends LinearLayout {
         return mVertical;
     }
 
+    public void setNavigationBarCanMove(boolean navigationBarCanMove) {
+        mNavigationBarCanMove = navigationBarCanMove;
+    }
+
     public void reorient() {
         final int rot = mDisplay.getRotation();
         for (int i = 0; i < 4; i++) {
             mRotatedViews[i].setVisibility(View.GONE);
         }
 
-        mCurrentView = mRotatedViews[rot];
+        if (!mNavigationBarCanMove) {
+            mCurrentView = mRotatedViews[Surface.ROTATION_0];
+        } else {
+            mCurrentView = mRotatedViews[rot];
+        }
         mCurrentView.setVisibility(View.VISIBLE);
 
         mDeadZone = (DeadZone) mCurrentView.findViewById(R.id.deadzone);
