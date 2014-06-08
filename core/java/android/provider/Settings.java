@@ -7151,6 +7151,13 @@ public final class Settings {
         public static final String SMART_PHONE_CALLER = "smart_phone_caller";
 
         /**
+         * Detailed incall info
+         *
+         * @hide
+         */
+        public static final String DETAILED_INCALL_INFO = "detailed_incall_info";
+
+        /**
          * The hostname for this device
          * @hide
          */
