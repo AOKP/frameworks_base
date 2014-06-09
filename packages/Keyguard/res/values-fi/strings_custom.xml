@@ -15,4 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources/>
+<resources>
+  <string name="app_name">Lukitusnäyttö</string>
+  <string name="keyboardview_keycode_random">Lataa satunnaiset näppäimet uudelleen</string>
+</resources>

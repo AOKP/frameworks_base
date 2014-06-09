@@ -77,6 +77,14 @@
   <string name="notify_turn_tethering_off_title">Tắt chia sẻ kết nối</string>
   <string name="permlab_preventpower">chặn nút nguồn</string>
   <string name="permdesc_preventpower">Cho phép ứng dụng ghi đè lên nút nguồn</string>
+  <string name="permlab_accessThemeService">truy cập dịch vụ chủ đề</string>
+  <string name="permdesc_accessThemeService">Cho phép một ứng dụng truy cập dịch vụ chủ đề. Ứng dụng bình thường không bao giờ cần quyền này.</string>
+  <string name="permlab_readThemes">đọc thông tin chủ đề của bạn</string>
+  <string name="permdesc_readThemesDesc">Cho phéo ứng dụng đọc chủ đề và
+xác định chủ đề bạn đã áp dụng.</string>
+  <string name="permlab_writeThemes">thay đổi chủ đề của bạn</string>
+  <string name="permdesc_writeThemesDesc">Cho phép ứng dụng thêm chủ đề mới và
+thay đổi chủ đề bạn đã áp dụng.</string>
   <string name="permlab_setKeyguardWallpaper">đặt nền màn hình khoá</string>
   <string name="permdesc_setKeyguardWallpaper">Cho phép một ứng dụng thay đổi hình nền màn hình khoá.</string>
 </resources>

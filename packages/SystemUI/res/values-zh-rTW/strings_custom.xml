@@ -22,6 +22,7 @@
   <string name="screenrecord_notif_ticker">正在錄影螢幕</string>
   <string name="screenrecord_notif_title">正在錄影螢幕</string>
   <string name="screenrecord_notif_stop">停止</string>
+  <string name="screenrecord_notif_error">無法螢幕錄影</string>
   <string name="status_bar_notification_hide_icon_packages">隱藏應用程式圖標</string>
   <string name="memory">記憶體</string>
   <string name="service_started_by_app">由應用程式啟動。</string>

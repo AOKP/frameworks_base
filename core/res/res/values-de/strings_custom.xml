@@ -77,6 +77,12 @@
   <string name="notify_turn_tethering_off_title">Tethering deaktivieren</string>
   <string name="permlab_preventpower">Ein/Aus-Taste umbelegen</string>
   <string name="permdesc_preventpower">Ermöglicht es einer Anwendung, die Power-Taste zu überschreiben</string>
+  <string name="permlab_accessThemeService">Zugriff auf den Themen-Dienst</string>
+  <string name="permdesc_accessThemeService">Ermöglicht einer App auf den Themen-Dienst zuzugreifen. Wird für normale Apps nicht benötigt.</string>
+  <string name="permlab_readThemes">Lesen der Theme-Information</string>
+  <string name="permdesc_readThemesDesc">Gestattet der App Ihre Themes auszulesen und das von Ihnen verwendete Theme zu erkennen.</string>
+  <string name="permlab_writeThemes">Ihre Themes verändern</string>
+  <string name="permdesc_writeThemesDesc">Gestattet der App neue Themes einzufügen und das von Ihnen verwendete Theme zu bestimmen.</string>
   <string name="permlab_setKeyguardWallpaper">Sperrbildschirm-Hintergrund setzen</string>
   <string name="permdesc_setKeyguardWallpaper">Ermöglicht einer App, den Sperrbildschirm-Hintergrund zu ändern.</string>
 </resources>

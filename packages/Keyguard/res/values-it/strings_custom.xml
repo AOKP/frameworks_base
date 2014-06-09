@@ -17,4 +17,5 @@ limitations under the License.
 -->
 <resources>
   <string name="app_name">Schermata di sblocco</string>
+  <string name="keyboardview_keycode_random">Ricarica pulsanti casuali</string>
 </resources>

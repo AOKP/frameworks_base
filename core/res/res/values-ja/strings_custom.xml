@@ -77,6 +77,12 @@
   <string name="notify_turn_tethering_off_title">テザリングをオフにしました</string>
   <string name="permlab_preventpower">電源キーの動作の上書きを防止</string>
   <string name="permdesc_preventpower">アプリによる電源キーの動作の上書きを許可</string>
+  <string name="permlab_accessThemeService">テーマサービスへのアクセス</string>
+  <string name="permdesc_accessThemeService">テーマサービスへのアクセスをアプリに許可します。通常のアプリでは使用しません。</string>
+  <string name="permlab_readThemes">テーマ情報を読み込む</string>
+  <string name="permdesc_readThemesDesc">テーマの読み込みおよび適用したテーマの決定をアプリに許可する</string>
+  <string name="permlab_writeThemes">テーマを変更する</string>
+  <string name="permdesc_writeThemesDesc">新しいテーマの導入および適用されているテーマの変更をアプリに許可する</string>
   <string name="permlab_setKeyguardWallpaper">ロック画面壁紙の設定</string>
   <string name="permdesc_setKeyguardWallpaper">アプリによるロック画面壁紙の変更を許可する</string>
 </resources>

@@ -77,6 +77,14 @@
   <string name="notify_turn_tethering_off_title">테더링 OFF</string>
   <string name="permlab_preventpower">전원 키를 방지</string>
   <string name="permdesc_preventpower">응용 프로그램이 전원 키를 대체 할 수 있습니다</string>
+  <string name="permlab_accessThemeService">테마 서비스에 액세스</string>
+  <string name="permdesc_accessThemeService">앱이 테마 서비스에 접근할 수 있도록 허용합니다. 일반 앱에서는 필요없는 권한입니다.</string>
+  <string name="permlab_readThemes">테마 정보를 읽으십시오</string>
+  <string name="permdesc_readThemesDesc">앱이 테마를 읽을 수 있도록 허용하고
+당신이 적용한 테마가 결정합니다.</string>
+  <string name="permlab_writeThemes">당신의 테마를 수정</string>
+  <string name="permdesc_writeThemesDesc">응용 프로그램은 새로운 테마를 삽입 할 수 있으며
+       당신이 적용한 테마가 수정합니다.</string>
   <string name="permlab_setKeyguardWallpaper">keyguard 배경설정</string>
   <string name="permdesc_setKeyguardWallpaper">앱으로 잠금화면 배경을 변경할 수 있습니다.</string>
 </resources>

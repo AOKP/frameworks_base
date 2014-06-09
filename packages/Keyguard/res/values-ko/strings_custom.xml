@@ -17,4 +17,5 @@ limitations under the License.
 -->
 <resources>
   <string name="app_name">잠금화면</string>
+  <string name="keyboardview_keycode_random">임의의 버튼을 다시불러오기</string>
 </resources>

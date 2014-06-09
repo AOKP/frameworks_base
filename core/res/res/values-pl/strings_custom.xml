@@ -77,6 +77,12 @@
   <string name="notify_turn_tethering_off_title">Wyłącz Tethering</string>
   <string name="permlab_preventpower">zablokuj klawisz zasilania</string>
   <string name="permdesc_preventpower">Pozwala aplikacji na przejęcie kontroli nad klawiszem zasilania</string>
+  <string name="permlab_accessThemeService">dostęp do usługi motywów</string>
+  <string name="permdesc_accessThemeService">Zezwala aplikacji na dostęp do usługi z motywami. Zwykłe aplikacje nie powinny tego wymagać.</string>
+  <string name="permlab_readThemes">odczytuje informacje o twoim motywie</string>
+  <string name="permdesc_readThemesDesc">Zezwala aplikacji na dostęp do twoich motywów i umożliwia decydowanie, który z nich ma zostać użyty.</string>
+  <string name="permlab_writeThemes">modyfikowanie twoich motywów</string>
+  <string name="permdesc_writeThemesDesc">Zezwla aplikacji na dodawanie nowych motywów i modyfikowanie tego, który używasz.</string>
   <string name="permlab_setKeyguardWallpaper">Ustawianie tła ekranu blokady</string>
   <string name="permdesc_setKeyguardWallpaper">Zezwól aplikacji na zmianę tła ekranu blokady.</string>
 </resources>

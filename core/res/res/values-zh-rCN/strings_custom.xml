@@ -77,6 +77,12 @@
   <string name="notify_turn_tethering_off_title">关闭网络共享</string>
   <string name="permlab_preventpower">阻止电源键</string>
   <string name="permdesc_preventpower">允许应用程序覆盖电源键的行为定义</string>
+  <string name="permlab_accessThemeService">访问主题服务</string>
+  <string name="permdesc_accessThemeService">允许应用访问主题服务。正常应用不应需要此权限。</string>
+  <string name="permlab_readThemes">读取您的主题信息</string>
+  <string name="permdesc_readThemesDesc">允许程序读取您的主题并确定您已使用的主题。</string>
+  <string name="permlab_writeThemes">修改你的主题</string>
+  <string name="permdesc_writeThemesDesc">允许程序修改您已经使用的主题，并插入新的主题。</string>
   <string name="permlab_setKeyguardWallpaper">设置锁屏壁纸</string>
   <string name="permdesc_setKeyguardWallpaper">允许应用更改锁屏壁纸。</string>
 </resources>

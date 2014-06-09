@@ -17,4 +17,5 @@ limitations under the License.
 -->
 <resources>
   <string name="app_name">锁屏</string>
+  <string name="keyboardview_keycode_random">重新加载随机按钮</string>
 </resources>

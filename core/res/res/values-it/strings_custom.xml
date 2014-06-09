@@ -77,6 +77,12 @@
   <string name="notify_turn_tethering_off_title">Disattiva Tethering</string>
   <string name="permlab_preventpower">disattiva il tasto power</string>
   <string name="permdesc_preventpower">Permetti ad una applicazione di ignorare il tasto power</string>
+  <string name="permlab_accessThemeService">accedi al servizio tema</string>
+  <string name="permdesc_accessThemeService">Permetti ad un\'applicazione di accedere al servizio tema. Non dovrebbe essere necessario per un\'app normale.</string>
+  <string name="permlab_readThemes">leggi le info del tuo tema</string>
+  <string name="permdesc_readThemesDesc">Permetti all\'app di leggere i tuoi temi e di determinare quale hai applicato.</string>
+  <string name="permlab_writeThemes">modifica tutti i temi</string>
+  <string name="permdesc_writeThemesDesc">Permetti all\'app di inserire nuovi temi e modificare quale tema hai applicato.</string>
   <string name="permlab_setKeyguardWallpaper">imposta sfondo sblocco schermo</string>
   <string name="permdesc_setKeyguardWallpaper">Consente a un\'app di cambiare lo sfondo della schermata di sblocco.</string>
 </resources>

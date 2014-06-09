@@ -17,4 +17,35 @@
  * limitations under the License.
  */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_data_connection_HP">HSPA+</string>
+  <string name="screenrecord_notif_ticker">Näytön tallennus on käynnissä</string>
+  <string name="screenrecord_notif_title">Kuvataan näyttöä</string>
+  <string name="screenrecord_notif_stop">Lopeta</string>
+  <string name="screenrecord_notif_pointer">Näytä osoitin</string>
+  <string name="screenrecord_notif_error">Näyttöä ei voida tallentaa</string>
+  <string name="battery_percent_format"><xliff:g id="number">%d%%</xliff:g></string>
+  <string name="status_bar_notification_hide_icon_packages">Piilota sovelluksen kuvakkeet</string>
+  <string name="memory">RAM</string>
+  <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> vapaana</string>
+  <string name="service_foreground_processes"><xliff:g id="memory">%1$s</xliff:g> käytössä</string>
+  <string name="service_process_name"><xliff:g id="process">%1$s</xliff:g></string>
+  <string name="service_client_name"><xliff:g id="client_name">%1$s</xliff:g></string>
+  <string name="service_started_by_app">Sovelluksen käynnistämä.</string>
+  <string name="running_processes_item_description_s_s"><xliff:g id="numprocess">%1$d</xliff:g>
+        prosessi ja <xliff:g id="numservices">%2$d</xliff:g> palvelu</string>
+  <string name="running_processes_item_description_s_p"><xliff:g id="numprocess">%1$d</xliff:g>
+        prosessi ja <xliff:g id="numservices">%2$d</xliff:g> palvelua</string>
+  <string name="running_processes_item_description_p_s"><xliff:g id="numprocess">%1$d</xliff:g>
+        prosessia ja <xliff:g id="numservices">%2$d</xliff:g> palvelu</string>
+  <string name="running_processes_item_description_p_p"><xliff:g id="numprocess">%1$d</xliff:g>
+        prosessia ja <xliff:g id="numservices">%2$d</xliff:g> palvelua</string>
+  <string name="running_process_item_user_label">Käyttäjä: <xliff:g id="user_name">%1$s</xliff:g></string>
+  <string name="permdesc_screenshot">Ruudunkaappaus</string>
+  <string name="permlab_screenshot">Sallii sovelluksen ottaa ruudunkaappauksia. Tämä toiminto on SystemUI:n suojelema.</string>
+  <string name="screenshot_toast">Ruudunkaappaus %1$d sekunnin kuluttua</string>
+  <string name="permdesc_screenrecord">Ruudun tallennus</string>
+  <string name="permlab_screenrecord">Sallii sovelluksen nauhoittaa ruudulla tapahtuvia asioita. Tämä toiminto on SystemUI:n suojelema.</string>
+  <string name="app_window">Sovellusikkuna</string>
+  <string name="close">Sulje</string>
+</resources>
