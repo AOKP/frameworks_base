@@ -77,6 +77,12 @@
   <string name="notify_turn_tethering_off_title">Выключить раздачу</string>
   <string name="permlab_preventpower">Блок. кнопки питания</string>
   <string name="permdesc_preventpower">Приложение сможет переопределять кнопку питания</string>
+  <string name="permlab_accessThemeService">Доступ к службе тем</string>
+  <string name="permdesc_accessThemeService">Приложение сможет получать доступ к службе тем. Это разрешение не используется обычными приложениями.</string>
+  <string name="permlab_readThemes">Чтение информации о теме</string>
+  <string name="permdesc_readThemesDesc">Приложение сможет читать Ваши темы оформления и определять, какую тему Вы применили.</string>
+  <string name="permlab_writeThemes">Изменение Ваших тем</string>
+  <string name="permdesc_writeThemesDesc">Приложение сможет осуществлять вставки новых тем оформления и изменять применённую Вами тему.</string>
   <string name="permlab_setKeyguardWallpaper">Установка обоев экрана блокировки</string>
   <string name="permdesc_setKeyguardWallpaper">Приложение сможет изменять обои экрана блокировки.</string>
 </resources>

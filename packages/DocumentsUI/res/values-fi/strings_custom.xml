@@ -14,4 +14,27 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="title_standalone">Tiedostot</string>
+  <string name="toast_success_delete">Tiedostot poistettu</string>
+  <string name="dialog_delete_confirm_title">Poista Tiedostot?</string>
+  <string name="menu_copy">Kopioi</string>
+  <string name="menu_cut">Leikkaa</string>
+  <string name="menu_paste">Liitä</string>
+  <plurals name="files_copied">
+    <item quantity="one">Tiedosto sijoitettu leikepöydälle</item>
+    <item quantity="other">%d tiedostoa sijoitettu leikepöydälle</item>
+  </plurals>
+  <plurals name="files_pasted">
+    <item quantity="one">Tiedosto liitetty, lähetys voi jatkua taustalla.</item>
+    <item quantity="other">%d Tiedostoa liitetty, lähetys voi jatkua taustalla.</item>
+  </plurals>
+  <string name="copy_in_progress">Kopioidaan...</string>
+  <string name="delete_in_progress">Poistetaan...</string>
+  <plurals name="dialog_delete_confirm_message">
+    <item quantity="one">Tämä tiedosto poistetaan pysyvästi!</item>
+    <item quantity="other">Tämä toiminto poistaa valitut %d tiedostoa!</item>
+  </plurals>
+  <string name="ok">OK</string>
+  <string name="cancel">Peruuta</string>
+</resources>

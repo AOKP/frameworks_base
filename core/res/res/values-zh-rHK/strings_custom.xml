@@ -21,7 +21,7 @@
   <string name="reboot">重新啟動</string>
   <string name="reboot_recovery">修復模式</string>
   <string name="reboot_download">下載</string>
-  <string name="reboot_bootloader">啟動載入程式 (Bootloader)</string>
+  <string name="reboot_bootloader">啟動載入器</string>
   <string name="reboot_progress">您的裝置正在重新啟動</string>
   <string name="rotation_lock_toggled">自動旋轉狀態已變更</string>
   <string name="immersive_mode">逼真模式</string>
@@ -30,9 +30,9 @@
   <string name="action_home">主頁</string>
   <string name="action_back">返回</string>
   <string name="action_recents">待辦事項</string>
-  <string name="action_recents_gb">待辦事項 (GB風格)</string>
+  <string name="action_recents_gb">代辦事項 (GB 樣式)</string>
   <string name="action_search">搜尋</string>
-  <string name="action_screenshot">螢幕截圖</string>
+  <string name="action_screenshot">擷取螢幕畫面</string>
   <string name="action_menu">功能表</string>
   <string name="action_ime">開啟輸入法選擇器</string>
   <string name="action_kill">強制結束程式</string>
@@ -47,7 +47,7 @@
   <string name="action_vib">鈴聲/震動</string>
   <string name="action_silent_vib">鈴聲/震動/靜音</string>
   <string name="action_event">事件</string>
-  <string name="action_today">今天</string>
+  <string name="action_today">今日</string>
   <string name="action_alarm">鬧鐘</string>
   <string name="action_unlock">解鎖</string>
   <string name="action_camera">相機</string>
@@ -55,9 +55,9 @@
   <string name="action_widgets">導航欄小部件</string>
   <string name="action_app_window">應用程式視窗</string>
   <string name="action_ribbon">AOKP 功能區</string>
-  <string name="action_app">自訂應用程式/捷徑</string>
+  <string name="action_app">自訂應用程式與捷徑</string>
   <string name="app_killed_message">應用程式已強制結束</string>
-  <string name="global_action_screenshot">螢幕截圖</string>
+  <string name="global_action_screenshot">擷取螢幕畫面</string>
   <string name="global_action_screenrecord">螢幕錄製</string>
   <string name="animation_fade">淡入淡出</string>
   <string name="animation_slide_right">從右滑入</string>
@@ -75,9 +75,15 @@
   <string name="animation_grow_shrink_left">縮放（左側）</string>
   <string name="animation_grow_shrink_right">縮放（右側）</string>
   <string name="notify_turn_wifi_off_title">關閉 Wi-Fi</string>
-  <string name="notify_turn_tethering_off_title">關閉網路共享</string>
+  <string name="notify_turn_tethering_off_title">關閉網絡共用</string>
   <string name="permlab_preventpower">防止使用電源鍵</string>
   <string name="permdesc_preventpower">允許應用程式重寫電源鍵</string>
-  <string name="permlab_setKeyguardWallpaper">設定鍵盤鎖的牆紙</string>
-  <string name="permdesc_setKeyguardWallpaper">允許應用程式來更改鎖定螢幕牆紙。</string>
+  <string name="permlab_accessThemeService">主題存取服務</string>
+  <string name="permdesc_accessThemeService">允許應用程式存取主題服務。一般應用程式並不需要此權限。</string>
+  <string name="permlab_readThemes">檢視主題資訊</string>
+  <string name="permdesc_readThemesDesc">允許應用程式讀取您的主題，並確定您已套用的主題。</string>
+  <string name="permlab_writeThemes">變更佈景主題</string>
+  <string name="permdesc_writeThemesDesc">允許程式變更目前主题，並插入新的主題。</string>
+  <string name="permlab_setKeyguardWallpaper">設定螢幕鎖定牆紙</string>
+  <string name="permdesc_setKeyguardWallpaper">允許應用程式變更螢幕鎖定牆紙。</string>
 </resources>

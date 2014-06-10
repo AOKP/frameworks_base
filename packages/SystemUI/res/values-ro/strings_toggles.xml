@@ -22,15 +22,18 @@
   <string name="toggle_SETTINGS">Setari</string>
   <string name="toggle_WIFI">WiFi</string>
   <string name="toggle_SIGNAL">Semnal</string>
+  <string name="toggle_ROTATE">Rotire automată</string>
   <string name="toggle_CLOCK">Ceas</string>
   <string name="toggle_GPS">GPS</string>
   <string name="toggle_LOCATION">Locatie</string>
   <string name="toggle_BATTERY">Baterie</string>
+  <string name="toggle_AIRPLANE_MODE">Modul avion</string>
   <string name="toggle_BLUETOOTH">Bluetooth</string>
   <string name="toggle_VIBRATE">Vibreaza</string>
   <string name="toggle_SILENT">Silentios</string>
   <string name="toggle_SYNC">Sincronizeaza</string>
   <string name="toggle_NFC">NFC</string>
+  <string name="toggle_TORCH">Lanternă</string>
   <string name="toggle_2G">2G</string>
   <string name="toggle_LTE">LTE</string>
 </resources>

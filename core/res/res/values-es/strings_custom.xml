@@ -77,4 +77,14 @@
   <string name="notify_turn_tethering_off_title">Desactivar Tethering</string>
   <string name="permlab_preventpower">Prevenir tecla encendido/apagado</string>
   <string name="permdesc_preventpower">Permitir a una aplicación reemplazar la tecla de encendido/apagado</string>
+  <string name="permlab_accessThemeService">Acceso al servicio de temas</string>
+  <string name="permdesc_accessThemeService">Permitir que la aplicación pueda acceder al servicio de temas. Esto no debería ser nunca necesario con aplicaciones normales.</string>
+  <string name="permlab_readThemes">leer la información de su tema</string>
+  <string name="permdesc_readThemesDesc">Permite que la aplicación lea sus temas y
+       pueda determinar que tema está aplicado.</string>
+  <string name="permlab_writeThemes">Modificar sus temas</string>
+  <string name="permdesc_writeThemesDesc">Permite que la aplicación introduzca nuevos temas y
+       modificar el tema que este aplicado.</string>
+  <string name="permlab_setKeyguardWallpaper">Establecer el fondo de pantalla de bloqueo</string>
+  <string name="permdesc_setKeyguardWallpaper">Permite que otras aplicaciones cambien el fondo de pantalla de bloqueo.</string>
 </resources>

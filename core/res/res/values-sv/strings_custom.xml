@@ -77,5 +77,12 @@
   <string name="notify_turn_tethering_off_title">Inaktivera delning</string>
   <string name="permlab_preventpower">förhindra avstängningsknapp</string>
   <string name="permdesc_preventpower">Tillåter ett program att åsidosätta avstängninsknappen</string>
+  <string name="permlab_accessThemeService">få tillgång till tema-tjänsten</string>
+  <string name="permdesc_accessThemeService">Tillåter en app att få tillgång till tema-tjänsten. Bör aldrig vara nödvändigt för vanliga appar.</string>
+  <string name="permlab_readThemes">Läs din tema-info</string>
+  <string name="permdesc_readThemesDesc">Tillåter att appen läser dina teman och avgöra vilket tema som du har använt.</string>
+  <string name="permlab_writeThemes">ändra din teman</string>
+  <string name="permdesc_writeThemesDesc">Tillåter att appen infogar nya teman och ändra vilket tema som du har använt.</string>
+  <string name="permlab_setKeyguardWallpaper">ställa in bakgrundsbild på låsskärm</string>
   <string name="permdesc_setKeyguardWallpaper">Tillåter en app att ändra låsskärmens bakgrundsbild.</string>
 </resources>

@@ -19,6 +19,8 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="accessibility_data_connection_HP">HSPA+</string>
+  <string name="screenrecord_notif_ticker">Ecranul este înregistrat</string>
+  <string name="screenrecord_notif_title">Înregistrare ecran</string>
   <string name="screenrecord_notif_stop">Stop</string>
   <string name="memory">RAM</string>
   <string name="close">Inchide</string>

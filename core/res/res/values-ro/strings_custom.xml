@@ -22,6 +22,15 @@
   <string name="reboot_download">Descarca</string>
   <string name="reboot_bootloader">Bootloader</string>
   <string name="immersive_mode">Full screen</string>
+  <string name="action_home">Acasă</string>
+  <string name="action_back">Înapoi</string>
+  <string name="action_search">Căutare</string>
+  <string name="action_screenshot">Captură ecran</string>
+  <string name="action_menu">Meniu</string>
   <string name="action_kill">Inchide aplicatie</string>
   <string name="action_lastapp">Ultima aplicatie</string>
+  <string name="action_notifications">Notificări</string>
+  <string name="action_clockoptions">Opţiuni ceas</string>
+  <string name="action_voiceassist">Căutare vocală</string>
+  <string name="action_torch">Lanternă</string>
 </resources>

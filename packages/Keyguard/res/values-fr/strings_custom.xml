@@ -17,4 +17,5 @@ limitations under the License.
 -->
 <resources>
   <string name="app_name">Écran de verrouillage</string>
+  <string name="keyboardview_keycode_random">Recharger les boutons au hasard</string>
 </resources>

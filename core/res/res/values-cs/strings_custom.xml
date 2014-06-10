@@ -77,6 +77,12 @@
   <string name="notify_turn_tethering_off_title">Vypnout Tethering</string>
   <string name="permlab_preventpower">přemapovat tlačítko napájení</string>
   <string name="permdesc_preventpower">Umožnit aplikaci přemapovat tlačítko napájení</string>
+  <string name="permlab_accessThemeService">přístup ke službě témat</string>
+  <string name="permdesc_accessThemeService">Umožnit aplikaci přístup ke službě témat. Pro normální aplikace by toto oprávnění nemělo být nikdy požadováno.</string>
+  <string name="permlab_readThemes">číst informace o tématu</string>
+  <string name="permdesc_readThemesDesc">Umožnit aplikacím číst informace o tématu a tak určit, jaké téma je aplikováno.</string>
+  <string name="permlab_writeThemes">upravit témata</string>
+  <string name="permdesc_writeThemesDesc">Umožnit aplikacím vytvářet nová témata a nastavit používané téma.</string>
   <string name="permlab_setKeyguardWallpaper">nastavit pozadí na zamčené obrazovce</string>
   <string name="permdesc_setKeyguardWallpaper">Umožnit aplikaci změnit pozadí na zamčené obrazovce.</string>
 </resources>
