@@ -1102,6 +1102,12 @@ public class Activity extends ContextThemeWrapper
         if (DEBUG_LIFECYCLE) Slog.v(TAG, "onResume " + this);
         getApplication().dispatchActivityResumed(this);
         mCalled = true;
+
+        ArrayList<String> mAutoImmersiveArrayList = Settings.AOKP.getArrayList(
+                getContentResolver(), Settings.AOKP.KEY_AUTO_IMMERSIVE_ARRAY);
+        if (mAutoImmersiveArrayList.contains(getPackageName())) {
+            updateImmersiveMode(true, true);
+        }
     }
 
     /**
@@ -2369,7 +2375,7 @@ public class Activity extends ContextThemeWrapper
      */
     public void onWindowFocusChanged(boolean hasFocus) {
         if (hasFocus) {
-            updateImmersiveMode(false);
+            updateImmersiveMode(false, false);
         }
     }
     
@@ -5467,16 +5473,18 @@ public class Activity extends ContextThemeWrapper
             super(handler);
         }
         void observe() {
-            getContentResolver().registerContentObserver(Settings.AOKP.getUriFor(Settings.AOKP.IMMERSIVE_MODE), false, this);
+            getContentResolver().registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.IMMERSIVE_MODE), false, this);
         }
          @Override
         public void onChange(boolean selfChange) {
-            updateImmersiveMode(true);
+            updateImmersiveMode(true, false);
         }
     }
 
-    void updateImmersiveMode(boolean force) {
-        if (Settings.AOKP.getBoolean(getContentResolver(), Settings.AOKP.IMMERSIVE_MODE, false)) {
+    void updateImmersiveMode(boolean force, final boolean autoImmersive) {
+        if (Settings.AOKP.getBoolean(getContentResolver(), Settings.AOKP.IMMERSIVE_MODE, false)
+                || autoImmersive) {
             /*
              *  SYSTEM_UI_FLAG_IMMERSIVE_STICKY does not allow the action bar to be shown on the swipe
              *  So use the regular mode and set a postdelayed to re hide it. This will give use access to
@@ -5485,7 +5493,8 @@ public class Activity extends ContextThemeWrapper
             mWindow.getDecorView().setOnSystemUiVisibilityChangeListener(new OnSystemUiVisibilityChangeListener() {
                 @Override
                 public void onSystemUiVisibilityChange(int visibility) {
-                    if (visibility == 0 && Settings.AOKP.getBoolean(getContentResolver(), Settings.AOKP.IMMERSIVE_MODE, false)) {
+                    if (visibility == 0 && (Settings.AOKP.getBoolean(getContentResolver(), Settings.AOKP.IMMERSIVE_MODE, false)
+                            || autoImmersive)) {
                         mHandler.postDelayed(mImmerseModeRunnable, 5000);
                     }
                 }

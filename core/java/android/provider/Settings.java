@@ -7698,6 +7698,13 @@ public final class Settings {
          * @hide
          */
         public static final String LOCKSCREEN_MENU_UNLOCK = "lockscreen_menu_unlock";
+
+        /**
+         * Auto Immersive Mode array
+         * @hide
+         */
+        public static final String KEY_AUTO_IMMERSIVE_ARRAY = "auto_immersive_array";
+
     }
 
     /**
