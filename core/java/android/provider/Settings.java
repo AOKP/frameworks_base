@@ -7693,6 +7693,12 @@ public final class Settings {
          */
         public static final String LISTVIEW_INTERPOLATOR = "listview_interpolator";
 
+        /**
+         * Auto Immersive Mode array
+         * @hide
+         */
+        public static final String KEY_AUTO_IMMERSIVE_ARRAY = "auto_immersive_array";
+
     }
 
     /**
