@@ -1317,7 +1317,7 @@ public final class ActiveServices {
         ProcessRecord app;
 
         if (!isolated) {
-            app = mAm.getProcessRecordLocked(procName, r.appInfo.uid, false);
+            app = mAm.getProcessRecordLocked(procName, r.appInfo.uid, true);
             if (DEBUG_MU) Slog.v(TAG_MU, "bringUpServiceLocked: appInfo.uid=" + r.appInfo.uid
                         + " app=" + app);
             if (app != null && app.thread != null) {
