@@ -7208,13 +7208,6 @@ public final class Settings {
         public static final String DEFAULT_THEME_COMPONENTS = "default_theme_components";
 
         /**
-         * Whether the default theme was applied on the first boot.
-         * @hide
-         */
-        public static final String DEFAULT_THEME_APPLIED_ON_FIRST_BOOT =
-                "default_theme_applied_on_first_boot";
-
-        /**
          * Location mode toggle
          * 1 - LOCATION_MODE_OFF / LOCATION_MODE_SENSORS_ONLY / LOCATION_MODE_BATTERY_SAVING / LOCATION_MODE_HIGH_ACCURACY
          * 2 - LOCATION_MODE_HIGH_ACCURACY / LOCATION_MODE_BATTERY_SAVING / LOCATION_MODE_SENSORS_ONLY
