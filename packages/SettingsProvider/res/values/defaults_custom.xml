@@ -20,4 +20,7 @@
     <!-- Default theme -->
     <string name="def_theme_package"></string>
     <string name="def_theme_components"></string>
+
+    <!-- Default values for HEADS_UP_NOTIFICATION -->
+    <string name="def_heads_up_notification_values"></string>
 </resources>
