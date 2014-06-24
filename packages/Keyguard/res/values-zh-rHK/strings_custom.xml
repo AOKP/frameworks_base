@@ -17,4 +17,5 @@ limitations under the License.
 -->
 <resources>
   <string name="app_name">鎖定螢幕</string>
+  <string name="keyboardview_keycode_random">重新載入隨機按鈕</string>
 </resources>

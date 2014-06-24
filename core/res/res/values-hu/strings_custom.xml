@@ -58,6 +58,7 @@
   <string name="action_app">Egyéni Alk./Parancsikon</string>
   <string name="app_killed_message">Alkalmazás kilőve</string>
   <string name="global_action_screenshot">Képernyőmentés</string>
+  <string name="global_action_screenrecord">Képernyőfelvétel</string>
   <string name="animation_fade">Áttűnés</string>
   <string name="animation_slide_right">Jobbról csúszik</string>
   <string name="animation_slide_left">Balról csúszik</string>

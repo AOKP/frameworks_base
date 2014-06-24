@@ -76,7 +76,7 @@
   <string name="notify_turn_wifi_off_title">W-LAN deaktivieren</string>
   <string name="notify_turn_tethering_off_title">Tethering deaktivieren</string>
   <string name="permlab_preventpower">Ein/Aus-Taste umbelegen</string>
-  <string name="permdesc_preventpower">Ermöglicht es einer Anwendung, die Power-Taste zu überschreiben</string>
+  <string name="permdesc_preventpower">Ermöglicht es einer Anwendung, die Ein/Aus-Taste neu zu belegen</string>
   <string name="permlab_accessThemeService">Zugriff auf den Themen-Dienst</string>
   <string name="permdesc_accessThemeService">Ermöglicht einer App auf den Themen-Dienst zuzugreifen. Wird für normale Apps nicht benötigt.</string>
   <string name="permlab_readThemes">Lesen der Theme-Information</string>

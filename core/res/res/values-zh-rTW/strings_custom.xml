@@ -20,7 +20,7 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">重新啟動</string>
   <string name="reboot_recovery">Recovery</string>
-  <string name="reboot_download">下載</string>
+  <string name="reboot_download">下載模式</string>
   <string name="reboot_bootloader">Bootloader</string>
   <string name="reboot_progress">您的裝置正在重新啟動</string>
   <string name="rotation_lock_toggled">自動旋轉狀態已變更</string>

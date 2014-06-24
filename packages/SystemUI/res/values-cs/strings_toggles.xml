@@ -54,7 +54,7 @@
   <string name="toggle_STAYAWAKE">Neuspávat</string>
   <string name="toggle_WIRELESSADB">Bezdrátové ADB</string>
   <string name="toggle_IMMERSIVE_MODE">Skryté lišty</string>
-  <string name="toggle_SCREENRECORD">Vodeozáznam obrazovky</string>
+  <string name="toggle_SCREENRECORD">Videozáznam obrazovky</string>
   <string name="quick_settings_swagger">Swagger</string>
   <string name="quick_settings_swaggersun">Swagger neděle</string>
   <string name="quick_settings_fbgt">FBGT</string>
