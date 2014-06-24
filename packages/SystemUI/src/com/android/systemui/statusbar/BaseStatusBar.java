@@ -158,6 +158,9 @@ public abstract class BaseStatusBar extends SystemUI implements
 
     private RecentsComponent mRecents;
 
+    private ArrayList<String> mDndList;
+    private ArrayList<String> mBlacklist;
+
     public IStatusBarService getStatusBarService() {
         return mBarService;
     }
@@ -210,6 +213,40 @@ public abstract class BaseStatusBar extends SystemUI implements
         }
     };
 
+    private class SettingsObserver extends ContentObserver {
+        public SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        public void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(
+                    Settings.AOKP.getUriFor(Settings.AOKP.HEADS_UP_CUSTOM_VALUES),
+                    false, this);
+            resolver.registerContentObserver(
+                    Settings.AOKP.getUriFor(Settings.AOKP.HEADS_UP_BLACKLIST_VALUES),
+                    false, this);
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            update();
+        }
+
+        private void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+            final String dndString = Settings.AOKP.getString(mContext.getContentResolver(),
+                    Settings.AOKP.HEADS_UP_CUSTOM_VALUES);
+            final String blackString = Settings.AOKP.getString(mContext.getContentResolver(),
+                    Settings.AOKP.HEADS_UP_BLACKLIST_VALUES);
+            splitAndAddToArrayList(mDndList, dndString, "\\|");
+            splitAndAddToArrayList(mBlacklist, blackString, "\\|");
+        }
+    };
+
+    private SettingsObserver mSettingsObserver = new SettingsObserver(mHandler);
+
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -231,10 +268,15 @@ public abstract class BaseStatusBar extends SystemUI implements
                 ServiceManager.checkService(DreamService.DREAM_SERVICE));
         mPowerManager = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
 
+        mDndList = new ArrayList<String>();
+        mBlacklist = new ArrayList<String>();
+
         mProvisioningObserver.onChange(false); // set up
         mContext.getContentResolver().registerContentObserver(
                 Settings.Global.getUriFor(Settings.Global.DEVICE_PROVISIONED), true,
                 mProvisioningObserver);
+
+        mSettingsObserver.observe();
 
         mBarService = IStatusBarService.Stub.asInterface(
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE));
@@ -1073,6 +1115,11 @@ public abstract class BaseStatusBar extends SystemUI implements
     protected boolean shouldInterrupt(StatusBarNotification sbn) {
         Notification notification = sbn.getNotification();
 
+        // check if notification from the package is blacklisted first
+        if (isPackageBlacklisted(sbn.getPackageName())) {
+            return false;
+        }
+
         // some predicates to make the boolean logic legible
         boolean isNoisy = (notification.defaults & Notification.DEFAULT_SOUND) != 0
                 || (notification.defaults & Notification.DEFAULT_VIBRATE) != 0
@@ -1129,22 +1176,23 @@ public abstract class BaseStatusBar extends SystemUI implements
     }
 
     private boolean isPackageInDnd(String packageName) {
-        final String baseString = Settings.AOKP.getString(mContext.getContentResolver(),
-                Settings.AOKP.HEADS_UP_CUSTOM_VALUES);
+        return mDndList.contains(packageName);
+    }
 
+    private boolean isPackageBlacklisted(String packageName) {
+        return mBlacklist.contains(packageName);
+    }
+
+    private void splitAndAddToArrayList(ArrayList<String> arrayList,
+                                        String baseString, String separator) {
+        // clear first
+        arrayList.clear();
         if (baseString != null) {
-            final String[] array = TextUtils.split(baseString, "\\|");
+            final String[] array = TextUtils.split(baseString, separator);
             for (String item : array) {
-                if (TextUtils.isEmpty(item)) {
-                    continue;
-                }
-                if (TextUtils.equals(item, packageName)) {
-                    return true;
-                }
+                arrayList.add(item.trim());
             }
         }
-
-        return false;
     }
 
     // Q: What kinds of notifications should show during setup?
