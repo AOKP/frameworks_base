@@ -413,6 +413,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mContext.getContentResolver().registerContentObserver(
                     Settings.AOKP.getUriFor(Settings.AOKP.HEADS_UP_NOTIFICATION), true,
                     mHeadsUpObserver, mCurrentUserId);
+            mSettingsObserver = new SettingsObserver(new Handler());
+            mSettingsObserver.observe();
+            updateSettings();
         }
     }
 
