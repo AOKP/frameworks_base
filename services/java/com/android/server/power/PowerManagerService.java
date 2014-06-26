@@ -37,6 +37,9 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.database.ContentObserver;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.hardware.SystemSensorManager;
 import android.net.Uri;
@@ -88,6 +91,7 @@ public final class PowerManagerService extends IPowerManager.Stub
     private static final int MSG_SCREEN_ON_BLOCKER_RELEASED = 3;
     // Message: Sent to poll whether the boot animation has terminated.
     private static final int MSG_CHECK_IF_BOOT_ANIMATION_FINISHED = 4;
+    private static final int MSG_WAKE_UP = 5;
 
     // Dirty bit: mWakeLocks changed
     private static final int DIRTY_WAKE_LOCKS = 1 << 0;
@@ -171,6 +175,9 @@ public final class PowerManagerService extends IPowerManager.Stub
 
     // Max time (microseconds) to allow a CPU boost for
     private static final int MAX_CPU_BOOST_TIME = 5000000;
+
+    // Max time allowed for proximity check
+    private static final int MAX_PROXIMITY_WAIT = 200;
 
     private Context mContext;
     private LightsService mLightsService;
@@ -403,6 +410,10 @@ public final class PowerManagerService extends IPowerManager.Stub
     private static native void nativeCpuBoost(int duration);
     private boolean mKeyboardVisible = false;
 
+    private SensorManager mSensorManager;
+    private Sensor mProximitySensor;
+    private boolean mProximityWake;
+
     public PowerManagerService() {
         synchronized (mLock) {
             mWakeLockSuspendBlocker = createSuspendBlockerLocked("PowerManagerService.WakeLocks");
@@ -435,6 +446,8 @@ public final class PowerManagerService extends IPowerManager.Stub
         mHandlerThread = new HandlerThread(TAG);
         mHandlerThread.start();
         mHandler = new PowerManagerHandler(mHandlerThread.getLooper());
+        mSensorManager = (SensorManager) mContext.getSystemService(Context.SENSOR_SERVICE);
+        mProximitySensor = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         Watchdog.getInstance().addMonitor(this);
         Watchdog.getInstance().addThread(mHandler, mHandlerThread.getName());
@@ -538,6 +551,10 @@ public final class PowerManagerService extends IPowerManager.Stub
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.SYSTEM_POWER_CRT_MODE),
                     false, mSettingsObserver, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.PROXIMITY_ON_WAKE),
+                    false, mSettingsObserver, UserHandle.USER_ALL);
+
             // Go.
             readConfigurationLocked();
             updateSettingsLocked();
@@ -594,6 +611,9 @@ public final class PowerManagerService extends IPowerManager.Stub
         mElectronBeamMode = Settings.AOKP.getIntForUser(resolver,
                 Settings.AOKP.SYSTEM_POWER_CRT_MODE,
                 1, UserHandle.USER_CURRENT);
+
+        mProximityWake = Settings.AOKP.getInt(resolver,
+                Settings.AOKP.PROXIMITY_ON_WAKE, 0) == 1;
 
         final int oldScreenBrightnessSetting = mScreenBrightnessSetting;
         mScreenBrightnessSetting = Settings.System.getIntForUser(resolver,
@@ -1061,25 +1081,90 @@ public final class PowerManagerService extends IPowerManager.Stub
         }
     }
 
-    @Override // Binder call
-    public void wakeUp(long eventTime) {
+    /**
+     * @hide
+     */
+    private void wakeUp(final long eventTime, boolean checkProximity) {
         if (eventTime > SystemClock.uptimeMillis()) {
             throw new IllegalArgumentException("event time must not be in the future");
         }
 
         mContext.enforceCallingOrSelfPermission(android.Manifest.permission.DEVICE_POWER, null);
 
-        final long ident = Binder.clearCallingIdentity();
-        try {
-            wakeUpInternal(eventTime);
-        } finally {
-            Binder.restoreCallingIdentity(ident);
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                final long ident = Binder.clearCallingIdentity();
+                try {
+                    wakeUpInternal(eventTime);
+                } finally {
+                    Binder.restoreCallingIdentity(ident);
+                }
+            }
+        };
+        runWithProximityCheck(r);
+    }
+
+    private void runWithProximityCheck(Runnable r) {
+        if (mHandler.hasMessages(MSG_WAKE_UP)) {
+            // There is already a message queued;
+            return;
+        }
+        if (mProximityWake && mProximitySensor != null) {
+            Message msg = mHandler.obtainMessage(MSG_WAKE_UP);
+            msg.obj = r;
+            mHandler.sendMessageDelayed(msg, MAX_PROXIMITY_WAIT);
+            runPostProximityCheck(r);
+        } else {
+            r.run();
         }
     }
 
+    private void runPostProximityCheck(final Runnable r) {
+        if (mSensorManager == null) {
+            r.run();
+            return;
+        }
+        mSensorManager.registerListener(new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                if (!mHandler.hasMessages(MSG_WAKE_UP)) {
+                    // The sensor took too long to return and
+                    // the wake event already triggered.
+                    return;
+                }
+                mHandler.removeMessages(MSG_WAKE_UP);
+                if (event.values[0] == mProximitySensor.getMaximumRange()) {
+                    r.run();
+                }
+                mSensorManager.unregisterListener(this);
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+
+        }, mProximitySensor, SensorManager.SENSOR_DELAY_FASTEST);
+    }
+
+    @Override // Binder call
+    public void wakeUpWithProximityCheck(long eventTime) {
+        wakeUp(eventTime, true);
+    }
+
+    @Override // Binder call
+    public void wakeUp(long eventTime) {
+        wakeUp(eventTime, false);
+    }
+
     // Called from native code.
-    private void wakeUpFromNative(long eventTime) {
-        wakeUpInternal(eventTime);
+    private void wakeUpFromNative(final long eventTime) {
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                wakeUpInternal(eventTime);
+            }
+        };
+        runWithProximityCheck(r);
     }
 
     private void wakeUpInternal(long eventTime) {
@@ -2667,6 +2752,9 @@ public final class PowerManagerService extends IPowerManager.Stub
                     break;
                 case MSG_CHECK_IF_BOOT_ANIMATION_FINISHED:
                     checkIfBootAnimationFinished();
+                    break;
+                case MSG_WAKE_UP:
+                    ((Runnable) msg.obj).run();
                     break;
             }
         }
