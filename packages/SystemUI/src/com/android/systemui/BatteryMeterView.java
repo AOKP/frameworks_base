@@ -64,7 +64,7 @@ public class BatteryMeterView extends View implements DemoMode {
     private int mHeight;
     private int mWidth;
     private String mWarningString;
-    private final int mChargeColor;
+    private int mChargeColor;
     private final float[] mBoltPoints;
     private final Path mBoltPath = new Path();
 
@@ -181,22 +181,10 @@ public class BatteryMeterView extends View implements DemoMode {
     public BatteryMeterView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         final Resources res = context.getResources();
-        TypedArray levels = res.obtainTypedArray(R.array.batterymeter_color_levels);
-        TypedArray colors = res.obtainTypedArray(R.array.batterymeter_color_values);
-
-        final int N = levels.length();
-        mColors = new int[2*N];
-        for (int i=0; i<N; i++) {
-            mColors[2*i] = levels.getInt(i, 0);
-            mColors[2*i+1] = colors.getColor(i, 0);
-        }
-        levels.recycle();
-        colors.recycle();
 
         mWarningString = context.getString(R.string.battery_meter_very_low_overlay_symbol);
 
         mFramePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mFramePaint.setColor(res.getColor(R.color.batterymeter_frame_color));
         mFramePaint.setDither(true);
         mFramePaint.setStrokeWidth(0);
         mFramePaint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -214,20 +202,42 @@ public class BatteryMeterView extends View implements DemoMode {
         mTextPaint.setTextAlign(Paint.Align.CENTER);
 
         mWarningTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mWarningTextPaint.setColor(mColors[1]);
         font = Typeface.create("sans-serif", Typeface.BOLD);
         mWarningTextPaint.setTypeface(font);
         mWarningTextPaint.setTextAlign(Paint.Align.CENTER);
 
-        mChargeColor = getResources().getColor(R.color.batterymeter_charge_color);
-
         mBoltPaint = new Paint();
         mBoltPaint.setAntiAlias(true);
-        mBoltPaint.setColor(res.getColor(R.color.batterymeter_bolt_color));
         mBoltPoints = loadBoltPoints(res);
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         updateSettings();
+    }
+
+    public void setColors(boolean qs) {
+        Resources res = getResources();
+        TypedArray levels = res.obtainTypedArray(R.array.batterymeter_color_levels);
+        TypedArray colors = res.obtainTypedArray(qs ? R.array.batterymeter_color_values :
+                                                      R.array.sb_batterymeter_color_values);
+
+        final int N = levels.length();
+        mColors = new int[2*N];
+        for (int i=0; i<N; i++) {
+            mColors[2*i] = levels.getInt(i, 0);
+            mColors[2*i+1] = colors.getColor(i, 0);
+        }
+        levels.recycle();
+        colors.recycle();
+        mWarningTextPaint.setColor(mColors[1]);
+        if (qs) {
+            mChargeColor = res.getColor(R.color.batterymeter_charge_color);
+            mBoltPaint.setColor(res.getColor(R.color.batterymeter_bolt_color));
+            mFramePaint.setColor(res.getColor(R.color.batterymeter_frame_color));
+        } else {
+            mChargeColor = res.getColor(R.color.sb_batterymeter_charge_color);
+            mBoltPaint.setColor(res.getColor(R.color.sb_batterymeter_bolt_color));
+            mFramePaint.setColor(res.getColor(R.color.sb_batterymeter_frame_color));
+        }
     }
 
     private static float[] loadBoltPoints(Resources res) {

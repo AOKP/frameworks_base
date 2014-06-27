@@ -7,9 +7,12 @@ import android.content.res.Resources;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.NetworkController.NetworkSignalChangedCallback;
+import com.android.systemui.statusbar.phone.QuickSettingsTileView;
 
 public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCallback {
 
@@ -66,6 +69,31 @@ public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCa
     }
 
     @Override
+    public QuickSettingsTileView createTileView() {
+        QuickSettingsTileView quick = (QuickSettingsTileView)
+                View.inflate(mContext, R.layout.toggle_tile_wifi, null);
+        quick.setOnClickListener(this);
+        quick.setOnLongClickListener(this);
+        mLabel = (TextView) quick.findViewById(R.id.label);
+        mIcon = (ImageView) quick.findViewById(R.id.icon);
+        mActivityIn = (ImageView) quick.findViewById(R.id.activity_in);
+        mActivityOut = (ImageView) quick.findViewById(R.id.activity_out);
+        return quick;
+    }
+
+    @Override
+    public View createTraditionalView() {
+        View root = View.inflate(mContext, R.layout.toggle_traditional_wifi, null);
+        root.setOnClickListener(this);
+        root.setOnLongClickListener(this);
+        mIcon = (ImageView) root.findViewById(R.id.icon);
+        mActivityIn = (ImageView) root.findViewById(R.id.activity_in);
+        mActivityOut = (ImageView) root.findViewById(R.id.activity_out);
+        mLabel = null;
+        return root;
+    }
+
+    @Override
     public void onWifiSignalChanged(boolean enabled, int wifiSignalIconId, boolean activityIn,
             boolean activityOut, String wifiSignalContentDescriptionId, String enabledDesc) {
         Resources r = mContext.getResources();
@@ -75,6 +103,7 @@ public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCa
         String label;
         int iconId;
         State newState = getState();
+        networkActivity(enabled && activityIn, enabled && activityOut);
         if (wifiConnected) {
             iconId = wifiSignalIconId;
             label = enabledDesc;
@@ -90,7 +119,6 @@ public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCa
         }
         updateCurrentState(newState);
         setInfo(removeDoubleQuotes(label), iconId);
-
     }
 
     @Override

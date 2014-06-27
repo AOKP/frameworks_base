@@ -6,24 +6,22 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LevelListDrawable;
 import android.view.View;
+import android.widget.TextView;
 
+import com.android.systemui.BatteryMeterView;
+import com.android.systemui.BatteryCircleMeterView;
 import com.android.systemui.R;
+import com.android.systemui.statusbar.phone.QuickSettingsTileView;
 import com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback;
 
 public class BatteryToggle extends BaseToggle implements BatteryStateChangeCallback {
 
-    LevelListDrawable mBatteryLevels;
-    LevelListDrawable mChargingBatteryLevels;
-
+    private BatteryMeterView mBattery;
+    private BatteryCircleMeterView mCircleBattery;
 
     @Override
     public void init(Context c, int style) {
         super.init(c, style);
-        mBatteryLevels = (LevelListDrawable) c.getResources()
-                .getDrawable(R.drawable.qs_sys_battery);
-        mChargingBatteryLevels =
-                (LevelListDrawable) c.getResources()
-                        .getDrawable(R.drawable.qs_sys_battery_charging);
     }
 
     @Override
@@ -40,15 +38,13 @@ public class BatteryToggle extends BaseToggle implements BatteryStateChangeCallb
 
     @Override
     public void onBatteryLevelChanged(int level, boolean pluggedIn) {
-        Drawable d = null;
-        if (pluggedIn) {
-            d = mChargingBatteryLevels;
-        } else {
-            d = mBatteryLevels;
+        if (mBattery == null) {
+            return;
         }
-        setIcon(d);
-        setIconLevel(level);
-
+        mCircleBattery.updateSettings();
+        mCircleBattery.setColors(true);
+        mBattery.updateSettings();
+        mBattery.setColors(true);
         if (level == 100) {
             setLabel(R.string.quick_settings_battery_charged_label);
         } else {
@@ -59,6 +55,36 @@ public class BatteryToggle extends BaseToggle implements BatteryStateChangeCallb
                             level));
         }
         scheduleViewUpdate();
+    }
+
+    @Override
+    public QuickSettingsTileView createTileView() {
+        QuickSettingsTileView quick = (QuickSettingsTileView)
+                View.inflate(mContext, R.layout.toggle_tile_battery, null);
+        quick.setOnClickListener(this);
+        quick.setOnLongClickListener(this);
+        mBattery = (BatteryMeterView) quick.findViewById(R.id.battery);
+        mBattery.setColors(true);
+        mBattery.setVisibility(View.GONE);
+        mCircleBattery = (BatteryCircleMeterView) quick.findViewById(R.id.circle_battery);
+        mCircleBattery.setColors(true);
+        mLabel = (TextView) quick.findViewById(R.id.label);
+        return quick;
+    }
+
+    @Override
+    public View createTraditionalView() {
+        View root = View.inflate(mContext, R.layout.toggle_traditional_battery, null);
+        root.setOnClickListener(this);
+        root.setOnLongClickListener(this);
+        mBattery = (BatteryMeterView) root.findViewById(R.id.battery);
+        mBattery.setColors(true);
+        mBattery.setVisibility(View.GONE);
+        mCircleBattery = (BatteryCircleMeterView) root.findViewById(R.id.circle_battery);
+        mCircleBattery.setColors(true);
+        mLabel = null;
+        mIcon = null;
+        return root;
     }
 
     @Override
