@@ -7,11 +7,16 @@ import android.content.res.Resources;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.systemui.R;
 import com.android.systemui.statusbar.policy.NetworkController.NetworkSignalChangedCallback;
+import com.android.systemui.statusbar.phone.QuickSettingsTileView;
 
 public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCallback {
+
+    private WifiState mWifiState = new WifiState();
 
     private WifiManager wifiManager;
 
@@ -23,6 +28,17 @@ public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCa
         updateCurrentState(State.DISABLED);
 
         wifiManager = (WifiManager) c.getSystemService(Context.WIFI_SERVICE);
+    }
+    
+    @Override
+    protected void updateView() {
+        setInfo(removeDoubleQuotes(mWifiState.label), mWifiState.wifiSignalIconId);
+        super.updateView();
+    }
+
+    public static class WifiState {
+        int wifiSignalIconId;
+        String label;
     }
 
     private void changeWifiState(final boolean desiredState) {
@@ -66,8 +82,33 @@ public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCa
     }
 
     @Override
+    public QuickSettingsTileView createTileView() {
+        QuickSettingsTileView quick = (QuickSettingsTileView)
+                View.inflate(mContext, R.layout.toggle_tile_wifi, null);
+        quick.setOnClickListener(this);
+        quick.setOnLongClickListener(this);
+        mLabel = (TextView) quick.findViewById(R.id.label);
+        mIcon = (ImageView) quick.findViewById(R.id.icon);
+        mActivityIn = (ImageView) quick.findViewById(R.id.activity_in);
+        mActivityOut = (ImageView) quick.findViewById(R.id.activity_out);
+        return quick;
+    }
+
+    @Override
+    public View createTraditionalView() {
+        View root = View.inflate(mContext, R.layout.toggle_traditional_wifi, null);
+        root.setOnClickListener(this);
+        root.setOnLongClickListener(this);
+        mIcon = (ImageView) root.findViewById(R.id.icon);
+        mActivityIn = (ImageView) root.findViewById(R.id.activity_in);
+        mActivityOut = (ImageView) root.findViewById(R.id.activity_out);
+        mLabel = null;
+        return root;
+    }
+
+    @Override
     public void onWifiSignalChanged(boolean enabled, int wifiSignalIconId, boolean activityIn,
-            boolean activityOut, String wifiSignalContentDescriptionId, String enabledDesc) {
+            boolean activityOut, String wifiSignalContentDescription, String enabledDesc) {
         Resources r = mContext.getResources();
         boolean wifiConnected = enabled && (wifiSignalIconId > 0) && (enabledDesc != null);
         boolean wifiNotConnected = (wifiSignalIconId > 0) && (enabledDesc == null);
@@ -76,21 +117,21 @@ public class WifiToggle extends StatefulToggle implements NetworkSignalChangedCa
         int iconId;
         State newState = getState();
         if (wifiConnected) {
-            iconId = wifiSignalIconId;
-            label = enabledDesc;
+            mWifiState.wifiSignalIconId = wifiSignalIconId;
+            mWifiState.label = enabledDesc;
             newState = State.ENABLED;
         } else if (wifiNotConnected) {
-            iconId = R.drawable.ic_qs_wifi_0;
-            label = r.getString(R.string.quick_settings_wifi_label);
+            mWifiState.wifiSignalIconId = R.drawable.ic_qs_wifi_0;
+            mWifiState.label = r.getString(R.string.quick_settings_wifi_label);
             newState = State.ENABLED;
         } else {
-            iconId = R.drawable.ic_qs_wifi_no_network;
-            label = r.getString(R.string.quick_settings_wifi_off_label);
+            mWifiState.wifiSignalIconId = R.drawable.ic_qs_wifi_no_network;
+            mWifiState.label = r.getString(R.string.quick_settings_wifi_off_label);
             newState = State.DISABLED;
         }
         updateCurrentState(newState);
-        setInfo(removeDoubleQuotes(label), iconId);
-
+        networkActivity(enabled && activityIn, enabled && activityOut);
+        scheduleViewUpdate();
     }
 
     @Override
