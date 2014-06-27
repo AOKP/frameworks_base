@@ -95,6 +95,7 @@ public class BatteryCircleMeterView extends ImageView {
     private int mCircleAnimSpeed = 4;
 
     private int mWarningLevel;
+    private boolean mQS;
 
     // runnable to invalidate view via mHandler.postDelayed() call
     private final Runnable mInvalidate = new Runnable() {
@@ -169,6 +170,7 @@ public class BatteryCircleMeterView extends ImageView {
                 // preload the battery level
                 mBatteryReceiver.onReceive(getContext(), sticky);
             }
+            setColors(mQS);
             mHandler.postDelayed(mInvalidate, 250);
         }
     }
@@ -229,6 +231,28 @@ public class BatteryCircleMeterView extends ImageView {
 
     }
 
+    public void setColors(boolean qs) {
+        mQS = qs;
+        Resources res = getResources();
+        int fgColor = res.getColor(qs ? com.android.systemui.R.color.batterymeter_circle_fg :
+                com.android.systemui.R.color.sb_batterymeter_circle_fg);
+        int bgColor = res.getColor(qs ? com.android.systemui.R.color.batterymeter_circle_bg :
+                com.android.systemui.R.color.sb_batterymeter_circle_bg);
+        int textColor = res.getColor(qs ? com.android.systemui.R.color.batterymeter_circle_text :
+                com.android.systemui.R.color.sb_batterymeter_circle_text);
+        int chargingTextColor = res.getColor(qs ? com.android.systemui.R.color.batterymeter_circle_text_charging :
+                com.android.systemui.R.color.sb_batterymeter_circle_text_charging);
+        mCircleTextColor = textColor;
+        mCircleTextChargingColor = chargingTextColor;
+        mCircleColor = fgColor;
+
+        mPaintSystem.setColor(mCircleColor);
+        // could not find the darker definition anywhere in resources
+        // do not want to use static 0x404040 color value. would break theming.
+        mPaintGray.setColor(bgColor);
+        mPaintRed.setColor(res.getColor(R.color.holo_red_light));
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (mRectLeft == null) {
@@ -250,13 +274,6 @@ public class BatteryCircleMeterView extends ImageView {
         Resources res = getResources();
         ContentResolver resolver = getContext().getContentResolver();
 
-        int defaultColor = res.getColor(com.android.systemui.R.color.batterymeter_charge_color);
-
-        mCircleTextColor = defaultColor;
-        mCircleTextChargingColor = defaultColor;
-        mCircleColor = defaultColor;
-
-        mPaintSystem.setColor(mCircleColor);
         mRectLeft = null;
         mCircleSize = 0;
 
@@ -293,11 +310,6 @@ public class BatteryCircleMeterView extends ImageView {
         mPaintGray = new Paint(mPaintFont);
         mPaintSystem = new Paint(mPaintFont);
         mPaintRed = new Paint(mPaintFont);
-
-        // could not find the darker definition anywhere in resources
-        // do not want to use static 0x404040 color value. would break theming.
-        mPaintGray.setColor(res.getColor(R.color.darker_gray));
-        mPaintRed.setColor(res.getColor(R.color.holo_red_light));
 
         // font needs some extra settings
         mPaintFont.setTextAlign(Align.CENTER);
@@ -346,10 +358,16 @@ public class BatteryCircleMeterView extends ImageView {
 
         mPaintFont.setTextSize(mCircleSize / 2f);
 
-        float strokeWidth = mCircleSize / 7f;
-        mPaintRed.setStrokeWidth(strokeWidth);
-        mPaintSystem.setStrokeWidth(strokeWidth);
-        mPaintGray.setStrokeWidth(strokeWidth / 3.5f);
+        float strokeWidth = mCircleSize / 6.5f;
+        float strokeWidthBg = strokeWidth * getFloat(mQS ?
+                com.android.systemui.R.dimen.circle_battery_thickness_bg_percentage :
+                com.android.systemui.R.dimen.sb_circle_battery_thickness_bg_percentage);
+        float strokeWidthFg = strokeWidth * getFloat(mQS ?
+                com.android.systemui.R.dimen.circle_battery_thickness_fg_percentage :
+                com.android.systemui.R.dimen.sb_circle_battery_thickness_fg_percentage);
+        mPaintRed.setStrokeWidth(strokeWidthFg);
+        mPaintSystem.setStrokeWidth(strokeWidthFg);
+        mPaintGray.setStrokeWidth(strokeWidthBg);
         // calculate rectangle for drawArc calls
         int pLeft = getPaddingLeft();
         mRectLeft = new RectF(pLeft + strokeWidth / 2.0f, 0 + strokeWidth / 2.0f, mCircleSize
@@ -392,4 +410,7 @@ public class BatteryCircleMeterView extends ImageView {
         mCircleSize = measure.getHeight();
     }
 
+    private float getFloat(int resId) {
+        return Float.parseFloat(getResources().getString(resId));
+    }
 }
