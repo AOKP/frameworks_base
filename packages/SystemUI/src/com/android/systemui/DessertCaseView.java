@@ -56,37 +56,15 @@ public class DessertCaseView extends FrameLayout {
             R.drawable.dessert_android,     // thx irina
     };
 
-    private static final int[] RARE_PASTRIES = {
-            R.drawable.dessert_cupcake,     // 2009
-            R.drawable.dessert_donut,       // 2009
-            R.drawable.dessert_eclair,      // 2009
-            R.drawable.dessert_froyo,       // 2010
-            R.drawable.dessert_gingerbread, // 2010
-            R.drawable.dessert_honeycomb,   // 2011
-            R.drawable.dessert_ics,         // 2011
-            R.drawable.dessert_jellybean,   // 2012
+    private static final int[] UNICORNS = {
+            R.drawable.unicorns_aokp1,
+            R.drawable.unicorns_aokp2,
+            R.drawable.unicorns_aokp3,
+            R.drawable.unicorns_aokp4,
+            R.drawable.unicorns_aokp5,
     };
 
-    private static final int[] XRARE_PASTRIES = {
-            R.drawable.dessert_petitfour,   // the original and still delicious
-
-            R.drawable.dessert_donutburger, // remember kids, this was long before cronuts
-
-            R.drawable.dessert_flan,        //     sholes final approach
-                                            //     landing gear punted to flan
-                                            //     runway foam glistens
-                                            //         -- mcleron
-
-            R.drawable.dessert_keylimepie,  // from an alternative timeline
-    };
-    private static final int[] XXRARE_PASTRIES = {
-            R.drawable.dessert_zombiegingerbread, // thx hackbod
-            R.drawable.dessert_dandroid,    // thx morrildl
-            R.drawable.dessert_jandycane,   // thx nes
-    };
-
-    private static final int NUM_PASTRIES = PASTRIES.length + RARE_PASTRIES.length
-            + XRARE_PASTRIES.length + XXRARE_PASTRIES.length;
+    private static final int NUM_PASTRIES = PASTRIES.length + UNICORN.length;
 
     private SparseArray<Drawable> mDrawables = new SparseArray<Drawable>(NUM_PASTRIES);
 
@@ -169,7 +147,7 @@ public class DessertCaseView extends FrameLayout {
         }
         opts.inMutable = true;
         Bitmap loaded = null;
-        for (int[] list : new int[][] { PASTRIES, RARE_PASTRIES, XRARE_PASTRIES, XXRARE_PASTRIES }) {
+        for (int[] list : new int[][] { PASTRIES, UNICORNS }) {
             for (int resid : list) {
                 opts.inBitmap = loaded;
                 loaded = BitmapFactory.decodeResource(res, resid, opts);
@@ -294,14 +272,8 @@ public class DessertCaseView extends FrameLayout {
 
             final float which = frand();
             final Drawable d;
-            if (which < 0.0005f) {
-                d = mDrawables.get(pick(XXRARE_PASTRIES));
-            } else if (which < 0.005f) {
-                d = mDrawables.get(pick(XRARE_PASTRIES));
-            } else if (which < 0.5f) {
+            if (which < 0.5f) {
                 d = mDrawables.get(pick(RARE_PASTRIES));
-            } else if (which < 0.7f) {
-                d = mDrawables.get(pick(PASTRIES));
             } else {
                 d = null;
             }
