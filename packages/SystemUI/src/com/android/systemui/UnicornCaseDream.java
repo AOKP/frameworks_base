@@ -18,18 +18,18 @@ package com.android.systemui;
 
 import android.service.dreams.DreamService;
 
-public class DessertCaseDream extends DreamService {
-    private DessertCaseView mView;
-    private DessertCaseView.RescalingContainer mContainer;
+public class UnicornCaseDream extends DreamService {
+    private UnicornCaseView mView;
+    private UnicornCaseView.RescalingContainer mContainer;
 
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         setInteractive(false);
 
-        mView = new DessertCaseView(this);
+        mView = new UnicornCaseView(this);
 
-        mContainer = new DessertCaseView.RescalingContainer(this);
+        mContainer = new UnicornCaseView.RescalingContainer(this);
 
         mContainer.setView(mView);
 

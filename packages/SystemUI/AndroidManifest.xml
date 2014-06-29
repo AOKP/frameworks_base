@@ -254,14 +254,14 @@
 
         <!-- platform logo easter egg activity -->
         <activity
-            android:name=".DessertCase"
+            android:name=".UnicornCase"
             android:exported="true"
-            android:label="@string/dessert_case"
+            android:label="@string/unicorn_case"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             android:hardwareAccelerated="true"
             android:launchMode="singleInstance"
             android:screenOrientation="locked"
-            android:process=":sweetsweetdesserts"
+            android:process=":sweetsweetunicorns"
             android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -272,9 +272,9 @@
 
         <!-- a gallery of delicious treats -->
         <service
-            android:name=".DessertCaseDream"
+            android:name=".UnicornCaseDream"
             android:exported="true"
-            android:label="@string/dessert_case"
+            android:label="@string/unicorn_case"
             android:enabled="false"
             android:process=":sweetsweetdesserts"
             >
