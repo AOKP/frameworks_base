@@ -24,25 +24,25 @@ import android.os.Handler;
 import android.util.Slog;
 import android.view.animation.DecelerateInterpolator;
 
-public class DessertCase extends Activity {
-    DessertCaseView mView;
+public class UnicornCase extends Activity {
+    UnicornCaseView mView;
 
     @Override
     public void onStart() {
         super.onStart();
 
         PackageManager pm = getPackageManager();
-        final ComponentName cn = new ComponentName(this, DessertCaseDream.class);
+        final ComponentName cn = new ComponentName(this, UnicornCaseDream.class);
         if (pm.getComponentEnabledSetting(cn) != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
-            Slog.v("DessertCase", "ACHIEVEMENT UNLOCKED");
+            Slog.v("UnicornCase", "ACHIEVEMENT UNLOCKED");
             pm.setComponentEnabledSetting(cn,
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                     PackageManager.DONT_KILL_APP);
         }
 
-        mView = new DessertCaseView(this);
+        mView = new UnicornCaseView(this);
 
-        DessertCaseView.RescalingContainer container = new DessertCaseView.RescalingContainer(this);
+        UnicornCaseView.RescalingContainer container = new UnicornCaseView.RescalingContainer(this);
 
         container.setView(mView);
 
