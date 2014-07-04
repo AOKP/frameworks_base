@@ -905,6 +905,14 @@ public class Activity extends ContextThemeWrapper
             mFragments.restoreAllState(p, mLastNonConfigurationInstances != null
                     ? mLastNonConfigurationInstances.fragments : null);
         }
+
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        // TODO: get these values from res/values/config.xml instead of hardcoding
+        params.x = (200/2);
+        params.height = (1920-400);
+        params.width = (1080-200);
+        params.y = (400/2);
+        
         mFragments.dispatchCreate();
         getApplication().dispatchActivityCreated(this, savedInstanceState);
         mCalled = true;
@@ -1108,6 +1116,15 @@ public class Activity extends ContextThemeWrapper
         if (mAutoImmersiveArrayList.contains(getPackageName())) {
             updateImmersiveMode(true, true);
         }
+
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        // TODO: get these values from res/values/config.xml instead of hardcoding
+        params.x = (200/2);
+        params.height = (1920-400);
+        params.width = (1080-200);
+        params.y = (400/2);
+
+
     }
 
     /**
