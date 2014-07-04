@@ -141,6 +141,8 @@ public class KeyguardViewManager {
                     Settings.AOKP.LOCKSCREEN_SEE_THROUGH), false, this);
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.LOCKSCREEN_BLUR_RADIUS), false, this);
+            resolver.registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.LOCKSCREEN_NOTIFICATIONS), false, this);
         }
 
         @Override
