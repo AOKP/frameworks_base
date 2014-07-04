@@ -102,6 +102,7 @@ public class ToggleManager {
     public static final String WIRELESS_ADB_TOGGLE = "WIRELESSADB";
     public static final String IMMERSIVE_MODE_TOGGLE = "IMMERSIVE_MODE";
     public static final String SCREENRECORD_TOGGLE = "SCREENRECORD";
+    public static final String HEADSUP_TOGGLE = "HEADSUP";
 
     private int mStyle;
 
@@ -180,6 +181,7 @@ public class ToggleManager {
             // no toggle
             // toggleMap.put(BT_TETHER_TOGGLE, null);
             toggleMap.put(IMMERSIVE_MODE_TOGGLE, ImmersiveModeToggle.class);
+            toggleMap.put(HEADSUP_TOGGLE, HeadsUpToggle.class);
         }
         return toggleMap;
     }
