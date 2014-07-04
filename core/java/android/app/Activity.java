@@ -1108,6 +1108,14 @@ public class Activity extends ContextThemeWrapper
         if (mAutoImmersiveArrayList.contains(getPackageName())) {
             updateImmersiveMode(true, true);
         }
+
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        params.x = ((1080-900)/2);
+        params.height = 1600;
+        params.width = 900;
+        params.y = ((1920-1600)/2);
+
+
     }
 
     /**
