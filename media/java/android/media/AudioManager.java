@@ -44,6 +44,8 @@ import android.view.VolumePanel;
 
 import java.util.HashMap;
 
+import com.android.internal.util.aokp.QuietHoursHelper;
+
 /**
  * AudioManager provides access to volume and ringer mode control.
  * <p>
@@ -1797,6 +1799,10 @@ public class AudioManager {
      */
     public void  playSoundEffect(int effectType) {
         if (effectType < 0 || effectType >= NUM_SOUND_EFFECTS) {
+            return;
+        }
+
+        if (QuietHoursHelper.inQuietHours(mContext, Settings.AOKP.QUIET_HOURS_SYSTEM)) {
             return;
         }
 
