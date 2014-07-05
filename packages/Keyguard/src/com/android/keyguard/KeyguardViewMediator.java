@@ -55,6 +55,7 @@ import android.view.WindowManager;
 import android.view.WindowManagerPolicy;
 
 import com.android.internal.telephony.IccCardConstants;
+import com.android.internal.util.aokp.QuietHoursHelper;
 import com.android.internal.widget.LockPatternUtils;
 
 
@@ -1193,6 +1194,10 @@ public class KeyguardViewMediator {
 
         if (mSuppressNextLockSound) {
             mSuppressNextLockSound = false;
+            return;
+        }
+
+        if (QuietHoursHelper.inQuietHours(mContext, Settings.AOKP.QUIET_HOURS_SYSTEM)) {
             return;
         }
 
