@@ -18,6 +18,24 @@ package android.app;
 
 import android.util.ArrayMap;
 import android.util.SuperNotCalledException;
+import android.view.*;
+import android.view.ActionMode;
+import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
+import android.view.Display;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.WindowManagerGlobal;
 import com.android.internal.app.ActionBarImpl;
 import com.android.internal.policy.PolicyManager;
 
@@ -40,6 +58,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -63,25 +82,10 @@ import android.util.Log;
 import android.util.PrintWriterPrinter;
 import android.util.Slog;
 import android.util.SparseArray;
-import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.ContextThemeWrapper;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnSystemUiVisibilityChangeListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewManager;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.WindowManagerGlobal;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
 
@@ -905,6 +909,26 @@ public class Activity extends ContextThemeWrapper
             mFragments.restoreAllState(p, mLastNonConfigurationInstances != null
                     ? mLastNonConfigurationInstances.fragments : null);
         }
+
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        Display currentDisplay = getWindowManager().getDefaultDisplay();
+        if ( currentDisplay.getOrientation() == Surface.ROTATION_0 ) {
+            // TODO: get these values from res/values/config.xml instead of hardcoding
+            params.x = (200 / 2);
+            params.height = (1920 - 400);
+            params.width = (1080 - 200);
+            params.y = (400 / 2);
+            getWindow().setAttributes(params);
+        } else {
+            Point size = new Point();
+            currentDisplay.getSize(size);
+            params.x = 0;
+            params.height = size.y;
+            params.width = size.x;
+            params.y = 0;
+            getWindow().setAttributes(params);
+        }
+        
         mFragments.dispatchCreate();
         getApplication().dispatchActivityCreated(this, savedInstanceState);
         mCalled = true;
@@ -1108,6 +1132,25 @@ public class Activity extends ContextThemeWrapper
         if (mAutoImmersiveArrayList.contains(getPackageName())) {
             updateImmersiveMode(true, true);
         }
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        Display currentDisplay = getWindowManager().getDefaultDisplay();
+        if ( currentDisplay.getOrientation() == Surface.ROTATION_0 ) {
+            // TODO: get these values from res/values/config.xml instead of hardcoding
+            params.x = (200 / 2);
+            params.height = (1920 - 400);
+            params.width = (1080 - 200);
+            params.y = (400 / 2);
+            getWindow().setAttributes(params);
+        } else {
+            Point size = new Point();
+            currentDisplay.getSize(size);
+            params.x = 0;
+            params.height = size.y;
+            params.width = size.x;
+            params.y = 0;
+            getWindow().setAttributes(params);
+        }
+
     }
 
     /**
@@ -1127,6 +1170,25 @@ public class Activity extends ContextThemeWrapper
         if (win != null) win.makeActive();
         if (mActionBar != null) mActionBar.setShowHideAnimationEnabled(true);
         mCalled = true;
+        WindowManager.LayoutParams params = getWindow().getAttributes();
+        Display currentDisplay = getWindowManager().getDefaultDisplay();
+        if ( currentDisplay.getOrientation() == Surface.ROTATION_0 ) {
+            // TODO: get these values from res/values/config.xml instead of hardcoding
+            params.x = (200 / 2);
+            params.height = (1920 - 400);
+            params.width = (1080 - 200);
+            params.y = (400 / 2);
+            getWindow().setAttributes(params);
+        } else {
+            Point size = new Point();
+            currentDisplay.getSize(size);
+            params.x = 0;
+            params.height = size.y;
+            params.width = size.x;
+            params.y = 0;
+            getWindow().setAttributes(params);
+        }
+
     }
 
     /**
