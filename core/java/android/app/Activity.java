@@ -18,6 +18,24 @@ package android.app;
 
 import android.util.ArrayMap;
 import android.util.SuperNotCalledException;
+import android.view.*;
+import android.view.ActionMode;
+import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
+import android.view.Display;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.Surface;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.WindowManagerGlobal;
 import com.android.internal.app.ActionBarImpl;
 import com.android.internal.policy.PolicyManager;
 
@@ -40,7 +58,9 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -63,25 +83,10 @@ import android.util.Log;
 import android.util.PrintWriterPrinter;
 import android.util.Slog;
 import android.util.SparseArray;
-import android.view.ActionMode;
-import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.ContextThemeWrapper;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnSystemUiVisibilityChangeListener;
-import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewManager;
-import android.view.Window;
-import android.view.WindowManager;
-import android.view.WindowManagerGlobal;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.AdapterView;
 
@@ -702,6 +707,7 @@ public class Activity extends ContextThemeWrapper
     private SearchManager mSearchManager;
     private MenuInflater mMenuInflater;
     private SettingsObserver mSettingsObserver;
+    private ResizeObserver mResizeObserver;
 
     static final class NonConfigurationInstances {
         Object activity;
@@ -888,7 +894,9 @@ public class Activity extends ContextThemeWrapper
      */
     protected void onCreate(Bundle savedInstanceState) {
         mSettingsObserver = new SettingsObserver(mHandler);
+        mResizeObserver = new ResizeObserver(mHandler);
         mSettingsObserver.observe();
+        mResizeObserver.observe();
         if (DEBUG_LIFECYCLE) Slog.v(TAG, "onCreate " + this + ": " + savedInstanceState);
         if (mLastNonConfigurationInstances != null) {
             mAllLoaderManagers = mLastNonConfigurationInstances.loaders;
@@ -905,9 +913,41 @@ public class Activity extends ContextThemeWrapper
             mFragments.restoreAllState(p, mLastNonConfigurationInstances != null
                     ? mLastNonConfigurationInstances.fragments : null);
         }
+
+        doResizeIfRequired();
+
+
         mFragments.dispatchCreate();
         getApplication().dispatchActivityCreated(this, savedInstanceState);
         mCalled = true;
+    }
+
+    private void doResizeIfRequired () {
+        try {
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            Display currentDisplay = getWindowManager().getDefaultDisplay();
+            if ((Settings.System.getInt(getContentResolver(), "mode_resize")) == 1) {
+                if ( currentDisplay.getRotation() == Surface.ROTATION_0 ) {
+                    // TODO: get these values from res/values/config.xml instead of hardcoding
+                    params.x = (200 / 2);
+                    params.height = (1920 - 450);
+                    params.width = (1080 - 200);
+                    params.y = (400 / 2);
+                    getWindow().setAttributes(params);
+                }
+            } else {
+                Point size = new Point();
+                currentDisplay.getSize(size);
+                params.x = 0;
+                params.height = size.y;
+                params.width = size.x;
+                params.y = 0;
+                getWindow().setAttributes(params);
+            }
+
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -1108,6 +1148,9 @@ public class Activity extends ContextThemeWrapper
         if (mAutoImmersiveArrayList.contains(getPackageName())) {
             updateImmersiveMode(true, true);
         }
+
+        doResizeIfRequired();
+
     }
 
     /**
@@ -1127,6 +1170,9 @@ public class Activity extends ContextThemeWrapper
         if (win != null) win.makeActive();
         if (mActionBar != null) mActionBar.setShowHideAnimationEnabled(true);
         mCalled = true;
+
+        doResizeIfRequired();
+
     }
 
     /**
@@ -5466,6 +5512,27 @@ public class Activity extends ContextThemeWrapper
          * @see Activity#convertToTranslucent(TranslucentConversionListener)
          */
         public void onTranslucentConversionComplete(boolean drawComplete);
+    }
+
+    public class ResizeObserver extends ContentObserver {
+
+        public ResizeObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    "mode_resize"), false, this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            Log.d("arnav@Cube26", "onChange called");
+
+            doResizeIfRequired();
+
+        }
     }
 
     class SettingsObserver extends ContentObserver {
