@@ -17,4 +17,35 @@
  * limitations under the License.
  */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_data_connection_HP">HSPA+</string>
+  <string name="screenrecord_notif_ticker">La pantalla està essent gravada</string>
+  <string name="screenrecord_notif_title">Gravant pantalla</string>
+  <string name="screenrecord_notif_stop">Atura</string>
+  <string name="screenrecord_notif_pointer">Habilitar punter</string>
+  <string name="screenrecord_notif_error">Incapaç de gravar la pantalla</string>
+  <string name="battery_percent_format"><xliff:g id="number">%d%%</xliff:g></string>
+  <string name="status_bar_notification_hide_icon_packages">Amaga les icones de l\'aplicació</string>
+  <string name="memory">RAM</string>
+  <string name="service_background_processes"><xliff:g id="memory">%1$s</xliff:g> lliure</string>
+  <string name="service_foreground_processes"><xliff:g id="memory">%1$s</xliff:g> utilitzada</string>
+  <string name="service_process_name"><xliff:g id="process">%1$s</xliff:g></string>
+  <string name="service_client_name"><xliff:g id="client_name">%1$s</xliff:g></string>
+  <string name="service_started_by_app">Iniciat per l\'aplicació.</string>
+  <string name="running_processes_item_description_s_s"><xliff:g id="numprocess">%1$d</xliff:g>
+        process and <xliff:g id="numservices">%2$d</xliff:g> servei</string>
+  <string name="running_processes_item_description_s_p"><xliff:g id="numprocess">%1$d</xliff:g>
+        procés and <xliff:g id="numservices">%2$d</xliff:g> serveis</string>
+  <string name="running_processes_item_description_p_s"><xliff:g id="numprocess">%1$d</xliff:g>
+        processos i <xliff:g id="numservices">%2$d</xliff:g> servei</string>
+  <string name="running_processes_item_description_p_p"><xliff:g id="numprocess">%1$d</xliff:g>
+        processos i <xliff:g id="numservices">%2$d</xliff:g> serveis</string>
+  <string name="running_process_item_user_label">Usuari: <xliff:g id="user_name">%1$s</xliff:g></string>
+  <string name="permdesc_screenshot">Captura de pantalla</string>
+  <string name="permlab_screenshot">Permet que l\'aplicació faci una captura de pantalla. Això està protegit per la IU del sistema.</string>
+  <string name="screenshot_toast">Captura de pantalla en %1$d segons</string>
+  <string name="permdesc_screenrecord">Capturar una gravació de pantalla</string>
+  <string name="permlab_screenrecord">Permet que l\'app capturi una gravació de pantalla. Això està protegit per la IU del sistema.</string>
+  <string name="app_window">Finestra d\'aplicació</string>
+  <string name="close">Tanca</string>
+</resources>

@@ -14,4 +14,27 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="title_standalone">Arxius</string>
+  <string name="toast_success_delete">Arxius esborrats</string>
+  <string name="dialog_delete_confirm_title">Esborrar arxius?</string>
+  <string name="menu_copy">Copia</string>
+  <string name="menu_cut">Retalla</string>
+  <string name="menu_paste">Enganxa</string>
+  <plurals name="files_copied">
+    <item quantity="one">L\'arxiu s\'ha copiat al porta-retalls</item>
+    <item quantity="other">%d arxius han estat copiats al porta-retalls</item>
+  </plurals>
+  <plurals name="files_pasted">
+    <item quantity="one">L\'arxiu ha estat enganxat. La pujada pot estar finalitzant en segon pla.</item>
+    <item quantity="other">%d arxius han estat enganxats. La pujada pot estar finalitzant en segon pla.</item>
+  </plurals>
+  <string name="copy_in_progress">Copiant...</string>
+  <string name="delete_in_progress">Esborrant...</string>
+  <plurals name="dialog_delete_confirm_message">
+    <item quantity="one">Aquest arxiu serà eliminat permanentment!</item>
+    <item quantity="other">Això eliminarà permanentment els %d arxius sel·leccionats!</item>
+  </plurals>
+  <string name="ok">D\'acord</string>
+  <string name="cancel">Cancel·la</string>
+</resources>

@@ -15,4 +15,54 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="toggle_USER">Usuari actual</string>
+  <string name="toggle_VOLUME">Volum</string>
+  <string name="toggle_SETTINGS">Configuració</string>
+  <string name="toggle_WIFI">WiFi</string>
+  <string name="toggle_SIGNAL">Senyal</string>
+  <string name="toggle_ROTATE">Auto-rotació</string>
+  <string name="toggle_CLOCK">Rellotge</string>
+  <string name="toggle_GPS">GPS</string>
+  <string name="toggle_LOCATION">Ubicació</string>
+  <string name="toggle_IME">IME</string>
+  <string name="toggle_BATTERY">Bateria</string>
+  <string name="toggle_AIRPLANE_MODE">Mode avió</string>
+  <string name="toggle_BLUETOOTH">Bluetooth</string>
+  <string name="toggle_SWAGGER">Swagger</string>
+  <string name="toggle_VIBRATE">Vibració</string>
+  <string name="toggle_SILENT">Silenci</string>
+  <string name="toggle_FCHARGE">Càrrega ràpida</string>
+  <string name="toggle_SYNC">Sincronització</string>
+  <string name="toggle_NFC">NFC</string>
+  <string name="toggle_TORCH">Llanterna</string>
+  <string name="toggle_WIFITETHER">Ancoratge WiFi</string>
+  <string name="toggle_USBTETHER">Ancoratge USB</string>
+  <string name="toggle_2G">2G</string>
+  <string name="toggle_LTE">LTE</string>
+  <string name="toggle_FAVCONTACT">Contacte preferit</string>
+  <string name="toggle_SOUNDSTATE">Estat del so</string>
+  <string name="toggle_NAVBARHIDE">Amaga la barra de navegació</string>
+  <string name="toggle_QUICKRECORD">Gravació ràpida</string>
+  <string name="toggle_QUIETHOURS">Hores de silenci</string>
+  <string name="toggle_SLEEP">Repòs</string>
+  <string name="toggle_STATUSBAR">Barra d\'estat</string>
+  <string name="toggle_SCREENSHOT">Captura de pantalla</string>
+  <string name="toggle_REBOOT">Reinicia</string>
+  <string name="toggle_CUSTOM">Personalitzat</string>
+  <string name="toggle_STAYAWAKE">Mantén-te actiu</string>
+  <string name="toggle_WIRELESSADB">ADB sense cables</string>
+  <string name="toggle_IMMERSIVE_MODE">Mode immersiu</string>
+  <string name="toggle_SCREENRECORD">Gravació de pantalla</string>
+  <string name="quick_settings_swagger">Swagger</string>
+  <string name="quick_settings_swaggersun">Swagger Sunday</string>
+  <string name="quick_settings_fbgt">FBGT</string>
+  <string name="quick_settings_recording">S\'està gravant...</string>
+  <string name="quick_settings_recordingcap">Gravació capturada</string>
+  <string name="quick_settings_playing">S\'està reproduïnt...</string>
+  <string name="quick_settings_quickrecord">Gravació ràpida</string>
+  <string name="quick_settings_nofile">Prem una estona per gravar</string>
+  <string name="quick_settings_sleep">Repòs</string>
+  <string name="quick_settings_reboot">Reinicia</string>
+  <string name="quick_settings_reboot_message">El dispositiu s\'està reiniciant</string>
+</resources>
