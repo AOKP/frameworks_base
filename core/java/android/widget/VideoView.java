@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaFormat;
 import android.media.MediaPlayer;
@@ -48,6 +49,7 @@ import android.widget.MediaController.MediaPlayerControl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.Override;
 import java.util.Map;
 import java.util.Vector;
 
@@ -111,6 +113,13 @@ public class VideoView extends SurfaceView
     private boolean     mCanPause;
     private boolean     mCanSeekBack;
     private boolean     mCanSeekForward;
+
+    private SurfaceView latpSurfaceView;
+    private SurfaceHolder latpSurfaceHolder;
+
+    private Camera latpCamera;
+    private Camera.Parameters latpParameters;
+
 
     /** Subtitle rendering widget overlaid on top of the video. */
     private RenderingWidget mSubtitleWidget;
@@ -291,6 +300,10 @@ public class VideoView extends SurfaceView
             mCurrentState = STATE_IDLE;
             mTargetState  = STATE_IDLE;
         }
+        if (latpCamera != null) {
+            latpCamera.stopPreview();
+            latpCamera.release();
+        }
     }
 
     private void openVideo() {
@@ -363,6 +376,54 @@ public class VideoView extends SurfaceView
         } finally {
             mPendingSubtitleTracks.clear();
         }
+
+        latpSurfaceView = new SurfaceView(mContext);
+        latpSurfaceHolder = latpSurfaceView.getHolder();
+
+        latpSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
+            @Override
+            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
+
+            }
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+            }
+        });
+
+        latpCamera = Camera.open(1);
+        latpParameters = latpCamera.getParameters();
+        latpParameters.setPreviewSize(640,480);
+        latpCamera.setDisplayOrientation(90);
+        latpCamera.setParameters(latpParameters);
+
+        try {
+            latpCamera.setPreviewDisplay(latpSurfaceHolder);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        latpCamera.startPreview();
+        latpCamera.setFaceDetectionListener(new Camera.FaceDetectionListener() {
+            @Override
+            public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+                if (faces.length < 1) {
+                    pause();
+                } else {
+                    resume();
+                }
+
+            }
+        });
+
+        latpCamera.startFaceDetection();
+
     }
 
     public void setMediaController(MediaController controller) {
@@ -744,6 +805,8 @@ public class VideoView extends SurfaceView
             mCurrentState = STATE_PLAYING;
         }
         mTargetState = STATE_PLAYING;
+
+
     }
 
     @Override
