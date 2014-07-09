@@ -55,6 +55,7 @@ import android.util.Log;
 
 import com.android.internal.widget.ILockSettings;
 
+import java.lang.String;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7704,6 +7705,15 @@ public final class Settings {
          * @hide
          */
         public static final String KEY_AUTO_IMMERSIVE_ARRAY = "auto_immersive_array";
+
+        /**
+         * App resize mode flag
+         *   values :
+         *   0 - app resize mode is off, apps use whole screen
+         *   1 - app resize mode is on
+         * @hide
+         */
+        public static final String MODE_APP_RESIZE = "mode_app_resize";
 
         /**
          * Whether electronic beam animation is enabled or not

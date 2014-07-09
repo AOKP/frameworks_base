@@ -67,12 +67,14 @@ import android.view.ActionMode;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.ContextThemeWrapper;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnCreateContextMenuListener;
 import android.view.View.OnSystemUiVisibilityChangeListener;
@@ -87,6 +89,7 @@ import android.widget.AdapterView;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.lang.Override;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -702,6 +705,7 @@ public class Activity extends ContextThemeWrapper
     private SearchManager mSearchManager;
     private MenuInflater mMenuInflater;
     private SettingsObserver mSettingsObserver;
+    private ResizeObserver mResizeObserver;
 
     static final class NonConfigurationInstances {
         Object activity;
@@ -888,7 +892,9 @@ public class Activity extends ContextThemeWrapper
      */
     protected void onCreate(Bundle savedInstanceState) {
         mSettingsObserver = new SettingsObserver(mHandler);
+        mResizeObserver = new ResizeObserver(mHandler);
         mSettingsObserver.observe();
+        mResizeObserver.observe();
         if (DEBUG_LIFECYCLE) Slog.v(TAG, "onCreate " + this + ": " + savedInstanceState);
         if (mLastNonConfigurationInstances != null) {
             mAllLoaderManagers = mLastNonConfigurationInstances.loaders;
@@ -1050,6 +1056,8 @@ public class Activity extends ContextThemeWrapper
             }
             mCheckedForLoaderManager = true;
         }
+
+        doResizeIfRequired();
 
         getApplication().dispatchActivityStarted(this);
     }
@@ -5466,6 +5474,38 @@ public class Activity extends ContextThemeWrapper
          * @see Activity#convertToTranslucent(TranslucentConversionListener)
          */
         public void onTranslucentConversionComplete(boolean drawComplete);
+    }
+
+    class ResizeObserver extends ContentObserver {
+        ResizeObserver (Handler handler) {
+            super((handler));
+        }
+
+        void observe() {
+            getContentResolver().registerContentObserver(Settings.AOKP.getUriFor(
+                    Settings.AOKP.MODE_APP_RESIZE),false,this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            doResizeIfRequired();
+        }
+    }
+
+    void doResizeIfRequired () {
+        if (Settings.AOKP.getBoolean(getContentResolver(), Settings.AOKP.MODE_APP_RESIZE, false)) {
+            WindowManager.LayoutParams params = getWindow().getAttributes();
+            Display currentDisplay = getWindowManager().getDefaultDisplay();
+            if ( currentDisplay.getRotation() == Surface.ROTATION_0 ) {
+                params.x = (200/2);
+                params.height = (1920-450);
+                params.width = (1080-200);
+                params.y = (400/2);
+                getWindow().setAttributes(params);
+
+            }
+        }
     }
 
     class SettingsObserver extends ContentObserver {
