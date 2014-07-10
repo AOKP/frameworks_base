@@ -19,6 +19,7 @@ package com.android.server.power;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -68,7 +69,10 @@ public final class ShutdownThread extends Thread {
     
     private static boolean mReboot;
     private static boolean mRebootSafeMode;
+    private static boolean mRebootSoft;
     private static String mRebootReason;
+
+    public static final String SOFT_REBOOT = "soft_reboot";
 
     // Provides shutdown assurance in case the system_server is killed
     public static final String SHUTDOWN_ACTION_PROPERTY = "sys.shutdown.requested";
@@ -144,9 +148,35 @@ public final class ShutdownThread extends Thread {
                             ? com.android.internal.R.string.reboot_safemode_title
                             : com.android.internal.R.string.power_off)
                     .setMessage(resourceId)
+                    .setSingleChoiceItems(com.android.internal.R.array.reboot_options, 0, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (which < 0)
+                                return;
+
+                            String actions[] = context.getResources().getStringArray(com.android.internal.R.array.reboot_values);
+
+                            if (actions != null && which < actions.length) {
+                                mRebootReason = actions[which];
+                                mRebootSoft = actions[which].equals(SOFT_REBOOT);
+                            }
+                        }
+                    })
                     .setPositiveButton(com.android.internal.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            beginShutdownSequence(context);
+                            if (mRebootSoft) {
+                                mRebootSoft = false;
+                                try {
+                                    final IActivityManager am =
+                                            ActivityManagerNative.asInterface(ServiceManager.checkService("activity"));
+                                    if (am != null) {
+                                        am.restart();
+                                    }
+                                } catch (RemoteException e) {
+                                    Log.e(TAG, "failure trying to perform soft reboot", e);
+                                }
+                            } else {
+                                beginShutdownSequence(context);
+                            }
                         }
                     })
                     .setNegativeButton(com.android.internal.R.string.no, null)
