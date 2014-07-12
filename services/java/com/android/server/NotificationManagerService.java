@@ -78,6 +78,7 @@ import android.widget.Toast;
 import com.android.internal.R;
 
 import com.android.internal.notification.NotificationScorer;
+import com.android.internal.util.aokp.QuietHoursHelper;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -469,10 +470,6 @@ public class NotificationManagerService extends INotificationManager.Stub
     }
 
     private boolean mQuietHoursEnabled = false;
-    // Minutes from midnight when quiet hours begin.
-    private int mQuietHoursStart = 0;
-    // Minutes from midnight when quiet hours end.
-    private int mQuietHoursEnd = 0;
     // Don't play sounds.
     private boolean mQuietHoursMute = true;
     // Dim LED if hardware supports it.
@@ -2023,21 +2020,7 @@ public class NotificationManagerService extends INotificationManager.Stub
     }
 
     private boolean inQuietHours() {
-        if (mQuietHoursEnabled) {
-            if (mQuietHoursStart == mQuietHoursEnd) {
-                return true;
-            }
-            // Get the date in "quiet hours" format.
-            Calendar calendar = Calendar.getInstance();
-            int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
-            if (mQuietHoursEnd < mQuietHoursStart) {
-                // Starts at night, ends in the morning.
-                return (minutes > mQuietHoursStart) || (minutes < mQuietHoursEnd);
-            } else {
-                return (minutes > mQuietHoursStart) && (minutes < mQuietHoursEnd);
-            }
-        }
-        return false;
+        return QuietHoursHelper.inQuietHours(mContext, null);
     }
 
     private void sendAccessibilityEvent(Notification notification, CharSequence packageName) {
@@ -2497,10 +2480,6 @@ public class NotificationManagerService extends INotificationManager.Stub
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.QUIET_HOURS_ENABLED), false, this);
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
-                    Settings.AOKP.QUIET_HOURS_START), false, this);
-            resolver.registerContentObserver(Settings.AOKP.getUriFor(
-                    Settings.AOKP.QUIET_HOURS_END), false, this);
-            resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.QUIET_HOURS_NOTIFICATIONS), false, this);
             resolver.registerContentObserver(Settings.AOKP.getUriFor(
                     Settings.AOKP.QUIET_HOURS_DIM), false, this);
@@ -2516,10 +2495,6 @@ public class NotificationManagerService extends INotificationManager.Stub
             ContentResolver resolver = mContext.getContentResolver();
             mQuietHoursEnabled = Settings.AOKP.getInt(resolver,
                     Settings.AOKP.QUIET_HOURS_ENABLED, 0) != 0;
-            mQuietHoursStart = Settings.AOKP.getInt(resolver,
-                    Settings.AOKP.QUIET_HOURS_START, 0);
-            mQuietHoursEnd = Settings.AOKP.getInt(resolver,
-                    Settings.AOKP.QUIET_HOURS_END, 0);
             mQuietHoursMute = Settings.AOKP.getInt(resolver,
                     Settings.AOKP.QUIET_HOURS_NOTIFICATIONS, 0) != 0;
             mQuietHoursDim = Settings.AOKP.getInt(resolver,

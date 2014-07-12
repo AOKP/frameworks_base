@@ -17,12 +17,37 @@
 package com.android.internal.util.aokp;
 
 import android.content.Context;
+import android.content.ContentResolver;
+import android.database.ContentObserver;
+import android.os.Handler;
 import android.os.UserHandle;
 import android.provider.Settings;
 
+import java.lang.Override;
 import java.util.Calendar;
 
 public class QuietHoursHelper {
+
+    public static boolean isQuietHoursNotificationEnabled(Context c) {
+        return Settings.AOKP.getBoolean(c.getContentResolver(),
+                Settings.AOKP.QUIET_HOURS_NOTIFICATIONS, false);
+    }
+    public static boolean isQuietHoursRingerEnabled(Context c) {
+        return Settings.AOKP.getBoolean(c.getContentResolver(),
+                Settings.AOKP.QUIET_HOURS_RINGER, false);
+    }
+    public static boolean isQuietHoursDimEnabled(Context c) {
+        return Settings.AOKP.getBoolean(c.getContentResolver(),
+                Settings.AOKP.QUIET_HOURS_DIM, false);
+    }
+    public static boolean isQuietHoursVibrateEnabled(Context c) {
+        return Settings.AOKP.getBoolean(c.getContentResolver(),
+                Settings.AOKP.QUIET_HOURS_STILL, false);
+    }
+
+    public static boolean inQuietHours(Context context) {
+        return inQuietHours(context, null);
+    }
 
     public static boolean inQuietHours(Context context, String option) {
         boolean mode = true;
@@ -37,7 +62,7 @@ public class QuietHoursHelper {
                 UserHandle.USER_CURRENT_OR_SELF);
 
         if (option != null) {
-            mode = Settings.System.getIntForUser(context.getContentResolver(),
+            mode = Settings.AOKP.getIntForUser(context.getContentResolver(),
                     option, 0,
                     UserHandle.USER_CURRENT_OR_SELF) != 0;
         }
@@ -59,4 +84,6 @@ public class QuietHoursHelper {
         }
         return false;
     }
+
+
 }
