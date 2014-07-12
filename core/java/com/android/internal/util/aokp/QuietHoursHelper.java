@@ -24,6 +24,10 @@ import java.util.Calendar;
 
 public class QuietHoursHelper {
 
+    public static boolean inQuietHours(Context context) {
+        inQuietHours(context, null);
+    }
+
     public static boolean inQuietHours(Context context, String option) {
         boolean mode = true;
         boolean quietHoursEnabled = Settings.AOKP.getIntForUser(context.getContentResolver(),
@@ -37,7 +41,7 @@ public class QuietHoursHelper {
                 UserHandle.USER_CURRENT_OR_SELF);
 
         if (option != null) {
-            mode = Settings.System.getIntForUser(context.getContentResolver(),
+            mode = Settings.AOKP.getIntForUser(context.getContentResolver(),
                     option, 0,
                     UserHandle.USER_CURRENT_OR_SELF) != 0;
         }
