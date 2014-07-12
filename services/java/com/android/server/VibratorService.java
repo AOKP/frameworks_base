@@ -44,6 +44,7 @@ import android.view.InputDevice;
 
 import com.android.internal.app.IAppOpsService;
 import com.android.internal.app.IBatteryStats;
+import com.android.internal.util.aokp.QuietHoursHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -616,28 +617,6 @@ public class VibratorService extends IVibratorService.Stub
     };
 
     private boolean inQuietHours() {
-        boolean quietHoursEnabled = Settings.AOKP.getInt(mContext.getContentResolver(),
-                Settings.AOKP.QUIET_HOURS_ENABLED, 0) != 0;
-        int quietHoursStart = Settings.AOKP.getInt(mContext.getContentResolver(),
-                Settings.AOKP.QUIET_HOURS_START, 0);
-        int quietHoursEnd = Settings.AOKP.getInt(mContext.getContentResolver(),
-                Settings.AOKP.QUIET_HOURS_END, 0);
-        boolean quietHoursVibrate = Settings.AOKP.getInt(mContext.getContentResolver(),
-                Settings.AOKP.QUIET_HOURS_STILL, 0) != 0;
-        if (quietHoursEnabled && quietHoursVibrate) {
-            if (quietHoursStart == quietHoursEnd) {
-                return true;
-            }
-            // Get the date in "quiet hours" format.
-            Calendar calendar = Calendar.getInstance();
-            int minutes = calendar.get(Calendar.HOUR_OF_DAY) * 60 + calendar.get(Calendar.MINUTE);
-            if (quietHoursEnd < quietHoursStart) {
-                // Starts at night, ends in the morning.
-                return (minutes > quietHoursStart) || (minutes < quietHoursEnd);
-            } else {
-                return (minutes > quietHoursStart) && (minutes < quietHoursEnd);
-            }
-        }
-        return false;
+        return QuietHoursHelper.inQuietHours(mContext, Settings.AOKP.QUIET_HOURS_STILL);
     }
 }
