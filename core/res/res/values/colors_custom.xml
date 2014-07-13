@@ -21,4 +21,7 @@
     <color name="default_dialog_text_holo_light">@android:color/holo_blue_light</color>
     <color name="default_dialog_divider_holo_dark">@android:color/holo_blue_light</color>
     <color name="default_dialog_divider_holo_light">@android:color/holo_blue_light</color>
+
+    <!-- Action(s) list background used on expanded notifications -->
+    <drawable name="notification_action_list_bg">#00000000</drawable>
 </resources>
