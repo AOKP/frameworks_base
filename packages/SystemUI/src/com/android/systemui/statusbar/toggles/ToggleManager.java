@@ -59,6 +59,8 @@ public class ToggleManager {
     public static final String ACTION_BROADCAST_TOGGLES = "com.android.systemui.statusbar.toggles.ACTION_BROADCAST_TOGGLES";
     public static final String ACTION_REQUEST_TOGGLES = "com.android.systemui.statusbar.toggles.ACTION_REQUEST_TOGGLES";
 
+    private static final String ACTION_THEME_CHANGED = "org.cyanogenmod.intent.action.THEME_CHANGED";
+
     static final boolean DEBUG = false;
 
     private static final String TOGGLE_PIPE = "|";
@@ -195,12 +197,17 @@ public class ToggleManager {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Intent broadcast = new Intent(ACTION_BROADCAST_TOGGLES);
-                broadcast.putExtra("toggle_bundle", ToggleManager.this.getAvailableToggles());
-                context.sendBroadcast(broadcast);
+                if (ACTION_REQUEST_TOGGLES.equals(intent.getAction())) {
+                    Intent broadcast = new Intent(ACTION_BROADCAST_TOGGLES);
+                    broadcast.putExtra("toggle_bundle", ToggleManager.this.getAvailableToggles());
+                    context.sendBroadcast(broadcast);
+                } else if (ACTION_THEME_CHANGED.equals(intent.getAction())) {
+                    updateSettings();
+                }
             }
         };
         mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(ACTION_REQUEST_TOGGLES));
+        mContext.registerReceiver(mBroadcastReceiver, new IntentFilter(ACTION_THEME_CHANGED));
     }
 
     public void cleanup() {
