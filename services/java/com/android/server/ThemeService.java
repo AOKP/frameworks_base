@@ -563,8 +563,8 @@ public class ThemeService extends IThemeService.Stub {
                     // We can't just use null for the themeConfig, it won't be registered as
                     // a changed config value because of the way equals in config had to be written.
                     final String defaultThemePkg =
-                            Settings.Secure.getString(mContext.getContentResolver(),
-                            Settings.Secure.DEFAULT_THEME_PACKAGE);
+                            Settings.AOKP.getString(mContext.getContentResolver(),
+                            Settings.AOKP.DEFAULT_THEME_PACKAGE);
                     ThemeConfig.Builder defaultBuilder =
                             createBuilderFrom(config, components, defaultThemePkg);
                     config.themeConfig = defaultBuilder.build();
