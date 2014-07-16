@@ -55,6 +55,7 @@
   <string name="toggle_WIRELESSADB">Беспроводной ADB</string>
   <string name="toggle_IMMERSIVE_MODE">Режим погружения</string>
   <string name="toggle_SCREENRECORD">Запись экрана</string>
+  <string name="toggle_HEADSUP">Всплытие</string>
   <string name="quick_settings_swagger">Swagger</string>
   <string name="quick_settings_swaggersun">Swagger воскресенье</string>
   <string name="quick_settings_fbgt">FBGT</string>
@@ -113,4 +114,6 @@
   <string name="quick_settings_immersive_mode_on">Погружение вкл</string>
   <string name="quick_settings_immersive_mode_off">Погружение выкл</string>
   <string name="quick_settings_clock_alarm_off">Будильник выкл</string>
+  <string name="quick_settings_headsup_on_label">Всплытие вкл</string>
+  <string name="quick_settings_headsup_off_label">Всплытие выкл</string>
 </resources>

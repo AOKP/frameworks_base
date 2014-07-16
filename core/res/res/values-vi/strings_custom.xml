@@ -56,6 +56,8 @@
   <string name="action_app_window">Widget ứ.dụng</string>
   <string name="action_ribbon">Dải băng AOKP</string>
   <string name="action_app">Tuỳ biến Ứ.dụng/Lối tắt</string>
+  <string name="action_dpad_left">Mũi tên trái </string>
+  <string name="action_dpad_right">Mũi tên phải</string>
   <string name="app_killed_message">Đã dừng ứng dụng</string>
   <string name="global_action_screenshot">Chụp ảnh màn hình</string>
   <string name="global_action_screenrecord">Quay màn hình</string>
@@ -87,4 +89,10 @@ xác định chủ đề bạn đã áp dụng.</string>
 thay đổi chủ đề bạn đã áp dụng.</string>
   <string name="permlab_setKeyguardWallpaper">đặt nền màn hình khoá</string>
   <string name="permdesc_setKeyguardWallpaper">Cho phép một ứng dụng thay đổi hình nền màn hình khoá.</string>
+  <string name="permgrouplab_security">Bảo mật</string>
+  <string name="permgroupdesc_security">Quyền liên quan đến thông tin bảo mật của thiết bị.</string>
+  <string name="permlab_readPhoneBlacklist">đọc danh sách đen của điện thoại</string>
+  <string name="permdesc_readPhoneBlacklist">Cho phép ứng dụng đọc thông tin về các số điện thoại bị chặn cuộc gọi hoặc tin nhắn đến.</string>
+  <string name="permlab_changePhoneBlacklist">thay đổi danh sách đen của điện thoại</string>
+  <string name="permdesc_changePhoneBlacklist">Cho phép ứng dụng thay đổi số điện thoại bị chặn cuộc gọi hoặc tin nhắn đến.</string>
 </resources>

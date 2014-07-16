@@ -56,6 +56,8 @@
   <string name="action_app_window">යෙදුම් කවුළුව</string>
   <string name="action_ribbon">AOKP පීත්තපටිය</string>
   <string name="action_app">රිසිකළ යෙදුම/කෙටි මග</string>
+  <string name="action_dpad_left">වම් ඊතලය </string>
+  <string name="action_dpad_right">දකුණු ඊතලය</string>
   <string name="app_killed_message">යෙදුම නසා දමන ලදී</string>
   <string name="global_action_screenshot">තිර සේයාව</string>
   <string name="global_action_screenrecord">තිර රෙකෝඩනය</string>
@@ -85,4 +87,10 @@
   <string name="permdesc_writeThemesDesc">අලුත් තේමා ඇතුල් කිරීමට සහ ඔබ යොදා ඇති තේමාව වෙනස් කිරීමට, යෙදුමට අවසර දෙන්න.</string>
   <string name="permlab_setKeyguardWallpaper">අගුළු තිරයේ බිතුපත සකසන්න</string>
   <string name="permdesc_setKeyguardWallpaper">අගුළු තිරයේ බිතුපත වෙනස්කිරීම සඳහා යෙදුමකට අවසර දෙන්න.</string>
+  <string name="permgrouplab_security">ආරක්ෂාව</string>
+  <string name="permgroupdesc_security">උපාංගයේ ආරක්ෂක තොරතුරු වලට අදාළ අනුමැති.</string>
+  <string name="permlab_readPhoneBlacklist">දුරකථන අපලේඛණය කියවීම</string>
+  <string name="permdesc_readPhoneBlacklist">පැමිණෙන ඇමතුම් හෝ පණිවිඩ සඳහා අවහිර කර ඇති ඇමතුම් අංක පිලිබඳ තොරතුරු කියවීම සඳහා යෙදුමකට අවසර දෙන්න.</string>
+  <string name="permlab_changePhoneBlacklist">දුරකථන අපලේඛණය වෙනස් කරන්න</string>
+  <string name="permdesc_changePhoneBlacklist">පැමිණෙන ඇමතුම් හෝ පණිවිඩ සඳහා අවහිර කර ඇති ඇමතුම් අංක වෙනස් කිරීම සඳහා යෙදුමකට අවසර දෙන්න.</string>
 </resources>

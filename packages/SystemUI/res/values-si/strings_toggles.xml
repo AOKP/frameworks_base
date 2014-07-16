@@ -55,6 +55,7 @@
   <string name="toggle_WIRELESSADB">රැහැන්රහිත ADB</string>
   <string name="toggle_IMMERSIVE_MODE">ගිල්වුම් ප්‍රකාරය</string>
   <string name="toggle_SCREENRECORD">තිර රෙකෝඩනය</string>
+  <string name="toggle_HEADSUP">හිස් එසවීම</string>
   <string name="quick_settings_swagger">පුරාජේරුවා</string>
   <string name="quick_settings_swaggersun">පුරාජේරු ඉරිදා</string>
   <string name="quick_settings_fbgt">FBGT</string>
@@ -113,4 +114,6 @@
   <string name="quick_settings_immersive_mode_on">ගිල්වුම් ප්‍රකාරය</string>
   <string name="quick_settings_immersive_mode_off">ගිල්වුම් ප්‍රකාරය අක්‍රීයයි</string>
   <string name="quick_settings_clock_alarm_off">ඇඟවීම් අක්‍රීයයි</string>
+  <string name="quick_settings_headsup_on_label">හිස් එසවීම සක්‍රීයයි</string>
+  <string name="quick_settings_headsup_off_label">හිස් එසවීම අක්‍රීයයි</string>
 </resources>

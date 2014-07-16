@@ -56,6 +56,8 @@
   <string name="action_app_window">애플리케이션 창</string>
   <string name="action_ribbon">AOKP 리본</string>
   <string name="action_app">사용자 정의 앱/바로가기</string>
+  <string name="action_dpad_left">왼쪽 화살표</string>
+  <string name="action_dpad_right">오른쪽 화살표</string>
   <string name="app_killed_message">애플리케이션 종료됨</string>
   <string name="global_action_screenshot">스크린샷</string>
   <string name="global_action_screenrecord">화면 기록</string>

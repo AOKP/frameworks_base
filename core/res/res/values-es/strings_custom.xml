@@ -56,6 +56,8 @@
   <string name="action_app_window">Ventana de la aplicación</string>
   <string name="action_ribbon">Cinta AOKP</string>
   <string name="action_app">App/contextual personalizado</string>
+  <string name="action_dpad_left">Flecha izquierda </string>
+  <string name="action_dpad_right">Flecha derecha</string>
   <string name="app_killed_message">Aplicación finalizada</string>
   <string name="global_action_screenshot">Captura de pantalla</string>
   <string name="global_action_screenrecord">Grabación de pantalla</string>

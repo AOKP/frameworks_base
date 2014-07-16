@@ -56,6 +56,8 @@
   <string name="action_app_window">App Fönster</string>
   <string name="action_ribbon">AOKP Band</string>
   <string name="action_app">Anpassad App/Genväg</string>
+  <string name="action_dpad_left">Pil vänster </string>
+  <string name="action_dpad_right">Pil höger</string>
   <string name="app_killed_message">App tvångsavslutad</string>
   <string name="global_action_screenshot">Skärmdump</string>
   <string name="global_action_screenrecord">Skärminspelning</string>

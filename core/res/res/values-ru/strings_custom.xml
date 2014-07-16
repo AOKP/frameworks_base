@@ -56,6 +56,8 @@
   <string name="action_app_window">Окно приложений</string>
   <string name="action_ribbon">Лента AOKP</string>
   <string name="action_app">Своё приложение/ярлык</string>
+  <string name="action_dpad_left">Стрелка влево </string>
+  <string name="action_dpad_right">Стрелка вправо</string>
   <string name="app_killed_message">Приложение завершено</string>
   <string name="global_action_screenshot">Снимок экрана</string>
   <string name="global_action_screenrecord">Запись экрана</string>
@@ -85,4 +87,10 @@
   <string name="permdesc_writeThemesDesc">Приложение сможет осуществлять вставки новых тем оформления и изменять применённую Вами тему.</string>
   <string name="permlab_setKeyguardWallpaper">Установка обоев экрана блокировки</string>
   <string name="permdesc_setKeyguardWallpaper">Приложение сможет изменять обои экрана блокировки.</string>
+  <string name="permgrouplab_security">Безопасность</string>
+  <string name="permgroupdesc_security">Разрешения, относящиеся к безопасности данных на устройстве.</string>
+  <string name="permlab_readPhoneBlacklist">Просмотр чёрного списка</string>
+  <string name="permdesc_readPhoneBlacklist">Приложение сможет считывать информацию о списке абонентов, от которых заблокированы входящие звонки или сообщения.</string>
+  <string name="permlab_changePhoneBlacklist">Изменение чёрного списка</string>
+  <string name="permdesc_changePhoneBlacklist">Приложение сможет изменять список абонентов, от которых заблокированы входящие звонки или сообщения.</string>
 </resources>
