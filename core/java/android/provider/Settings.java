@@ -3546,6 +3546,124 @@ public final class Settings {
          */
         public static final String ACCESSIBILITY_ENABLED = "accessibility_enabled";
 
+         /**
+         * The style of the incoming call screen.
+         * Default is {@link INCOMING_CALL_STYLE_FULLSCREEN_PHOTO}.
+         * @hide
+         */
+        public static final String INCOMING_CALL_STYLE = "incoming_call_style";
+
+        /** @hide */
+        public static final int INCOMING_CALL_STYLE_CLASSIC = 0;
+        /** @hide */
+        public static final int INCOMING_CALL_STYLE_FULLSCREEN_PHOTO = 1;
+
+        /**
+         * Settings to backup. This is here so that it's in the same place as the settings
+         * keys and easy to update.
+         *
+         * NOTE: Settings are backed up and restored in the order they appear
+         *       in this array. If you have one setting depending on another,
+         *       make sure that they are ordered appropriately.
+         *
+         * @hide
+         */
+        public static final String[] SETTINGS_TO_BACKUP = {
+            STAY_ON_WHILE_PLUGGED_IN,   // moved to global
+            WIFI_USE_STATIC_IP,
+            WIFI_STATIC_IP,
+            WIFI_STATIC_GATEWAY,
+            WIFI_STATIC_NETMASK,
+            WIFI_STATIC_DNS1,
+            WIFI_STATIC_DNS2,
+            MMS_AUTO_RETRIEVAL,
+            MMS_AUTO_RETRIEVAL_ON_ROAMING,
+            BLUETOOTH_DISCOVERABILITY,
+            BLUETOOTH_DISCOVERABILITY_TIMEOUT,
+            BLUETOOTH_ACCEPT_ALL_FILES,
+            DIM_SCREEN,
+            SCREEN_OFF_TIMEOUT,
+            SCREEN_BRIGHTNESS,
+            SCREEN_BRIGHTNESS_MODE,
+            SCREEN_AUTO_BRIGHTNESS_ADJ,
+            VIBRATE_INPUT_DEVICES,
+            MODE_RINGER_STREAMS_AFFECTED,
+            VOLUME_VOICE,
+            VOLUME_SYSTEM,
+            VOLUME_RING,
+            VOLUME_MUSIC,
+            VOLUME_ALARM,
+            VOLUME_NOTIFICATION,
+            VOLUME_BLUETOOTH_SCO,
+            VOLUME_VOICE + APPEND_FOR_LAST_AUDIBLE,
+            VOLUME_SYSTEM + APPEND_FOR_LAST_AUDIBLE,
+            VOLUME_RING + APPEND_FOR_LAST_AUDIBLE,
+            VOLUME_MUSIC + APPEND_FOR_LAST_AUDIBLE,
+            VOLUME_ALARM + APPEND_FOR_LAST_AUDIBLE,
+            VOLUME_NOTIFICATION + APPEND_FOR_LAST_AUDIBLE,
+            VOLUME_BLUETOOTH_SCO + APPEND_FOR_LAST_AUDIBLE,
+            TEXT_AUTO_REPLACE,
+            TEXT_AUTO_CAPS,
+            TEXT_AUTO_PUNCTUATE,
+            TEXT_SHOW_PASSWORD,
+            AUTO_TIME,                  // moved to global
+            AUTO_TIME_ZONE,             // moved to global
+            TIME_12_24,
+            DATE_FORMAT,
+            ACCELEROMETER_ROTATION,
+            LOCKSCREEN_ROTATION,
+            USER_ROTATION,
+            DTMF_TONE_WHEN_DIALING,
+            DTMF_TONE_TYPE_WHEN_DIALING,
+            HEARING_AID,
+            TTY_MODE,
+            NOISE_SUPPRESSION,
+            SOUND_EFFECTS_ENABLED,
+            HAPTIC_FEEDBACK_ENABLED,
+            POWER_SOUNDS_ENABLED,       // moved to global
+            DOCK_SOUNDS_ENABLED,        // moved to global
+            LOCKSCREEN_SOUNDS_ENABLED,
+            SHOW_WEB_SUGGESTIONS,
+            NOTIFICATION_LIGHT_PULSE,
+            NOTIFICATION_LIGHT_PULSE_DEFAULT_COLOR,
+            NOTIFICATION_LIGHT_PULSE_DEFAULT_LED_ON,
+            NOTIFICATION_LIGHT_PULSE_DEFAULT_LED_OFF,
+            NOTIFICATION_VIBRATE_DURING_ALERTS_DISABLED,
+            SIP_CALL_OPTIONS,
+            SIP_RECEIVE_CALLS,
+            POINTER_SPEED,
+            VIBRATE_WHEN_RINGING,
+            RINGTONE,
+            NOTIFICATION_SOUND,
+            QUIET_HOURS_ENABLED,
+            QUIET_HOURS_START,
+            QUIET_HOURS_END,
+            QUIET_HOURS_RINGER,
+            QUIET_HOURS_MUTE,
+            QUIET_HOURS_HAPTIC,
+            QUIET_HOURS_SYSTEM,
+            QUIET_HOURS_STILL,
+            QUIET_HOURS_DIM,
+            SYSTEM_PROFILES_ENABLED,
+            POWER_MENU_SCREENSHOT_ENABLED,
+            POWER_MENU_REBOOT_ENABLED,
+            POWER_MENU_PROFILES_ENABLED,
+            POWER_MENU_AIRPLANE_ENABLED,
+            POWER_MENU_SOUND_ENABLED,
+            POWER_MENU_USER_ENABLED,
+            LOCKSCREEN_BATTERY_VISIBILITY,
+            LOCKSCREEN_MODLOCK_ENABLED,
+            PHONE_BLACKLIST_ENABLED,
+            PHONE_BLACKLIST_NOTIFY_ENABLED,
+            PHONE_BLACKLIST_PRIVATE_NUMBER_MODE,
+            PHONE_BLACKLIST_UNKNOWN_NUMBER_MODE,
+            PHONE_BLACKLIST_REGEX_ENABLED,
+            INCOMING_CALL_STYLE,
+        };
+
+        // Settings moved to Settings.Secure
+>>>>>>> ad99f08... Make incoming call screen style configurable (1/3)
+
         /**
          * If touch exploration is enabled.
          */
