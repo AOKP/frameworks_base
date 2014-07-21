@@ -2092,4 +2092,5 @@
   <java-symbol type="bool" name="config_sms_force_7bit_encoding" />
   <java-symbol type="array" name="config_sms_convert_destination_number_support" />
   <java-symbol type="string" name="config_partial_segment_expire_age" />
+  <java-symbol type="bool" name="config_global_phone_enabled" />
 </resources>
