@@ -49,6 +49,13 @@
                 android:layout_width="@dimen/status_bar_recents_thumbnail_width"
                 android:layout_height="@dimen/status_bar_recents_thumbnail_height"
             />
+            <ImageView android:id="@+id/lock_app"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible"
+                android:background="@drawable/ic_recent_lock_app"
+                android:layout_gravity="right|top"
+            />
         </FrameLayout>
 
         <ImageView android:id="@+id/app_icon"
