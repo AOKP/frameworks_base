@@ -82,5 +82,8 @@
     <string name="app_window">Application Window</string>
     <string name="close">Close</string>
 
+    <!-- Recents menu -->
+    <string name="status_bar_recent_lock_item_title">Lock app in list</string>
+
 </resources>
 
