@@ -15,4 +15,45 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="toggle_USER">Τρέχων Χρήστης</string>
+  <string name="toggle_BRIGHTNESS">Φωτεινότητα</string>
+  <string name="toggle_VOLUME">Ένταση ήχου</string>
+  <string name="toggle_SETTINGS">Ρυθμίσεις</string>
+  <string name="toggle_WIFI">WiFi</string>
+  <string name="toggle_SIGNAL">Σήμα</string>
+  <string name="toggle_ROTATE">Αυτόματη περιστροφή</string>
+  <string name="toggle_CLOCK">Ρολόι</string>
+  <string name="toggle_GPS">GPS</string>
+  <string name="toggle_LOCATION">Τοποθεσία</string>
+  <string name="toggle_BATTERY">Μπαταρία</string>
+  <string name="toggle_AIRPLANE_MODE">Λειτουργία αεροπλάνου</string>
+  <string name="toggle_BLUETOOTH">Bluetooth</string>
+  <string name="toggle_SWAGGER">Έπαρση</string>
+  <string name="toggle_VIBRATE">Δόνηση</string>
+  <string name="toggle_SILENT">Αθόρυβο</string>
+  <string name="toggle_FCHARGE">Ταχεία Φόρτιση</string>
+  <string name="toggle_SYNC">Συγχρονισμός</string>
+  <string name="toggle_NFC">NFC</string>
+  <string name="toggle_TORCH">Φακός</string>
+  <string name="toggle_USBTETHER">Πρόσδεση USB</string>
+  <string name="toggle_2G">2G</string>
+  <string name="toggle_LTE">LTE</string>
+  <string name="toggle_NAVBARHIDE">Απόκρυψη NavBar</string>
+  <string name="toggle_QUICKRECORD">Γρήγορη εγγραφή</string>
+  <string name="toggle_QUIETHOURS">Ώρες ησυχίας</string>
+  <string name="toggle_SLEEP">Αναστολή</string>
+  <string name="toggle_STATUSBAR">Γραμμή Κατάστασης</string>
+  <string name="toggle_SCREENSHOT">Στιγμιότυπο οθόνης</string>
+  <string name="toggle_REBOOT">Επανεκκίνηση</string>
+  <string name="toggle_CUSTOM">Προσαρμοσμένο</string>
+  <string name="toggle_STAYAWAKE">Παραμονή σε κανονική κατάσταση λειτουργίας</string>
+  <string name="toggle_WIRELESSADB">Ασύρματο ADB</string>
+  <string name="toggle_HEADSUP">HeadsUP</string>
+  <string name="quick_settings_swagger">Έπαρση</string>
+  <string name="quick_settings_recording">Γίνεται εγγραφή...</string>
+  <string name="quick_settings_quickrecord">Γρήγορη εγγραφή</string>
+  <string name="quick_settings_nofile">Παρατεταμένο πάτημα για εγγραφή</string>
+  <string name="quick_settings_sleep">Απουσία δραστηριότητας</string>
+  <string name="quick_settings_reboot">Επανεκκίνηση</string>
+</resources>

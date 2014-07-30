@@ -89,4 +89,10 @@
        modificar el tema que este aplicado.</string>
   <string name="permlab_setKeyguardWallpaper">Establecer el fondo de pantalla de bloqueo</string>
   <string name="permdesc_setKeyguardWallpaper">Permite que otras aplicaciones cambien el fondo de pantalla de bloqueo.</string>
+  <string name="permgrouplab_security">Seguridad</string>
+  <string name="permgroupdesc_security">Permisos relacionados con información de seguridad del dispositivo.</string>
+  <string name="permlab_readPhoneBlacklist">Leer lista negra del teléfono</string>
+  <string name="permdesc_readPhoneBlacklist">Permite que la aplicación lea la información sobre los números de teléfono bloqueados para llamadas o mensajes entrantes.</string>
+  <string name="permlab_changePhoneBlacklist">cambiar la lista negra del teléfono</string>
+  <string name="permdesc_changePhoneBlacklist">Permite que la aplicación cambie los números de teléfono bloqueados para llamadas o mensajes entrantes.</string>
 </resources>

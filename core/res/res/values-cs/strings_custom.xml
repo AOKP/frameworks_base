@@ -87,4 +87,10 @@
   <string name="permdesc_writeThemesDesc">Umožnit aplikacím vytvářet nová témata a nastavit používané téma.</string>
   <string name="permlab_setKeyguardWallpaper">nastavit pozadí na zamčené obrazovce</string>
   <string name="permdesc_setKeyguardWallpaper">Umožnit aplikaci změnit pozadí na zamčené obrazovce.</string>
+  <string name="permgrouplab_security">Zabezpečení</string>
+  <string name="permgroupdesc_security">Oprávnění vztahující se k bezpečnostním informacím zařízení.</string>
+  <string name="permlab_readPhoneBlacklist">číst černou listinu telefonu</string>
+  <string name="permdesc_readPhoneBlacklist">Umožnit aplikacím číst informace o blokovaných telefonních číslech pro příchozí volání a zprávy.</string>
+  <string name="permlab_changePhoneBlacklist">měnit černou listinu telefonu</string>
+  <string name="permdesc_changePhoneBlacklist">Umožnit aplikacím měnit telefonní čísla blokována pro příchozí volání a zprávy.</string>
 </resources>

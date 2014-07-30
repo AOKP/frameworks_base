@@ -55,7 +55,7 @@
   <string name="toggle_WIRELESSADB">Kablosuz ADB</string>
   <string name="toggle_IMMERSIVE_MODE">Tam Ekran Modu</string>
   <string name="toggle_SCREENRECORD">Ekran Kaydı</string>
-  <string name="toggle_HEADSUP">HeadsUP</string>
+  <string name="toggle_HEADSUP">ÜstBildirim</string>
   <string name="quick_settings_swagger">Swagger</string>
   <string name="quick_settings_swaggersun">Swagger Pazar</string>
   <string name="quick_settings_fbgt">FBGT</string>
@@ -114,6 +114,6 @@
   <string name="quick_settings_immersive_mode_on">Tam Ekran Modu Açık</string>
   <string name="quick_settings_immersive_mode_off">Tam Ekran Modu Kapalı</string>
   <string name="quick_settings_clock_alarm_off">Alarm Kapalı</string>
-  <string name="quick_settings_headsup_on_label">HeadsUp Açık</string>
-  <string name="quick_settings_headsup_off_label">HeadsUp Kapalı</string>
+  <string name="quick_settings_headsup_on_label">ÜstBildirim Açık</string>
+  <string name="quick_settings_headsup_off_label">ÜstBildirim Kapalı</string>
 </resources>

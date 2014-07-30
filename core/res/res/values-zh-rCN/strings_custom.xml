@@ -56,6 +56,8 @@
   <string name="action_app_window">应用窗口</string>
   <string name="action_ribbon">AOKP操作区</string>
   <string name="action_app">自定义程序/快捷方式</string>
+  <string name="action_dpad_left">左箭头</string>
+  <string name="action_dpad_right">右箭头</string>
   <string name="app_killed_message">应用程序已结束</string>
   <string name="global_action_screenshot">屏幕截图</string>
   <string name="global_action_screenrecord">屏幕录像</string>
@@ -85,4 +87,10 @@
   <string name="permdesc_writeThemesDesc">允许程序修改您已经使用的主题，并插入新的主题。</string>
   <string name="permlab_setKeyguardWallpaper">设置锁屏壁纸</string>
   <string name="permdesc_setKeyguardWallpaper">允许应用更改锁屏壁纸。</string>
+  <string name="permgrouplab_security">安全</string>
+  <string name="permgroupdesc_security">与设备安全信息相关的权限。</string>
+  <string name="permlab_readPhoneBlacklist">读取手机黑名单</string>
+  <string name="permdesc_readPhoneBlacklist">允许应用读取有关被阻止来电或信息的电话号码的信息。</string>
+  <string name="permlab_changePhoneBlacklist">更改手机黑名单</string>
+  <string name="permdesc_changePhoneBlacklist">允许应用更改被阻止来电或信息的电话号码。</string>
 </resources>

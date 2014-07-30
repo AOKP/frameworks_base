@@ -89,4 +89,10 @@
        당신이 적용한 테마가 수정합니다.</string>
   <string name="permlab_setKeyguardWallpaper">keyguard 배경설정</string>
   <string name="permdesc_setKeyguardWallpaper">앱으로 잠금화면 배경을 변경할 수 있습니다.</string>
+  <string name="permgrouplab_security">보안</string>
+  <string name="permgroupdesc_security">장치의 보안 정보에 관련된 권한입니다.</string>
+  <string name="permlab_readPhoneBlacklist">전화 블랙리스트 읽기</string>
+  <string name="permdesc_readPhoneBlacklist">앱이 전화 또는 메시지 수신이 차단된 전화번호들의 정보를 읽을 수 있도록 허용합니다.</string>
+  <string name="permlab_changePhoneBlacklist">전화 블랙리스트 수정</string>
+  <string name="permdesc_changePhoneBlacklist">앱이 어떤 전화번호들의 전화 또는 메시지를 차단할 것인지를 변경할 수 있도록 허용합니다.</string>
 </resources>

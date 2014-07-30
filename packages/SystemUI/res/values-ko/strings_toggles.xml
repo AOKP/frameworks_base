@@ -55,6 +55,7 @@
   <string name="toggle_WIRELESSADB">무선 ADB</string>
   <string name="toggle_IMMERSIVE_MODE">몰입 모드</string>
   <string name="toggle_SCREENRECORD">화면 기록</string>
+  <string name="toggle_HEADSUP">HeadsUP</string>
   <string name="quick_settings_swagger">Swagger</string>
   <string name="quick_settings_swaggersun">Swagger Sunday</string>
   <string name="quick_settings_fbgt">FBGT</string>
@@ -113,4 +114,6 @@
   <string name="quick_settings_immersive_mode_on">몰입 모드 ON</string>
   <string name="quick_settings_immersive_mode_off">몰입 모드 OFF</string>
   <string name="quick_settings_clock_alarm_off">알람 OFF</string>
+  <string name="quick_settings_headsup_on_label">HeadsUp 켜기</string>
+  <string name="quick_settings_headsup_off_label">HeadsUp 끄기</string>
 </resources>

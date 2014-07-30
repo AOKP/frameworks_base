@@ -36,5 +36,5 @@
     <item quantity="other">මෙම ගොනු %d ස්ථිරවම මකාදැමේ!</item>
   </plurals>
   <string name="ok">හරි</string>
-  <string name="cancel">අවලංගු කරන්න</string>
+  <string name="cancel">එපා</string>
 </resources>

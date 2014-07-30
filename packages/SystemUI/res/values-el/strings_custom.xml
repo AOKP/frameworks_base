@@ -17,4 +17,13 @@
  * limitations under the License.
  */
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"/>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="accessibility_data_connection_HP">HSPA+</string>
+  <string name="screenrecord_notif_title">Καταγραφή της οθόνης</string>
+  <string name="screenrecord_notif_stop">Διακοπή</string>
+  <string name="screenrecord_notif_pointer">Εναλλαγή δείκτη</string>
+  <string name="screenrecord_notif_error">Δεν είναι δυνατή η καταγραφή οθόνης</string>
+  <string name="memory">RAM</string>
+  <string name="service_started_by_app">Εκκινήθηκε από εφαρμογή.</string>
+  <string name="close">Κλείσε</string>
+</resources>
