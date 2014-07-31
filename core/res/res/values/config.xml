@@ -1881,4 +1881,8 @@
     <string-array translatable="false" name="config_sms_convert_destination_number_support">
         <item>false</item>
     </string-array>
+    <!-- Configuartion to support 7bit Ascii encoding and decoding
+         for long messages. -->
+    <bool name="config_ascii_7bit_support_for_long_message">false</bool>
+
 </resources>
