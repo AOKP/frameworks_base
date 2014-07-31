@@ -107,8 +107,13 @@ public class AwesomeAction {
                         break;
                     case ACTION_APP_WINDOW:
                         Intent appWindow = new Intent();
-                        appWindow.setAction("com.android.systemui.ACTION_SHOW_APP_WINDOW");
+                        appWindow.setAction("com.stinger.ivy.ACTION_TOGGLE_APP_WINDOW");
                         mContext.sendBroadcast(appWindow);
+                        break;
+                    case ACTION_WIDGETS:
+                        Intent widgetWindow = new Intent();
+                        widgetWindow.setAction("com.stinger.ivy.ACTION_TOGGLE_WIDGETS");
+                        mContext.sendBroadcast(widgetWindow);
                         break;
                     case ACTION_VIB:
                         am = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);

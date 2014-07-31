@@ -44,10 +44,7 @@ public class NavBarHelpers {
             AwesomeConstant.ACTION_TODAY,
             AwesomeConstant.ACTION_ALARM,
             AwesomeConstant.ACTION_DPAD_LEFT,
-            AwesomeConstant.ACTION_DPAD_RIGHT,
-            /* these are just not implemented yet: */
-            AwesomeConstant.ACTION_TORCH,
-            AwesomeConstant.ACTION_WIDGETS
+            AwesomeConstant.ACTION_DPAD_RIGHT
     };
 
     private NavBarHelpers() {
