@@ -25,7 +25,6 @@ import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.provider.DocumentsContract.Document;
 import android.provider.DocumentsProvider;
-import android.util.Log;
 
 import com.android.documentsui.DocumentUtils;
 import com.android.documentsui.DocumentsApplication;
@@ -49,12 +48,14 @@ public class DocumentInfo implements Durable, Parcelable {
     public String authority;
     public String documentId;
     public String mimeType;
-    public String displayName;
+    public static String displayName;
     public long lastModified;
     public int flags;
     public String summary;
     public long size;
     public int icon;
+
+    public static String mTopDirectory;
 
     /** Derived fields that aren't persisted */
     public Uri derivedUri;

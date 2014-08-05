@@ -54,9 +54,7 @@ import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
@@ -68,7 +66,6 @@ import android.graphics.drawable.InsetDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.DocumentsContract;
@@ -105,7 +102,6 @@ import com.android.documentsui.model.RootInfo;
 import com.google.android.collect.Maps;
 import libcore.io.IoUtils;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -139,6 +135,8 @@ public class DocumentsActivity extends Activity {
 
     private RootsCache mRoots;
     private State mState;
+
+    private String mTopDirectory;
 
     private List<DocumentInfo> mClipboardFiles;
     /* true if copy, false if cut */
@@ -841,6 +839,8 @@ public class DocumentsActivity extends Activity {
         return mState.stack.peek();
     }
 
+    public RootInfo getRootDirectory() { return mState.stack.root; }
+
     private String getCallingPackageMaybeExtra() {
         final String extra = getIntent().getStringExtra(DocumentsContract.EXTRA_PACKAGE_NAME);
         return (extra != null) ? extra : getCallingPackage();
@@ -880,6 +880,15 @@ public class DocumentsActivity extends Activity {
                 mState.derivedMode = mState.userMode;
             }
         } else {
+            if (mTopDirectory != null) {
+                if (!DocumentUtils.isAtRootOfVolume(mTopDirectory)) {
+                    mTopDirectory = cwd.displayName;
+                } else {
+                    mTopDirectory += "/" + cwd.displayName;
+                }
+            } else {
+                mTopDirectory = cwd.displayName;
+            }
             if (mState.currentSearch != null) {
                 // Ongoing search
                 DirectoryFragment.showSearch(fm, root, mState.currentSearch, anim);
@@ -1003,6 +1012,7 @@ public class DocumentsActivity extends Activity {
             mState.stack.push(doc);
             mState.stackTouched = true;
             onCurrentDirectoryChanged(ANIM_DOWN);
+            Log.d(TAG, "directory is now " + mTopDirectory);
         } else if (mState.action == ACTION_OPEN || mState.action == ACTION_GET_CONTENT) {
             // Explicit file picked, return
             new ExistingFinishTask(doc.derivedUri).executeOnExecutor(getCurrentExecutor());
@@ -1030,15 +1040,10 @@ public class DocumentsActivity extends Activity {
                 }
             }
         } else if (mState.action == ACTION_STANDALONE) {
+            Log.d(TAG, "path is now " + mTopDirectory);
             if (doc.isApplication(doc.derivedUri)) {
                 // File picked is an apk, attempt to install
-                // for now limited to internal storage
-                if (DocumentUtils.isExternalStorageDocument(doc.derivedUri)
-                        && DocumentUtils.getPath(this, doc.derivedUri) != null) {
-                    DocumentUtils.installApplication(this, doc);
-                } else {
-                    Toast.makeText(this, R.string.toast_no_application, Toast.LENGTH_SHORT).show();
-                }
+                DocumentUtils.installApplication(this, mTopDirectory, doc);
             } else {
                 try {
                     final Intent view = new Intent(Intent.ACTION_VIEW);
