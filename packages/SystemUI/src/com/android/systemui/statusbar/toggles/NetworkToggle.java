@@ -151,7 +151,7 @@ public class NetworkToggle extends StatefulToggle {
     private void getSwitchableModes() {
         String default_modes = "";
         if (isDeviceGSM()) {
-            default_modes = deviceSupportsLTE() ? "9|0|1" : "0|1";
+            default_modes = deviceSupportsLTE() ? "9|0|1|2" : "0|1|2";
         } else if (isDeviceCDMA()) {
             default_modes = deviceSupportsLTE() ? "8|4|5" : "4|5";
         }
