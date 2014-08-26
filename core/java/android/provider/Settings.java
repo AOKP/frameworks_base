@@ -7184,6 +7184,13 @@ public final class Settings {
         public static final String DETAILED_INCALL_INFO = "detailed_incall_info";
 
         /**
+         * Auto call record
+         *
+         * @hide
+         */
+        public static final String AUTO_CALL_RECORD = "auto_call_record";
+
+        /**
          * The hostname for this device
          * @hide
          */
