@@ -677,7 +677,7 @@ public class NavigationBarView extends LinearLayout {
             if (mTablet) {
                 // add left cursor button
                 addButton(navButtons, leftCursorButton, landscape);
-                addLightsOutButton(lightsOut, leftCursorButton, landscape, true);
+                addLightsOutButton(lightsOut, leftCursorButton, landscape, true, false);
 
                 // eats up that extra mTablet space
                 addSeparator(navButtons, landscape, 0, stockThreeButtonLayout ? 1f : 0.5f);
@@ -685,7 +685,7 @@ public class NavigationBarView extends LinearLayout {
             } else {
                 // add left cursor button
                 addButton(navButtons, leftCursorButton, landscape);
-                addLightsOutButton(lightsOut, leftCursorButton, landscape, true);
+                addLightsOutButton(lightsOut, leftCursorButton, landscape, true, false);
             }
 
             for (int j = 0; j < mNavButtons.size(); j++) {
@@ -720,7 +720,7 @@ public class NavigationBarView extends LinearLayout {
 
                 // add button
                 addButton(navButtons, button, landscape);
-                addLightsOutButton(lightsOut, button, landscape, false);
+                addLightsOutButton(lightsOut, button, landscape, false, false);
 
                 if (!mTablet && stockThreeButtonLayout && j != (mNavButtons.size() - 1)) {
                     // in the case of a 'stock' 3-button layout, the buttons need to be spaced further out apart
@@ -770,16 +770,16 @@ public class NavigationBarView extends LinearLayout {
 
                 // add the button last so it hangs on the edge
                 addButton(navButtons, menuButton, landscape);
-                addLightsOutButton(lightsOut, menuButton, landscape, true);
+                addLightsOutButton(lightsOut, menuButton, landscape, true, false);
 
                 addButton(navButtons, rightCursorButton, landscape);
-                addLightsOutButton(lightsOut, rightCursorButton, landscape, true);
+                addLightsOutButton(lightsOut, rightCursorButton, landscape, true, true);
             } else {
                 addButton(navButtons, menuButton, landscape);
-                addLightsOutButton(lightsOut, menuButton, landscape, true);
+                addLightsOutButton(lightsOut, menuButton, landscape, true, false);
 
                 addButton(navButtons, rightCursorButton, landscape);
-                addLightsOutButton(lightsOut, rightCursorButton, landscape, true);
+                addLightsOutButton(lightsOut, rightCursorButton, landscape, true, true);
             }
         }
         invalidate();
@@ -1021,13 +1021,17 @@ public class NavigationBarView extends LinearLayout {
             root.addView(v);
     }
 
-    private void addLightsOutButton(LinearLayout root, View v, boolean landscape, boolean empty) {
+    private void addLightsOutButton(LinearLayout root, View v, boolean landscape, boolean empty, boolean isGone) {
         ImageView addMe = new ImageView(mContext);
         addMe.setLayoutParams(v.getLayoutParams());
         addMe.setImageResource(empty ? R.drawable.ic_sysbar_lights_out_dot_large
                 : R.drawable.ic_sysbar_lights_out_dot_small);
         addMe.setScaleType(ImageView.ScaleType.CENTER);
-        addMe.setVisibility(empty ? View.INVISIBLE : View.VISIBLE);
+        if (isGone) {
+            addMe.setVisibility(View.GONE);
+        } else {
+            addMe.setVisibility(empty ? View.INVISIBLE : View.VISIBLE);
+        }
 
         if (landscape && !mTablet)
             root.addView(addMe, 0);
