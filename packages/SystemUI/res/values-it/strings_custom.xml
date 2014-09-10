@@ -49,4 +49,6 @@
   <string name="app_window">Finestra applicazione</string>
   <string name="close">Chiudi</string>
   <string name="status_bar_recent_lock_item_title">Blocca nella lista app</string>
+  <string name="dessert_case_settings_aokp_title">Visualizza unicorni</string>
+  <string name="dessert_case_settings_aokp_summary">Visualizza unicorni insieme a dolci di Android all\'interno del sogno</string>
 </resources>

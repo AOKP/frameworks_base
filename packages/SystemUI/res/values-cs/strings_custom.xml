@@ -49,4 +49,6 @@
   <string name="app_window">Aplikační okno</string>
   <string name="close">Zavřít</string>
   <string name="status_bar_recent_lock_item_title">Zamknout aplikaci v seznamu</string>
+  <string name="dessert_case_settings_aokp_title">Zobrazit jednorožce</string>
+  <string name="dessert_case_settings_aokp_summary">Zobrazit jednorožce spolu s Androidími dezerty</string>
 </resources>

@@ -45,4 +45,6 @@
   <string name="app_window">Okno aplikacji</string>
   <string name="close">Zamknij</string>
   <string name="status_bar_recent_lock_item_title">Zablokuj aplikację na liście</string>
+  <string name="dessert_case_settings_aokp_title">Pokaż jednorożce</string>
+  <string name="dessert_case_settings_aokp_summary">Pokaż jednorożce razem z Androidami na pustyni we śnie</string>
 </resources>

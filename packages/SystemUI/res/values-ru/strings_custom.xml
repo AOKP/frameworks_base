@@ -49,4 +49,6 @@
   <string name="app_window">Окно приложений</string>
   <string name="close">Закрыть</string>
   <string name="status_bar_recent_lock_item_title">Блок. прил. в списке</string>
+  <string name="dessert_case_settings_aokp_title">Единороги</string>
+  <string name="dessert_case_settings_aokp_summary">Показ единорогов вместе с десертами Андроид внутри мечты</string>
 </resources>
