@@ -45,4 +45,15 @@
     -->
     <bool name="config_proximityCheckOnWake">false</bool>
     <integer name="config_proximityCheckTimeout">250</integer>
+
+    <!-- Indicate the device's Smart Cover coordinates.
+         If none are provided, then the feature will be disabled.
+         The array should contain 4 values, in pixels, (sample values provided):
+            Top      0
+            Left     100
+            Bottom   Top + 400
+            Right    Display Width - 100
+    -->
+    <integer-array name="config_smartCoverWindowCoords">
+    </integer-array>
 </resources>
