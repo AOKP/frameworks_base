@@ -148,4 +148,7 @@
     <!-- USB OTG notification message -->
     <string name="usb_storage_notification_manage_message">Tap to manage</string>
 
+    <!-- Theme installation error notification -->
+    <string name="theme_install_error_title">Failed to install theme</string>
+    <string name="theme_install_error_message">%s failed to install</string>
 </resources>
