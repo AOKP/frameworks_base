@@ -45,4 +45,5 @@
   <string name="app_window">アプリウィンドウ</string>
   <string name="close">閉じる</string>
   <string name="status_bar_recent_lock_item_title">リスト内のロックアプリ</string>
+  <string name="dessert_case_settings_aokp_title">ユニコーンを表示</string>
 </resources>

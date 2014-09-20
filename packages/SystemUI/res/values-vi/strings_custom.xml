@@ -49,4 +49,6 @@
   <string name="app_window">Cửa sổ ứng dụng</string>
   <string name="close">Đóng</string>
   <string name="status_bar_recent_lock_item_title">Khóa ứng dụng trong danh sách</string>
+  <string name="dessert_case_settings_aokp_title">Hiện kỳ lân</string>
+  <string name="dessert_case_settings_aokp_summary">Hiện kỳ lân cùng với biểu tượng Android trong Day Dream</string>
 </resources>

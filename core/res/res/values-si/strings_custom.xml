@@ -19,6 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">නැවත පනගන්වන්න</string>
+  <string name="reboot_soft">මෘදුව නැවත පනගන්වන්න</string>
   <string name="reboot_recovery">ප්‍රතිසාධන ප්‍රකාරයට</string>
   <string name="reboot_download">බාගැනීමේ ප්‍රකාරයට</string>
   <string name="reboot_bootloader">ඇරඹුම් ප්‍රවේශකයට</string>

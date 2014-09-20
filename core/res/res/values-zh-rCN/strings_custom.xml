@@ -19,6 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">重新启动</string>
+  <string name="reboot_soft">软重启</string>
   <string name="reboot_recovery">恢复模式</string>
   <string name="reboot_download">下载模式</string>
   <string name="reboot_bootloader">引导模式</string>
@@ -93,4 +94,5 @@
   <string name="permdesc_readPhoneBlacklist">允许应用读取有关被阻止来电或信息的电话号码的信息。</string>
   <string name="permlab_changePhoneBlacklist">更改手机黑名单</string>
   <string name="permdesc_changePhoneBlacklist">允许应用更改被阻止来电或信息的电话号码。</string>
+  <string name="usb_storage_notification_manage_message">点击以管理</string>
 </resources>

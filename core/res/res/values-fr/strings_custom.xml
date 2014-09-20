@@ -52,7 +52,7 @@
   <string name="action_unlock">Déverrouiller</string>
   <string name="action_camera">Appareil photo</string>
   <string name="action_null">Vide</string>
-  <string name="action_widgets">Gadgets de navigation</string>
+  <string name="action_widgets">Nav Widgets</string>
   <string name="action_app_window">Fenêtre Application</string>
   <string name="action_ribbon">Ruban AOKP</string>
   <string name="action_app">Application/raccourci personnalisé</string>
@@ -85,7 +85,7 @@
   <string name="permdesc_readThemesDesc">Autorise une application à lire vos thèmes et à déterminer quel thème vous avez appliqué.</string>
   <string name="permlab_writeThemes">modifier vos thèmes</string>
   <string name="permdesc_writeThemesDesc">Autorise une application à insérer de nouveaux thèmes et à modifier le thème que vous avez appliqué.</string>
-  <string name="permlab_setKeyguardWallpaper">Définir le fond d\'écran du clavier de verrouillage</string>
+  <string name="permlab_setKeyguardWallpaper">Définir le fond d\'écran de verrouillage</string>
   <string name="permdesc_setKeyguardWallpaper">Autorise une application à changer le fond de l\'écran de verrouillage.</string>
   <string name="permgrouplab_security">Sécurité</string>
   <string name="permgroupdesc_security">Autorisations liées à des informations de sécurité de l\'appareil.</string>
@@ -93,4 +93,5 @@
   <string name="permdesc_readPhoneBlacklist">Autorise une application à lire les informations sur les numéros de téléphone qui sont bloqués pour les appels ou les messages entrants.</string>
   <string name="permlab_changePhoneBlacklist">modifier la liste noire du téléphone</string>
   <string name="permdesc_changePhoneBlacklist">Autorise une application à modifier les numéros de téléphone qui sont bloqués pour les appels ou les messages entrants.</string>
+  <string name="usb_storage_notification_manage_message">Appuyez pour configurer</string>
 </resources>

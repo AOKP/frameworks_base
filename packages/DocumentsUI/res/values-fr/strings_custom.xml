@@ -17,13 +17,13 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="title_standalone">Fichiers</string>
   <string name="toast_success_delete">Fichiers supprimés</string>
-  <string name="dialog_delete_confirm_title">Supprimer les fichiers?</string>
+  <string name="dialog_delete_confirm_title">Supprimer les fichiers ?</string>
   <string name="menu_copy">Copier</string>
   <string name="menu_cut">Couper</string>
   <string name="menu_paste">Coller</string>
   <plurals name="files_copied">
-    <item quantity="one">Le fichier a été mis dans le presse-papiers</item>
-    <item quantity="other">%d fichiers ont été mis dans le presse-papiers</item>
+    <item quantity="one">Le fichier a été copié dans le presse-papiers</item>
+    <item quantity="other">%d fichiers ont été copiés dans le presse-papiers</item>
   </plurals>
   <plurals name="files_pasted">
     <item quantity="one">Le fichier a été collé. Le téléchargement pourrait se terminer en arrière-plan.</item>

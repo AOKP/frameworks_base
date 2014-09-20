@@ -45,4 +45,6 @@
   <string name="app_window">应用程序</string>
   <string name="close">关闭</string>
   <string name="status_bar_recent_lock_item_title">在列表中锁定应用程序</string>
+  <string name="dessert_case_settings_aokp_title">显示独角兽</string>
+  <string name="dessert_case_settings_aokp_summary">在Android的甜点梦里显示独角兽</string>
 </resources>

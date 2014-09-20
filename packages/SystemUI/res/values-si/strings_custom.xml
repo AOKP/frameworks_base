@@ -45,4 +45,6 @@
   <string name="app_window">යෙදුමේ කවුළුව</string>
   <string name="close">වහන්න</string>
   <string name="status_bar_recent_lock_item_title">ලැයිස්තුව තුල යෙදුම අඟුළුලන්න</string>
+  <string name="dessert_case_settings_aokp_title">කඟවේණුන් පෙන්වන්න</string>
+  <string name="dessert_case_settings_aokp_summary">සිහිනය තුල ඇති Android ගේ අතුරුපසයන් සමග එක්ව කඟවේණුන් පෙන්වන්න</string>
 </resources>

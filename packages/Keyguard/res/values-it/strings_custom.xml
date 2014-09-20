@@ -15,7 +15,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Schermata di sblocco</string>
   <string name="keyboardview_keycode_random">Ricarica pulsanti casuali</string>
+  <string name="lockscreen_gesture_instructions">Disegnare gesture per sbloccare</string>
+  <string name="lockscreen_gesture_correct">Corretto!</string>
+  <string name="lockscreen_gesture_wrong">Riprova</string>
+  <string name="keyguard_accessibility_gesture_unlock">Sblocco con un gesto.</string>
+  <string name="keyguard_accessibility_gesture_area">Zona della gesture.</string>
+  <string name="kg_forgot_gesture_button_text">Gesture dimenticata</string>
+  <string name="kg_wrong_gesture">Gesture errata</string>
+  <string name="kg_gesture_instructions">Disegna la tua gesture</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">
+        Hai disegnato la gesture di sblocco in modo errato <xliff:g id="number">%d</xliff:g> volte.
+        \n\nProva ancora fra<xliff:g id="number">%d</xliff:g> secondi.
+    </string>
 </resources>

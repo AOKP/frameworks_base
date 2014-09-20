@@ -45,4 +45,6 @@
   <string name="app_window">Uygulama Penceresi</string>
   <string name="close">Kapat</string>
   <string name="status_bar_recent_lock_item_title">Listedeki uygulamayı kilitle</string>
+  <string name="dessert_case_settings_aokp_title">Tek boynuzlu atları göster</string>
+  <string name="dessert_case_settings_aokp_summary">Rüya içinde Android\'in tatlıları ile birlikte tek boynuzlu atları göster</string>
 </resources>

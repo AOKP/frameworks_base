@@ -19,6 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">再起動</string>
+  <string name="reboot_soft">ソフトリブート</string>
   <string name="reboot_recovery">リカバリー</string>
   <string name="reboot_download">ダウンロード</string>
   <string name="reboot_bootloader">ブートローダー</string>

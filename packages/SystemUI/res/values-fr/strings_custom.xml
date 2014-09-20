@@ -42,11 +42,13 @@
         processus and <xliff:g id="numservices">%2$d</xliff:g> services</string>
   <string name="running_process_item_user_label">Utilisateur: <xliff:g id="user_name">%1$s</xliff:g></string>
   <string name="permdesc_screenshot">Capture d\'écran</string>
-  <string name="permlab_screenshot">Permet à l\'application de prendre une capture une capture d\'écran. Celle-ci est protégée par SystemUI.</string>
+  <string name="permlab_screenshot">Permet à l\'application de prendre une capture d\'écran. Celle-ci est protégée par SystemUI.</string>
   <string name="screenshot_toast">Capture d\'écran dans %1$d secondes</string>
   <string name="permdesc_screenrecord">Capture vidéo</string>
   <string name="permlab_screenrecord">Permet à l\'application d\'enregistrer l\'écran. Ceci est protégé par SystemUI.</string>
   <string name="app_window">Fenêtre des applications</string>
   <string name="close">Fermer</string>
   <string name="status_bar_recent_lock_item_title">Verrouiller appli dans la liste</string>
+  <string name="dessert_case_settings_aokp_title">Montrer les licornes</string>
+  <string name="dessert_case_settings_aokp_summary">Montrer dans un rêve les licornes ainsi que les desserts d\'Android</string>
 </resources>

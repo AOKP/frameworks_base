@@ -49,4 +49,6 @@
   <string name="app_window">Alkalmazás ablak</string>
   <string name="close">Bezárás</string>
   <string name="status_bar_recent_lock_item_title">Alkalmazás rögzítése a listában</string>
+  <string name="dessert_case_settings_aokp_title">Egyszarvúak megjelenítése</string>
+  <string name="dessert_case_settings_aokp_summary">Álmodozásokban az egyszarvúak megjelenítése az Android desszertekel együtt</string>
 </resources>
