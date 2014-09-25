@@ -98,6 +98,8 @@ public abstract class BaseStatusBar extends SystemUI implements
     protected static final int MSG_SHOW_HEADS_UP = 1026;
     protected static final int MSG_HIDE_HEADS_UP = 1027;
     protected static final int MSG_ESCALATE_HEADS_UP = 1028;
+    protected static final int MSG_TOGGLE_LAST_APP = 1029;
+    protected static final int MSG_TOGGLE_KILL_APP = 1030;
 
     protected static final boolean ENABLE_HEADS_UP = true;
     // scores above this threshold should be displayed in heads up mode.
@@ -521,6 +523,20 @@ public abstract class BaseStatusBar extends SystemUI implements
     @Override
     public void hideSearchPanel() {
         int msg = MSG_CLOSE_SEARCH_PANEL;
+        mHandler.removeMessages(msg);
+        mHandler.sendEmptyMessage(msg);
+    }
+
+    @Override
+    public void toggleLastApp() {
+        int msg = MSG_TOGGLE_LAST_APP;
+        mHandler.removeMessages(msg);
+        mHandler.sendEmptyMessage(msg);
+    }
+
+    @Override
+    public void toggleKillApp() {
+        int msg = MSG_TOGGLE_KILL_APP;
         mHandler.removeMessages(msg);
         mHandler.sendEmptyMessage(msg);
     }
