@@ -19,6 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">Starta om</string>
+  <string name="reboot_soft">Mjuk omstart</string>
   <string name="reboot_recovery">Recovery</string>
   <string name="reboot_download">Ladda ner</string>
   <string name="reboot_bootloader">Bootloader</string>
@@ -93,4 +94,5 @@
   <string name="permdesc_readPhoneBlacklist">Tillåter en app att läsa information om telefonnummer som blockeras för inkommande samtal eller meddelanden.</string>
   <string name="permlab_changePhoneBlacklist">ändra telefonens svartlista</string>
   <string name="permdesc_changePhoneBlacklist">Tillåter en app att ändra de telefonnummer som är blockerade för inkommande samtal eller meddelanden.</string>
+  <string name="usb_storage_notification_manage_message">Tryck för att hantera</string>
 </resources>

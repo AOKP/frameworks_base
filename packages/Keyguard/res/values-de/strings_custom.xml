@@ -18,4 +18,15 @@ limitations under the License.
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Sperrbildschirm</string>
   <string name="keyboardview_keycode_random">Aktualisiere zufällige Knöpfe</string>
+  <string name="lockscreen_gesture_instructions">Zum Entsperren Geste zeichnen</string>
+  <string name="lockscreen_gesture_correct">Korrekt!</string>
+  <string name="lockscreen_gesture_wrong">Nochmal versuchen</string>
+  <string name="keyguard_accessibility_gesture_unlock">Entsperrungsgeste.</string>
+  <string name="keyguard_accessibility_gesture_area">Gestenbereich.</string>
+  <string name="kg_forgot_gesture_button_text">Geste vergessen</string>
+  <string name="kg_wrong_gesture">Falsche Geste</string>
+  <string name="kg_gesture_instructions">Geste zeichnen</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">
+        Sie haben Ihr Entsperrungsmuster <xliff:g id="NUMBER_0">%d</xliff:g>-mal falsch gezeichnet. "\n\n"Bitte versuchen Sie es in <xliff:g id="NUMBER_1">%d</xliff:g> Sekunden noch einmal.
+    </string>
 </resources>

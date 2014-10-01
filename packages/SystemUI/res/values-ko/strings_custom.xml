@@ -45,4 +45,6 @@
   <string name="app_window">애플리케이션 창</string>
   <string name="close">닫기</string>
   <string name="status_bar_recent_lock_item_title">목록에서 응용 프로그램 잠금</string>
+  <string name="dessert_case_settings_aokp_title">유니콘을 표시</string>
+  <string name="dessert_case_settings_aokp_summary">유니콘과 꿈안에 안드로이드 디저트와함께</string>
 </resources>

@@ -18,4 +18,13 @@ limitations under the License.
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">잠금화면</string>
   <string name="keyboardview_keycode_random">임의의 버튼을 다시불러오기</string>
+  <string name="lockscreen_gesture_instructions">잠금을 해제 하려면 제스처 그리기</string>
+  <string name="lockscreen_gesture_correct">수정!</string>
+  <string name="lockscreen_gesture_wrong">다시 시도해 보세요.</string>
+  <string name="keyguard_accessibility_gesture_unlock">제스처 잠금해제</string>
+  <string name="keyguard_accessibility_gesture_area">제스쳐 영역</string>
+  <string name="kg_forgot_gesture_button_text">제스쳐 분실</string>
+  <string name="kg_wrong_gesture">잘못된 제스쳐</string>
+  <string name="kg_gesture_instructions">당신의 제스처 그리기</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">잠금해제 패턴을 <xliff:g id="NUMBER_0">%d</xliff:g>회 잘못 그렸습니다. "\n\n"<xliff:g id="NUMBER_1">%d</xliff:g>초 후에 다시 시도하세요.</string>
 </resources>

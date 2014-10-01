@@ -49,4 +49,6 @@
   <string name="app_window">Anwendungsfenster</string>
   <string name="close">Schließen</string>
   <string name="status_bar_recent_lock_item_title">App in Liste sperren</string>
+  <string name="dessert_case_settings_aokp_title">Einhörner anzeigen</string>
+  <string name="dessert_case_settings_aokp_summary">Einhörner zusammen mit Android-Nachspeisen im Traum anzeigen</string>
 </resources>

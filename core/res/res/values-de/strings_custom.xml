@@ -19,6 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">Neustart</string>
+  <string name="reboot_soft">Schneller Neustart</string>
   <string name="reboot_recovery">Recovery</string>
   <string name="reboot_download">Download</string>
   <string name="reboot_bootloader">Bootloader</string>

@@ -45,4 +45,6 @@
   <string name="app_window">應用程式視窗</string>
   <string name="close">關閉</string>
   <string name="status_bar_recent_lock_item_title">鎖定應用程式於清單</string>
+  <string name="dessert_case_settings_aokp_title">顯示獨角獸</string>
+  <string name="dessert_case_settings_aokp_summary">在 Android 彩蛋中顯示獨角獸</string>
 </resources>

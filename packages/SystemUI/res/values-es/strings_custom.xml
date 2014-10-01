@@ -45,4 +45,6 @@
   <string name="app_window">Ventana de la aplicación</string>
   <string name="close">Cerrar</string>
   <string name="status_bar_recent_lock_item_title">Fijar aplicación en la lista</string>
+  <string name="dessert_case_settings_aokp_title">Mostrar los unicornios</string>
+  <string name="dessert_case_settings_aokp_summary">Mostrar los unicornios junto con postres de Android dentro del sueño</string>
 </resources>

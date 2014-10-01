@@ -18,4 +18,14 @@ limitations under the License.
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Zamčená obrazovka</string>
   <string name="keyboardview_keycode_random">Načíst tlačítka náhodně</string>
+  <string name="lockscreen_gesture_instructions">Nakreslit gesto pro odemčení</string>
+  <string name="lockscreen_gesture_correct">Správně!</string>
+  <string name="lockscreen_gesture_wrong">Zkusit znovu</string>
+  <string name="keyguard_accessibility_gesture_unlock">Odemykací gesto.</string>
+  <string name="keyguard_accessibility_gesture_area">Prostor gesta.</string>
+  <string name="kg_forgot_gesture_button_text">Zapomenout gesto</string>
+  <string name="kg_wrong_gesture">Špatné gesto</string>
+  <string name="kg_gesture_instructions">Nakreslit gesto</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">Složité gesto bylo <xliff:g id="number">%d</xliff:g>x špatně nakresleno.
+\n\nVyzkoušet znovu za <xliff:g id="number">%d</xliff:g> sekund.</string>
 </resources>

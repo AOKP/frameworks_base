@@ -18,4 +18,16 @@ limitations under the License.
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Låsskärm</string>
   <string name="keyboardview_keycode_random">Ladda om blandade knappar</string>
+  <string name="lockscreen_gesture_instructions">Rita mönster för att låsa upp</string>
+  <string name="lockscreen_gesture_correct">Korrekt!</string>
+  <string name="lockscreen_gesture_wrong">Försök igen</string>
+  <string name="keyguard_accessibility_gesture_unlock">Mönsterupplåsning</string>
+  <string name="keyguard_accessibility_gesture_area">Mönsterområde.</string>
+  <string name="kg_forgot_gesture_button_text">Glöm gest</string>
+  <string name="kg_wrong_gesture">Fel gest</string>
+  <string name="kg_gesture_instructions">Rita din gest</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">
+        Du har ritat ditt grafiska lösenord fel <xliff:g id="number">%d</xliff:g> gånger.
+        \n\nFörsök igen om <xliff:g id="number">%d</xliff:g> sekunder.
+    </string>
 </resources>

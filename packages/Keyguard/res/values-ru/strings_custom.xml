@@ -18,4 +18,16 @@ limitations under the License.
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Экран блокировки</string>
   <string name="keyboardview_keycode_random">Сброс случайных кнопок</string>
+  <string name="lockscreen_gesture_instructions">Нарисуйте жест для разблокировки</string>
+  <string name="lockscreen_gesture_correct">Правильно!</string>
+  <string name="lockscreen_gesture_wrong">Попробуйте снова</string>
+  <string name="keyguard_accessibility_gesture_unlock">Разблокировка жестом.</string>
+  <string name="keyguard_accessibility_gesture_area">Место для жеста.</string>
+  <string name="kg_forgot_gesture_button_text">Забыли жест</string>
+  <string name="kg_wrong_gesture">Неверный жест</string>
+  <string name="kg_gesture_instructions">Нарисуйте Ваш жест</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">
+        Вы нарисовали неверный жест разблокировки <xliff:g id="number">%d</xliff:g> раз.
+        \n\nПопробуйте снова через <xliff:g id="number">%d</xliff:g> с.
+    </string>
 </resources>

@@ -18,4 +18,16 @@ limitations under the License.
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Ekran blokady</string>
   <string name="keyboardview_keycode_random">Przeładuj losowe przyciski</string>
+  <string name="lockscreen_gesture_instructions">Narysuj gest, by odblokować</string>
+  <string name="lockscreen_gesture_correct">Prawidłowo!</string>
+  <string name="lockscreen_gesture_wrong">Spróbuj ponownie</string>
+  <string name="keyguard_accessibility_gesture_unlock">Odblokowanie gestem.</string>
+  <string name="keyguard_accessibility_gesture_area">Pole do wprowadzenia gestu.</string>
+  <string name="kg_forgot_gesture_button_text">Zapomniałem gest</string>
+  <string name="kg_wrong_gesture">Nieprawidłowy gest</string>
+  <string name="kg_gesture_instructions">Narysuj swój gest</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">
+        Błędnie narysowano gest <xliff:g id="number">%d</xliff:g> razy.
+        \n\nSpróbuj ponownie za <xliff:g id="number">%d</xliff:g> sekund.
+    </string>
 </resources>

@@ -18,4 +18,16 @@ limitations under the License.
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">Pantalla de bloqueo</string>
   <string name="keyboardview_keycode_random">Recargar botones aleatoriamente</string>
+  <string name="lockscreen_gesture_instructions">Dibujar gesto para desbloqueo</string>
+  <string name="lockscreen_gesture_correct">¡Correcto!</string>
+  <string name="lockscreen_gesture_wrong">Inténtelo de nuevo</string>
+  <string name="keyguard_accessibility_gesture_unlock">Gesto de desbloqueo.</string>
+  <string name="keyguard_accessibility_gesture_area">Área de gesto.</string>
+  <string name="kg_forgot_gesture_button_text">Olvidó el gesto</string>
+  <string name="kg_wrong_gesture">Gesto erróneo</string>
+  <string name="kg_gesture_instructions">Dibuje su gesto</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">
+        Ha dibujado incorrectamente su gesto de desbloqueo <xliff:g id="number">%d</xliff:g> veces.
+\n\nInténtelo de nuevo dentro de <xliff:g id="number">%d</xliff:g> segundos.
+    </string>
 </resources>

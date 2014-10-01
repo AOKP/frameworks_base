@@ -18,4 +18,13 @@ limitations under the License.
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="app_name">锁屏</string>
   <string name="keyboardview_keycode_random">重新加载随机按钮</string>
+  <string name="lockscreen_gesture_instructions">绘制手势解锁</string>
+  <string name="lockscreen_gesture_correct">正确！</string>
+  <string name="lockscreen_gesture_wrong">请重试</string>
+  <string name="keyguard_accessibility_gesture_unlock">手势解锁</string>
+  <string name="keyguard_accessibility_gesture_area">手势区域</string>
+  <string name="kg_forgot_gesture_button_text">忘记手势</string>
+  <string name="kg_wrong_gesture">错误手势</string>
+  <string name="kg_gesture_instructions">绘制您的手势</string>
+  <string name="kg_too_many_failed_gesture_attempts_dialog_message">您已经 <xliff:g id="number">%d</xliff:g> 次错误地绘制了解锁图案。\n\n请在 <xliff:g id="number">%d</xliff:g> 秒后重试。</string>
 </resources>

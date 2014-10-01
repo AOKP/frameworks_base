@@ -19,6 +19,7 @@
 -->
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
   <string name="reboot">重新啟動</string>
+  <string name="reboot_soft">軟重新啟動</string>
   <string name="reboot_recovery">修復模式</string>
   <string name="reboot_download">下載</string>
   <string name="reboot_bootloader">啟動載入器</string>
@@ -86,8 +87,8 @@
   <string name="permdesc_readThemesDesc">允許應用程式讀取您的主題，並確定您已套用的主題。</string>
   <string name="permlab_writeThemes">變更佈景主題</string>
   <string name="permdesc_writeThemesDesc">允許程式變更目前主题，並插入新的主題。</string>
-  <string name="permlab_setKeyguardWallpaper">設定螢幕鎖定牆紙</string>
-  <string name="permdesc_setKeyguardWallpaper">允許應用程式變更螢幕鎖定牆紙。</string>
+  <string name="permlab_setKeyguardWallpaper">設定鍵盤鎖的牆紙</string>
+  <string name="permdesc_setKeyguardWallpaper">允許應用程式變更鎖定畫面牆紙。</string>
   <string name="permgrouplab_security">安全</string>
   <string name="permgroupdesc_security">與裝置安全資訊相關的許可權。</string>
   <string name="permlab_readPhoneBlacklist">讀取電話黑名單</string>
