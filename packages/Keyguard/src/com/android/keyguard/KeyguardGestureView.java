@@ -26,11 +26,14 @@ import android.gesture.Gesture;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -82,6 +85,7 @@ public class KeyguardGestureView extends LinearLayout implements KeyguardSecurit
     private SecurityMessageDisplay mSecurityMessageDisplay;
     private View mEcaView;
     private Drawable mBouncerFrame;
+    private GestureDetector mDoubleTapGesture;
 
     enum FooterMode {
         Normal,
@@ -111,6 +115,15 @@ public class KeyguardGestureView extends LinearLayout implements KeyguardSecurit
         mLockPatternUtils = mLockPatternUtils == null
                 ? new LockPatternUtils(mContext) : mLockPatternUtils;
 
+        mDoubleTapGesture = new GestureDetector(mContext,
+                new GestureDetector.SimpleOnGestureListener() {
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                PowerManager pm = (PowerManager) mContext.getSystemService(Context.POWER_SERVICE);
+                if (pm != null) pm.goToSleep(e.getEventTime());
+                return true;
+            }
+        });
         mLockGestureView = (LockGestureView) findViewById(R.id.lock_gesture_view);
         mLockGestureView.setSaveEnabled(false);
         mLockGestureView.setFocusable(false);
@@ -118,6 +131,16 @@ public class KeyguardGestureView extends LinearLayout implements KeyguardSecurit
 
         // stealth mode will be the same for the life of this screen
         mLockGestureView.setInStealthMode(!mLockPatternUtils.isVisibleGestureEnabled());
+
+        if (Settings.AOKP.getInt(mContext.getContentResolver(),
+                    Settings.AOKP.DOUBLE_TAP_SLEEP_GESTURE, 0) == 1) {
+            mLockGestureView.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return mDoubleTapGesture.onTouchEvent(event);
+                }
+            });
+        }
 
         mForgotGestureButton = (Button) findViewById(R.id.forgot_password_button);
         // note: some configurations don't have an emergency call area
