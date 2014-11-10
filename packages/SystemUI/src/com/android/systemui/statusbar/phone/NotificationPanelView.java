@@ -36,8 +36,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Handler;
-import android.os.PowerManager;
-import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.MathUtils;
@@ -253,6 +251,10 @@ public class NotificationPanelView extends PanelView implements
     private int mCustomDashWidth;
     private int mCustomDashGap;
 
+    private Handler mHandler = new Handler();
+    private SettingsObserver mSettingsObserver;
+    private boolean mOneFingerQuickSettingsIntercept;
+
     public NotificationPanelView(Context context, AttributeSet attrs) {
         super(context, attrs);
         setWillNotDraw(!DEBUG);
@@ -326,6 +328,7 @@ public class NotificationPanelView extends PanelView implements
         mKeyguardWeatherInfo = (TextView) mKeyguardStatusView.findViewById(R.id.weather_info);
         setQSStroke();
         setQSBackgroundAlpha();
+        mSettingsObserver = new SettingsObserver(mHandler);
     }
 
     @Override
@@ -880,7 +883,13 @@ public class NotificationPanelView extends PanelView implements
                 && mQsExpansionEnabled) {
             mTwoFingerQsExpandPossible = true;
         }
-        if (mTwoFingerQsExpandPossible && isOpenQsEvent(event)
+        boolean twoFingerQsEvent = mTwoFingerQsExpandPossible
+                && (event.getActionMasked() == MotionEvent.ACTION_POINTER_DOWN
+                && event.getPointerCount() == 2);
+        boolean oneFingerQsOverride = mOneFingerQuickSettingsIntercept
+                && event.getActionMasked() == MotionEvent.ACTION_DOWN
+                && shouldQuickSettingsIntercept(event.getX(), event.getY(), -1, false);
+        if ((twoFingerQsEvent || oneFingerQsOverride) && isOpenQsEvent(event)
                 && event.getY(event.getActionIndex()) < mStatusBarMinHeight) {
             MetricsLogger.count(mContext, COUNTER_PANEL_OPEN_QS, 1);
             mQsExpandImmediate = true;
@@ -1456,18 +1465,30 @@ public class NotificationPanelView extends PanelView implements
      * @return Whether we should intercept a gesture to open Quick Settings.
      */
     private boolean shouldQuickSettingsIntercept(float x, float y, float yDiff) {
+        return shouldQuickSettingsIntercept(x, y, yDiff, true);
+    }
+
+    /**
+     * @return Whether we should intercept a gesture to open Quick Settings.
+     */
+    private boolean shouldQuickSettingsIntercept(float x, float y, float yDiff, boolean useHeader) {
         if (!mQsExpansionEnabled || mCollapsedOnDown) {
             return false;
         }
         View header = mKeyguardShowing ? mKeyguardStatusBar : mQsContainer.getHeader();
-        boolean onHeader = x >= mQsAutoReinflateContainer.getX()
+        boolean onHeader = useHeader && x >= mQsAutoReinflateContainer.getX()
                 && x <= mQsAutoReinflateContainer.getX() + mQsAutoReinflateContainer.getWidth()
                 && y >= header.getTop() && y <= header.getBottom();
+
+        final float w = getMeasuredWidth();
+        float region = (w * (1.f/3.f)); // TODO overlay region fraction?
+        final boolean showQsOverride = isLayoutRtl() ? (x < region) : (w - region < x)
+                        && mStatusBarState == StatusBarState.SHADE;
 
         if (mQsExpanded) {
             return onHeader || (yDiff < 0 && isInQsArea(x, y));
         } else {
-            return onHeader;
+            return onHeader || showQsOverride;
         }
     }
 
@@ -2491,6 +2512,8 @@ public class NotificationPanelView extends PanelView implements
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN), false, this);
             update();
         }
 
@@ -2527,7 +2550,8 @@ public class NotificationPanelView extends PanelView implements
                     Settings.System.QS_STROKE_DASH_WIDTH, 0);
             mCustomDashGap = Settings.System.getInt(resolver,
                     Settings.System.QS_STROKE_DASH_GAP, 10);
-
+            mOneFingerQuickSettingsIntercept = Settings.System.getInt(
+                    resolver, Settings.System.STATUS_BAR_QUICK_QS_PULLDOWN, 1) == 1;
             setQSStroke();
             setQSBackgroundAlpha();
         }
