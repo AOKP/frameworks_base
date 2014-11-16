@@ -70,14 +70,11 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemClock;
-import android.os.SystemProperties;
 import android.os.Trace;
 import android.os.UserHandle;
-import android.text.TextUtils;
 import android.util.EventLog;
 import android.util.Slog;
 import android.view.Display;
-import com.android.internal.app.ActivityTrigger;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -256,18 +253,7 @@ final class ActivityStack {
 
     final Handler mHandler;
 
-    static final ActivityTrigger mActivityTrigger;
-
-    static {
-        if (!TextUtils.isEmpty(SystemProperties.get("ro.vendor.extension_library"))) {
-            mActivityTrigger = new ActivityTrigger();
-        } else {
-            mActivityTrigger = null;
-        }
-    }
-
     final class ActivityStackHandler extends Handler {
-
         //public Handler() {
         //    if (localLOGV) Slog.v(TAG, "Handler started!");
         //}
@@ -1364,10 +1350,6 @@ final class ActivityStack {
         next.updateOptionsLocked(options);
 
         if (DEBUG_SWITCH) Slog.v(TAG, "Resuming " + next);
-
-        if (mActivityTrigger != null) {
-            mActivityTrigger.activityResumeTrigger(next.intent);
-        }
 
         // If we are currently pausing an activity, then don't do anything
         // until that is done.
