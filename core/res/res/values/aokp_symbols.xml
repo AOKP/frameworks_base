@@ -152,4 +152,10 @@
   <!-- Dyanamic Navbar -->
   <java-symbol type="color" name="input_method_navigation_guard_dynamic" />
 
+  <!-- Developer settings - Kill app back press -->
+  <java-symbol type="string" name="app_killed_message" />
+
+  <!-- Config.xml entries -->
+  <java-symbol type="integer" name="config_backKillTimeout" />
+
 </resources>
