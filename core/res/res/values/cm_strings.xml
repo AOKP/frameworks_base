@@ -160,4 +160,7 @@
 
     <!-- Notify user that they are in Lock-to-app (for devices without navbar) -->
     <string name="lock_to_app_toast_no_navbar">To unpin this screen, touch and hold the Back button.</string>
+
+    <!-- Long-press back kill application -->
+    <string name="app_killed_message">Application killed</string>
 </resources>
