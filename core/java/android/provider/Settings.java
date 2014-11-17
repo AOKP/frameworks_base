@@ -2704,6 +2704,12 @@ public final class Settings {
         };
 
         /**
+         * Timeout of long-pressing the Back button
+         * @hide
+         */
+        public static final String KILL_APP_LONGPRESS_TIMEOUT = "kill_app_longpress_timeout";
+
+        /**
          * Scaling factor for fonts, float.
          */
         public static final String FONT_SCALE = "font_scale";
@@ -6185,6 +6191,19 @@ public final class Settings {
         public static final String SCREENSAVER_DEFAULT_COMPONENT = "screensaver_default_component";
 
         /**
+        * Whether to allow killing of the foreground app by long-pressing the Back button
+         * @hide
+         */
+
+        public static final String KILL_APP_LONGPRESS_BACK = "kill_app_longpress_back";
+
+        /**
+         * Timeout of long-pressing the Back button
+         * @hide
+         */
+        public static final String KILL_APP_LONGPRESS_TIMEOUT = "kill_app_longpress_timeout";
+
+        /**
          * The default NFC payment component
          * @hide
          */
@@ -6473,6 +6492,12 @@ public final class Settings {
         public static final String VOLUME_LINK_NOTIFICATION = "volume_link_notification";
 
         /**
+         * Holds comma separated list of ordering of QS tiles.
+         * @hide
+         */
+        public static final String QS_TILES = "sysui_qs_tiles";
+
+        /**
          * This are the settings to be backed up.
          *
          * NOTE: Settings are backed up and restored in the order they appear
@@ -6548,7 +6573,7 @@ public final class Settings {
             INCALL_POWER_BUTTON_BEHAVIOR,
             WIFI_DISCONNECT_DELAY_DURATION,
             ADVANCED_REBOOT,
-            CAMERA_GESTURE_DISABLED
+            QS_TILES
         };
 
         /**
