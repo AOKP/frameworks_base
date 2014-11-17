@@ -79,6 +79,7 @@ import static android.view.WindowManager.LayoutParams.PRIVATE_FLAG_NAV_HIDE_FORC
 import static android.view.WindowManager.LayoutParams.PRIVATE_FLAG_SHOW_FOR_ALL_USERS;
 import static android.view.WindowManager.LayoutParams.PRIVATE_FLAG_STATUS_HIDE_FORCED;
 import static android.view.WindowManager.LayoutParams.PRIVATE_FLAG_STATUS_BAR_EXPANDED;
+import static android.view.WindowManager.LayoutParams.PRIVATE_FLAG_STATUS_HIDE_FORCED;
 import static android.view.WindowManager.LayoutParams.PRIVATE_FLAG_SYSTEM_ERROR;
 import static android.view.WindowManager.LayoutParams.PRIVATE_FLAG_WAS_NOT_FULLSCREEN;
 import static android.view.WindowManager.LayoutParams.ROTATION_ANIMATION_CROSSFADE;
