@@ -7162,6 +7162,12 @@ public final class Settings {
         public static final String WEB_ACTION_ENABLED = "web_action_enabled";
 
         /**
+         * Whether user is allowed to pull down quick settings on secure keyguard.
+         * @hide
+         */
+        public static final String STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD = "status_bar_locked_on_secure_keyguard";
+
+        /**
          * This are the settings to be backed up.
          *
          * NOTE: Settings are backed up and restored in the order they appear
@@ -7244,6 +7250,7 @@ public final class Settings {
             CAMERA_DOUBLE_TAP_POWER_GESTURE_DISABLED,
             SYSTEM_NAVIGATION_KEYS_ENABLED,
             QS_TILES,
+            STATUS_BAR_LOCKED_ON_SECURE_KEYGUARD,
             DOZE_ENABLED,
             DOZE_PULSE_ON_PICK_UP,
             DOZE_PULSE_ON_DOUBLE_TAP
