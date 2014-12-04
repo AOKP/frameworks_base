@@ -516,4 +516,9 @@ public class IWindowManagerImpl implements IWindowManager {
     @Override
     public void toggleGlobalMenu() {
     }
+
+    @Override
+    public boolean hasPermanentMenuKey() {
+        return true;
+    }
 }

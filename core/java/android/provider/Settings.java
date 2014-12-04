@@ -3008,6 +3008,12 @@ public final class Settings {
 
 
         /**
+         * Enable HW keys
+         * @hide
+         */
+        public static final String ENABLE_HW_KEYS = "enable_hw_keys";
+
+        /**
          * Date format string
          *   mm/dd/yyyy
          *   dd/mm/yyyy

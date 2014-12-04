@@ -28,4 +28,7 @@
     <string-array name="config_disabledComponents" translatable="false">
     </string-array>
 
+    <!-- Hardware keys on/off option -->
+    <bool name="config_hwKeysPref">false</bool>
+
 </resources>
