@@ -21,6 +21,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
 import android.app.AlarmManager;
+import android.app.AppOpsManager;
 import android.app.IAlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -63,7 +64,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Locale;
-import java.util.Random;
 import java.util.TimeZone;
 
 import static android.app.AlarmManager.RTC_WAKEUP;
@@ -121,12 +121,9 @@ class AlarmManagerService extends SystemService {
     private final ArrayList<Integer> mBlockedUids = new ArrayList<Integer>();
 
     long mNativeData;
+    private long mNextWakeup;
     private long mNextRtcWakeup;
-    private final Random mFuzzer = new Random();
-    private long mNextWakeupBatchStart;     // nominal start of next wakeup's delivery window
-    private long mNextWakeup;               // actual scheduled next wakeup within that window
     private long mNextNonWakeup;
-
     int mBroadcastRefCount = 0;
     PowerManager.WakeLock mWakeLock;
     boolean mLastWakeLockUnimportantForLogging;
@@ -159,6 +156,8 @@ class AlarmManagerService extends SystemService {
     // May only use on mHandler's thread, locking not required.
     private final SparseArray<AlarmManager.AlarmClockInfo> mHandlerSparseAlarmClockArray =
             new SparseArray<>();
+
+    private AppOpsManager mAppOps;
 
     // Alarm delivery ordering bookkeeping
     static final int PRIO_TICK = 0;
@@ -399,27 +398,14 @@ class AlarmManagerService extends SystemService {
 
     static class BatchTimeOrder implements Comparator<Batch> {
         public int compare(Batch b1, Batch b2) {
-            final long start1 = b1.start;
-            final long start2 = b2.start;
-            if (start1 > start2) {
+            long when1 = b1.start;
+            long when2 = b2.start;
+            if (when1 - when2 > 0) {
                 return 1;
             }
-            if (start1 < start2) {
+            if (when1 - when2 < 0) {
                 return -1;
             }
-
-            // Identical trigger times.  As a secondary ordering, require that
-            // the batch with the shorter allowable delivery window sorts first.
-            final long interval1 = b1.end - b1.start;
-            final long interval2 = b2.end - b2.start;
-            if (interval1 > interval2) {
-                return 1;
-            }
-            if (interval2 < interval1) {
-                return -1;
-            }
-
-            // equal start + delivery window => they're identical
             return 0;
         }
     }
@@ -570,7 +556,7 @@ class AlarmManagerService extends SystemService {
                 }
                 setImplLocked(a.type, a.when, whenElapsed, a.windowLength, maxElapsed,
                         a.repeatInterval, a.operation, batch.standalone, doValidate, a.workSource,
-                        a.alarmClock, a.userId);
+                        a.alarmClock, a.userId, false);
             }
         }
     }
@@ -644,7 +630,7 @@ class AlarmManagerService extends SystemService {
     @Override
     public void onStart() {
         mNativeData = init();
-        mNextWakeup = mNextRtcWakeup = mNextWakeupBatchStart = mNextNonWakeup = 0;
+        mNextWakeup = mNextRtcWakeup = mNextNonWakeup = 0;
 
         // We have to set current TimeZone info to kernel
         // because kernel doesn't keep this after reboot
@@ -677,6 +663,8 @@ class AlarmManagerService extends SystemService {
         } else {
             Slog.w(TAG, "Failed to open alarm driver. Falling back to a handler.");
         }
+
+        mAppOps = (AppOpsManager) getContext().getSystemService(Context.APP_OPS_SERVICE);
 
         publishBinderService(Context.ALARM_SERVICE, mService);
     }
@@ -775,6 +763,24 @@ class AlarmManagerService extends SystemService {
 
         final int userId = UserHandle.getCallingUserId();
 
+        boolean wakeupFiltered = false;
+        if (operation.getCreatorUid() >= Process.FIRST_APPLICATION_UID &&
+                (type == AlarmManager.RTC_WAKEUP
+                        || type == AlarmManager.ELAPSED_REALTIME_WAKEUP)
+                && mAppOps.checkOpNoThrow(AppOpsManager.OP_ALARM_WAKEUP,
+                        operation.getCreatorUid(),
+                        operation.getCreatorPackage())
+                != AppOpsManager.MODE_ALLOWED) {
+
+            if (type == AlarmManager.RTC_WAKEUP) {
+                type = AlarmManager.RTC;
+            } else {
+                type = AlarmManager.ELAPSED_REALTIME;
+            }
+
+            wakeupFiltered = true;
+        }
+
         synchronized (mLock) {
             if (DEBUG_BATCH) {
                 Slog.v(TAG, "set(" + operation + ") : type=" + type
@@ -783,17 +789,28 @@ class AlarmManagerService extends SystemService {
                         + " interval=" + interval + " standalone=" + isStandalone);
             }
             setImplLocked(type, triggerAtTime, triggerElapsed, windowLength, maxElapsed,
-                    interval, operation, isStandalone, true, workSource, alarmClock, userId);
+                    interval, operation, isStandalone, true, workSource, alarmClock, userId,
+                    wakeupFiltered);
         }
     }
 
     private void setImplLocked(int type, long when, long whenElapsed, long windowLength,
             long maxWhen, long interval, PendingIntent operation, boolean isStandalone,
             boolean doValidate, WorkSource workSource, AlarmManager.AlarmClockInfo alarmClock,
-            int userId) {
+            int userId, boolean wakeupFiltered) {
         Alarm a = new Alarm(type, when, whenElapsed, windowLength, maxWhen, interval,
                 operation, workSource, alarmClock, userId);
-        removeLocked(operation);
+
+        // Remove this alarm if already scheduled.
+        final boolean foundExistingWakeup = removeWithStatusLocked(operation);
+
+        // note AppOp for accounting purposes
+        // skip if the alarm already existed
+        if (!foundExistingWakeup && wakeupFiltered) {
+            mAppOps.noteOpNoThrow(AppOpsManager.OP_ALARM_WAKEUP,
+                    operation.getCreatorUid(),
+                    operation.getCreatorPackage());
+        }
 
         int whichBatch = (isStandalone) ? -1 : attemptCoalesceLocked(whenElapsed, maxWhen);
         if (whichBatch < 0) {
@@ -840,7 +857,6 @@ class AlarmManagerService extends SystemService {
                         "AlarmManager.set");
             }
 
-            // Exact alarms are standalone; inexact get batched together
             setImpl(type, triggerAtTime, windowLength, interval, operation,
                     windowLength == AlarmManager.WINDOW_EXACT, workSource, alarmClock);
         }
@@ -945,7 +961,7 @@ class AlarmManagerService extends SystemService {
 
             pw.print("nowRTC="); pw.print(nowRTC);
             pw.print("="); pw.print(sdf.format(new Date(nowRTC)));
-            pw.print(" nowELAPSED="); pw.print(nowELAPSED);
+            pw.print(" nowELAPSED="); TimeUtils.formatDuration(nowELAPSED, pw);
             pw.println();
             if (!mInteractive) {
                 pw.print("Time since non-interactive: ");
@@ -1151,6 +1167,17 @@ class AlarmManagerService extends SystemService {
         return true;
     }
 
+    private Batch findFirstWakeupBatchLocked() {
+        final int N = mAlarmBatches.size();
+        for (int i = 0; i < N; i++) {
+            Batch b = mAlarmBatches.get(i);
+            if (b.hasWakeups()) {
+                return b;
+            }
+        }
+        return null;
+    }
+
     private Batch findFirstRtcWakeupBatchLocked() {
         final int N = mAlarmBatches.size();
         for (int i = 0; i < N; i++) {
@@ -1296,47 +1323,13 @@ class AlarmManagerService extends SystemService {
         // prior to that which contains no wakeups, we schedule that as well.
         long nextNonWakeup = 0;
         if (mAlarmBatches.size() > 0) {
-            // Find the first wakeup alarm and note the following batch as well.  We'll be
-            // choosing a fuzzed delivery time within the first's allowable interval but
-            // ensuring that it does not encroach on the second's start time, to minimize
-            // alarm reordering.
-            Batch firstWakeup = null, nextAfterWakeup = null;
-            final int N = mAlarmBatches.size();
-            for (int i = 0; i < N; i++) {
-                Batch b = mAlarmBatches.get(i);
-                if (b.hasWakeups()) {
-                    firstWakeup = b;
-                    if (i < N-1) {
-                        nextAfterWakeup = mAlarmBatches.get(i+1);
-                    }
-                    break;
-                }
-            }
-
-            // There's a subtlety here: we depend on the invariant that if two batches
-            // exist with the same start time, the one with the shorter delivery window
-            // is sorted before the other.  This guarantees us that we need only look
-            // at the first [relevant] batch in the queue in order to schedule an alarm
-            // appropriately.
+            final Batch firstWakeup = findFirstWakeupBatchLocked();
             final Batch firstBatch = mAlarmBatches.get(0);
-
             final Batch firstRtcWakeup = findFirstRtcWakeupBatchLocked();
-
-            if (firstWakeup != null && mNextWakeupBatchStart != firstWakeup.start) {
-                mNextWakeupBatchStart = mNextWakeup = firstWakeup.start;
-                final long windowEnd = (nextAfterWakeup == null)
-                        ? firstWakeup.end
-                        : Math.min(firstWakeup.end, nextAfterWakeup.start);
-                final long interval = windowEnd - firstWakeup.start;
-                // if the interval is over maxint we're into crazy land anyway, but
-                // just in case we check and don't fuzz if the conversion to int for
-                // random-number purposes would blow up
-                if (interval > 0 && interval < Integer.MAX_VALUE) {
-                    mNextWakeup += mFuzzer.nextInt((int) interval);
-                }
-                setLocked(ELAPSED_REALTIME_WAKEUP, mNextWakeup);
+            if (firstWakeup != null && mNextWakeup != firstWakeup.start) {
+                mNextWakeup = firstWakeup.start;
+                setLocked(ELAPSED_REALTIME_WAKEUP, firstWakeup.start);
             }
-
             if (firstRtcWakeup != null && mNextRtcWakeup != firstRtcWakeup.start) {
                 mNextRtcWakeup = firstRtcWakeup.start;
                 long when = firstRtcWakeup.getWhenByElapsedTime(mNextRtcWakeup);
@@ -1349,7 +1342,6 @@ class AlarmManagerService extends SystemService {
                 nextNonWakeup = firstBatch.start;
             }
         }
-
         if (mPendingNonWakeupAlarms.size() > 0) {
             if (nextNonWakeup == 0 || mNextNonWakeupDeliveryTime < nextNonWakeup) {
                 nextNonWakeup = mNextNonWakeupDeliveryTime;
@@ -1376,6 +1368,10 @@ class AlarmManagerService extends SystemService {
     }
 
     private void removeLocked(PendingIntent operation) {
+        removeWithStatusLocked(operation);
+    }
+
+    private boolean removeWithStatusLocked(PendingIntent operation) {
         boolean didRemove = false;
         for (int i = mAlarmBatches.size() - 1; i >= 0; i--) {
             Batch b = mAlarmBatches.get(i);
@@ -1407,6 +1403,8 @@ class AlarmManagerService extends SystemService {
             rescheduleKernelAlarmsLocked();
             updateNextAlarmClockLocked();
         }
+
+        return didRemove;
     }
 
     void removeLocked(String packageName) {
@@ -1586,7 +1584,7 @@ class AlarmManagerService extends SystemService {
                     setImplLocked(alarm.type, alarm.when + delta, nextElapsed, alarm.windowLength,
                             maxTriggerTime(nowELAPSED, nextElapsed, alarm.repeatInterval),
                             alarm.repeatInterval, alarm.operation, batch.standalone, true,
-                            alarm.workSource, alarm.alarmClock, alarm.userId);
+                            alarm.workSource, alarm.alarmClock, alarm.userId, false);
                 }
 
                 if (alarm.wakeup) {
@@ -1818,6 +1816,10 @@ class AlarmManagerService extends SystemService {
                         ActivityManagerNative.noteWakeupAlarm(
                                 alarm.operation, -1, null);
                     }
+                    // AppOps accounting
+                    mAppOps.noteOpNoThrow(AppOpsManager.OP_ALARM_WAKEUP,
+                            alarm.operation.getCreatorUid(),
+                            alarm.operation.getCreatorPackage());
                 }
             } catch (PendingIntent.CanceledException e) {
                 if (alarm.repeatInterval > 0) {
@@ -1876,7 +1878,8 @@ class AlarmManagerService extends SystemService {
                     }
                     Intent intent = new Intent(Intent.ACTION_TIME_CHANGED);
                     intent.addFlags(Intent.FLAG_RECEIVER_REPLACE_PENDING
-                            | Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT);
+                            | Intent.FLAG_RECEIVER_REGISTERED_ONLY_BEFORE_BOOT
+                            | Intent.FLAG_RECEIVER_FOREGROUND);
                     getContext().sendBroadcastAsUser(intent, UserHandle.ALL);
                 }
                 
@@ -2053,6 +2056,7 @@ class AlarmManagerService extends SystemService {
         public ClockReceiver() {
             IntentFilter filter = new IntentFilter();
             filter.addAction(Intent.ACTION_TIME_TICK);
+            filter.addAction(Intent.ACTION_TIME_CHANGED);
             filter.addAction(Intent.ACTION_DATE_CHANGED);
             getContext().registerReceiver(this, filter);
         }
@@ -2064,6 +2068,11 @@ class AlarmManagerService extends SystemService {
                     Slog.v(TAG, "Received TIME_TICK alarm; rescheduling");
                 }
                 scheduleTimeTickEvent();
+            } else if (intent.getAction().equals(Intent.ACTION_TIME_CHANGED)) {
+                if (DEBUG_BATCH) {
+                    Slog.v(TAG, "Received TIME_CHANGED alarm; reschedule date changed event.");
+                }
+                scheduleDateChangedEvent();
             } else if (intent.getAction().equals(Intent.ACTION_DATE_CHANGED)) {
                 // Since the kernel does not keep track of DST, we need to
                 // reset the TZ information at the beginning of each day
@@ -2092,7 +2101,7 @@ class AlarmManagerService extends SystemService {
         public void scheduleDateChangedEvent() {
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(System.currentTimeMillis());
-            calendar.set(Calendar.HOUR, 0);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
             calendar.set(Calendar.MILLISECOND, 0);
