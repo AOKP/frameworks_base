@@ -24,4 +24,6 @@
 
     <!-- Action(s) list background used on expanded notifications -->
     <drawable name="notification_action_list_bg">#00000000</drawable>
+    <!-- Notification action text color -->
+    <color name="notification_action_text_color">#ccc</color>
 </resources>
