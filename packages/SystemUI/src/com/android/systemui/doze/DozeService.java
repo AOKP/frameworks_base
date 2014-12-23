@@ -18,10 +18,12 @@ package com.android.systemui.doze;
 
 import android.app.UiModeManager;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.database.ContentObserver;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -32,13 +34,17 @@ import android.media.AudioAttributes;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.os.SystemClock;
+import android.os.UserHandle;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.service.dreams.DreamService;
 import android.util.Log;
 import android.view.Display;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.MetricsProto.MetricsEvent;
+
+import com.android.systemui.R;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.statusbar.phone.DozeParameters;
 
@@ -72,6 +78,13 @@ public class DozeService extends DreamService {
     private boolean mPowerSaveActive;
     private boolean mCarMode;
     private long mNotificationPulseTime;
+
+    private boolean mDozeTriggerPickup;
+    private boolean mDozeTriggerSigmotion;
+    private boolean mDozeTriggerNotification;
+    private boolean mDozeSchedule;
+
+    private PulseSchedule mSchedule = null;
 
     public DozeService() {
         if (DEBUG) Log.d(mTag, "new DozeService()");
@@ -152,6 +165,10 @@ public class DozeService extends DreamService {
             finishForCarMode();
             return;
         }
+
+        // Settings observer
+        SettingsObserver observer = new SettingsObserver(mHandler);
+        observer.observe();
 
         mDreaming = true;
         listenForPulseSignals(true);
@@ -283,10 +300,16 @@ public class DozeService extends DreamService {
 
     private void listenForPulseSignals(boolean listen) {
         if (DEBUG) Log.d(mTag, "listenForPulseSignals: " + listen);
-        mSigMotionSensor.setListening(listen);
-        mPickupSensor.setListening(listen);
+        if (mDozeTriggerPickup) {
+            mPickupSensor.setListening(listen);
+        }
+        if (mDozeTriggerSigmotion) {
+            mSigMotionSensor.setListening(listen);
+        }
         listenForBroadcasts(listen);
-        listenForNotifications(listen);
+        if (mDozeTriggerNotification) {
+            listenForNotifications(listen);
+        }
     }
 
     private void listenForBroadcasts(boolean listen) {
@@ -374,6 +397,70 @@ public class DozeService extends DreamService {
             }
         }
     };
+
+    /**
+     * Settingsobserver to take care of the user settings.
+     */
+    private class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DOZE_TRIGGER_PICKUP),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DOZE_TRIGGER_SIGMOTION),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DOZE_TRIGGER_NOTIFICATION),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DOZE_SCHEDULE),
+                    false, this, UserHandle.USER_ALL);
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            update();
+        }
+
+        public void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+
+            // Get preferences
+            mDozeTriggerPickup = (Settings.System.getIntForUser(resolver,
+                    Settings.System.DOZE_TRIGGER_PICKUP,
+                    mContext.getResources().getBoolean(
+                    R.bool.doze_pulse_on_pick_up) ? 1 : 0,
+                    UserHandle.USER_CURRENT) == 1);
+            mDozeTriggerSigmotion = (Settings.System.getIntForUser(resolver,
+                    Settings.System.DOZE_TRIGGER_SIGMOTION,
+                    mContext.getResources().getBoolean(
+                    R.bool.doze_pulse_on_significant_motion) ? 1 : 0,
+                    UserHandle.USER_CURRENT) == 1);
+            mDozeTriggerNotification = (Settings.System.getIntForUser(resolver,
+                    Settings.System.DOZE_TRIGGER_NOTIFICATION, 1,
+                    UserHandle.USER_CURRENT) == 1);
+            mDozeSchedule = (Settings.System.getIntForUser(resolver,
+                    Settings.System.DOZE_SCHEDULE, 1,
+                    UserHandle.USER_CURRENT) == 1);
+
+            updateDozeSchedule();
+        }
+
+        private void updateDozeSchedule() {
+            if (mDozeSchedule) {
+                mSchedule = mDozeParameters.getPulseSchedule();
+            } else {
+                mSchedule = mDozeParameters.getAlternatePulseSchedule();
+            }
+        }
+    }
 
     private class TriggerSensor extends TriggerEventListener {
         private final Sensor mSensor;

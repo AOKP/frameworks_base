@@ -122,6 +122,14 @@ public class DozeParameters {
         return getBoolean("doze.pulse.notifications", R.bool.doze_pulse_on_notifications);
     }
 
+    public PulseSchedule getAlternatePulseSchedule() {
+        final String spec = getString("doze.pulse.schedule", R.string.doze_pulse_schedule_alternate);
+        if (sPulseSchedule == null || !sPulseSchedule.mSpec.equals(spec)) {
+            sPulseSchedule = PulseSchedule.parse(spec);
+        }
+        return sPulseSchedule;
+    }
+
     public int getPickupVibrationThreshold() {
         return getInt("doze.pickup.vibration.threshold", R.integer.doze_pickup_vibration_threshold);
     }
