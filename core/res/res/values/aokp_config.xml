@@ -16,9 +16,6 @@
 */
 -->
 <resources>
-  <!-- Vendor warning -->
-  <java-symbol type="string" name="system_error_vendorprint" />
-
-  <java-symbol type="bool" name="config_enableScreenrecordChord" />
-
+    <!-- If this is true, key chords can be used to take a screen record on the device. -->
+    <bool name="config_enableScreenrecordChord">true</bool>
 </resources>
