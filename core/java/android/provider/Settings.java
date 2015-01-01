@@ -3671,6 +3671,8 @@ public final class Settings {
                 "task_open_behind",
         };
         public static final String ANIMATION_CONTROLS_DURATION = "animation_controls_duration";
+        public static final String ANIMATION_CONTROLS_EXIT_ONLY = "animation_controls_exit_only";
+        public static final String ANIMATION_CONTROLS_REVERSE_EXIT = "animation_controls_reverse_exit";
 
         /**
          * Network traffic indicator, goes from least to greatest significant bitwise
