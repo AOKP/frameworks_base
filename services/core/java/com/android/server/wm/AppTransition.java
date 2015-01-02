@@ -235,7 +235,6 @@ public class AppTransition implements Dump {
     private int[] mActivityAnimations = new int[11];
     private int mAnimationDuration;
     private boolean mIsResId = false;
-    private boolean mNoOverrides;
 
     private int mCurrentUserId = 0;
     private long mLastClipRevealTransitionDuration = DEFAULT_APP_TRANSITION_DURATION;
@@ -1722,7 +1721,6 @@ public class AppTransition implements Dump {
 
     void overridePendingAppTransition(String packageName, int enterAnim, int exitAnim,
             IRemoteCallback startedCallback) {
-        if (mNoOverrides) return;
         if (isTransitionSet()) {
             clear();
             mNextAppTransitionType = NEXT_TRANSIT_TYPE_CUSTOM;
@@ -1738,7 +1736,6 @@ public class AppTransition implements Dump {
 
     void overridePendingAppTransitionScaleUp(int startX, int startY, int startWidth,
             int startHeight) {
-        if (mNoOverrides) return;
         if (isTransitionSet()) {
             clear();
             mNextAppTransitionType = NEXT_TRANSIT_TYPE_SCALE_UP;
@@ -1759,7 +1756,6 @@ public class AppTransition implements Dump {
 
     void overridePendingAppTransitionThumb(Bitmap srcThumb, int startX, int startY,
                                            IRemoteCallback startedCallback, boolean scaleUp) {
-        if (mNoOverrides) return;
         if (isTransitionSet()) {
             clear();
             mNextAppTransitionType = scaleUp ? NEXT_TRANSIT_TYPE_THUMBNAIL_SCALE_UP
@@ -2091,10 +2087,6 @@ public class AppTransition implements Dump {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.ANIMATION_CONTROLS_DURATION), false, this);
-            resolver.registerContentObserver(
-                    Settings.System.getUriFor(Settings.System.ANIMATION_CONTROLS_NO_OVERRIDE), false, this);
-            for (int i = 0; i < 10; i++) {
-                resolver.registerContentObserver(
             for (int i = 0; i < 11; i++) {
                     resolver.registerContentObserver(
                     Settings.System.getUriFor(Settings.System.ACTIVITY_ANIMATION_CONTROLS[i]), false, this);
@@ -2111,8 +2103,6 @@ public class AppTransition implements Dump {
         for (int i = 0; i < 11; i++) {
             mActivityAnimations[i] = Settings.System.getInt(resolver, Settings.System.ACTIVITY_ANIMATION_CONTROLS[i], 0);
         }
-
-        mNoOverrides = Settings.System.getBoolean(resolver, Settings.System.ANIMATION_CONTROLS_NO_OVERRIDE, false);
 
         int temp = Settings.System.getInt(resolver, Settings.System.ANIMATION_CONTROLS_DURATION, 0);
         mAnimationDuration = temp * 15;
