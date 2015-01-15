@@ -2210,8 +2210,14 @@
          on the current state of the device.
          Each item must be one of the following strings:
          "power" = Power off
-         "settings" = An action to launch settings
+         "reboot" = Reboot
+         "screenshot" = Take screenshot
+         "screenrecord" = Take screen recording
+         "profile" = Change phone's profile
          "airplane" = Airplane mode toggle
+         "users" = list of users
+         "settings" = An action to launch settings
+         "lockdown" = lock the phone down
          "bugreport" = Take bug report, if available
          "silent" = silent mode
          "users" = list of users
@@ -2221,7 +2227,12 @@
         <item>power</item>
         <item>restart</item>
         <item>bugreport</item>
+        <item>screenrecord</item>
         <item>users</item>
+        <item>settings</item>
+        <item>lockdown</item>
+        <item>bugreport</item>
+        <item>silent</item>
     </string-array>
 
     <!-- Number of milliseconds to hold a wake lock to ensure that drawing is fully
