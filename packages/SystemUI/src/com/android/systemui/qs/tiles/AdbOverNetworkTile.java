@@ -1,5 +1,6 @@
 /*
- * Copyright (C) 2015 The CyanogenMod Open Source Project
+ * Copyright (C) 2015 The CyanogenMod Project
+ * Copyright (C) 2017 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +17,6 @@
 
 package com.android.systemui.qs.tiles;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -26,15 +26,22 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.UserHandle;
 import android.provider.Settings;
+
 import com.android.systemui.R;
 import com.android.systemui.qs.QSTile;
-import com.android.internal.logging.MetricsProto.MetricsEvent;
 
 import java.net.InetAddress;
 
 import cyanogenmod.providers.CMSettings;
+import org.cyanogenmod.internal.logging.CMMetricsLogger;
 
+/** Quick settings tile: AdbOverNetwork **/
 public class AdbOverNetworkTile extends QSTile<QSTile.BooleanState> {
+
+    private boolean mListening;
+
+    private static final Intent SETTINGS_DEVELOPMENT =
+            new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS);
 
     @Override
     public BooleanState newTileState() {
@@ -50,18 +57,12 @@ public class AdbOverNetworkTile extends QSTile<QSTile.BooleanState> {
 
     @Override
     public Intent getLongClickIntent() {
-        return new Intent().setComponent(new ComponentName(
-            "com.android.settings", "com.android.settings.Settings$DevelopmentSettingsActivity"));
+        return null;
     }
 
     @Override
-    public CharSequence getTileLabel() {
-        return mContext.getString(R.string.quick_settings_adb_network);
-    }
-
-    @Override
-    public int getMetricsCategory() {
-        return MetricsEvent.QUICK_SETTINGS;
+    protected void handleLongClick() {
+        mHost.startActivityDismissingKeyguard(SETTINGS_DEVELOPMENT);
     }
 
     @Override
@@ -76,15 +77,25 @@ public class AdbOverNetworkTile extends QSTile<QSTile.BooleanState> {
                 InetAddress address = NetworkUtils.intToInetAddress(wifiInfo.getIpAddress());
                 state.label = address.getHostAddress();
             } else {
-                // if wifiInfo is null, set the label without host address
-                state.label = mContext.getString(R.string.quick_settings_network_adb_enabled_label);
+                //if wifiInfo is null, set the label without host address
+                state.label = mContext.getString(R.string.quick_settings_network_adb_label);
             }
             state.icon = ResourceIcon.get(R.drawable.ic_qs_network_adb_on);
         } else {
-            // Otherwise set the label and disabled icon
-            state.label = mContext.getString(R.string.quick_settings_network_adb_disabled_label);
+            // Otherwise set the disabled label and icon
+            state.label = mContext.getString(R.string.quick_settings_network_adb_label);
             state.icon = ResourceIcon.get(R.drawable.ic_qs_network_adb_off);
         }
+    }
+
+    @Override
+    public CharSequence getTileLabel() {
+        return mContext.getString(R.string.quick_settings_network_adb_label);
+    }
+
+    @Override
+    public int getMetricsCategory() {
+        return CMMetricsLogger.TILE_ADB_OVER_NETWORK;
     }
 
     private boolean isAdbEnabled() {
@@ -109,22 +120,19 @@ public class AdbOverNetworkTile extends QSTile<QSTile.BooleanState> {
     };
 
     @Override
-    public void destroy() {
-        mContext.getContentResolver().unregisterContentObserver(mObserver);
-    }
-
-    @Override
     public void setListening(boolean listening) {
-        if (listening) {
-            mContext.getContentResolver().registerContentObserver(
-                    CMSettings.Secure.getUriFor(CMSettings.Secure.ADB_PORT),
-                    false, mObserver);
-            mContext.getContentResolver().registerContentObserver(
-                    Settings.Global.getUriFor(Settings.Global.ADB_ENABLED),
-                    false, mObserver);
-        } else {
-            mContext.getContentResolver().unregisterContentObserver(mObserver);
+        if (mListening != listening) {
+            mListening = listening;
+            if (listening) {
+                mContext.getContentResolver().registerContentObserver(
+                        CMSettings.Secure.getUriFor(CMSettings.Secure.ADB_PORT),
+                        false, mObserver);
+                mContext.getContentResolver().registerContentObserver(
+                        Settings.Global.getUriFor(Settings.Global.ADB_ENABLED),
+                        false, mObserver);
+            } else {
+                mContext.getContentResolver().unregisterContentObserver(mObserver);
+            }
         }
     }
-
 }
