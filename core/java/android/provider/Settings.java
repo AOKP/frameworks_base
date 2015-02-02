@@ -3008,6 +3008,12 @@ public final class Settings {
 
 
         /**
+         * Navigation bar button color
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_TINT = "navigation_bar_tint";
+
+        /**
          * Enable HW keys
          * @hide
          */
