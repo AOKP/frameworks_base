@@ -76,7 +76,7 @@
             android:visibility="gone"
             >
             <ImageView
-                android:layout_width="@dimen/navigation_key_width"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_sysbar_lights_out_dot_large"
                 android:scaleType="center"
@@ -88,7 +88,7 @@
                 android:visibility="invisible"
                 />
             <ImageView
-                android:layout_width="@dimen/navigation_key_width"
+                android:layout_width="80dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_sysbar_lights_out_dot_large"
                 android:scaleType="center"
@@ -191,7 +191,7 @@
                 android:visibility="invisible"
                 />
             <ImageView
-                android:layout_height="@dimen/navigation_key_width"
+                android:layout_height="80dp"
                 android:layout_width="match_parent"
                 android:src="@drawable/ic_sysbar_lights_out_dot_large"
                 android:scaleType="center"
