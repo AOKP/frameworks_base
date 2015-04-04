@@ -4488,6 +4488,12 @@ public final class Settings {
          */
         public static final String STATUS_BAR_AOKP_LOGO_STYLE = "status_bar_logo_style";
 
+	    /**
+         * show the membar in recents
+         *  @hide
+         */
+        public static final String SYSTEMUI_RECENTS_MEM_DISPLAY = "systemui_recents_mem_display";
+
         /**
          * Which component to use for Recents UI
          * 0 - Pie Recents (Quickstep)
