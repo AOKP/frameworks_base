@@ -4144,6 +4144,12 @@ public final class Settings {
          */
         public static final String STATUS_BAR_DATE = "status_bar_date";
 
+	/**
+         * show the membar in recents
+         *  @hide
+         */
+        public static final String SYSTEMUI_RECENTS_MEM_DISPLAY = "systemui_recents_mem_display";
+
         /**
          * Sets the date string style
          * 0 - Regular style
