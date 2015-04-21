@@ -16,18 +16,22 @@
 
 package com.android.systemui.qs.tiles;
 
-import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 import android.provider.Settings.Global;
-
-import com.android.internal.logging.MetricsProto.MetricsEvent;
 
 import com.android.systemui.qs.GlobalSetting;
 import com.android.systemui.qs.QSTile;
 import com.android.systemui.R;
 
+import org.cyanogenmod.internal.logging.CMMetricsLogger;
+
+/** Quick settings tile: Heads up **/
 public class HeadsUpTile extends QSTile<QSTile.BooleanState> {
+
+    private static final Intent NOTIFICATION_SETTINGS =
+            new Intent("android.settings.NOTIFICATION_MANAGER");
 
     private final GlobalSetting mSetting;
 
@@ -48,20 +52,18 @@ public class HeadsUpTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
-    public void handleClick() {
+    protected void handleClick() {
         setEnabled(!mState.value);
         refreshState();
     }
 
     @Override
-    public Intent getLongClickIntent() {
-        return new Intent().setComponent(new ComponentName(
-            "com.android.settings", "com.android.settings.Settings$NotificationAppListActivity"));
+    protected void handleLongClick() {
     }
 
     @Override
-    public CharSequence getTileLabel() {
-        return mContext.getString(R.string.quick_settings_heads_up_label);
+    public Intent getLongClickIntent() {
+        return null;
     }
 
     private void setEnabled(boolean enabled) {
@@ -88,19 +90,22 @@ public class HeadsUpTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    public CharSequence getTileLabel() {
+        return mContext.getString(R.string.quick_settings_heads_up_label);
+    }
+
+    @Override
     protected String composeChangeAnnouncement() {
         if (mState.value) {
-            return mContext.getString(
-                    R.string.accessibility_quick_settings_heads_up_changed_on);
+            return mContext.getString(R.string.accessibility_quick_settings_heads_up_changed_on);
         } else {
-            return mContext.getString(
-                    R.string.accessibility_quick_settings_heads_up_changed_off);
+            return mContext.getString(R.string.accessibility_quick_settings_heads_up_changed_off);
         }
     }
 
     @Override
     public int getMetricsCategory() {
-        return MetricsEvent.QUICK_SETTINGS;
+        return CMMetricsLogger.TILE_HEADS_UP;
     }
 
     @Override
