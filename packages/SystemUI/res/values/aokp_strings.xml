@@ -66,4 +66,7 @@
     <string name="quick_settings_sleepscreen_label">Sleep Screen</string>
     <string name="quick_settings_romcontrol_label">AOKP</string>
 
+    <!-- Gesture Anywhere -->
+    <string name="gestures_message">Draw your gesture here</string>
+
 </resources>
