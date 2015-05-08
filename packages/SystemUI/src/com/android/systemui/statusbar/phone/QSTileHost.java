@@ -64,6 +64,7 @@ import com.android.systemui.qs.tiles.LocationTile;
 import com.android.systemui.qs.tiles.MusicTile;
 import com.android.systemui.qs.tiles.NavigationBarTile;
 import com.android.systemui.qs.tiles.NightDisplayTile;
+import com.android.systemui.qs.tiles.PieTile;
 import com.android.systemui.qs.tiles.PowerMenuTile;
 import com.android.systemui.qs.tiles.PulseTile;
 import com.android.systemui.qs.tiles.RebootTile;
@@ -475,6 +476,7 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (tileSpec.equals("app_side_bar")) return new AppSideBarTile(this);
         else if (tileSpec.equals("gesture_anywhere")) return new GestureAnyWhereTile(this);
         else if (tileSpec.equals("volume")) return new VolumeTile(this);
+        else if (tileSpec.equals("pie")) return new PieTile(this);
 
         // Intent tiles.
         else if (tileSpec.startsWith(IntentTile.PREFIX)) return IntentTile.create(this,tileSpec);
