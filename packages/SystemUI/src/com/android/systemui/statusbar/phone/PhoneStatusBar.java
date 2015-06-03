@@ -529,6 +529,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR))) {
                     UpdateNotifDrawerClearAllIconColor();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.ENABLE_TASK_MANAGER))) {
+                    mShowTaskManager = Settings.System.getIntForUser(
+                            mContext.getContentResolver(),
+                            Settings.System.ENABLE_TASK_MANAGER,
+                            0, UserHandle.USER_CURRENT) == 1;
+                             recreateStatusBar();
             }
             update();
         }
