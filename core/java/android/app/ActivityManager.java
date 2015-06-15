@@ -987,9 +987,9 @@ public class ActivityManager {
          */
         public TaskDescription(String label, Bitmap icon, int colorPrimary) {
             this(label, icon, null, colorPrimary, 0);
-            if ((colorPrimary != 0) && (Color.alpha(colorPrimary) != 255)) {
+            /*if ((colorPrimary != 0) && (Color.alpha(colorPrimary) != 255)) {
                 throw new RuntimeException("A TaskDescription's primary color should be opaque");
-            }
+            }*/
         }
 
         /**
