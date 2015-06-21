@@ -39,6 +39,13 @@
         android:layout_marginBottom="@dimen/battery_margin_bottom"
         android:layout_marginStart="@dimen/signal_cluster_battery_padding"/>
 
+    <com.android.systemui.DockBatteryMeterView android:id="@+id/dock_battery"
+        android:layout_height="14.5dp"
+        android:layout_width="9.5dp"
+        android:layout_marginBottom="@dimen/battery_margin_bottom"
+        android:layout_marginStart="@dimen/signal_cluster_battery_padding"
+        android:visibility="gone"/>
+
     <!-- 3Minit proprietary battery icon hook -->
     <com.android.systemui.statusbar.policy.MinitBattery
         android:id="@+id/minitBattery"
