@@ -665,9 +665,14 @@ public class WindowManagerService extends IWindowManager.Stub
         private final Uri mAnimationDurationScaleUri =
                 Settings.Global.getUriFor(Settings.Global.ANIMATOR_DURATION_SCALE);
 
+        private final Uri mDisableAnimationsUri =
+                Settings.System.getUriFor(Settings.System.DISABLE_TRANSITION_ANIMATIONS);
+
         public SettingsObserver() {
             super(new Handler());
             ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(mDisableAnimationsUri, false, this,
+                    UserHandle.USER_ALL);
             resolver.registerContentObserver(mDisplayInversionEnabledUri, false, this,
                     UserHandle.USER_ALL);
             resolver.registerContentObserver(mWindowAnimationScaleUri, false, this,
@@ -686,6 +691,8 @@ public class WindowManagerService extends IWindowManager.Stub
 
             if (mDisplayInversionEnabledUri.equals(uri)) {
                 updateCircularDisplayMaskIfNeeded();
+            } else if (mDisableAnimationsUri.equals(uri))  {
+                updateAnimationsDisabledSetting(getAnimationsDisabledByUser());
             } else {
                 @UpdateAnimationScaleMode
                 final int mode;
@@ -1022,6 +1029,23 @@ public class WindowManagerService extends IWindowManager.Stub
         }, 0);
     }
 
+    private void updateAnimationsDisabledSetting(boolean enabled) {
+        synchronized (mWindowMap) {
+            if (mAnimationsDisabled != enabled) {
+                mAnimationsDisabled = enabled;
+                dispatchNewAnimatorScaleLocked(null);
+            }
+        }
+    }
+
+    private boolean getAnimationsDisabledByUser() {
+        return Settings.System.getIntForUser(
+                mContext.getContentResolver(),
+                Settings.System.DISABLE_TRANSITION_ANIMATIONS,
+                0,
+                mCurrentUserId) == 1;
+    }
+
     private WindowManagerService(Context context, InputManagerService inputManager,
             boolean haveInputMethods, boolean showBootMsgs, boolean onlyCore,
             WindowManagerPolicy policy) {
@@ -1093,7 +1117,7 @@ public class WindowManagerService extends IWindowManager.Stub
                     }
                 }
             });
-            mAnimationsDisabled = mPowerManagerInternal
+            mAnimationsDisabled = getAnimationsDisabledByUser() || mPowerManagerInternal
                     .getLowPowerState(ServiceType.ANIMATION).batterySaverEnabled;
         }
         mScreenFrozenLock = mPowerManager.newWakeLock(
