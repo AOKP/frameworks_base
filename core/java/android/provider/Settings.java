@@ -4231,6 +4231,12 @@ public final class Settings {
         public static final String TOAST_ANIMATION = "toast_animation";
         
         /**
+         * Disabled Transition animations of the android system
+         * @hide
+         */
+        public static final String DISABLE_TRANSITION_ANIMATIONS = "disable_transition_animations";
+
+        /**
          * AOKP Custom System Animations
          * @hide
          */
