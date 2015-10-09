@@ -7415,22 +7415,20 @@ public class PackageManagerService extends IPackageManager.Stub {
                     }
                 }
                 if (doTrim) {
-                    if (!isFirstBoot()) {
+                    try {
+                        // give the packagename to the PhoneWindowManager
+                        ApplicationInfo ai;
                         try {
-                            // give the packagename to the PhoneWindowManager
-                            ApplicationInfo ai;
-                            try {
-                                ai = mContext.getPackageManager().getApplicationInfo(pkg.packageName, 0);
-                            } catch (Exception e) {
-                                ai = null;
-                            }
-                            mPolicy.setPackageName((String) (ai != null ?
-                                    mContext.getPackageManager().getApplicationLabel(ai) : pkg.packageName));
-                            ActivityManagerNative.getDefault().showBootMessage(
-                                    mContext.getResources().getString(
-                                            R.string.android_upgrading_fstrim), true);
-                        } catch (RemoteException e) {
+                            ai = mContext.getPackageManager().getApplicationInfo(pkg.packageName, 0);
+                        } catch (Exception e) {
+                            ai = null;
                         }
+                        mPolicy.setPackageName((String) (ai != null ?
+                                mContext.getPackageManager().getApplicationLabel(ai) : pkg.packageName));
+                        ActivityManagerNative.getDefault().showBootMessage(
+                                mContext.getResources().getString(
+                                        R.string.android_upgrading_fstrim), true);
+                    } catch (RemoteException e) {
                     }
                     ms.runMaintenance();
                 }
