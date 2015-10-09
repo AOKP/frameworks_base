@@ -655,7 +655,7 @@ public final class SystemServer {
             traceBeginAndSlog("StartWindowManagerService");
             wm = WindowManagerService.main(context, inputManager,
                     mFactoryTestMode != FactoryTest.FACTORY_TEST_LOW_LEVEL,
-                    !mFirstBoot, mOnlyCore);
+                    true, mOnlyCore);
             ServiceManager.addService(Context.WINDOW_SERVICE, wm);
             ServiceManager.addService(Context.INPUT_SERVICE, inputManager);
             Trace.traceEnd(Trace.TRACE_TAG_SYSTEM_SERVER);
