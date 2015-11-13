@@ -2710,4 +2710,8 @@
   <java-symbol type="integer" name="power_key_hits_emergency" />
   <java-symbol type="bool" name="config_emergencyCallOnPowerkeyTapGestureEnabled" />
   <java-symbol type="bool" name="config_usb_data_unlock" />
+
+  <!-- Vendor warning -->
+  <java-symbol type="string" name="system_error_vendorprint" />
+
 </resources>
