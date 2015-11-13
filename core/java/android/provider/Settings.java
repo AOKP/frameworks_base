@@ -2435,12 +2435,6 @@ public final class Settings {
         };
 
         /**
-         * Timeout of long-pressing the Back button
-         * @hide
-         */
-        public static final String KILL_APP_LONGPRESS_TIMEOUT = "kill_app_longpress_timeout";
-
-        /**
          * Scaling factor for fonts, float.
          */
         public static final String FONT_SCALE = "font_scale";
@@ -6190,6 +6184,12 @@ public final class Settings {
          * @hide
          */
         public static final String SCREENSAVER_DEFAULT_COMPONENT = "screensaver_default_component";
+
+        /**
+         * Timeout of long-pressing the Back button
+         * @hide
+         */
+        public static final String KILL_APP_LONGPRESS_TIMEOUT = "kill_app_longpress_timeout";
 
         /**
          * The default NFC payment component
