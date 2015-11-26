@@ -24,4 +24,7 @@
     <color name="gesture_overlay_background_fill_color">#80000000</color>
     <color name="gesture_color">@android:color/holo_blue_light</color>
 
+    <!-- Weather Temperature Status Bar Icon -->
+    <color name="status_bar_temp_text_color">#FFFFFFFF</color>
+
 </resources>
