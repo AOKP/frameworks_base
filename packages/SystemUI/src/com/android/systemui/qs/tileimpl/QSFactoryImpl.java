@@ -44,6 +44,7 @@ import com.android.systemui.qs.tiles.LocationTile;
 import com.android.systemui.qs.tiles.NfcTile;
 import com.android.systemui.qs.tiles.NightDisplayTile;
 import com.android.systemui.qs.tiles.ReadingModeTile;
+import com.android.systemui.qs.tiles.RebootTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.qs.tiles.ScreenshotTile;
 import com.android.systemui.qs.tiles.SyncTile;
@@ -131,6 +132,8 @@ public class QSFactoryImpl implements QSFactory {
 			// AOKP
             case "screenshot":
                 return new ScreenshotTile(mHost);
+            case "reboot":
+                return new RebootTile(mHost);
         }
 
         // Intent tiles.
