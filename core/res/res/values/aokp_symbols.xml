@@ -120,4 +120,7 @@
   <java-symbol type="string" name="zen_mode_normal_toast" />
   <java-symbol type="string" name="zen_mode_no_interruptions_toast" />
   <java-symbol type="string" name="zen_mode_important_interruptions_toast" />
+
+  <!-- Screen record shortcut -->
+  <java-symbol type="bool" name="config_enableScreenrecordChord" />
 </resources>
