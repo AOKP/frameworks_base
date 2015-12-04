@@ -147,6 +147,9 @@
     <!-- Block notifications inline notifications -->
     <uses-permission android:name="android.permission.UPDATE_APP_OPS_STATS" />
 
+    <!-- Kill app permission -->
+    <uses-permission android:name="android.permission.FORCE_STOP_PACKAGES" />
+
     <!-- Access battery information -->
     <uses-permission android:name="android.permission.BATTERY_STATS" />
 
