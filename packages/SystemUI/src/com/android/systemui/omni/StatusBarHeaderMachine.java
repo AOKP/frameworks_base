@@ -101,6 +101,7 @@ public class StatusBarHeaderMachine {
 
         @Override
         public void onChange(boolean selfChange) {
+            doUpdateStatusHeaderObservers(true); // simplest way to update poly headers without clobbering API
             updateEnablement();
         }
     }
