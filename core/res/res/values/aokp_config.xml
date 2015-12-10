@@ -31,4 +31,6 @@
     <!-- Hardware keys on/off option -->
     <bool name="config_hwKeysPref">false</bool>
 
+    <!-- Use alternative way to blur lockscreen -->
+    <bool name="config_use_stackblur">false</bool>
 </resources>
