@@ -92,4 +92,7 @@
 
   <!-- Screen record shortcut -->
   <java-symbol type="bool" name="config_enableScreenrecordChord" />
+
+  <!-- Use alternative way to blur lockscreen -->
+  <java-symbol type="bool" name="config_use_stackblur" />
 </resources>
