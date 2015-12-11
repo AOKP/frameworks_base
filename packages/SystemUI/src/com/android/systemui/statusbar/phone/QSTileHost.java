@@ -51,6 +51,7 @@ import com.android.systemui.qs.tiles.HotspotTile;
 import com.android.systemui.qs.tiles.IntentTile;
 import com.android.systemui.qs.tiles.LocationTile;
 import com.android.systemui.qs.tiles.NfcTile;
+import com.android.systemui.qs.tiles.PerfProfileTile;
 import com.android.systemui.qs.tiles.PowerMenuTile;
 import com.android.systemui.qs.tiles.ProfilesTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
@@ -340,6 +341,7 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (tileSpec.equals("edit")) return new EditTile(this);
         else if (tileSpec.equals("compass")) return new CompassTile(this);
         else if (tileSpec.equals("nfc")) return new NfcTile(this);
+        else if (tileSpec.equals("performance")) return new PerfProfileTile(this);
         else if (tileSpec.equals("power_menu")) return new PowerMenuTile(this);
         else if (tileSpec.equals("profiles")) return new ProfilesTile(this);
         else if (tileSpec.equals("sync")) return new SyncTile(this);
@@ -419,6 +421,7 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (spec.equals("adb_network")) return R.string.qs_tile_adb_over_network;
         else if (spec.equals("compass")) return R.string.qs_tile_compass;
         else if (spec.equals("nfc")) return R.string.quick_settings_nfc;
+        else if (spec.equals("performance")) return R.string.qs_tile_performance;
         else if (spec.equals("power_menu")) return R.string.quick_settings_powermenu_label;
         else if (spec.equals("profiles")) return R.string.quick_settings_profiles;
         else if (spec.equals("sync")) return R.string.quick_settings_sync_label;
