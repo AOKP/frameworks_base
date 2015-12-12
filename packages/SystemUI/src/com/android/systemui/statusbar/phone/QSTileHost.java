@@ -38,6 +38,7 @@ import com.android.systemui.R;
 import com.android.systemui.qs.QSTile;
 import com.android.systemui.qs.tiles.AdbOverNetworkTile;
 import com.android.systemui.qs.tiles.AirplaneModeTile;
+import com.android.systemui.qs.tiles.AmbientDisplayTile;
 import com.android.systemui.qs.tiles.BluetoothTile;
 import com.android.systemui.qs.tiles.CastTile;
 import com.android.systemui.qs.tiles.CellularTile;
@@ -347,15 +348,16 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (tileSpec.equals("edit")) return new EditTile(this);
         else if (tileSpec.equals("adb_network")) return new AdbOverNetworkTile(this);
         else if (tileSpec.equals("compass")) return new CompassTile(this);
-        else if (tileSpec.equals("lockscreen")) return  new LockscreenToggleTile(this);
         else if (tileSpec.equals("nfc")) return new NfcTile(this);
-        else if (tileSpec.equals("performance")) return new PerfProfileTile(this);
         else if (tileSpec.equals("power_menu")) return new PowerMenuTile(this);
         else if (tileSpec.equals("profiles")) return new ProfilesTile(this);
         else if (tileSpec.equals("sync")) return new SyncTile(this);
         else if (tileSpec.equals("volume_panel")) return new VolumeTile(this);
         else if (tileSpec.equals("usb_tether")) return new UsbTetherTile(this);
         else if (tileSpec.equals("screen_timeout")) return new ScreenTimeoutTile(this);
+        else if (tileSpec.equals("performance")) return new PerfProfileTile(this);
+        else if (tileSpec.equals("lockscreen")) return  new LockscreenToggleTile(this);
+        else if (tileSpec.equals("ambient_display")) return new AmbientDisplayTile(this);
         else if (tileSpec.startsWith(IntentTile.PREFIX)) return IntentTile.create(this,tileSpec);
         else throw new IllegalArgumentException("Bad tile spec: " + tileSpec);
     }
@@ -428,15 +430,16 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (spec.equals("edit")) return R.string.quick_settings_edit_label;
         else if (spec.equals("adb_network")) return R.string.qs_tile_adb_over_network;
         else if (spec.equals("compass")) return R.string.qs_tile_compass;
-        else if (spec.equals("lockscreen")) return R.string.quick_settings_lockscreen_label;
         else if (spec.equals("nfc")) return R.string.quick_settings_nfc;
-        else if (spec.equals("performance")) return R.string.qs_tile_performance;
         else if (spec.equals("power_menu")) return R.string.quick_settings_powermenu_label;
         else if (spec.equals("profiles")) return R.string.quick_settings_profiles;
         else if (spec.equals("sync")) return R.string.quick_settings_sync_label;
         else if (spec.equals("volume_panel")) return R.string.quick_settings_volume_panel_label;
         else if (spec.equals("usb_tether")) return R.string.quick_settings_usb_tether_label;
         else if (spec.equals("screen_timeout")) return R.string.quick_settings_screen_timeout_detail_title;
+        else if (spec.equals("performance")) return R.string.qs_tile_performance;
+        else if (spec.equals("lockscreen")) return R.string.quick_settings_lockscreen_label;
+        else if (spec.equals("ambient_display")) return R.string.quick_settings_ambient_display_label;
         return 0;
     }
 
