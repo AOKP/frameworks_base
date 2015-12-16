@@ -680,6 +680,10 @@ public abstract class Connection extends Conferenceable {
      * @param properties A property bit field.
      * @return A human readable string representation.
      */
+
+    /**
+     * @hide
+     */
     public static String propertiesToString(int properties) {
         return propertiesToStringInternal(properties, true /* isLong */);
     }
