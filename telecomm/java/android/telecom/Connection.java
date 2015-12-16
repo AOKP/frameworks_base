@@ -559,6 +559,8 @@ public abstract class Connection extends Conferenceable {
      *
      * @param properties The properties bit-mask.
      * @return String representation.
+     */
+    /**
      * @hide
      */
     public static String propertiesToString(int properties) {
