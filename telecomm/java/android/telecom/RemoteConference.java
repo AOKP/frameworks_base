@@ -378,6 +378,7 @@ public final class RemoteConference {
      * {@link Connection} for valid values.
      *
      * @return A bitmask of the properties of the conference call.
+     * @hide
      */
     public final int getConnectionProperties() {
         return mConnectionProperties;
