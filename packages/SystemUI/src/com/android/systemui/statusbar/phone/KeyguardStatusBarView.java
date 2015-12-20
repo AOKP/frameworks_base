@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.internal.util.aokp.AOKPUtils;
 import com.android.systemui.BatteryLevelTextView;
 import com.android.systemui.BatteryMeterView;
 import com.android.systemui.DockBatteryMeterView;
@@ -93,6 +94,9 @@ public class KeyguardStatusBarView extends RelativeLayout {
         mBatteryLevel = (BatteryLevelTextView) findViewById(R.id.battery_level_text);
         mDockBatteryLevel = (BatteryLevelTextView) findViewById(R.id.dock_battery_level_text);
         mCarrierLabel = (TextView) findViewById(R.id.keyguard_carrier_text);
+        if (AOKPUtils.isWifiOnly(getContext())) {
+            mCarrierLabel.setText("");
+        }
         loadDimens();
         mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(getContext(),
                 android.R.interpolator.fast_out_slow_in);
