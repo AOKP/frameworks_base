@@ -58,6 +58,7 @@ import com.android.systemui.qs.tiles.PerfProfileTile;
 import com.android.systemui.qs.tiles.PowerMenuTile;
 import com.android.systemui.qs.tiles.ProfilesTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
+import com.android.systemui.qs.tiles.ScreenrecordTile;
 import com.android.systemui.qs.tiles.ScreenshotTile;
 import com.android.systemui.qs.tiles.ScreenTimeoutTile;
 import com.android.systemui.qs.tiles.SyncTile;
@@ -353,6 +354,7 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (tileSpec.equals("nfc")) return new NfcTile(this);
         else if (tileSpec.equals("power_menu")) return new PowerMenuTile(this);
         else if (tileSpec.equals("profiles")) return new ProfilesTile(this);
+        else if (tileSpec.equals("screenrecord")) return new ScreenrecordTile(this);
         else if (tileSpec.equals("screenshot")) return new ScreenshotTile(this);
         else if (tileSpec.equals("sync")) return new SyncTile(this);
         else if (tileSpec.equals("volume_panel")) return new VolumeTile(this);
@@ -437,6 +439,7 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (spec.equals("nfc")) return R.string.quick_settings_nfc_label;
         else if (spec.equals("power_menu")) return R.string.quick_settings_powermenu_label;
         else if (spec.equals("profiles")) return R.string.quick_settings_profiles;
+        else if (spec.equals("screenrecord")) return R.string.quick_settings_screenrecord;
         else if (spec.equals("screenshot")) return R.string.quick_settings_screenshot;
         else if (spec.equals("sync")) return R.string.quick_settings_sync_label;
         else if (spec.equals("volume_panel")) return R.string.quick_settings_volume_panel_label;

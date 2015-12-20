@@ -43,5 +43,7 @@
     <!-- Quick Settings -->
     <string name="quick_settings_powermenu_label">Power Menu</string>
     <string name="quick_settings_screenshot">Screenshot</string>
+    <string name="quick_settings_screenrecord">Screenrecord</string>
+    <string name="quick_settings_screenrecord_on">Recording ...</string>
 
 </resources>
