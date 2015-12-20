@@ -117,7 +117,7 @@
 
     <!-- The default tiles to display in QuickSettings -->
     <string name="quick_settings_tiles_extra" translatable="false">
-        hotspot,inversion,saver,work,cast,screenshot,expanded_desktop,reboot,power_menu
+        hotspot,inversion,saver,work,cast,screenshot,expanded_desktop,reboot,power_menu,sleepscreen
     </string>
 
     <!-- The tiles to display in QuickSettings -->
