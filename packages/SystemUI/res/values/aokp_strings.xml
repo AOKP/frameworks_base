@@ -42,5 +42,6 @@
 
     <!-- Quick Settings -->
     <string name="quick_settings_powermenu_label">Power Menu</string>
+    <string name="quick_settings_screenshot">Screenshot</string>
 
 </resources>
