@@ -48,6 +48,7 @@ import com.android.systemui.qs.tiles.RebootTile;
 import com.android.systemui.qs.tiles.ROMControlTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.qs.tiles.ScreenshotTile;
+import com.android.systemui.qs.tiles.SleepScreenTile;
 import com.android.systemui.qs.tiles.SyncTile;
 import com.android.systemui.qs.tiles.UsbTetherTile;
 import com.android.systemui.qs.tiles.UserTile;
@@ -137,6 +138,8 @@ public class QSFactoryImpl implements QSFactory {
                 return new RebootTile(mHost);
             case "romcontrol":
                 return new ROMControlTile(mHost);
+            case "sleepscreen":
+                return new SleepScreenTile(mHost);
         }
 
         // Intent tiles.
