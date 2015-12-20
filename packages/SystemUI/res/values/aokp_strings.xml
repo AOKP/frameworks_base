@@ -45,5 +45,6 @@
     <string name="quick_settings_screenshot">Screenshot</string>
     <string name="quick_settings_screenrecord">Screenrecord</string>
     <string name="quick_settings_screenrecord_on">Recording ...</string>
+    <string name="quick_settings_sleepscreen_label">Sleep Screen</string>
 
 </resources>
