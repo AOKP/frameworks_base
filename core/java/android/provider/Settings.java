@@ -4185,6 +4185,18 @@ public final class Settings {
          */
         public static final String STATUS_BAR_SHOW_WEATHER = "status_bar_show_weather";
 
+	/**
+         * Statusbar AOKP logo
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO = "status_bar_aokp_logo";
+
+        /**
+         * Statusbar AOKP logo color setting
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO_COLOR = "status_bar_aokp_logo_color";
+
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
