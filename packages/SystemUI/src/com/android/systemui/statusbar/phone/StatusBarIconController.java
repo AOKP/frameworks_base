@@ -28,6 +28,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.TypedValue;
@@ -80,6 +81,10 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     private BatteryMeterView mBatteryMeterViewKeyguard;
     private ClockController mClockController;
     private View mCenterClockLayout;
+
+    private ImageView mAokpLogo;
+    private ImageView mAokpLogoRight;
+    private ImageView mAokpLogoLeft;
 
     private int mIconSize;
     private int mIconHPadding;
@@ -149,6 +154,10 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mBatteryLevelView = (BatteryLevelTextView) statusBar.findViewById(R.id.battery_level);
 
         TunerService.get(mContext).addTunable(this, ICON_BLACKLIST);
+
+        mAokpLogo = (ImageView) statusBar.findViewById(R.id.aokp_logo);
+        mAokpLogoRight = (ImageView) statusBar.findViewById(R.id.aokp_logo_right);
+        mAokpLogoLeft = (ImageView) statusBar.findViewById(R.id.aokp_logo_left);
     }
 
     public void setSignalCluster(SignalClusterView signalCluster) {
@@ -332,11 +341,19 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     public void hideSystemIconArea(boolean animate) {
         animateHide(mSystemIconArea, animate);
         animateHide(mCenterClockLayout, animate);
+        if (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_AOKP_LOGO, 0) == 1) {
+            animateHide(mAokpLogoLeft, animate);
+        }
     }
 
     public void showSystemIconArea(boolean animate) {
         animateShow(mSystemIconArea, animate);
         animateShow(mCenterClockLayout, animate);
+        if (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_AOKP_LOGO, 0) == 1) {
+            animateShow(mAokpLogoLeft, animate);
+        }
     }
 
     public void hideNotificationIconArea(boolean animate) {
@@ -549,6 +566,14 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
                 isInArea(mTintArea, mBatteryMeterView) ? mDarkIntensity : 0);
         mClockController.setTextColor(mTintArea, mIconTint);
         mBatteryLevelView.setTextColor(getTint(mTintArea, mBatteryLevelView, mIconTint));
+
+        if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.STATUS_BAR_AOKP_LOGO_COLOR, 0xFFFFFFFF,
+                    UserHandle.USER_CURRENT) == 0xFFFFFFFF) {
+                mAokpLogo.setImageTintList(ColorStateList.valueOf(mIconTint));
+                mAokpLogoRight.setImageTintList(ColorStateList.valueOf(mIconTint));
+                mAokpLogoLeft.setImageTintList(ColorStateList.valueOf(mIconTint));
+        }
     }
 
     public void appTransitionPending() {
