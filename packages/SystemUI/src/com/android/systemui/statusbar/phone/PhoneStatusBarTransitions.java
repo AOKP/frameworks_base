@@ -32,7 +32,7 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
     private final PhoneStatusBarView mView;
     private final float mIconAlphaWhenOpaque;
 
-    private View mLeftSide, mStatusIcons, mSignalCluster, mBattery, mClock, mNetworkTraffic;
+    private View mLeftSide, mStatusIcons, mSignalCluster, mBattery, mClock, mNetworkTraffic, mAokpLogo, mAokpLogoRight, mAokpLogoLeft;
 
     private Animator mCurrentAnimation;
 
@@ -50,6 +50,9 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
         mBattery = mView.findViewById(R.id.battery);
         mClock = mView.findViewById(R.id.clock);
         mNetworkTraffic = mView.findViewById(R.id.networkTraffic);
+        mAokpLogo = mView.findViewById(R.id.aokp_logo);
+        mAokpLogoRight = mView.findViewById(R.id.aokp_logo_right);
+        mAokpLogoLeft = mView.findViewById(R.id.aokp_logo_left);
         applyModeBackground(-1, getMode(), false /*animate*/);
         applyMode(getMode(), false /*animate*/);
     }
@@ -95,7 +98,10 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
                     animateTransitionTo(mSignalCluster, newAlpha),
                     animateTransitionTo(mNetworkTraffic, newAlpha),
                     animateTransitionTo(mBattery, newAlphaBC),
-                    animateTransitionTo(mClock, newAlphaBC)
+                    animateTransitionTo(mClock, newAlphaBC),
+                    animateTransitionTo(mAokpLogo, newAlphaBC),
+                    animateTransitionTo(mAokpLogoRight, newAlphaBC),
+                    animateTransitionTo(mAokpLogoLeft, newAlphaBC)
                     );
             if (isLightsOut(mode)) {
                 anims.setDuration(LIGHTS_OUT_DURATION);
@@ -109,6 +115,9 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
             mNetworkTraffic.setAlpha(newAlpha);
             mBattery.setAlpha(newAlphaBC);
             mClock.setAlpha(newAlphaBC);
+            mAokpLogo.setAlpha(newAlphaBC);
+            mAokpLogoRight.setAlpha(newAlphaBC);
+            mAokpLogoLeft.setAlpha(newAlphaBC);
         }
     }
 }
