@@ -56,6 +56,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -381,6 +382,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     View mExpandedContents;
     TextView mNotificationPanelDebugText;
 
+    // Aokp logo
+    private boolean mAokpLogo;
+    private int mAokpLogoColor;
+    private ImageView aokpLogo;
+
     // settings
     private QSDragPanel mQSPanel;
     private QSTileHost mQSTileHost;
@@ -535,6 +541,12 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_AOKP_LOGO),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_AOKP_LOGO_COLOR),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -598,6 +610,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
             // This method reads CMSettings.Secure.RECENTS_LONG_PRESS_ACTIVITY
             updateCustomRecentsLongPressHandler(false);
+
+            // AOKP logo
+            mAokpLogo = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_AOKP_LOGO, 0, mCurrentUserId) == 1;
+            mAokpLogoColor = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_AOKP_LOGO_COLOR, 0xFFFFFFFF, mCurrentUserId);
+            showAokpLogo(mAokpLogo, mAokpLogoColor);
 
             final int oldWeatherState = mWeatherTempState;
             mWeatherTempState = Settings.System.getIntForUser(
@@ -3806,6 +3825,15 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             }
         }
     };
+
+    public void showAokpLogo(boolean show, int color) {
+        if (mStatusBarView == null) return;
+        aokpLogo = (ImageView) mStatusBarView.findViewById(R.id.aokp_logo);
+        aokpLogo.setColorFilter(color, Mode.SRC_IN);
+        if (aokpLogo != null) {
+            aokpLogo.setVisibility(show ? (mAokpLogo ? View.VISIBLE : View.GONE) : View.GONE);
+        }
+    }
 
     private BroadcastReceiver mPackageBroadcastReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
