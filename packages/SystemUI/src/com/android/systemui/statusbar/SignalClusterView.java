@@ -23,6 +23,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.telephony.SubscriptionInfo;
 import android.util.ArraySet;
 import android.util.AttributeSet;
@@ -119,6 +121,11 @@ public class SignalClusterView extends LinearLayout implements NetworkController
     private boolean mActivityEnabled;
     private boolean mForceBlockWifi;
 
+    //AOKP Statusbar Logo
+    private ImageView mAokpLogo;
+    private ImageView mAokpLogoRight;
+    private ImageView mAokpLogoLeft;
+
     private final IconLogger mIconLogger = Dependency.get(IconLogger.class);
 
     public SignalClusterView(Context context) {
@@ -204,6 +211,10 @@ public class SignalClusterView extends LinearLayout implements NetworkController
         mWifiAirplaneSpacer =         findViewById(R.id.wifi_airplane_spacer);
         mWifiSignalSpacer =           findViewById(R.id.wifi_signal_spacer);
         mMobileSignalGroup =          findViewById(R.id.mobile_signal_group);
+        //AOKP Statusbar Logo
+        mAokpLogo = (ImageView) findViewById(R.id.aokp_logo);
+        mAokpLogoRight = (ImageView) findViewById(R.id.aokp_logo_right);
+        mAokpLogoLeft = (ImageView) findViewById(R.id.aokp_logo_left);
 
         maybeScaleVpnAndNoSimsIcons();
     }
@@ -622,6 +633,13 @@ public class SignalClusterView extends LinearLayout implements NetworkController
                 mEthernet, mEthernetDark);
         for (int i = 0; i < mPhoneStates.size(); i++) {
             mPhoneStates.get(i).setIconTint(mIconTint, mDarkIntensity, mTintArea);
+        }
+        if (Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.STATUS_BAR_AOKP_LOGO_COLOR, 0xFFFFFFFF,
+                    UserHandle.USER_CURRENT) == 0xFFFFFFFF) {
+                mAokpLogo.setImageTintList(ColorStateList.valueOf(mIconTint));
+                mAokpLogoRight.setImageTintList(ColorStateList.valueOf(mIconTint));
+                mAokpLogoLeft.setImageTintList(ColorStateList.valueOf(mIconTint));
         }
     }
 

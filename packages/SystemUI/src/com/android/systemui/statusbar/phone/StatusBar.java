@@ -78,6 +78,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -470,6 +471,14 @@ public class StatusBar extends SystemUI implements DemoMode,
      * possible.
      */
     private boolean mAlwaysExpandNonGroupedNotification;
+
+    // Aokp logo
+    private boolean mAokpLogo;
+    private int mAokpLogoColor;
+    private int mAokpLogoStyle;
+    private ImageView aokpLogo;
+    private ImageView aokpLogoright;
+    private ImageView aokpLogoleft;
 
     // settings
     private QSPanel mQSPanel;
@@ -4124,6 +4133,39 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     }
 
+    public void showAokpLogo(boolean show, int color, int style) {
+        if (mStatusBarView == null) return;
+        if (!show) {
+            aokpLogo.setVisibility(View.GONE);
+            aokpLogoright.setVisibility(View.GONE);
+            aokpLogoleft.setVisibility(View.GONE);
+            return;
+        }
+
+        if (color != 0xFFFFFFFF) {
+            aokpLogo.setColorFilter(color, Mode.SRC_IN);
+            aokpLogoright.setColorFilter(color, Mode.SRC_IN);
+            aokpLogoleft.setColorFilter(color, Mode.SRC_IN);
+        } else {
+            aokpLogo.clearColorFilter();
+            aokpLogoright.clearColorFilter();
+            aokpLogoleft.clearColorFilter();
+        }
+        if (style == 0) {
+            aokpLogo.setVisibility(View.VISIBLE);
+            aokpLogoright.setVisibility(View.GONE);
+            aokpLogoleft.setVisibility(View.GONE);
+        } else if (style == 1) {
+            aokpLogo.setVisibility(View.GONE);
+            aokpLogoright.setVisibility(View.VISIBLE);
+            aokpLogoleft.setVisibility(View.GONE);
+        } else if (style == 2) {
+            aokpLogo.setVisibility(View.GONE);
+            aokpLogoright.setVisibility(View.GONE);
+            aokpLogoleft.setVisibility(View.VISIBLE);
+        }
+    }
+
     protected void dismissKeyguardThenExecute(OnDismissAction action, boolean afterKeyguardGone) {
         dismissKeyguardThenExecute(action, null /* cancelRunnable */, afterKeyguardGone);
     }
@@ -5956,7 +5998,7 @@ public class StatusBar extends SystemUI implements DemoMode,
 
         @Override
         public void onDoubleTap(float screenX, float screenY) {
-            if (screenX > 0 && screenY > 0 && mAmbientIndicationContainer != null 
+            if (screenX > 0 && screenY > 0 && mAmbientIndicationContainer != null
                 && mAmbientIndicationContainer.getVisibility() == View.VISIBLE) {
                 mAmbientIndicationContainer.getLocationOnScreen(mTmpInt2);
                 float viewX = screenX - mTmpInt2[0];
@@ -6175,6 +6217,15 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                    Settings.Secure.QS_COLUMNS),
                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_AOKP_LOGO),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_AOKP_LOGO_COLOR),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_AOKP_LOGO_STYLE),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -6191,9 +6242,23 @@ public class StatusBar extends SystemUI implements DemoMode,
                     Settings.Secure.QS_COLUMNS))) {
                     updateResources();
             }
+            update();
         }
 
         public void update() {
+            // AOKP logo
+            ContentResolver resolver = mContext.getContentResolver();
+            aokpLogo = (ImageView) mStatusBarView.findViewById(R.id.aokp_logo);
+            aokpLogoright = (ImageView) mStatusBarView.findViewById(R.id.aokp_logo_right);
+            aokpLogoleft = (ImageView) mStatusBarView.findViewById(R.id.aokp_logo_left);
+            mAokpLogo = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_AOKP_LOGO, 0, mCurrentUserId) == 1;
+            mAokpLogoColor = Settings.System.getIntForUser(resolver,
+                    Settings.System.STATUS_BAR_AOKP_LOGO_COLOR, 0xFFFFFFFF, mCurrentUserId);
+            mAokpLogoStyle = Settings.System.getIntForUser(
+                    resolver, Settings.System.STATUS_BAR_AOKP_LOGO_STYLE, 0,
+                    UserHandle.USER_CURRENT);
+            showAokpLogo(mAokpLogo, mAokpLogoColor, mAokpLogoStyle);
 
         }
 

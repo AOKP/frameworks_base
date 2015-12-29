@@ -22,11 +22,15 @@ import static com.android.systemui.statusbar.phone.StatusBar.reinflateSignalClus
 import android.annotation.Nullable;
 import android.app.Fragment;
 import android.app.StatusBarManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.systemui.Dependency;
@@ -60,6 +64,11 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private StatusBar mStatusBarComponent;
     private DarkIconManager mDarkIconManager;
     private SignalClusterView mSignalClusterView;
+    //AOKP Statusbar Logo
+    private ImageView mAokpLogo;
+    private ImageView mAokpLogoRight;
+    private ImageView mAokpLogoLeft;
+    private Context mContext;
 
     private SignalCallback mSignalCallback = new SignalCallback() {
         @Override
@@ -94,6 +103,10 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         mSystemIconArea = mStatusBar.findViewById(R.id.system_icon_area);
         mSignalClusterView = mStatusBar.findViewById(R.id.signal_cluster);
         Dependency.get(DarkIconDispatcher.class).addDarkReceiver(mSignalClusterView);
+        //AOKP Statusbar Logo
+        mAokpLogo = (ImageView) mStatusBar.findViewById(R.id.aokp_logo);
+        mAokpLogoRight = (ImageView) mStatusBar.findViewById(R.id.aokp_logo_right);
+        mAokpLogoLeft = (ImageView) mStatusBar.findViewById(R.id.aokp_logo_left);
         // Default to showing until we know otherwise.
         showSystemIconArea(false);
         initEmergencyCryptkeeperText();
@@ -193,10 +206,24 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void hideSystemIconArea(boolean animate) {
         animateHide(mSystemIconArea, animate);
+        if (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_AOKP_LOGO, 0) == 1 &&
+           (Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_AOKP_LOGO_STYLE,  0,
+                UserHandle.USER_CURRENT) == 2)) {
+            animateHide(mAokpLogoLeft, animate);
+        }
     }
 
     public void showSystemIconArea(boolean animate) {
         animateShow(mSystemIconArea, animate);
+        if (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_AOKP_LOGO, 0) == 1  &&
+           (Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_AOKP_LOGO_STYLE,  0,
+                UserHandle.USER_CURRENT) == 2)) {
+            animateShow(mAokpLogoLeft, animate);
+        }
     }
 
     public void hideNotificationIconArea(boolean animate) {

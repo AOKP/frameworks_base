@@ -4171,6 +4171,24 @@ public final class Settings {
                 "lockscreen_shortcuts_longpress";
 
         /**
+         * Statusbar AOKP logo
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO = "status_bar_aokp_logo";
+
+        /**
+         * Statusbar AOKP logo color setting
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO_COLOR = "status_bar_aokp_logo_color";
+
+        /**
+         * Statusbar AOKP logo style
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO_STYLE = "status_bar_aokp_logo_style";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
