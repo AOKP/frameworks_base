@@ -4315,6 +4315,24 @@ public final class Settings {
         public static final String FORMAL_TEXT_INPUT = "formal_text_input";
 
         /**
+         * Statusbar AOKP logo
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO = "status_bar_aokp_logo";
+
+        /**
+         * Statusbar AOKP logo color setting
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO_COLOR = "status_bar_aokp_logo_color";
+
+        /**
+         * Statusbar AOKP logo style
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO_STYLE = "status_bar_aokp_logo_style";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
@@ -5845,7 +5863,7 @@ public final class Settings {
          * @hide
          */
         public static final String PULSE_LAVALAMP_SOLID_SPEED = "lava_lamp_solid_speed";
- 
+
         /**
          * A flag containing settings used for biometric weak
          * @hide
