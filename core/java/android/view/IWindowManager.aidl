@@ -289,4 +289,11 @@ interface IWindowManager
     WindowContentFrameStats getWindowContentFrameStats(IBinder token);
 
     void setLiveLockscreenEdgeDetector(boolean enable);
+
+    /**
+     * Get current system ui visibility mode.
+     *
+     * @hide
+     */
+    int getSystemUIVisibility();
 }
