@@ -114,6 +114,7 @@ import com.android.systemui.chaos.lab.gestureanywhere.GestureAnywhereView;
 import com.android.systemui.recents.Recents;
 import com.android.systemui.recents.RecentsActivity;
 import com.android.systemui.cm.SpamMessageProvider;
+import com.android.systemui.slimrecent.RecentController;
 import com.android.systemui.statusbar.NotificationData.Entry;
 import com.android.systemui.statusbar.appcirclesidebar.AppCircleSidebar;
 import com.android.systemui.statusbar.phone.NavigationBarView;
@@ -243,6 +244,8 @@ public abstract class BaseStatusBar extends SystemUI implements
     private boolean mDeviceProvisioned = false;
 
     private RecentsComponent mRecents;
+    private RecentController mSlimRecents;
+    private boolean mUseSlimRecents = false;
 
     protected int mZenMode;
 
@@ -613,9 +616,6 @@ public abstract class BaseStatusBar extends SystemUI implements
         mBarService = IStatusBarService.Stub.asInterface(
                 ServiceManager.getService(Context.STATUS_BAR_SERVICE));
 
-        mRecents = getComponent(Recents.class);
-        mRecents.setCallback(this);
-
         final Configuration currentConfig = mContext.getResources().getConfiguration();
         mLocale = currentConfig.locale;
         mLayoutDirection = TextUtils.getLayoutDirectionFromLocale(mLocale);
@@ -627,6 +627,8 @@ public abstract class BaseStatusBar extends SystemUI implements
                 android.R.interpolator.linear_out_slow_in);
         mFastOutLinearIn = AnimationUtils.loadInterpolator(mContext,
                 android.R.interpolator.fast_out_linear_in);
+
+        updateRecents();
 
         // Connect in to the status bar manager service
         StatusBarIconList iconList = new StatusBarIconList();
@@ -1183,6 +1185,8 @@ public abstract class BaseStatusBar extends SystemUI implements
     protected void hideRecents(boolean triggeredFromAltTab, boolean triggeredFromHomeKey) {
         if (mRecents != null) {
             mRecents.hideRecents(triggeredFromAltTab, triggeredFromHomeKey);
+        } else if (mSlimRecents != null) {
+            mSlimRecents.hideRecents(triggeredFromHomeKey);
         }
     }
 
@@ -1198,6 +1202,9 @@ public abstract class BaseStatusBar extends SystemUI implements
         if (mRecents != null) {
             sendCloseSystemWindows(mContext, SYSTEM_DIALOG_REASON_RECENT_APPS);
             mRecents.toggleRecents(mDisplay, mLayoutDirection, getStatusBarView());
+        } else if (mSlimRecents != null) {
+            sendCloseSystemWindows(mContext, SYSTEM_DIALOG_REASON_RECENT_APPS);
+            mSlimRecents.toggleRecents(mDisplay, mLayoutDirection, getStatusBarView());
         }
     }
 
@@ -1210,6 +1217,8 @@ public abstract class BaseStatusBar extends SystemUI implements
     protected void preloadRecents() {
         if (mRecents != null) {
             mRecents.preloadRecents();
+        } else if (mSlimRecents != null) {
+            mSlimRecents.preloadRecentTasksList();
         }
     }
 
@@ -1228,12 +1237,37 @@ public abstract class BaseStatusBar extends SystemUI implements
     protected void showRecentsPreviousAffiliatedTask() {
         if (mRecents != null) {
             mRecents.showPrevAffiliatedTask();
+     	} else if (mRecents != null) {
+            mRecents.showNextAffiliatedTask();
+     	} else if (mSlimRecents != null) {
+            mSlimRecents.cancelPreloadingRecentTasksList();
         }
     }
 
     @Override
     public void onVisibilityChanged(boolean visible) {
         // Do nothing
+    }
+
+    protected void rebuildRecentsScreen() {
+        if (mSlimRecents != null) {
+            mSlimRecents.rebuildRecentsScreen();
+        }
+    }
+
+    protected void updateRecents() {
+        boolean slimRecents = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.USE_SLIM_RECENTS, 0, UserHandle.USER_CURRENT) == 1;
+        if (slimRecents) {
+            mSlimRecents = new RecentController(mContext, mLayoutDirection);
+            mSlimRecents.setCallback(this);
+            mRecents = null;
+        } else {
+            mRecents = getComponent(Recents.class);
+            mRecents.setCallback(this);
+            mSlimRecents = null;
+        }
+        rebuildRecentsScreen();
     }
 
     /**
