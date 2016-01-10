@@ -4268,6 +4268,12 @@ public final class Settings {
         public static final String IN_CALL_PROXIMITY_SENSOR = "in_call_proximity_sensor";
 
         /**
+         * Whether to persistently show Add Tile Icon Even When Brightness Slider Is Disabled
+         * @hide
+         */
+        public static final String PERSIST_ADD = "persist_add";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
