@@ -55,9 +55,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.internal.logging.MetricsConstants;
 import com.android.internal.util.aokp.WeatherController;
 import com.android.internal.util.aokp.WeatherControllerImpl;
+
 import com.android.keyguard.KeyguardStatusView;
 import com.android.systemui.BatteryLevelTextView;
 import com.android.systemui.BatteryMeterView;
@@ -77,6 +77,7 @@ import java.text.NumberFormat;
 
 import cyanogenmod.app.StatusBarPanelCustomTile;
 import cyanogenmod.providers.CMSettings;
+import org.cyanogenmod.internal.logging.CMMetricsLogger;
 
 /**
  * The view to manage the header area in the expanded status bar.
@@ -783,7 +784,7 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
 
                 @Override
                 public int getMetricsCategory() {
-                    return MetricsConstants.DONT_TRACK_ME_BRO;
+                    return CMMetricsLogger.DONT_LOG;
                 }
             };
         }
