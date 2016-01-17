@@ -32,6 +32,8 @@ import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.PorterDuff.Mode;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -273,6 +275,9 @@ public class NotificationPanelView extends PanelView implements
         VERTICAL
     }
 
+    // QS alpha
+    private int mQSShadeAlpha;
+
     // Handles swiping to the LiveLockscreen from keyguard
     SwipeHelper.SimpleCallback mSwipeCallback = new SwipeHelper.SimpleCallback() {
         @Override
@@ -492,6 +497,7 @@ public class NotificationPanelView extends PanelView implements
                 }
             }
         });
+        setQSBackgroundAlpha();
     }
 
     @Override
@@ -2726,6 +2732,9 @@ public class NotificationPanelView extends PanelView implements
                     CMSettings.System.DOUBLE_TAP_SLEEP_GESTURE), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE), false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_TRANSPARENT_SHADE),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -2756,6 +2765,19 @@ public class NotificationPanelView extends PanelView implements
 
             mDoubleTapToSleepAnywhere = Settings.System.getIntForUser(resolver,
                     Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE, 0, UserHandle.USER_CURRENT) == 1;
+
+            mQSShadeAlpha = Settings.System.getInt(
+                    resolver, Settings.System.QS_TRANSPARENT_SHADE, 255);
+            setQSBackgroundAlpha();
+        }
+    }
+
+    private void setQSBackgroundAlpha() {
+        if (mQsContainer != null) {
+            mQsContainer.getBackground().setAlpha(mQSShadeAlpha);
+        }
+        if (mQsPanel != null) {
+            mQsPanel.setQSShadeAlphaValue(mQSShadeAlpha);
         }
     }
 
