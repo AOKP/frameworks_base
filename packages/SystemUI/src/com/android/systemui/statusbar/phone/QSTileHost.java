@@ -476,7 +476,11 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (spec.equals("adb_network")) return R.drawable.ic_qs_network_adb_on;
         else if (spec.equals("compass")) return R.drawable.ic_qs_compass_on;
         else if (spec.equals("nfc")) return R.drawable.ic_qs_nfc_on;
+        else if (spec.equals("power_menu")) return R.drawable.ic_qs_powermenu;
         else if (spec.equals("profiles")) return R.drawable.ic_qs_profiles_on;
+        else if (spec.equals("screenrecord")) return R.drawable.ic_qs_screenrecord;
+        else if (spec.equals("screenshot")) return R.drawable.ic_qs_screenshot;
+        else if (spec.equals("sleepscreen")) return R.drawable.ic_qs_sleep;
         else if (spec.equals("sync")) return R.drawable.ic_qs_sync_on;
         else if (spec.equals("volume_panel")) return R.drawable.ic_qs_volume_panel;
         else if (spec.equals("usb_tether")) return R.drawable.ic_qs_usb_tether_on;
