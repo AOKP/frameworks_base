@@ -35,4 +35,8 @@
     <string name="animation_grow_shrink_left">Grow in (Left)</string>
     <string name="animation_grow_shrink_right">Grow in (Right)</string>
 
+    <!-- Zen mode toast for oneplus two -->
+    <string name="zen_mode_normal_toast">Do not disturb disabled</string>
+    <string name="zen_mode_no_interruptions_toast">Do not disturb set to total silence</string>
+    <string name="zen_mode_important_interruptions_toast">Do not disturb set to priority only</string>
 </resources>
