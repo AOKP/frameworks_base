@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2016 The CyanogenMod Project
+ * Copyright (c) 2017 The LineageOS Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,12 +28,16 @@ import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.Settings;
 
-import com.android.internal.logging.MetricsProto.MetricsEvent;
 import com.android.systemui.qs.QSTile;
 import com.android.systemui.R;
 
+import org.cyanogenmod.internal.logging.CMMetricsLogger;
+
 /** Quick settings tile: Caffeine **/
 public class CaffeineTile extends QSTile<QSTile.BooleanState> {
+
+    private static final Intent NOTIFICATION_SETTINGS =
+            new Intent("android.settings.NOTIFICATION_MANAGER");
 
     private final PowerManager.WakeLock mWakeLock;
     private int mSecondsRemaining;
@@ -113,6 +118,10 @@ public class CaffeineTile extends QSTile<QSTile.BooleanState> {
     }
 
     @Override
+    protected void handleLongClick() {
+    }
+
+    @Override
     public Intent getLongClickIntent() {
         return null;
     }
@@ -124,7 +133,7 @@ public class CaffeineTile extends QSTile<QSTile.BooleanState> {
 
     @Override
     public int getMetricsCategory() {
-        return MetricsEvent.QUICK_SETTINGS;
+        return CMMetricsLogger.TILE_CAFFEINE;
     }
 
     private void startCountDown(long duration) {
