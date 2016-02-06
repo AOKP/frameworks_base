@@ -27,6 +27,7 @@ import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.support.v4.graphics.ColorUtils;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
@@ -192,6 +193,25 @@ public class KeyguardStatusView extends GridLayout {
         }
     }
 
+    public void hideLockscreenItems() {
+        if (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.HIDE_LOCKSCREEN_CLOCK, 1) == 1) {
+            mClockView = (TextClock) findViewById(R.id.clock_view);
+            mClockView.setVisibility(View.VISIBLE);
+        } else {
+            mClockView = (TextClock) findViewById(R.id.clock_view);
+            mClockView.setVisibility(View.GONE);
+        }
+        if (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.HIDE_LOCKSCREEN_DATE, 1) == 1) {
+            mDateView = (DateView) findViewById(R.id.date_view);
+            mDateView.setVisibility(View.VISIBLE);
+        } else {
+            mDateView = (DateView) findViewById(R.id.date_view);
+            mDateView.setVisibility(View.GONE);
+        }
+    }
+
     public void refreshTime() {
         mDateView.setDatePattern(Patterns.dateViewSkel);
 
@@ -206,6 +226,7 @@ public class KeyguardStatusView extends GridLayout {
 
         refreshTime();
         refreshAlarmStatus(nextAlarm);
+        hideLockscreenItems();
     }
 
     void refreshAlarmStatus(AlarmManager.AlarmClockInfo nextAlarm) {
@@ -260,6 +281,7 @@ public class KeyguardStatusView extends GridLayout {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         KeyguardUpdateMonitor.getInstance(mContext).removeCallback(mInfoCallback);
+        hideLockscreenItems();
     }
 
     private String getOwnerInfo() {
