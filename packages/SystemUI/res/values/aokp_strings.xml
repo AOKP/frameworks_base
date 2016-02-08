@@ -29,6 +29,7 @@
     <string name="quick_settings_powermenu_label">Power Menu</string>
     <string name="quick_settings_sleepscreen_label">Sleep Screen</string>
     <string name="quick_settings_romcontrol_label">AOKP</string>
+    <string name="quick_settings_apppicker">App Picker</string>
 
     <!-- DUI -->
     <string name="systemui_tuner_navbar_title">Stock settings</string>
