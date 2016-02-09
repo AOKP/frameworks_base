@@ -5437,7 +5437,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             pm.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:CAMERA_GESTURE");
             mStatusBarKeyguardViewManager.notifyDeviceWakeUpRequested();
         }
-        mWindowManagerService
         vibrateForCameraGesture();
         if (!mStatusBarKeyguardViewManager.isShowing()) {
             startActivity(KeyguardBottomAreaView.INSECURE_CAMERA_INTENT,
