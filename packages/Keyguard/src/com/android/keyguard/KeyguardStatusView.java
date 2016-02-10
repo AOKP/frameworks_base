@@ -306,6 +306,14 @@ public class KeyguardStatusView extends GridLayout implements
                     Settings.System.LOCK_SCREEN_SHOW_WEATHER_LOCATION, 1) == 1;
         boolean showTimestamp = Settings.System.getInt(resolver,
                     Settings.System.LOCK_SCREEN_SHOW_WEATHER_TIMESTAMP, 1) == 1;
+        int clockColor = Settings.System.getInt(resolver,
+                Settings.System.LOCKSCREEN_CLOCK_COLOR, 0xFFFFFFFF);
+        int clockDateColor = Settings.System.getInt(resolver,
+                Settings.System.LOCKSCREEN_CLOCK_DATE_COLOR, 0xFFFFFFFF);
+        int ownerInfoColor = Settings.System.getInt(resolver,
+                Settings.System.LOCKSCREEN_OWNER_INFO_COLOR, 0xFFFFFFFF);
+        int alarmColor = Settings.System.getInt(resolver,
+                Settings.System.LOCKSCREEN_ALARM_COLOR, 0xFFFFFFFF);
         int iconNameValue = Settings.System.getInt(resolver,
                 Settings.System.LOCK_SCREEN_WEATHER_CONDITION_ICON, 0);
         boolean colorizeAllIcons = Settings.System.getInt(resolver,
@@ -333,6 +341,22 @@ public class KeyguardStatusView extends GridLayout implements
         mWeatherHumidity.setTextColor(secondaryTextColor);
         mWeatherWind.setTextColor(secondaryTextColor);
         mWeatherTimestamp.setTextColor(secondaryTextColor);
+
+        if (mClockView != null) {
+            mClockView.setTextColor(clockColor);
+        }
+
+        if (mDateView != null) {
+            mDateView.setTextColor(clockDateColor);
+        }
+
+        if (mOwnerInfo != null) {
+            mOwnerInfo.setTextColor(ownerInfoColor);
+        }
+
+        if (mAlarmStatusView != null) {
+            mAlarmStatusView.setTextColor(alarmColor);
+        }
 
         if (mIconNameValue != iconNameValue) {
             mIconNameValue = iconNameValue;
