@@ -1951,6 +1951,8 @@ public final class Settings {
          * @param def Value to return if the setting is not defined.
          * @return The setting's current value, or 'def' if it is not defined
          * or not a valid boolean.
+         *
+         * {@hide}
          */
         public static boolean getBoolean(ContentResolver cr, String name, boolean def) {
             String v = getString(cr, name);
@@ -1976,6 +1978,8 @@ public final class Settings {
          * @param name The name of the setting to modify.
          * @param value The new value for the setting.
          * @return true if the value was set, false on database errors
+         *
+         * {@hide}
          */
         public static boolean putBoolean(ContentResolver cr, String name, boolean value) {
             return putString(cr, name, value ? "1" : "0");
