@@ -27,6 +27,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
+/** {@hide} */
 public class SlimSeekBarPreference extends Preference
         implements OnSeekBarChangeListener {
 
