@@ -953,6 +953,7 @@ public final class PowerManager {
         }
     }
 
+    /** {@hide} */
     public String getSeenWakeLocks()
     {
 	try {

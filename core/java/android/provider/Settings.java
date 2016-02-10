@@ -1667,6 +1667,8 @@ public final class Settings {
          * @param def Value to return if the setting is not defined.
          * @return The setting's current value, or 'def' if it is not defined
          * or not a valid boolean.
+         *
+         * {@hide}
          */
         public static boolean getBoolean(ContentResolver cr, String name, boolean def) {
             String v = getString(cr, name);
@@ -1692,6 +1694,8 @@ public final class Settings {
          * @param name The name of the setting to modify.
          * @param value The new value for the setting.
          * @return true if the value was set, false on database errors
+         *
+         * {@hide}
          */
         public static boolean putBoolean(ContentResolver cr, String name, boolean value) {
             return putString(cr, name, value ? "1" : "0");
@@ -3837,8 +3841,12 @@ public final class Settings {
                 "wallpaper_intra_close",
                 "task_open_behind",
         };
+
+        /** {@hide} */
         public static final String ANIMATION_CONTROLS_DURATION = "animation_controls_duration";
+        /** {@hide} */
         public static final String ANIMATION_CONTROLS_EXIT_ONLY = "animation_controls_exit_only";
+        /** {@hide} */
         public static final String ANIMATION_CONTROLS_REVERSE_EXIT = "animation_controls_reverse_exit";
 
         /**
@@ -4083,8 +4091,8 @@ public final class Settings {
         public static final String STATUS_BAR_SHOW_CARRIER = "status_bar_show_carrier";
 
         /**
-         * custom carrier label. The value is
-         * String.
+         * custom carrier label. The value is String.
+         * {@hide}
          */
         public static final String CUSTOM_CARRIER_LABEL = "custom_carrier_label";
 
@@ -4116,6 +4124,7 @@ public final class Settings {
 
         /**
          * Boolean value on whether to show weather in the statusbar
+         * {@hide}
          */
         public static final String STATUS_BAR_SHOW_WEATHER = "status_bar_show_weather";
 
