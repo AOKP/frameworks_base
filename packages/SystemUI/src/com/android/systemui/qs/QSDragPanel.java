@@ -34,11 +34,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.ArrayMap;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -107,6 +109,8 @@ public class QSDragPanel extends QSPanel implements View.OnDragListener, View.On
     private int mLocationHits;
     private int mLastLeftShift = -1;
     private int mLastRightShift = -1;
+    private int moreSlots;
+
     private boolean mRestored;
     private boolean mRestoring;
     // whether the current view we are dragging in has shifted tiles
@@ -782,10 +786,10 @@ public class QSDragPanel extends QSPanel implements View.OnDragListener, View.On
 
     public int getTilesPerPage(boolean firstPage) {
         if ((!mFirstRowLarge && firstPage) || !firstPage) {
-            return QSTileHost.TILES_PER_PAGE + 1;
+            return QSTileHost.TILES_PER_PAGE + 3 * moreSlots + 1;
         }
-        return QSTileHost.TILES_PER_PAGE;
-    }
+        return QSTileHost.TILES_PER_PAGE + 2 * moreSlots;
+      }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -1833,29 +1837,80 @@ public class QSDragPanel extends QSPanel implements View.OnDragListener, View.On
 
     public void updateResources() {
         final Resources res = mContext.getResources();
-        final int columns = Math.max(1, res.getInteger(R.integer.quick_settings_num_columns));
-        mCellHeight = res.getDimensionPixelSize(R.dimen.qs_tile_height);
-        mCellWidth = (int) (mCellHeight * TILE_ASPECT);
         mLargeCellHeight = res.getDimensionPixelSize(R.dimen.qs_dual_tile_height);
         mLargeCellWidth = (int) (mLargeCellHeight * TILE_ASPECT);
         mPanelPaddingBottom = res.getDimensionPixelSize(R.dimen.qs_panel_padding_bottom);
         mDualTileUnderlap = res.getDimensionPixelSize(R.dimen.qs_dual_tile_padding_vertical);
         mBrightnessPaddingTop = res.getDimensionPixelSize(R.dimen.qs_brightness_padding_top);
         mPageIndicatorHeight = res.getDimensionPixelSize(R.dimen.qs_panel_page_indicator_height);
-        if (mColumns != columns) {
-            mColumns = columns;
-            if (isLaidOut()) postInvalidate();
-        }
         if (isLaidOut()) {
-            for (TileRecord r : mRecords) {
-                r.tile.clearState();
-            }
             updateDetailText();
+            updateNumColumns();
             mQsPanelTop.updateResources();
             if (mListening) {
                 refreshAllTiles();
             }
         }
+    }
+
+    public void updateNumColumns() {
+        final Resources res = mContext.getResources();
+        final ContentResolver resolver = mContext.getContentResolver();
+        int defColumns = Math.max(1, res.getInteger(R.integer.quick_settings_num_columns));
+        int columns = Settings.System.getIntForUser(resolver,
+                Settings.System.QS_NUM_TILE_COLUMNS, defColumns,
+                UserHandle.USER_CURRENT);
+        switch (columns) {
+            case 3:
+                moreSlots = 0;
+                break;
+            case 4:
+                moreSlots = 1;
+                break;
+            case 5:
+                moreSlots = 2;
+                break;
+            default:
+                moreSlots = 0;
+        }
+        if (mColumns != columns) {
+            mColumns = columns;
+        }
+        setTiles(mHost.getTiles());
+        mPagerAdapter.notifyDataSetChanged();
+
+        float aspect = getAspectForColumnCount(columns, res);
+        mCellHeight = Math.round(res.getDimensionPixelSize(
+                R.dimen.qs_tile_height) * aspect);
+        mCellWidth = Math.round(mCellHeight * (TILE_ASPECT * aspect));
+        for (TileRecord record : mRecords) {
+            record.tileView.updateDimens(res, aspect);
+            record.tileView.recreateLabel();
+            if (record.tileView.getVisibility() != GONE) {
+                record.tileView.requestLayout();
+            }
+        }
+        postInvalidate();
+    }
+
+    private float getAspectForColumnCount(int numColumns, Resources res) {
+        TypedValue tileScaleFactor = new TypedValue();
+        int dimen;
+        switch (numColumns) {
+            case 3:
+                dimen = R.dimen.qs_tile_three_column_scale;
+                break;
+            case 4:
+                dimen = R.dimen.qs_tile_four_column_scale;
+                break;
+            case 5:
+                dimen = R.dimen.qs_tile_five_column_scale;
+                break;
+            default:
+                dimen = R.dimen.qs_tile_three_column_scale;
+        }
+        res.getValue(dimen, tileScaleFactor, true);
+        return tileScaleFactor.getFloat();
     }
 
     public boolean isAnimating(TileRecord t) {
