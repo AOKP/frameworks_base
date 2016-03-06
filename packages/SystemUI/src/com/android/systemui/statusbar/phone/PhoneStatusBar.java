@@ -531,6 +531,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.APP_SIDEBAR_POSITION),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -560,6 +563,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     updateSpeedbump();
                     updateClearAll();
                     updateEmptyShadeView();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR))) {
+                    UpdateNotifDrawerClearAllIconColor();
             }
             update();
         }
@@ -1502,6 +1508,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         // Private API call to make the shadows look better for Recents
         ThreadedRenderer.overrideProperty("ambientRatio", String.valueOf(1.5f));
 
+        UpdateNotifDrawerClearAllIconColor();
         return mStatusBarView;
     }
 
@@ -2457,6 +2464,15 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     }
                 }
             }
+        }
+    }
+
+    private void UpdateNotifDrawerClearAllIconColor() {
+        int color = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.NOTIFICATION_DRAWER_CLEAR_ALL_ICON_COLOR,
+                0xffffffff, mCurrentUserId);
+        if (mDismissView != null) {
+            mDismissView.updateIconColor(color);
         }
     }
 
