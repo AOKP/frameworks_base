@@ -46,6 +46,7 @@ import com.android.systemui.R;
 import com.android.systemui.RecentsComponent;
 import com.android.systemui.SystemUI;
 import com.android.systemui.SystemUIApplication;
+import com.android.systemui.cm.UserContentObserver;
 import com.android.systemui.recents.misc.Console;
 import com.android.systemui.recents.misc.SystemServicesProxy;
 import com.android.systemui.recents.model.RecentsTaskLoadPlan;
@@ -60,6 +61,8 @@ import com.android.systemui.recents.views.TaskViewTransform;
 import com.android.systemui.statusbar.phone.PhoneStatusBar;
 
 import java.util.ArrayList;
+
+import cyanogenmod.providers.CMSettings;
 
 /**
  * Annotation for a method that is only called from the primary user's SystemUI process and will be

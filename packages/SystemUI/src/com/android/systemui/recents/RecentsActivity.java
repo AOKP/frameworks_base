@@ -25,7 +25,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.os.UserHandle;
@@ -38,7 +37,6 @@ import android.widget.Toast;
 import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.Prefs;
 import com.android.systemui.R;
-import com.android.systemui.recents.RecentsConfiguration;
 import com.android.systemui.recents.misc.Console;
 import com.android.systemui.recents.misc.DebugTrigger;
 import com.android.systemui.recents.misc.ReferenceCountedTrigger;
@@ -133,7 +131,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     /**
      * Broadcast receiver to handle messages from AlternateRecentsComponent.
      */
-    private final BroadcastReceiver mServiceBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver mServiceBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -163,7 +161,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     /**
      * Broadcast receiver to handle messages from the system
      */
-    private final BroadcastReceiver mSystemBroadcastReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver mSystemBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -182,7 +180,7 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
     /**
      * A custom debug trigger to listen for a debug key chord.
      */
-    private final DebugTrigger mDebugTrigger = new DebugTrigger(new Runnable() {
+    final DebugTrigger mDebugTrigger = new DebugTrigger(new Runnable() {
         @Override
         public void run() {
             onDebugModeTriggered();
@@ -272,10 +270,6 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
                 if (showSearchBar) {
                     mRecentsView.setSearchBarVisibility(View.VISIBLE);
                 } else {
-                    mRecentsView.setSearchBarVisibility(View.GONE);
-                }
-            } else {
-                if (showSearchBar) {
                     refreshSearchWidgetView();
                 }
             }
@@ -449,6 +443,14 @@ public class RecentsActivity extends Activity implements RecentsView.RecentsView
         if (!mConfig.launchedHasConfigurationChanged) {
             mRecentsView.disableLayersForOneFrame();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        if (mConfig.searchBarEnabled && mConfig.launchedFromHome) {
+            overridePendingTransition(0, 0);
+        }
+        super.onResume();
     }
 
     @Override

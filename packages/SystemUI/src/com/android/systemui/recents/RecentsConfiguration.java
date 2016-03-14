@@ -31,6 +31,7 @@ import com.android.systemui.Prefs;
 import com.android.systemui.R;
 import com.android.systemui.recents.misc.Console;
 import com.android.systemui.recents.misc.SystemServicesProxy;
+
 import cyanogenmod.providers.CMSettings;
 
 /** A static Recents configuration for the current context
@@ -74,6 +75,7 @@ public class RecentsConfiguration {
     public int maxNumTasksToLoad;
 
     /** Search bar */
+    public boolean searchBarEnabled = true;
     public int searchBarSpaceHeightPx;
 
     /** Task stack */

@@ -353,10 +353,13 @@ public class SignalClusterView
 
         for (PhoneState state : mPhoneStates) {
             if (state.mMobile != null) {
+                state.maybeStopAnimatableDrawable(state.mMobile);
                 state.mMobile.setImageDrawable(null);
+                state.mLastMobileStrengthId = -1;
             }
             if (state.mMobileType != null) {
                 state.mMobileType.setImageDrawable(null);
+                state.mLastMobileTypeId = -1;
             }
         }
 
@@ -484,6 +487,8 @@ public class SignalClusterView
         private final int mSubId;
         private boolean mMobileVisible = false;
         private int mMobileStrengthId = 0, mMobileTypeId = 0;
+        private int mLastMobileStrengthId = -1;
+        private int mLastMobileTypeId = -1;
         private boolean mIsMobileTypeIconWide;
         private String mMobileDescription, mMobileTypeDescription;
         private boolean mShowRoamingIndicator;
@@ -550,6 +555,32 @@ public class SignalClusterView
             mMobileType.setVisibility(mMobileTypeId != 0 ? View.VISIBLE : View.GONE);
 
             return mMobileVisible;
+        }
+
+        private void updateAnimatableIcon(ImageView view, int resId) {
+            maybeStopAnimatableDrawable(view);
+            view.setImageResource(resId);
+            maybeStartAnimatableDrawable(view);
+        }
+
+        private void maybeStopAnimatableDrawable(ImageView view) {
+            Drawable drawable = view.getDrawable();
+            if (drawable instanceof Animatable) {
+                Animatable ad = (Animatable) drawable;
+                if (ad.isRunning()) {
+                    ad.stop();
+                }
+            }
+        }
+
+        private void maybeStartAnimatableDrawable(ImageView view) {
+            Drawable drawable = view.getDrawable();
+            if (drawable instanceof Animatable) {
+                Animatable ad = (Animatable) drawable;
+                if (!ad.isRunning()) {
+                    ad.start();
+                }
+            }
         }
 
         public void populateAccessibilityEvent(AccessibilityEvent event) {
