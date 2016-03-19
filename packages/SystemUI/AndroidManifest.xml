@@ -138,6 +138,11 @@
             android:protectionLevel="signature" />
     <uses-permission android:name="com.android.systemui.permission.SELF" />
 
+    <!-- Themes tile -->
+    <uses-permission android:name="android.permission.ACCESS_THEME_MANAGER" />
+    <uses-permission android:name="android.permission.READ_THEMES" />
+    <uses-permission android:name="android.permission.WRITE_THEMES" />
+
     <!-- LiveDisplay -->
     <uses-permission android:name="android.permission.HARDWARE_ABSTRACTION_ACCESS" />
 
