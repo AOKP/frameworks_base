@@ -2831,6 +2831,8 @@ public class NotificationPanelView extends PanelView implements
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(CMSettings.Secure.getUriFor(
                     CMSettings.Secure.LOCK_SCREEN_WEATHER_ENABLED), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.ENABLE_TASK_MANAGER), false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -2872,6 +2874,8 @@ public class NotificationPanelView extends PanelView implements
 
             mQSShadeAlpha = Settings.System.getInt(
                     resolver, Settings.System.QS_TRANSPARENT_SHADE, 255);
+            mShowTaskManager = Settings.System.getIntForUser(resolver,
+                    Settings.System.ENABLE_TASK_MANAGER, 0, UserHandle.USER_CURRENT) == 1;
             setQSBackgroundAlpha();
         }
     }

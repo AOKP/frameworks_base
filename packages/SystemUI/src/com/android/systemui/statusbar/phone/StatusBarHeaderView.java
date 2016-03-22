@@ -1106,6 +1106,8 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
                     CMSettings.System.STATUS_BAR_SHOW_BATTERY_PERCENT), false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_TRANSPARENT_HEADER), false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.ENABLE_TASK_MANAGER), false, this);
             update();
         }
 
@@ -1143,6 +1145,9 @@ public class StatusBarHeaderView extends RelativeLayout implements View.OnClickL
             mQSHeaderAlpha = Settings.System.getInt(
                     resolver, Settings.System.QS_TRANSPARENT_HEADER, 255);
             setQSHeaderAlpha();
+
+            mShowTaskManager = Settings.System.getIntForUser(resolver,
+                    Settings.System.ENABLE_TASK_MANAGER, 0, currentUserId) == 1;
 
             updateVisibilities();
             requestCaptureValues();
