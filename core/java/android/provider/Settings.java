@@ -4431,6 +4431,12 @@ public final class Settings {
         public static final String DT2L_CAMERA_VIBRATE_CONFIG = "dt2l_camera_vibrate_config";
 
         /**
+         * Heads up timeout configuration
+         * @hide
+         */
+        public static final String HEADS_UP_TIMEOUT = "heads_up_timeout";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
