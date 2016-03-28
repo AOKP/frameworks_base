@@ -1327,6 +1327,8 @@ public interface WindowManagerPolicy {
      */
     public void startKeyguardExitAnimation(long startTime, long fadeoutDuration);
 
+    public void setLiveLockscreenEdgeDetector(boolean enable);
+
     /**
      * Toggle global menu
      *
