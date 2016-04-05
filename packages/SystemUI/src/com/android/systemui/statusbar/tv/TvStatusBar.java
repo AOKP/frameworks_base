@@ -17,6 +17,7 @@
 package com.android.systemui.statusbar.tv;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.IBinder;
 import android.os.RemoteException;
@@ -256,5 +257,9 @@ public class TvStatusBar extends BaseStatusBar {
             }
         } catch (RemoteException ex) {
         }
+    }
+
+    @Override // CommandQueue
+    public void showCustomIntentAfterKeyguard(Intent intent) {
     }
 }
