@@ -17,6 +17,7 @@
 package com.android.systemui.statusbar;
 
 import android.content.ComponentName;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
@@ -76,6 +77,12 @@ public class CommandQueue extends IStatusBar.Stub {
     private static final int MSG_APP_TRANSITION_FINISHED       = 31 << MSG_SHIFT;
     private static final int MSG_DISMISS_KEYBOARD_SHORTCUTS    = 32 << MSG_SHIFT;
 
+    // Slim Additions
+    private static final int MSG_START_CUSTOM_INTENT_AFTER_KEYGUARD = 33 << MSG_SHIFT;
+    private static final int MSG_TOGGLE_LAST_APP                    = 34 << MSG_SHIFT;
+    private static final int MSG_TOGGLE_KILL_APP                    = 35 << MSG_SHIFT;
+    private static final int MSG_TOGGLE_SCREENSHOT                  = 36 << MSG_SHIFT;
+
     public static final int FLAG_EXCLUDE_NONE = 0;
     public static final int FLAG_EXCLUDE_SEARCH_PANEL = 1 << 0;
     public static final int FLAG_EXCLUDE_RECENTS_PANEL = 1 << 1;
@@ -104,6 +111,7 @@ public class CommandQueue extends IStatusBar.Stub {
         void topAppWindowChanged(boolean visible);
         void setImeWindowStatus(IBinder token, int vis, int backDisposition,
                 boolean showImeSwitcher);
+
         void showRecentApps(boolean triggeredFromAltTab, boolean fromHome);
         void hideRecentApps(boolean triggeredFromAltTab, boolean triggeredFromHomeKey);
         void toggleRecentApps();
@@ -125,10 +133,13 @@ public class CommandQueue extends IStatusBar.Stub {
         void startAssist(Bundle args);
         void onCameraLaunchGestureDetected(int source);
         void showTvPictureInPictureMenu();
-
         void addQsTile(ComponentName tile);
         void remQsTile(ComponentName tile);
         void clickTile(ComponentName tile);
+        public void showCustomIntentAfterKeyguard(Intent intent);
+        public void toggleLastApp();
+        public void toggleKillApp();
+        public void toggleScreenshot();
     }
 
     public CommandQueue(Callbacks callbacks) {
@@ -388,6 +399,33 @@ public class CommandQueue extends IStatusBar.Stub {
         }
     }
 
+    public void showCustomIntentAfterKeyguard(Intent intent) {
+        mHandler.removeMessages(MSG_START_CUSTOM_INTENT_AFTER_KEYGUARD);
+        Message m = mHandler.obtainMessage(MSG_START_CUSTOM_INTENT_AFTER_KEYGUARD, 0, 0, intent);
+        m.sendToTarget();
+    }
+
+    public void toggleLastApp() {
+        synchronized (mList) {
+            mHandler.removeMessages(MSG_TOGGLE_LAST_APP);
+            mHandler.obtainMessage(MSG_TOGGLE_LAST_APP, 0, 0, null).sendToTarget();
+       }
+    }
+
+    public void toggleKillApp() {
+        synchronized (mList) {
+            mHandler.removeMessages(MSG_TOGGLE_KILL_APP);
+            mHandler.obtainMessage(MSG_TOGGLE_KILL_APP, 0, 0, null).sendToTarget();
+        }
+    }
+
+    public void toggleScreenshot() {
+        synchronized (mList) {
+            mHandler.removeMessages(MSG_TOGGLE_SCREENSHOT);
+            mHandler.obtainMessage(MSG_TOGGLE_SCREENSHOT, 0, 0, null).sendToTarget();
+        }
+    }
+
     private final class H extends Handler {
         public void handleMessage(Message msg) {
             final int what = msg.what & MSG_MASK;
@@ -502,6 +540,18 @@ public class CommandQueue extends IStatusBar.Stub {
                     break;
                 case MSG_TOGGLE_APP_SPLIT_SCREEN:
                     mCallbacks.toggleSplitScreen();
+                    break;
+                case MSG_START_CUSTOM_INTENT_AFTER_KEYGUARD:
+                    mCallbacks.showCustomIntentAfterKeyguard((Intent) msg.obj);
+                    break;
+                case MSG_TOGGLE_LAST_APP:
+                    mCallbacks.toggleLastApp();
+                    break;
+                case MSG_TOGGLE_KILL_APP:
+                    mCallbacks.toggleKillApp();
+                    break;
+                case MSG_TOGGLE_SCREENSHOT:
+                    mCallbacks.toggleScreenshot();
                     break;
             }
         }
