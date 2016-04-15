@@ -382,6 +382,7 @@ public class NotificationPanelView extends PanelView implements
 
         mSwipeHelper = new SwipeHelper(SwipeHelper.X,
                 SwipeHelper.SWIPE_ZONE_LEFT, mSwipeCallback, mContext);
+        mSwipeHelper.setSwipeProgressFadeEnd(1.0f);
         mMinimumFlingVelocity = ViewConfiguration.get(getContext())
                 .getScaledMinimumFlingVelocity();
 
