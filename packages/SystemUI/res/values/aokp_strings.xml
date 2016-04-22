@@ -80,4 +80,7 @@
 
     <!-- Content description of the power button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
     <string name="accessibility_expand">Immersive Mode</string>
+
+    <!-- Heads up snooze toast -->
+    <string name="heads_up_snooze_message">Heads up is snoozing for <xliff:g id="number">%d</xliff:g> minutes.</string>
 </resources>
