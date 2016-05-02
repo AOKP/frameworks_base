@@ -433,6 +433,8 @@ LOCAL_INTERMEDIATE_SOURCES := \
 LOCAL_NO_STANDARD_LIBRARIES := true
 LOCAL_JAVA_LIBRARIES := core-libart conscrypt okhttp core-junit bouncycastle ext
 
+LOCAL_JAVA_LIBRARIES += org.cyanogenmod.platform.internal
+
 LOCAL_MODULE := framework
 
 LOCAL_DX_FLAGS := --core-library --multi-dex

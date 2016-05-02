@@ -28,12 +28,14 @@ public interface WeatherController {
         void onWeatherChanged(WeatherInfo temp);
     }
     public static class WeatherInfo {
+        public double temp = Double.NaN;
         public String city = null;
-        public String wind = null;
+        public double windSpeed = Double.NaN;
         public int conditionCode = 0;
         public Drawable conditionDrawable = null;
-        public String temp = null;
         public String humidity = null;
         public String condition = null;
+        public int tempUnit;
+        public int windSpeedUnit;
     }
 }
