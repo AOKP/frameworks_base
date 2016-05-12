@@ -209,11 +209,9 @@ import com.android.systemui.volume.VolumeComponent;
 import cyanogenmod.app.CMContextConstants;
 import cyanogenmod.app.CustomTileListenerService;
 import cyanogenmod.app.StatusBarPanelCustomTile;
-import cyanogenmod.weather.util.WeatherUtils;
 
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -618,8 +616,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     resolver, Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP, 0,
                     UserHandle.USER_CURRENT);
             if (oldWeatherState != mWeatherTempState) {
-                updateWeatherTextState(mWeatherController.getWeatherInfo().temp, 
-                        mWeatherController.getWeatherInfo().tempUnit,
+                updateWeatherTextState(mWeatherController.getWeatherInfo().temp,
                         mWeatherTempColor, mWeatherTempSize, mWeatherTempFontStyle);
             }
 
@@ -646,21 +643,17 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mStatusBarView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void updateWeatherTextState(double temp, int tempUnit, int color, int size, int font) {
-        if (mWeatherTempState == 0 || Double.isNaN(temp)) {
+    private void updateWeatherTextState(String temp, int color, int size, int font) {
+        if (mWeatherTempState == 0 || TextUtils.isEmpty(temp)) {
             mWeatherTempView.setVisibility(View.GONE);
             return;
         }
         if (mWeatherTempState == 1) {
-            DecimalFormat noDigitsFormat = new DecimalFormat("0");
-            String noDigitsTemp = noDigitsFormat.format(temp);
-            if (noDigitsTemp.equals("-0")) {
-                noDigitsTemp = "0";
-            }
-            mWeatherTempView.setText(noDigitsTemp);
+            SpannableString span = new SpannableString(temp);
+            span.setSpan(new RelativeSizeSpan(0.7f), temp.length() - 1, temp.length(), 0);
+            mWeatherTempView.setText(span);
         } else if (mWeatherTempState == 2) {
-            mWeatherTempView.setText(
-                WeatherUtils.formatTemperature(temp, tempUnit));
+            mWeatherTempView.setText(temp.substring(0, temp.length() - 1));
         }
         mWeatherTempView.setTextColor(color);
         mWeatherTempView.setTextSize(size);
@@ -1370,7 +1363,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 mContext.getContentResolver(), Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP, 0,
                 UserHandle.USER_CURRENT);
         mWeatherController.addCallback(this);
-        updateWeatherTextState(0.0, 1, mWeatherTempColor, mWeatherTempSize, mWeatherTempFontStyle);
+        updateWeatherTextState(mWeatherTempView.getText().toString(), mWeatherTempColor, mWeatherTempSize, mWeatherTempFontStyle);
 
         mKeyguardUserSwitcher = new KeyguardUserSwitcher(mContext,
                 (ViewStub) mStatusBarWindowContent.findViewById(R.id.keyguard_user_switcher),
@@ -1576,11 +1569,12 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     @Override
     public void onWeatherChanged(WeatherController.WeatherInfo info) {
         SettingsObserver observer = new SettingsObserver(mHandler);
-        if (Double.isNaN(info.temp) || info.condition == null) {
+        if (info.temp == null || info.condition == null) {
             mWeatherTempView.setText(null);
+           // observer.update();
         } else {
-            updateWeatherTextState(info.temp, info.tempUnit,
-                        mWeatherTempColor, mWeatherTempSize, mWeatherTempFontStyle);
+            mWeatherTempView.setText(info.temp);
+           // observer.update();
         }
     }
 
