@@ -43,13 +43,10 @@ import android.widget.ImageView;
 import android.widget.TextClock;
 import android.widget.TextView;
 
-import com.android.internal.util.aokp.AOKPUtils;
 import com.android.internal.util.aokp.WeatherController;
 import com.android.internal.util.aokp.WeatherControllerImpl;
 import com.android.internal.util.slim.ImageHelper;
 import com.android.internal.widget.LockPatternUtils;
-
-import cyanogenmod.weather.util.WeatherUtils;
 
 import java.util.Date;
 import java.util.Locale;
@@ -267,7 +264,7 @@ public class KeyguardStatusView extends GridLayout implements
 
     @Override
     public void onWeatherChanged(WeatherController.WeatherInfo info) {
-        if (Double.isNaN(info.temp) || info.condition == null) {
+        if (info.temp == null || info.condition == null) {
             mWeatherCity.setText("--");
             mWeatherWind.setText(null);
             mWeatherConditionDrawable = null;
@@ -279,15 +276,9 @@ public class KeyguardStatusView extends GridLayout implements
             updateWeatherSettings(true);
         } else {
             mWeatherCity.setText(info.city);
-            mWeatherWind.setText(
-                    AOKPUtils.formatWind(info.windSpeed, info.windSpeedUnit));
+            mWeatherWind.setText(info.wind);
             mWeatherConditionDrawable = info.conditionDrawable;
-            if (Double.isNaN(info.temp)) {
-                mWeatherCurrentTemp.setText(null);
-            } else {
-                mWeatherCurrentTemp.setText(
-                        WeatherUtils.formatTemperature(info.temp, info.tempUnit));
-            }
+            mWeatherCurrentTemp.setText(info.temp);
             mWeatherHumidity.setText(info.humidity);
             mWeatherConditionText.setText(info.condition);
             mWeatherTimestamp.setText(getCurrentDate());

@@ -19,9 +19,6 @@ package com.android.internal.util.aokp;
 import android.content.Context;
 import android.content.res.Resources;
 
-import cyanogenmod.providers.WeatherContract;
-
-import java.text.DecimalFormat;
 import java.util.Locale;
 
 public class AOKPUtils {
@@ -34,35 +31,5 @@ public class AOKPUtils {
     public static boolean isChineseLanguage() {
        return Resources.getSystem().getConfiguration().locale.getLanguage().startsWith(
                Locale.CHINESE.getLanguage());
-    }
-
-    public static String formatWind(double windSpeed, int windSpeedUnit) {
-        if (!isValidWindSpeedUnit(windSpeedUnit)) return null;
-        if (Double.isNaN(windSpeed)) return "-";
-
-        DecimalFormat oneDigitFormat = new DecimalFormat("0.0");
-        String oneDigitSpeed = oneDigitFormat.format(windSpeed);
-        if (oneDigitSpeed.equals("-0.0")) {
-            oneDigitSpeed = "0.0";
-        }
-
-        StringBuilder formatted = new StringBuilder()
-                .append(oneDigitSpeed).append(" ");
-        if (windSpeedUnit == WeatherContract.WeatherColumns.WindSpeedUnit.KPH) {
-            formatted.append("KPH"); //TODO use getString() 
-        } else if (windSpeedUnit == WeatherContract.WeatherColumns.WindSpeedUnit.MPH) {
-            formatted.append("MPH"); //TODO use getString() 
-        }
-        return formatted.toString();
-    }
-
-    private static boolean isValidWindSpeedUnit(int unit) {
-        switch (unit) {
-            case WeatherContract.WeatherColumns.WindSpeedUnit.KPH:
-            case WeatherContract.WeatherColumns.WindSpeedUnit.MPH:
-                return true;
-            default:
-                return false;
-        }
     }
 }
