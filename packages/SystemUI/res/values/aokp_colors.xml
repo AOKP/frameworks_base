@@ -29,8 +29,4 @@
 
     <!-- Network traffic monitor multi-line text size -->
     <dimen name="net_traffic_multi_text_size">9dp</dimen>
-
-    <!-- Weather Temperature Status Bar Icon -->
-    <color name="status_bar_temp_text_color">#FFFFFFFF</color>
-
 </resources>
