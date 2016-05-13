@@ -398,7 +398,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     TextView mWeatherTempView;
     private int mWeatherTempState;
     private int mWeatherTempStyle;
-    private int mWeatherTempColor;
 
     // Max Lockscreen Notification count
     private int mMaxKeyguardNotifConfig;
@@ -509,9 +508,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE),
                     false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_WEATHER_COLOR),
-                    false, this, UserHandle.USER_ALL);
-            resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.LOCKSCREEN_BLUR_RADIUS),
                     false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
@@ -537,9 +533,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                                 .getColor(com.android.internal.R.color.battery_saver_mode_color);
                     }
             } else if (uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE))
-                    || uri.equals(Settings.System.getUriFor(
-                    Settings.System.STATUS_BAR_WEATHER_COLOR))) {
+                    Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE))) {
                     recreateStatusBar();
                     updateRowStates();
                     updateSpeedbump();
@@ -588,15 +582,12 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     resolver, Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP, 0,
                     UserHandle.USER_CURRENT);
             if (oldWeatherState != mWeatherTempState) {
-                updateWeatherTextState(mWeatherController.getWeatherInfo().temp, mWeatherTempColor);
+                updateWeatherTextState(mWeatherController.getWeatherInfo().temp);
             }
 
             mWeatherTempStyle = Settings.System.getIntForUser(
                     resolver, Settings.System.STATUS_BAR_WEATHER_TEMP_STYLE, 0,
                     UserHandle.USER_CURRENT);
-
-            mWeatherTempColor = Settings.System.getIntForUser(resolver,
-                    Settings.System.STATUS_BAR_WEATHER_COLOR, 0xFFFFFFFF, mCurrentUserId);
 
             mBlurRadius = Settings.System.getInt(mContext.getContentResolver(),
                     Settings.System.LOCKSCREEN_BLUR_RADIUS, 14);
@@ -607,7 +598,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mStatusBarView.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
     }
 
-    private void updateWeatherTextState(String temp, int color) {
+    private void updateWeatherTextState(String temp) {
         if (mWeatherTempState == 0 || TextUtils.isEmpty(temp)) {
             mWeatherTempView.setVisibility(View.GONE);
             return;
@@ -619,7 +610,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         } else if (mWeatherTempState == 2) {
             mWeatherTempView.setText(temp.substring(0, temp.length() - 1));
         }
-        mWeatherTempView.setTextColor(color);
         mWeatherTempView.setVisibility(View.VISIBLE);
     }
 
@@ -1271,8 +1261,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mWeatherTempView = (TextView) mStatusBarView.findViewById(R.id.left_weather_temp);
         }
 
-        mWeatherTempColor = Settings.System.getIntForUser(mContext.getContentResolver(),
-                    Settings.System.STATUS_BAR_WEATHER_COLOR, 0xFFFFFFFF, mCurrentUserId);
         mWeatherTempState = Settings.System.getIntForUser(
                 mContext.getContentResolver(), Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP, 0,
                 UserHandle.USER_CURRENT);
@@ -1281,11 +1269,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mWeatherController.addCallback(new WeatherController.Callback() {
                 @Override
                 public void onWeatherChanged(WeatherInfo temp) {
-                    updateWeatherTextState(temp.temp, mWeatherTempColor);
+                    updateWeatherTextState(temp.temp);
                 }
             });
         }
-        updateWeatherTextState(mWeatherController.getWeatherInfo().temp, mWeatherTempColor);
+        updateWeatherTextState(mWeatherController.getWeatherInfo().temp);
 
         mKeyguardUserSwitcher = new KeyguardUserSwitcher(mContext,
                 (ViewStub) mStatusBarWindowContent.findViewById(R.id.keyguard_user_switcher),
