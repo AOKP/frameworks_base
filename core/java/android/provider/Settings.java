@@ -4075,12 +4075,6 @@ public final class Settings {
         public static final String STATUS_BAR_WEATHER_COLOR = "status_bar_weather_color";
 
         /**
-         * Statusbar weather font size setting
-         * @hide
-         */
-        public static final String STATUS_BAR_WEATHER_SIZE = "status_bar_weather_size";
-
-        /**
          * Status bar carrier label
          * 0: Hide
          * 1: Display on keyguard status bar
