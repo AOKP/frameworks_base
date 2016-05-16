@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-**
+/*
 ** Copyright 2016, The AOKP Project
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,10 +18,9 @@
 -->
 <resources>
 
-    <!-- The seperater between the shorcuts. -->
-    <dimen name="shortcut_seperater_width">8dp</dimen>
-
-    <!-- Top margin for shortcuts. -->
-    <dimen name="shortcut_margin_top">25dp</dimen>
+    <!-- Keyguard weather colors -->
+    <color name="keyguard_default_primary_text_color">#ffffffff</color>
+    <color name="keyguard_default_secondary_text_color">#b3ffffff</color>
+    <color name="keyguard_default_icon_color">#ffffffff</color>
 
 </resources>
