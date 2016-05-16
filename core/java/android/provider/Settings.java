@@ -4614,7 +4614,7 @@ public final class Settings {
         public static final String STATUS_BAR_AOKP_LOGO_POSITION = "status_bar_logo_position";
 
         /**
-         * Statusbar AICP logo custom style
+         * Statusbar AOKP logo custom style
          * @hide
          */
         public static final String STATUS_BAR_AOKP_LOGO_STYLE = "status_bar_logo_style";
@@ -4632,9 +4632,18 @@ public final class Settings {
         public static final String QS_TILE_TITLE_VISIBILITY = "qs_tile_title_visibility";
 
         /**
-         * --- AICP System settings end
-         *  Add new system settings above this comment
+         * Change quick settings tiles animation style
+         *
+         * @hide
          */
+        public static final String ANIM_TILE_STYLE = "anim_tile_style";
+
+        /**
+         * Change quick settings tiles animation duration
+         *
+         * @hide
+         */
+        public static final String ANIM_TILE_DURATION = "anim_tile_duration";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
