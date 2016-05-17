@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.aokp;
+package com.android.keyguard;
 
 import android.graphics.drawable.Drawable;
 
 public interface WeatherController {
     void addCallback(Callback callback);
     void removeCallback(Callback callback);
-    void updateWeather();
     WeatherInfo getWeatherInfo();
+    void updateWeather();
 
     public interface Callback {
         void onWeatherChanged(WeatherInfo temp);
@@ -32,8 +32,9 @@ public interface WeatherController {
         public String wind = null;
         public int conditionCode = 0;
         public Drawable conditionDrawable = null;
-        public String temp = null;
+        public double temp = Double.NaN;
         public String humidity = null;
         public String condition = null;
+        public int tempUnit;
     }
 }
