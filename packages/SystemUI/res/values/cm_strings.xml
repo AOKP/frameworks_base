@@ -48,4 +48,7 @@
     <string name="select_application">Select application</string>
     <string name="lockscreen_choose_action_title">Choose action</string>
     <string name="lockscreen_none_target">None</string>
+
+<!-- Weather string format in keyguard -->
+    <string name="keyguard_status_view_weather_format"><xliff:g id="temp">%1$s</xliff:g> <xliff:g id="condition">%2$s</xliff:g></string>
 </resources>
