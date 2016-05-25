@@ -33,6 +33,7 @@ import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.util.Slog;
 import android.util.SparseArray;
 import android.util.TimeUtils;
