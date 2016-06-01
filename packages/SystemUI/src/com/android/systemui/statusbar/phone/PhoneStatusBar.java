@@ -4780,6 +4780,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             e.printStackTrace();
         }
         if (mLiveLockScreenController.isShowingLiveLockScreenView()) {
+            mLiveLockScreenController.onLiveLockScreenFocusChanged(false);
             mLiveLockScreenController.getLiveLockScreenView().onKeyguardShowing(
                     mStatusBarKeyguardViewManager.isScreenTurnedOn());
         }
