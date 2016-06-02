@@ -549,6 +549,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.RECENT_CARD_TEXT_COLOR), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_NUM_TILE_COLUMNS), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_NUM_TILE_ROWS), false, this,
+                    UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_CUSTOM_HEADER_SHADOW), false, this,
+                    UserHandle.USER_ALL);
+
             update();
         }
 
@@ -675,6 +685,10 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             }
             if (mIconPolicy != null) {
                 mIconPolicy.setCurrentUserSetup(mUserSetup);
+            }
+
+            if (mQSPanel != null) {
+                mQSPanel.updateQSLayout();
             }
         }
     };
@@ -2331,6 +2345,14 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     public void updateRowStates() {
         super.updateRowStates();
         mNotificationPanel.notifyVisibleChildrenChanged();
+    }
+
+    protected boolean hasActiveVisibleNotifications() {
+        return mNotificationData.hasActiveVisibleNotifications();
+    }
+
+    protected boolean hasActiveClearableNotifications() {
+        return mNotificationData.hasActiveClearableNotifications();
     }
 
     @Override

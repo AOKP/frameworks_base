@@ -4136,6 +4136,14 @@ public final class Settings {
         public static final String STATUS_BAR_CUSTOM_HEADER = "status_bar_custom_header";
 
         /**
+         *
+         * Whether to apply a shadow on top of the header image
+         * value is the alpha value of the shadow image is 0 -> no shadow -> 255 black
+         * @hide
+         */
+        public static final String STATUS_BAR_CUSTOM_HEADER_SHADOW = "status_bar_custom_header_shadow";
+
+        /**
          * Current active provider
          * @hide
          */
@@ -4280,6 +4288,26 @@ public final class Settings {
          * @hide
          */
         public static final String RECENT_CARD_TEXT_COLOR = "recent_card_text_color";
+
+        /**
+         * Number of rows to display on the quick settings panel
+         * Default is 3
+         * @hide
+         */
+        public static final String QS_NUM_TILE_ROWS = "sysui_qs_num_tile_rows";
+
+        /**
+         * Number of columns to display on the quick settings panel
+         * Default is 3
+         * @hide
+         */
+        public static final String QS_NUM_TILE_COLUMNS = "sysui_qs_num_tile_columns";
+
+        /**
+         * Quick Settings Smart Pulldown
+         * @hide
+         */
+        public static final String QS_SMART_PULLDOWN = "qs_smart_pulldown";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
