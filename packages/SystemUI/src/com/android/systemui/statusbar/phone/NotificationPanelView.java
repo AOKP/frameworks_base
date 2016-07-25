@@ -297,6 +297,8 @@ public class NotificationPanelView extends PanelView implements
     private boolean mUserInteractedWithLiveLockScreen;
     private boolean mUserReturnedFromLiveLockScreen;
 
+    private boolean mScreenOnHintsEnabled;
+
     private enum SwipeLockedDirection {
         UNKNOWN,
         HORIZONTAL,
@@ -440,6 +442,7 @@ public class NotificationPanelView extends PanelView implements
         mScreenHeight = point.y;
         mUnlockMethodCache = UnlockMethodCache.getInstance(context);
 
+        mScreenOnHintsEnabled = res.getBoolean(R.bool.config_showScreenOnLockScreenHints);
         mUserUnlocked = getUserUnlocked();
         mUserExpandedNotifications = getUserExpandedNotificationsInKeyguard();
         mUserInteractedWithLiveLockScreen = getUserInteractedWithLls();
@@ -3155,6 +3158,7 @@ public class NotificationPanelView extends PanelView implements
     }
 
     private boolean shouldShowScreenOnHints() {
-        return mStatusBar.isDeviceProvisioned() && mStatusBarState == StatusBarState.KEYGUARD;
+        return mScreenOnHintsEnabled && mStatusBar.isDeviceProvisioned() &&
+                mStatusBarState == StatusBarState.KEYGUARD;
     }
 }
