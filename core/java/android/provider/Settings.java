@@ -4314,6 +4314,18 @@ public final class Settings {
         public static final String TOAST_ANIMATION = "toast_animation";
 
         /**
+         * Color of toast message icon
+         * @hide
+         */
+        public static final String TOAST_ICON_COLOR = "toast_icon_color";
+
+        /**
+         * Color of toast message test
+         * @hide
+         */
+        public static final String TOAST_TEXT_COLOR = "toast_text_color";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
