@@ -1456,4 +1456,16 @@
     <string name="enable_accessibility_canceled" msgid="3833923257966635673">"Đã hủy trợ năng."</string>
     <string name="user_switched" msgid="3768006783166984410">"Người dùng hiện tại <xliff:g id="NAME">%1$s</xliff:g>."</string>
     <string name="owner_name" msgid="2716755460376028154">"Chủ sở hữu"</string>
+    <string name="reboot">Khởi động lại</string>
+    <string name="reboot_recovery">Vào Recovery</string>
+    <string name="reboot_download">Vào Download</string>
+    <string name="reboot_bootloader">Vào Bootloader</string>
+    <string name="reboot_progress">Điện thoại đang khởi động lại</string>    
+    <string name="global_action_screenshot">Chụp màn hình</string>
+    <string name="global_action_torch">Đèn pin</string>
+    <string name="global_actions_toggle_navbar_hide">Tùy chỉnh thanh Navbar</string>
+	   <string name="vibration_picker_title">Chọn rung</string>
+    <string name="vibration_picker_del_title">Xóa rung</string>
+    <string name="notify_turn_wifi_off_title">Tắt Wi-Fi</string>
 </resources>
+WIDTH
