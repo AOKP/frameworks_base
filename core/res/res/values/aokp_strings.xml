@@ -20,6 +20,8 @@
   <!-- Vendor mismatched fingerprint warning [CHAR LIMIT=NONE] -->
   <string name="system_error_vendorprint">It appears that your vendor image may be out of date. Please flash latest vendor image for your device.</string>
 
+    <string name="default_string">Default</string>
+
     <!-- AOKP custom system animations -->
     <string name="animation_fade">Fade</string>
     <string name="animation_slide_right">Slide in right</string>
