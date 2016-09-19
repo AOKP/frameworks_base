@@ -74,6 +74,7 @@ import com.android.systemui.qs.tiles.ScreenshotTile;
 import com.android.systemui.qs.tiles.SleepScreenTile;
 import com.android.systemui.qs.tiles.SyncTile;
 import com.android.systemui.qs.tiles.UsbTetherTile;
+import com.android.systemui.qs.tiles.VolumeTile;
 import com.android.systemui.qs.tiles.UserTile;
 import com.android.systemui.qs.tiles.WifiTile;
 import com.android.systemui.qs.tiles.WorkModeTile;
@@ -473,6 +474,7 @@ public class QSTileHost implements QSTile.Host, Tunable {
         else if (tileSpec.equals("app_circle_bar")) return new AppCircleBarTile(this);
         else if (tileSpec.equals("app_side_bar")) return new AppSideBarTile(this);
         else if (tileSpec.equals("gesture_anywhere")) return new GestureAnyWhereTile(this);
+        else if (tileSpec.equals("volume")) return new VolumeTile(this);
 
         // Intent tiles.
         else if (tileSpec.startsWith(IntentTile.PREFIX)) return IntentTile.create(this,tileSpec);
