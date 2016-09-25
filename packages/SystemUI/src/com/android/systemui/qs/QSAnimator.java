@@ -14,7 +14,13 @@
 
 package com.android.systemui.qs;
 
+import android.content.ContentResolver;
+import android.database.ContentObserver;
 import android.graphics.Path;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnAttachStateChangeListener;
@@ -66,6 +72,8 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
     private int mNumQuickTiles;
     private float mLastPosition;
     private QSTileHost mHost;
+    private Handler mHandler = new Handler();
+    private SettingsObserver mSettingsObserver;
 
     public QSAnimator(QSContainer container, QuickQSPanel quickPanel, QSPanel panel) {
         mQsContainer = container;
@@ -80,6 +88,7 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
         } else {
             Log.w(TAG, "QS Not using page layout");
         }
+        mSettingsObserver = new SettingsObserver(mHandler);
     }
 
     public void onRtlChanged() {
@@ -104,6 +113,7 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
     public void onViewAttachedToWindow(View v) {
         TunerService.get(mQsContainer.getContext()).addTunable(this, ALLOW_FANCY_ANIMATION,
                 MOVE_FULL_ROWS, QuickQSPanel.NUM_QUICK_TILES);
+        mSettingsObserver.observe();
     }
 
     @Override
@@ -112,6 +122,7 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
             mHost.removeCallback(this);
         }
         TunerService.get(mQsContainer.getContext()).removeTunable(this);
+        mSettingsObserver.unobserve();
     }
 
     @Override
@@ -372,4 +383,40 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
             setPosition(mLastPosition);
         }
     };
+
+    class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mQsContainer.getContext().getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.QS_FANCY_ANIMATION), false, this, UserHandle.USER_ALL);
+            update();
+        }
+
+        void unobserve() {
+            ContentResolver resolver = mQsContainer.getContext().getContentResolver();
+            resolver.unregisterContentObserver(this);
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.QS_FANCY_ANIMATION))) {
+                if (!mAllowFancy) {
+                    clearAnimationState();
+                }
+            }
+            updateAnimators();
+            update();
+        }
+
+        public void update() {
+            ContentResolver resolver = mQsContainer.getContext().getContentResolver();
+            mAllowFancy = Settings.System.getIntForUser(resolver,
+                    Settings.System.QS_FANCY_ANIMATION, 1, UserHandle.USER_CURRENT) == 1;
+        }
+    }
 }
