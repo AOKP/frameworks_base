@@ -115,6 +115,11 @@
         wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,nfc,location,hotspot,inversion,saver,work,cast,night,adb_network,ambient_display,caffeine,heads_up,livedisplay,sync,usb_tether,volume_panel
     </string>
 
+    <!-- The default tiles to display in QuickSettings -->
+    <string name="quick_settings_tiles_extra" translatable="false">
+        hotspot,inversion,saver,work,cast
+    </string>
+
     <!-- The tiles to display in QuickSettings -->
     <string name="quick_settings_tiles" translatable="false">default</string>
 
