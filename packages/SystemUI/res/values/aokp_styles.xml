@@ -40,4 +40,8 @@
         <item name="android:shadowDy">2.0</item>
     </style>
 
+    <style name="TextAppearance.StatusBar.WeatherTemp" parent="@*android:style/TextAppearance.StatusBar">
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>
