@@ -45,4 +45,9 @@
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
     </style>
 
+    <!-- Status bar weather temp -->
+    <style name="TextAppearance.StatusBar.WeatherTemp" parent="@*android:style/TextAppearance.StatusBar">
+        <item name="android:textStyle">normal</item>
+    </style>
+
 </resources>

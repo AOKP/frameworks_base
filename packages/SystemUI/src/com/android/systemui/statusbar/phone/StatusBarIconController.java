@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.systemui.BatteryLevelTextView;
@@ -85,6 +86,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     private ImageView mAokpLogo;
     private ImageView mAokpLogoRight;
     private ImageView mAokpLogoLeft;
+
+    private TextView mWeather;
 
     private int mIconSize;
     private int mIconHPadding;
@@ -146,6 +149,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
 
         mDarkModeIconColorSingleTone = context.getColor(R.color.dark_mode_icon_color_single_tone);
         mLightModeIconColorSingleTone = context.getColor(R.color.light_mode_icon_color_single_tone);
+        mWeather = (TextView) statusBar.findViewById(R.id.weather_temp);
         mHandler = new Handler();
         mClockController = new ClockController(statusBar, mNotificationIconAreaController, mHandler);
         mCenterClockLayout = statusBar.findViewById(R.id.center_clock_layout);
@@ -580,6 +584,7 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
                 mAokpLogoRight.setImageTintList(ColorStateList.valueOf(mIconTint));
                 mAokpLogoLeft.setImageTintList(ColorStateList.valueOf(mIconTint));
         }
+        mWeather.setTextColor(mIconTint);
     }
 
     public void appTransitionPending() {
