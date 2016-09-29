@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2014 SlimRoms Project
+* Copyright (C) 2016 SlimRoms Project
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,5 +26,4 @@ public class Converter {
     public static int pxToDp(Context context, int px) {
         return (int) ((px / context.getResources().getDisplayMetrics().density) + 0.5);
     }
-
 }
