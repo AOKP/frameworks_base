@@ -32,4 +32,8 @@
 
     <!-- Screen record notification error title -->
     <string name="screenrecord_notif_error">Unable to record screen</string>
+
+    <!-- Quick Settings tiles -->
+    <string name="quick_settings_screenshot_label">Screenshot</string>
+
 </resources>
