@@ -37,6 +37,7 @@ import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.graphics.drawable.Icon;
+import android.database.ContentObserver;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -133,6 +134,7 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
     private final ArraySet<Pair<String, Integer>> mCurrentNotifs = new ArraySet<>();
     private final UiOffloadThread mUiOffloadThread = Dependency.get(UiOffloadThread.class);
     private final SuController mSuController;
+    private boolean mSuIndicatorVisible;
 
     // Assume it's all good unless we hear otherwise.  We don't always seem
     // to get broadcasts that it *is* there.
@@ -180,6 +182,7 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
         mSlotDataSaver = context.getString(com.android.internal.R.string.status_bar_data_saver);
         mSlotLocation = context.getString(com.android.internal.R.string.status_bar_location);
         mSlotSu = context.getString(com.android.internal.R.string.status_bar_su);
+        mSettingsObserver.onChange(true);
 
         // listen for broadcasts
         IntentFilter filter = new IntentFilter();
@@ -229,6 +232,9 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
         mIconController.setIconVisibility(mSlotHotspot, mHotspot.isHotspotEnabled());
 
         // su
+        mContext.getContentResolver().registerContentObserver(
+                Settings.System.getUriFor(Settings.System.SHOW_SU_INDICATOR),
+                false, mSettingsObserver);
         mIconController.setIcon(mSlotSu, R.drawable.stat_sys_su, null);
         mIconController.setIconVisibility(mSlotSu, false);
         mSuController.addCallback(mSuCallback);
@@ -269,6 +275,20 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
             updateForegroundInstantApps();
         });
     }
+
+    private ContentObserver mSettingsObserver = new ContentObserver(null) {
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            mSuIndicatorVisible = Settings.System.getInt(mContext.getContentResolver(),
+                    Settings.System.SHOW_SU_INDICATOR, 0) == 1;
+            updateSu();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            onChange(selfChange, null);
+        }
+    };
 
     public void destroy() {
         mRotationLockController.removeCallback(this);
@@ -688,7 +708,7 @@ public class PhoneStatusBarPolicy implements Callback, Callbacks,
     };
 
     private void updateSu() {
-        mIconController.setIconVisibility(mSlotSu, mSuController.hasActiveSessions());
+        mIconController.setIconVisibility(mSlotSu, mSuController.hasActiveSessions() && mSuIndicatorVisible);
     }
 
     private final CastController.Callback mCastCallback = new CastController.Callback() {
