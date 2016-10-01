@@ -4049,6 +4049,12 @@ public final class Settings {
         public static final String NETWORK_TRAFFIC_COLOR = "network_traffic_color";
 
         /**
+         * Whether to disable showing arrows in network traffic indicators
+         * @hide
+         */
+        public static final String NETWORK_TRAFFIC_HIDEARROW = "network_traffic_hidearrow";
+
+        /**
          * Whether or not to hide the network traffic indicator when there is no activity
          * @hide
          */

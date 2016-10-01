@@ -61,6 +61,7 @@ public class NetworkTraffic extends TextView {
     private int MB = KB * KB;
     private int GB = MB * KB;
     private boolean mAutoHide;
+    private boolean mHideArrow;
     private int mAutoHideThreshold;
     private int mNetworkTrafficColor;
 
@@ -190,6 +191,9 @@ public class NetworkTraffic extends TextView {
             resolver.registerContentObserver(Settings.System
                     .getUriFor(Settings.System.NETWORK_TRAFFIC_COLOR), false,
                     this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System
+                    .getUriFor(Settings.System.NETWORK_TRAFFIC_HIDEARROW), false,
+                    this, UserHandle.USER_ALL);
         }
 
         /*
@@ -281,6 +285,10 @@ public class NetworkTraffic extends TextView {
                 Settings.System.NETWORK_TRAFFIC_AUTOHIDE_THRESHOLD, 10,
                 UserHandle.USER_CURRENT);
 
+        mHideArrow = Settings.System.getIntForUser(resolver,
+                Settings.System.NETWORK_TRAFFIC_HIDEARROW, 0,
+                UserHandle.USER_CURRENT) == 1;
+
         mState = Settings.System.getInt(resolver, Settings.System.NETWORK_TRAFFIC_STATE, 0);
 
         mNetworkTrafficColor = Settings.System.getInt(resolver,
@@ -337,18 +345,22 @@ public class NetworkTraffic extends TextView {
     private void updateTrafficDrawable() {
         int intTrafficDrawable;
         Drawable drw = null;
-        if (isSet(mState, MASK_UP + MASK_DOWN)) {
-            intTrafficDrawable = R.drawable.stat_sys_network_traffic_updown;
-        } else if (isSet(mState, MASK_UP)) {
-            intTrafficDrawable = R.drawable.stat_sys_network_traffic_up;
-        } else if (isSet(mState, MASK_DOWN)) {
-            intTrafficDrawable = R.drawable.stat_sys_network_traffic_down;
+        if (!mHideArrow) {
+            if (isSet(mState, MASK_UP + MASK_DOWN)) {
+                intTrafficDrawable = R.drawable.stat_sys_network_traffic_updown;
+            } else if (isSet(mState, MASK_UP)) {
+                intTrafficDrawable = R.drawable.stat_sys_network_traffic_up;
+            } else if (isSet(mState, MASK_DOWN)) {
+                intTrafficDrawable = R.drawable.stat_sys_network_traffic_down;
+            } else {
+                intTrafficDrawable = 0;
+            }
+            if (intTrafficDrawable != 0) {
+                drw = getContext().getResources().getDrawable(intTrafficDrawable);
+                drw.setColorFilter(mNetworkTrafficColor, PorterDuff.Mode.SRC_ATOP);
+            }
         } else {
-            intTrafficDrawable = 0;
-        }
-        if (intTrafficDrawable != 0) {
-            drw = getContext().getResources().getDrawable(intTrafficDrawable);
-            drw.setColorFilter(mNetworkTrafficColor, PorterDuff.Mode.SRC_ATOP);
+            drw = null;
         }
         setCompoundDrawablesWithIntrinsicBounds(null, null, drw, null);
     }
