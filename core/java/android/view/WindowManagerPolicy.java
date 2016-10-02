@@ -1251,7 +1251,7 @@ public interface WindowManagerPolicy {
     public boolean hasPermanentMenuKey();
 
     /**
-     * Specifies whether the device needs a navigation bar (because it has no hardware buttons)
+     * Device requires a software navigation bar.
      */
     public boolean needsNavigationBar();
 
