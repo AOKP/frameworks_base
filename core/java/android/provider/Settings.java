@@ -1993,7 +1993,7 @@ public final class Settings {
             }
         }
 
-	/**
+    /**
          * Convenience function for updating a single settings value as a
          * boolean. This will either create a new entry in the table if the
          * given name does not exist, or modify the value of the existing row
@@ -3945,7 +3945,7 @@ public final class Settings {
          */
         public static final String STATUS_BAR_DATE = "status_bar_date";
 
-	/**
+    /**
          * show the membar in recents
          *  @hide
          */
@@ -4386,6 +4386,18 @@ public final class Settings {
          * @hide
          */
         public static final String AMBIENT_DISPLAY_SHOW_BATTERY = "ambient_display_show_battery";
+
+        /*
+         * show clear all recents button
+         *  @hide
+         */
+        public static final String SHOW_CLEAR_ALL_RECENTS = "show_clear_all_recents";
+
+        /**
+         * location of the clear all rectents button
+         * @hide
+         */
+        public static final String  RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";
 
         /**
          * Whether to allow fullscreen screenshots or let the user select which area to screenshot
