@@ -33,6 +33,8 @@ import com.android.systemui.qs.customize.QSCustomizer;
 import com.android.systemui.tuner.TunerService;
 import com.android.systemui.tuner.TunerService.Tunable;
 
+import android.provider.Settings.Secure;
+
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -41,7 +43,7 @@ import java.util.Collection;
  */
 public class QuickQSPanel extends QSPanel {
 
-    public static final String NUM_QUICK_TILES = "sysui_qqs_count";
+    public static final String NUM_QUICK_TILES = Secure.QQS_COUNT;
 
     private int mMaxTiles;
     protected QSPanel mFullPanel;

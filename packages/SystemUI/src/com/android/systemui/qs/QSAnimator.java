@@ -180,7 +180,11 @@ public class QSAnimator implements Callback, PageListener, Listener, OnLayoutCha
                 if (quickTileView == null) continue;
 
                 lastX = loc1[0];
-                getRelativePosition(loc1, quickTileView.getIcon().getIconView(), view);
+
+                if (quickTileView.getIcon() != null) {
+            	    getRelativePosition(loc1, quickTileView.getIcon().getIconView(), view);
+                }
+
                 getRelativePosition(loc2, tileIcon, view);
                 final int xDiff = loc2[0] - loc1[0];
                 final int yDiff = loc2[1] - loc1[1];
