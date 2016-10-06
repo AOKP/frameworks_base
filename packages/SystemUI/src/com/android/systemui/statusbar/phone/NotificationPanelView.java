@@ -236,6 +236,7 @@ public class NotificationPanelView extends PanelView implements
     private boolean mDoubleTapToSleepEnabled;
     private int mStatusBarHeaderHeight;
     private GestureDetector mDoubleTapGesture;
+    private boolean mDoubleTapToSleepAnywhere;
 
     private boolean mKeyguardWeatherEnabled;
     private TextView mKeyguardWeatherInfo;
@@ -818,6 +819,9 @@ public class NotificationPanelView extends PanelView implements
         if (mDoubleTapToSleepEnabled
                 && mStatusBarState == StatusBarState.KEYGUARD
                 && event.getY() < mStatusBarHeaderHeight) {
+            mDoubleTapGesture.onTouchEvent(event);
+        } else if (mDoubleTapToSleepAnywhere
+                && mStatusBarState == StatusBarState.KEYGUARD) {
             mDoubleTapGesture.onTouchEvent(event);
         }
         initDownStates(event);
@@ -2484,6 +2488,9 @@ public class NotificationPanelView extends PanelView implements
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_STROKE_DASH_GAP),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -2504,19 +2511,21 @@ public class NotificationPanelView extends PanelView implements
 
         public void update() {
             ContentResolver resolver = mContext.getContentResolver();
+            mDoubleTapToSleepAnywhere = Settings.System.getIntForUser(resolver,
+                    Settings.System.DOUBLE_TAP_SLEEP_ANYWHERE, 0, UserHandle.USER_CURRENT) == 1;
             mQSShadeAlpha = Settings.System.getInt(
                     resolver, Settings.System.QS_TRANSPARENT_SHADE, 255);
-            mQSStroke = Settings.System.getInt(mContext.getContentResolver(),
+            mQSStroke = Settings.System.getInt(resolver,
                         Settings.System.QS_STROKE, 0);
-            mCustomStrokeColor = Settings.System.getInt(mContext.getContentResolver(),
+            mCustomStrokeColor = Settings.System.getInt(resolver,
                         Settings.System.QS_STROKE_COLOR, mContext.getResources().getColor(R.color.system_accent_color));
-            mCustomStrokeThickness = Settings.System.getInt(mContext.getContentResolver(),
+            mCustomStrokeThickness = Settings.System.getInt(resolver,
                         Settings.System.QS_STROKE_THICKNESS, 4);
-            mCustomCornerRadius = Settings.System.getInt(mContext.getContentResolver(),
+            mCustomCornerRadius = Settings.System.getInt(resolver,
                         Settings.System.QS_CORNER_RADIUS, 5);
-            mCustomDashWidth = Settings.System.getInt(mContext.getContentResolver(),
+            mCustomDashWidth = Settings.System.getInt(resolver,
                     Settings.System.QS_STROKE_DASH_WIDTH, 0);
-            mCustomDashGap = Settings.System.getInt(mContext.getContentResolver(),
+            mCustomDashGap = Settings.System.getInt(resolver,
                     Settings.System.QS_STROKE_DASH_GAP, 10);
 
             setQSStroke();
