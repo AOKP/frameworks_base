@@ -288,6 +288,12 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             "lineagesystem:" + LineageSettings.System.FORCE_SHOW_NAVBAR;
     private static final String QS_TILE_TITLE_VISIBILITY =
             "system:" + Settings.System.QS_TILE_TITLE_VISIBILITY;
+    private static final String QS_ROWS_PORTRAIT =
+            "system:" + Settings.Secure.QS_ROWS_PORTRAIT;
+    private static final String QS_ROWS_LANDSCAPE =
+            "system:" + Settings.Secure.QS_ROWS_LANDSCAPE;
+    private static final String QS_COLUMNS =
+            "system:" + Settings.Secure.QS_COLUMNS;
 
     private static final String BANNER_ACTION_CANCEL =
             "com.android.systemui.statusbar.banner_action_cancel";
@@ -709,7 +715,10 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         tunerService.addTunable(this, LOCKSCREEN_MEDIA_METADATA);
         tunerService.addTunable(this, FORCE_SHOW_NAVBAR);
         tunerService.addTunable(this, QS_TILE_TITLE_VISIBILITY);
-
+        tunerService.addTunable(this, QS_ROWS_PORTRAIT); 
+        tunerService.addTunable(this, QS_ROWS_LANDSCAPE);
+        tunerService.addTunable(this, QS_COLUMNS);
+        
         mDisplayManager = mContext.getSystemService(DisplayManager.class);
 
         mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
@@ -5800,6 +5809,9 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
                 mShowMediaMetadata = newValue == null || Integer.parseInt(newValue) != 0;
                 break;
             case QS_TILE_TITLE_VISIBILITY:
+            case QS_ROWS_PORTRAIT:
+            case QS_ROWS_LANDSCAPE:
+            case QS_COLUMNS:            
                 if (mQSPanel != null) {
                     mQSPanel.updateResources();
                 }
