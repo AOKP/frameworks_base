@@ -6156,6 +6156,15 @@ public class StatusBar extends SystemUI implements DemoMode,
 
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                   Settings.Secure.QS_ROWS_PORTRAIT),
+                   false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                   Settings.Secure.QS_ROWS_LANDSCAPE),
+                   false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                   Settings.Secure.QS_COLUMNS),
+                   false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -6163,6 +6172,15 @@ public class StatusBar extends SystemUI implements DemoMode,
         public void onChange(boolean selfChange, Uri uri) {
             super.onChange(selfChange);
             ContentResolver resolver = mContext.getContentResolver();
+            if (uri.equals(Settings.Secure.getUriFor(
+                    Settings.Secure.QS_ROWS_PORTRAIT))
+                    || uri.equals(Settings.Secure.getUriFor(
+                    Settings.Secure.QS_ROWS_LANDSCAPE))) {
+                    updateResources();
+            } else if (uri.equals(Settings.Secure.getUriFor(
+                    Settings.Secure.QS_COLUMNS))) {
+                    updateResources();
+            }
         }
 
         public void update() {
