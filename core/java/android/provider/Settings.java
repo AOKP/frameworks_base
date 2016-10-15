@@ -7086,6 +7086,12 @@ public final class Settings {
                 INCALL_POWER_BUTTON_BEHAVIOR_SCREEN_OFF;
 
         /**
+         * Enable single click to turn Bluetooth on or off.
+         * @hide
+         */
+        public static final String QS_BT_EASY_TOGGLE = "qs_bt_easy_toggle";
+
+        /**
          * Whether the device should wake when the wake gesture sensor detects motion.
          * @hide
          */
