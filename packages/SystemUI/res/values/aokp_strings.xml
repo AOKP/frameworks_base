@@ -34,4 +34,11 @@
     <!-- DUI -->
     <string name="systemui_tuner_navbar_title">Stock settings</string>
 
+    <!-- Navigation bar Tile -->
+    <string name="quick_settings_navigation_bar">Navigation bar</string>
+    <string name="quick_settings_smartbar">SmartBar</string>
+    <string name="quick_settings_smartbar_off">SmartBar off</string>
+    <string name="quick_settings_fling">Fling</string>
+    <string name="quick_settings_fling_off">Fling off</string>
+
 </resources>
