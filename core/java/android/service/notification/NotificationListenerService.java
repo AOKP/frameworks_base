@@ -1176,7 +1176,7 @@ public abstract class NotificationListenerService extends Service {
                 CharSequence explanation, String overrideGroupKey) {
             mKey = key;
             mRank = rank;
-            mIsAmbient = importance < IMPORTANCE_VERY_LOW;
+            mIsAmbient = importanceToLevel(importance) < importanceToLevel(IMPORTANCE_VERY_LOW);
             mMatchesInterruptionFilter = matchesInterruptionFilter;
             mVisibilityOverride = visibilityOverride;
             mSuppressedVisualEffects = suppressedVisualEffects;
@@ -1208,6 +1208,54 @@ public abstract class NotificationListenerService extends Service {
                     return "MAX";
                 default:
                     return "UNKNOWN(" + String.valueOf(importance) + ")";
+            }
+        }
+
+        /**
+         * {@hide}
+         */
+        public static int importanceToLevel(int importance) {
+            switch (importance) {
+                case IMPORTANCE_NONE:
+                    return 0;
+                case IMPORTANCE_MIN:
+                    return 1;
+                case IMPORTANCE_VERY_LOW:
+                    return 2;
+                case IMPORTANCE_LOW:
+                    return 3;
+                case IMPORTANCE_DEFAULT:
+                    return 4;
+                case IMPORTANCE_HIGH:
+                    return 5;
+                case IMPORTANCE_MAX:
+                    return 6;
+                default:
+                    return 4;
+            }
+        }
+
+        /**
+         * {@hide}
+         */
+        public static int levelToImportance(int level) {
+            switch (level) {
+                case 0:
+                    return IMPORTANCE_NONE;
+                case 1:
+                    return IMPORTANCE_MIN;
+                case 2:
+                    return IMPORTANCE_VERY_LOW;
+                case 3:
+                    return IMPORTANCE_LOW;
+                case 4:
+                    return IMPORTANCE_DEFAULT;
+                case 5:
+                    return IMPORTANCE_HIGH;
+                case 6:
+                    return IMPORTANCE_MAX;
+                default:
+                    return IMPORTANCE_UNSPECIFIED;
             }
         }
     }
