@@ -661,18 +661,29 @@ final class DefaultPermissionGrantPolicy {
 
             }
 
+            // Storage Manager
+            Intent storageManagerIntent = new Intent(StorageManager.ACTION_MANAGE_STORAGE);
+            PackageParser.Package storageManagerPckg = getDefaultSystemHandlerActivityPackageLPr(
+                    storageManagerIntent, userId);
+            if (storageManagerPckg != null
+                    && doesPackageSupportRuntimePermissions(storageManagerPckg)) {
+                grantRuntimePermissionsLPw(storageManagerPckg, STORAGE_PERMISSIONS, true, userId);
+            }
+
+            mService.mSettings.onDefaultRuntimePermissionsGrantedLPr(userId);
+
             // Google Account
-            PackageParser.Package googleaccountPackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.google.android.gsf.login", userId);
-            if (googleaccountPackage != null) {
+            PackageParser.Package googleaccountPackage = getSystemPackageLPr(
+                    "com.google.android.gsf.login");
+            if (googleaccountPackage != null && doesPackageSupportRuntimePermissions(googleaccountPackage)) {
                 grantRuntimePermissionsLPw(googleaccountPackage, CONTACTS_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(googleaccountPackage, PHONE_PERMISSIONS, userId);
             }
 
             // Google App
-            PackageParser.Package googleappPackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.google.android.googlequicksearchbox", userId);
-            if (googleappPackage != null) {
+            PackageParser.Package googleappPackage = getSystemPackageLPr(
+                    "com.google.android.googlequicksearchbox");
+            if (googleappPackage != null && doesPackageSupportRuntimePermissions(googleappPackage)) {
                 grantRuntimePermissionsLPw(googleappPackage, CALENDAR_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(googleappPackage, CAMERA_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(googleappPackage, CONTACTS_PERMISSIONS, userId);
@@ -684,9 +695,9 @@ final class DefaultPermissionGrantPolicy {
             }
 
             // Google Play Services
-            PackageParser.Package gmscorePackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.google.android.gms", userId);
-            if (gmscorePackage != null) {
+            PackageParser.Package gmscorePackage = getSystemPackageLPr(
+                    "com.google.android.gms");
+            if (gmscorePackage != null && doesPackageSupportRuntimePermissions(gmscorePackage)) {
                 grantRuntimePermissionsLPw(gmscorePackage, SENSORS_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(gmscorePackage, CALENDAR_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(gmscorePackage, CAMERA_PERMISSIONS, userId);
@@ -698,64 +709,72 @@ final class DefaultPermissionGrantPolicy {
                 grantRuntimePermissionsLPw(gmscorePackage, STORAGE_PERMISSIONS, userId);
             }
 
+            // Persistent Google Play Services
+            PackageParser.Package gmscorePackagePersistent = getSystemPackageLPr(
+                    "com.google.android.gms.persistent");
+            if (gmscorePackagePersistent != null
+                    && doesPackageSupportRuntimePermissions(gmscorePackagePersistent)) {
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, SENSORS_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, CALENDAR_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, CAMERA_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, CONTACTS_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, LOCATION_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, MICROPHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, PHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, SMS_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(gmscorePackagePersistent, STORAGE_PERMISSIONS, userId);
+            }
+
             // Google Connectivity Services
-            PackageParser.Package gcsPackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.google.android.apps.gcs", userId);
-            if (gcsPackage != null) {
+            PackageParser.Package gcsPackage = getSystemPackageLPr(
+                    "com.google.android.apps.gcs");
+            if (gcsPackage != null && doesPackageSupportRuntimePermissions(gcsPackage)) {
                 grantRuntimePermissionsLPw(gcsPackage, CONTACTS_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(gcsPackage, LOCATION_PERMISSIONS, userId);
             }
 
             // Google Contacts Sync
-            PackageParser.Package googlecontactssyncPackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.google.android.syncadapters.contacts", userId);
-            if (googlecontactssyncPackage != null) {
+            PackageParser.Package googlecontactssyncPackage = getSystemPackageLPr(
+                    "com.google.android.syncadapters.contacts");
+            if (googlecontactssyncPackage != null && doesPackageSupportRuntimePermissions(googlecontactssyncPackage)) {
                 grantRuntimePermissionsLPw(googlecontactssyncPackage, CONTACTS_PERMISSIONS, userId);
             }
 
             // Google Backup Transport
-            PackageParser.Package googlebackuptransportPackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.google.android.backuptransport", userId);
-            if (googlebackuptransportPackage != null) {
+            PackageParser.Package googlebackuptransportPackage = getSystemPackageLPr(
+                    "com.google.android.backuptransport");
+            if (googlebackuptransportPackage != null && doesPackageSupportRuntimePermissions(googlebackuptransportPackage)) {
                 grantRuntimePermissionsLPw(googlebackuptransportPackage, CONTACTS_PERMISSIONS, userId);
             }
 
             // Google Play Framework
-            PackageParser.Package gsfcorePackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.google.android.gsf", userId);
-            if (gsfcorePackage != null) {
+            PackageParser.Package gsfcorePackage = getSystemPackageLPr(
+                    "com.google.android.gsf");
+            if (gsfcorePackage != null && doesPackageSupportRuntimePermissions(gsfcorePackage)) {
                 grantRuntimePermissionsLPw(gsfcorePackage, CONTACTS_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(gsfcorePackage, PHONE_PERMISSIONS, userId);
             }
 
             // Google Setup Wizard
-            PackageParser.Package setupwizardPackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.google.android.setupwizard", userId);
-            if (setupwizardPackage != null) {
+            PackageParser.Package setupwizardPackage = getSystemPackageLPr(
+                    "com.google.android.setupwizard");
+            if (setupwizardPackage != null && doesPackageSupportRuntimePermissions(setupwizardPackage)) {
                 grantRuntimePermissionsLPw(setupwizardPackage, CONTACTS_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(setupwizardPackage, PHONE_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(setupwizardPackage, LOCATION_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(setupwizardPackage, CAMERA_PERMISSIONS, userId);
             }
 
             // Google Play Store
-            PackageParser.Package vendingPackage = getDefaultProviderAuthorityPackageLPr(
-                    "com.android.vending", userId);
-            if (vendingPackage != null) {
+            PackageParser.Package vendingPackage = getSystemPackageLPr(
+                    "com.android.vending");
+            if (vendingPackage != null && doesPackageSupportRuntimePermissions(vendingPackage)) {
                 grantRuntimePermissionsLPw(vendingPackage, CONTACTS_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(vendingPackage, PHONE_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(vendingPackage, LOCATION_PERMISSIONS, userId);
                 grantRuntimePermissionsLPw(vendingPackage, SMS_PERMISSIONS, userId);
+                grantRuntimePermissionsLPw(vendingPackage, STORAGE_PERMISSIONS, userId);
             }
-
-            // Storage Manager
-            Intent storageManagerIntent = new Intent(StorageManager.ACTION_MANAGE_STORAGE);
-            PackageParser.Package storageManagerPckg = getDefaultSystemHandlerActivityPackageLPr(
-                    storageManagerIntent, userId);
-            if (storageManagerPckg != null
-                    && doesPackageSupportRuntimePermissions(storageManagerPckg)) {
-                grantRuntimePermissionsLPw(storageManagerPckg, STORAGE_PERMISSIONS, true, userId);
-            }
-
-            mService.mSettings.onDefaultRuntimePermissionsGrantedLPr(userId);
         }
     }
 
