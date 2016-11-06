@@ -104,6 +104,9 @@ import java.util.List;
 
 import static com.android.internal.util.cm.PowerMenuConstants.*;
 
+import static android.view.WindowManager.TAKE_SCREENSHOT_FULLSCREEN;
+import static android.view.WindowManager.TAKE_SCREENSHOT_SELECTED_REGION;
+
 /**
  * Helper to show the global actions dialog.  Each item is an {@link Action} that
  * may show depending on whether the keyguard is showing, and whether the device
@@ -114,6 +117,11 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     private static final String TAG = "GlobalActions";
 
     private static final boolean SHOW_SILENT_TOGGLE = true;
+
+    private final Object mScreenshotLock = new Object();
+    private ServiceConnection mScreenshotConnection = null;
+    private int mScreenshotFullscreen = TAKE_SCREENSHOT_FULLSCREEN;
+    private int mScreenshotSelectedRegion = TAKE_SCREENSHOT_SELECTED_REGION;
 
     private final Context mContext;
     private final WindowManagerFuncs mWindowManagerFuncs;
@@ -584,24 +592,25 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
     }
 
     private final class ScreenshotAction extends SinglePressAction implements LongPressAction {
-
         private ScreenshotAction() {
             super(com.android.internal.R.drawable.ic_lock_screenshot,
                     R.string.global_action_screenshot);
-
-            setStatus(mContext.getString(R.string.global_actions_screenshot_status));
         }
 
         @Override
         public void onPress() {
-            takeScreenshot(false);
+            if (Settings.System.getInt(mContext.getContentResolver(),
+                   Settings.System.SCREENSHOT_TYPE, 0) == 1) {
+                takeScreenshot(mScreenshotSelectedRegion);
+            } else {
+                takeScreenshot(mScreenshotFullscreen);
+            }
         }
 
         @Override
         public boolean onLongPress() {
-            mHandler.sendEmptyMessage(MESSAGE_DISMISS);
-            takeScreenshot(true /* partial */);
-            return true;
+            takeScreenshot(mScreenshotSelectedRegion);
+            return false;
         }
 
         @Override
@@ -877,8 +886,31 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
      * functions needed for taking screenhots.
      * This leverages the built in ICS screenshot functionality
      */
-    final Object mScreenshotLock = new Object();
-    ServiceConnection mScreenshotConnection = null;
+    class ScreenshotRunnable implements Runnable {
+        private int mScreenshotFullscreen = TAKE_SCREENSHOT_FULLSCREEN;
+        private int mScreenshotSelectedRegion = TAKE_SCREENSHOT_SELECTED_REGION;
+
+        public void setScreenshotType(int screenshotType) {
+            if (Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.SCREENSHOT_TYPE, 0) == 1) {
+            mScreenshotSelectedRegion = screenshotType;
+            } else {
+            mScreenshotFullscreen = screenshotType;
+            }
+        }
+
+        @Override
+        public void run() {
+        if (Settings.System.getInt(mContext.getContentResolver(),
+              Settings.System.SCREENSHOT_TYPE, 0) == 1) {
+           takeScreenshot(mScreenshotSelectedRegion);
+        } else {
+           takeScreenshot(mScreenshotFullscreen);
+           }
+        }
+    }
+
+    private final ScreenshotRunnable mScreenshotRunnable = new ScreenshotRunnable();
 
     final Runnable mScreenshotTimeout = new Runnable() {
         @Override public void run() {
@@ -891,7 +923,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         }
     };
 
-    private void takeScreenshot(final boolean partial) {
+    private void takeScreenshot(final int screenshotType) {
         synchronized (mScreenshotLock) {
             if (mScreenshotConnection != null) {
                 return;
@@ -908,9 +940,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                             return;
                         }
                         Messenger messenger = new Messenger(service);
-                        Message msg = Message.obtain(null, 1);
-                        msg.what = partial ? WindowManager.TAKE_SCREENSHOT_SELECTED_REGION
-                                : WindowManager.TAKE_SCREENSHOT_FULLSCREEN;
+                        Message msg = Message.obtain(null, screenshotType);
                         final ServiceConnection myConn = this;
                         Handler h = new Handler(mHandler.getLooper()) {
                             @Override
@@ -927,23 +957,9 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                         msg.replyTo = new Messenger(h);
                         msg.arg1 = msg.arg2 = 0;
 
-                        // Needs delay or else we'll be taking a screenshot of the dialog each time
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException ie) {
-                            // Do nothing
-                        }
-
-                        /*  remove for the time being
-                        if (mStatusBar != null && mStatusBar.isVisibleLw())
-                            msg.arg1 = 1;
-                        if (mNavigationBar != null && mNavigationBar.isVisibleLw())
-                            msg.arg2 = 1;
-                         */
-
                         /* wait for the dialog box to close */
                         try {
-                            Thread.sleep(mScreenshotDelay);
+                             Thread.sleep(mScreenshotDelay * 1000);
                         } catch (InterruptedException ie) {
                             // Do nothing
                         }
@@ -959,7 +975,8 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
                 @Override
                 public void onServiceDisconnected(ComponentName name) {}
             };
-            if (mContext.bindService(intent, conn, Context.BIND_AUTO_CREATE)) {
+            if (mContext.bindServiceAsUser(
+                    intent, conn, Context.BIND_AUTO_CREATE, UserHandle.CURRENT)) {
                 mScreenshotConnection = conn;
                 mHandler.postDelayed(mScreenshotTimeout, 10000);
             }
