@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (c) 2015, The Android Open Kang Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- The text for the button in the notification window-shade that clears
+         all of the currently visible notifications. [CHAR LIMIT=10]-->
+    <string name="clear_recents">Chiudi tutti i recenti</string>
+
+    <!-- App circle sidebar -->
+    <string name="app_float_maximize_item_title">Massimizza</string>
+    <string name="app_float_item_title">Vista fluttuante</string>
+    <string name="app_stop_item_title">Termina app</string>
+
+    <!-- Screenrecord Notification Ticker -->
+    <string name="screenrecord_notif_ticker">Lo schermo è in fase di registrazione</string>
+
+    <!-- Screenrecord notification title -->
+    <string name="screenrecord_notif_title">Schermata di registrazione</string>
+
+    <!-- Screenrecord notification action: Stop -->
+    <string name="screenrecord_notif_stop">Ferma</string>
+
+    <!-- Screenrecord notification action: show/hide pointer -->
+    <string name="screenrecord_notif_pointer_on">Visualizza puntatore</string>
+    <string name="screenrecord_notif_pointer_off">Nascondi puntatore</string>
+
+    <!-- Screen record notification error title -->
+    <string name="screenrecord_notif_error">Impossibile registrare lo schermo</string>
+
+    <!-- Quick Settings -->
+    <string name="quick_settings_powermenu_label">Power Menù</string>
+    <string name="quick_settings_screenshot">Screenshot</string>
+    <string name="quick_settings_screenrecord">Screenrecord</string>
+    <string name="quick_settings_screenrecord_on">Registrazione ...</string>
+    <string name="quick_settings_sleepscreen_label">Sospendi schermo</string>
+
+    <!-- Battery Saver Dimss -->
+    <string name="battery_saver_dismiss_title">Chiudere</string>
+    <string name="battery_saver_notification_action_text_short">Spegni</string>
+
+    <!-- Dialog title for navigation bar button selection -->
+    <string name="navbar_power_button">Pulsante di alimentazione</string>
+
+    <!-- Content description of the power button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+    <string name="accessibility_power">Alimentazione</string>
+
+    <!-- Dialog title for navigation bar button selection -->
+    <string name="navbar_torch">Torcia</string>
+
+    <!-- Content description of the power button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+    <string name="accessibility_torch">Torcia</string>
+
+    <!-- Dialog title for navigation bar button selection -->
+    <string name="navbar_camera">Camera</string>
+
+    <!-- Content description of the power button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+    <string name="accessibility_camera">Camera</string>
+
+    <!-- Dialog title for navigation bar button selection -->
+    <string name="navbar_screenshot">ScreenShot</string>
+
+    <!-- Content description of the power button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+    <string name="accessibility_screenshot">ScreenShot</string>
+
+    <!-- Dialog title for navigation bar button selection -->
+    <string name="navbar_expand">Modalità immersiva</string>
+
+    <!-- Content description of the power button for accessibility (not shown on the screen). [CHAR LIMIT=NONE] -->
+    <string name="accessibility_expand">Modalità immersiva</string>
+
+    <!-- Heads up snooze toast -->
+    <string name="heads_up_snooze_message">Le notifiche fluttuanti saranno posticipate per <xliff:g id="number">%d</xliff:g> minuti.</string>
+
+    <!-- PA Pie controls -->
+    <string name="pie_date_format">ccc, dd MMM yyyy</string>
+    <string name="pie_hour_format_12">hh:mm</string>
+    <string name="pie_hour_format_24">HH:mm</string>
+    <string name="pie_am_pm">a</string>
+</resources>
