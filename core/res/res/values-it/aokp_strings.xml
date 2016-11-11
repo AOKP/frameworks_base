@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     Copyright (C) 2015 The AOKP Project
+     Copyright (c) 2013, The Linux Foundation. All rights reserved.
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+          http://www.apache.org/licenses/LICENSE-2.0
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="action_null">Vuoto</string>
+    <string name="default_string">Predefinito</string>
+
+    <!-- AOKP custom system animations -->
+    <string name="animation_fade">Dissolvenza</string>
+    <string name="animation_slide_right">Scorri verso destra</string>
+    <string name="animation_slide_left">Scorri verso sinistra</string>
+    <string name="animation_slide_right_no_fade">Scorri verso destra (nessuna dissolvenza)</string>
+    <string name="animation_slide_left_no_fade">Scorri verso sinistra (nessuna dissolvenza)</string>
+    <string name="animation_slide_up">Scorri in basso</string>
+    <string name="animation_slide_down">Scorri in alto</string>
+    <string name="animation_default">Predefinito</string>
+    <string name="animation_translucent">Traslucido</string>
+    <string name="animation_grow_shrink">Espandi (dall\'alto)</string>
+    <string name="animation_grow_shrink_center">Espandi (dal centro)</string>
+    <string name="animation_grow_shrink_bottom">Espandi (dal basso)</string>
+    <string name="animation_grow_shrink_left">Espandi (da sinistra)</string>
+    <string name="animation_grow_shrink_right">Espandi (da destra)</string>
+
+</resources>
