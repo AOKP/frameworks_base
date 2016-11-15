@@ -81,7 +81,7 @@ public class KeyguardStatusBarView extends RelativeLayout
     private View mSystemIconsContainer;
 
     private boolean mShowBatteryText;
-    private Boolean mForceBatteryText;
+    private boolean mForceBatteryText;
 
     private ContentObserver mObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean selfChange, Uri uri) {
@@ -202,12 +202,10 @@ public class KeyguardStatusBarView extends RelativeLayout
                 mMultiUserSwitch.setVisibility(View.GONE);
             }
         }
-        if (mForceBatteryText != null) {
-            mBatteryLevel.setVisibility(mForceBatteryText ? View.VISIBLE : View.GONE);
-        } else {
-            mBatteryLevel.setVisibility(
-                    mBatteryCharging || mShowBatteryText ? View.VISIBLE : View.GONE);
-        }
+
+        mBatteryLevel.setVisibility(
+                mBatteryCharging || mShowBatteryText || mForceBatteryText ? View.VISIBLE : View.GONE);
+
         if (Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.KEYGUARD_SHOW_CLOCK, 0) == 1) {
             mKeyguardClock.setVisibility(View.VISIBLE);
@@ -381,14 +379,8 @@ public class KeyguardStatusBarView extends RelativeLayout
                 break;
             case STATUS_BAR_BATTERY_STYLE:
                 if (newValue != null) {
-                    final int value = Integer.parseInt(newValue);
-                    if (value == BatteryMeterDrawable.BATTERY_STYLE_TEXT) {
-                        mForceBatteryText = true;
-                    } else if (value == BatteryMeterDrawable.BATTERY_STYLE_HIDDEN) {
-                        mForceBatteryText = false;
-                    } else {
-                        mForceBatteryText = null;
-                    }
+                    mForceBatteryText = CMSettings.System.getInt(getContext().getContentResolver(),
+                            CMSettings.System.STATUS_BAR_BATTERY_STYLE, 0) == 6 ? true : false;
                 }
                 break;
         }
