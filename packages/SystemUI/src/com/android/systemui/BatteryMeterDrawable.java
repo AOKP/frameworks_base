@@ -332,7 +332,6 @@ public class BatteryMeterDrawable extends Drawable implements
         super.setBounds(left, top, right, bottom);
         mHeight = bottom - top;
         mWidth = right - left;
-        mWarningTextPaint.setTextSize(mHeight * 0.75f);
         mWarningTextHeight = -mWarningTextPaint.getFontMetrics().ascent;
     }
 
@@ -646,7 +645,7 @@ public class BatteryMeterDrawable extends Drawable implements
         final float textSize;
         switch(mStyle) {
             case BATTERY_STYLE_CIRCLE:
-                textSize = widthDiv2 - mContext.getResources().getDisplayMetrics().density / 1.3f;
+                textSize = mStyle == 2 ? widthDiv2 - mContext.getResources().getDisplayMetrics().density * 2 : widthDiv2;
                 break;
             case BATTERY_STYLE_LANDSCAPE:
                 textSize = widthDiv2 * 1.3f;
