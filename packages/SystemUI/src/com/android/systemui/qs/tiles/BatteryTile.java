@@ -45,6 +45,8 @@ import com.android.systemui.qs.QSTile;
 import com.android.systemui.statusbar.policy.BatteryController;
 import cyanogenmod.providers.CMSettings;
 
+import cyanogenmod.providers.CMSettings;
+
 import java.text.NumberFormat;
 
 public class BatteryTile extends QSTile<QSTile.State> implements BatteryController.BatteryStateChangeCallback {
