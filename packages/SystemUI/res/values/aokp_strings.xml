@@ -41,4 +41,6 @@
     <string name="quick_settings_fling">Fling</string>
     <string name="quick_settings_fling_off">Fling off</string>
 
+    <string name="recents_custom_android_n">CLEAR ALL</string>
+
 </resources>

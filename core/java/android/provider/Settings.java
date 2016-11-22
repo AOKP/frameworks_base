@@ -4237,6 +4237,60 @@ public final class Settings {
         public static final String  RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";
 
         /**
+         * Recents Clear All Button Style
+         * @hide
+         */
+        public static final String CLEAR_RECENTS_STYLE = "clear_recents_style";
+
+       /**
+         * Recents Clear All Button Style Switch
+         * @hide
+         */
+        public static final String CLEAR_RECENTS_STYLE_ENABLE = "clear_recents_style_enable";
+
+       /**
+         * Recents Clear All Button Color
+         * @hide
+         */
+        public static final String FAB_BUTTON_COLOR= "fab_button_color";
+
+       /**
+         * Recents MemBar Color
+         * @hide
+         */
+        public static final String MEM_BAR_COLOR= "mem_bar_color";
+
+       /**
+         * Recents MemBar Text Color
+         * @hide
+         */
+        public static final String MEM_TEXT_COLOR= "mem_text_color";
+
+       /**
+         * Recents Clear Button Color
+         * @hide
+         */
+        public static final String CLEAR_BUTTON_COLOR= "clear_button_color";
+
+       /**
+         * Recents FAB animation
+         * @hide
+         */
+        public static final String RECENTS_ROTATE_FAB= "recents_rotate_fab";
+
+       /**
+         * Recents FAB animation style
+         * @hide
+         */
+        public static final String FAB_ANIMATION_STYLE= "fab_animation_style";
+
+        /**
+         * TaskView Pin Color
+         * @hide
+         */
+        public static final String PIN_BUTTON_COLOR = "pin_button_color";
+
+        /**
          * Defines the screen-off animation to display
          * @hide
          */

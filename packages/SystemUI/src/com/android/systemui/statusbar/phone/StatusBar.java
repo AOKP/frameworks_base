@@ -6249,6 +6249,12 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVBAR_BUTTON_COLOR),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.CLEAR_RECENTS_STYLE),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.CLEAR_RECENTS_STYLE_ENABLE),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -6270,6 +6276,15 @@ public class StatusBar extends SystemUI implements DemoMode,
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.NAVBAR_BUTTON_COLOR))) {
                         mNavigationBar.updateNavbarOverlay(mContext.getResources());
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.CLEAR_RECENTS_STYLE))
+                    || uri.equals(Settings.System.getUriFor(
+                    Settings.System.CLEAR_RECENTS_STYLE_ENABLE))) {
+                    updateRowStates();
+                    updateSpeedBumpIndex();
+                    checkBarModes();
+                    updateClearAll();
+                    updateEmptyShadeView();
             }
         }
 

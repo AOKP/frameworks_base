@@ -22,4 +22,7 @@
     <color name="fab_color_ripple">#ff7a7a7a</color>
     <color name="floating_action_button_icon_color">@*android:color/accent_material_dark</color>
 
+    <!-- Recents membar text color -->
+    <color name="recents_membar_text_color">@android:color/white</color>
+
 </resources>
