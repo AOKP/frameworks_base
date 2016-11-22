@@ -75,4 +75,7 @@
     <!-- Alarm status color -->
     <color name="alarm_status_color">#E0E0E0</color>
 
+    <!-- Recents membar text color -->
+    <color name="recents_membar_text_color">@android:color/white</color>
+
 </resources>

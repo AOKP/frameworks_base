@@ -157,4 +157,6 @@
     <!-- volte icon switch -->
     <string name="status_bar_volte">VOLTE</string>
 
+    <string name="recents_custom_android_n">CLEAR ALL</string>
+
 </resources>
