@@ -154,4 +154,6 @@
     <string name="dlg_cancel">Cancel</string>
     <string name="kill">Kill App</string>
 
+    <string name="recents_custom_android_n">CLEAR ALL</string>
+
 </resources>
