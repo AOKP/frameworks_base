@@ -48,4 +48,5 @@
     backgrounds (requires config_allowNotificationIconTextTinting to be true)-->
     <bool name="config_useDarkBgNotificationIconTextTinting">false</bool>
 
+    <bool name="single_hand_mode">true</bool>
 </resources>
