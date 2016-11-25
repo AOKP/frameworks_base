@@ -8041,7 +8041,16 @@ public final class Settings {
         */
          public static final String STATUS_BAR_CHARGE_COLOR = "status_bar_charge_color";
 
+
         /**
+          * Whether to force percentage text out of the battery icon when charging
+          *
+          * @hide
+        */
+         public static final String FORCE_CHARGE_BATTERY_TEXT = "force_charge_battery_text";
+
+        /**
+
          * Whether the camera double twist gesture to flip between front and back mode should be
          * enabled.
          *
