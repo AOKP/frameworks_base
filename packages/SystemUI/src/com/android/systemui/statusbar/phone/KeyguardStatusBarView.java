@@ -82,6 +82,7 @@ public class KeyguardStatusBarView extends RelativeLayout
 
     private boolean mShowBatteryText;
     private boolean mForceBatteryText;
+    private boolean mForceChargeBatteryText;
 
     private ContentObserver mObserver = new ContentObserver(new Handler()) {
         public void onChange(boolean selfChange, Uri uri) {
@@ -204,7 +205,7 @@ public class KeyguardStatusBarView extends RelativeLayout
         }
 
         mBatteryLevel.setVisibility(
-                mBatteryCharging || mShowBatteryText || mForceBatteryText ? View.VISIBLE : View.GONE);
+                (mBatteryCharging && mForceChargeBatteryText) || mShowBatteryText || mForceBatteryText ? View.VISIBLE : View.GONE);
 
         if (Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.KEYGUARD_SHOW_CLOCK, 0) == 1) {
@@ -376,6 +377,8 @@ public class KeyguardStatusBarView extends RelativeLayout
         switch (key) {
             case STATUS_BAR_SHOW_BATTERY_PERCENT:
                 mShowBatteryText = newValue != null && Integer.parseInt(newValue) == 2;
+                mForceChargeBatteryText = Settings.Secure.getInt(getContext().getContentResolver(),
+                        Settings.Secure.FORCE_CHARGE_BATTERY_TEXT, 1) == 1 ? true : false;
                 break;
             case STATUS_BAR_BATTERY_STYLE:
                 if (newValue != null) {
