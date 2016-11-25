@@ -8035,6 +8035,13 @@ public final class Settings {
                 "camera_double_tap_power_gesture_disabled";
 
         /**
+          * battery icon color when charging
+          *
+          * @hide
+        */
+         public static final String STATUS_BAR_CHARGE_COLOR = "status_bar_charge_color";
+
+        /**
          * Whether the camera double twist gesture to flip between front and back mode should be
          * enabled.
          *
