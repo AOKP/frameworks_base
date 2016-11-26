@@ -2943,4 +2943,7 @@ public class NotificationPanelView extends PanelView implements
                 break;
         }
     }
+
+    public void updateSettings() {
+    }
 }
