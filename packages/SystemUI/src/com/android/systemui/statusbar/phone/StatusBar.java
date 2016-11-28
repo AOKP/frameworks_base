@@ -6315,6 +6315,9 @@ public class StatusBar extends SystemUI implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.QS_FOOTER_WARNINGS),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                  Settings.System.QS_TILE_TITLE_VISIBILITY),
+                  false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -6323,9 +6326,11 @@ public class StatusBar extends SystemUI implements DemoMode,
             super.onChange(selfChange);
             ContentResolver resolver = mContext.getContentResolver();
             if (uri.equals(Settings.Secure.getUriFor(
-                    Settings.Secure.QS_ROWS_PORTRAIT))
+                        Settings.Secure.QS_ROWS_PORTRAIT))
                     || uri.equals(Settings.Secure.getUriFor(
-                    Settings.Secure.QS_ROWS_LANDSCAPE))) {
+                        Settings.Secure.QS_ROWS_LANDSCAPE))
+                    || uri.equals(Settings.System.getUriFor(
+                        Settings.System.QS_TILE_TITLE_VISIBILITY))) {
                     updateResources();
             } else if (uri.equals(Settings.Secure.getUriFor(
                     Settings.Secure.QS_COLUMNS))) {
@@ -6359,13 +6364,13 @@ public class StatusBar extends SystemUI implements DemoMode,
                 }
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.QS_FOOTER_WARNINGS))) {
-                setQsPanelOptions();
+                updateQsPanelResources();
             }
         }
 
         public void update() {
             updateBatterySettings();
-            setQsPanelOptions();
+            updateQsPanelResources();
         }
     }
 
@@ -6397,9 +6402,9 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     };
 
-    private void setQsPanelOptions() {
+    private void updateQsPanelResources() {
         if (mQSPanel != null) {
-            mQSPanel.updateSettings();
+            mQSPanel.updateResources();
         }
     }
 

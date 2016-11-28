@@ -4625,6 +4625,12 @@ public final class Settings {
         */
         public static final String QS_FOOTER_WARNINGS = "qs_footer_warnings";
 
+         /**
+         * Whether to display qs tile titles in the qs panel
+         * @hide
+         */
+        public static final String QS_TILE_TITLE_VISIBILITY = "qs_tile_title_visibility";
+
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
@@ -4797,6 +4803,7 @@ public final class Settings {
             PRIVATE_SETTINGS.add(STATUS_BAR_DAYLIGHT_HEADER_PACK);
             PRIVATE_SETTINGS.add(STATUS_BAR_CUSTOM_HEADER_PROVIDER);
             PRIVATE_SETTINGS.add(STATUS_BAR_CUSTOM_HEADER_IMAGE);
+            PRIVATE_SETTINGS.add(QS_TILE_TITLE_VISIBILITY);
         }
 
         /**
