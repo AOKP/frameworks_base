@@ -142,7 +142,7 @@ public class BatteryMeterDrawable extends Drawable implements
     private ValueAnimator mAnimator;
 
     private int mTextGravity;
-
+    private int mStyle;
     private int mCurrentBackgroundColor = 0;
     private int mCurrentFillColor = 0;
 
@@ -154,6 +154,7 @@ public class BatteryMeterDrawable extends Drawable implements
     public BatteryMeterDrawable(Context context, Handler handler, int frameColor, int style) {
         mContext = context;
         mHandler = handler;
+        mStyle = style;
         final Resources res = context.getResources();
         TypedArray levels = res.obtainTypedArray(R.array.batterymeter_color_levels);
         TypedArray colors = res.obtainTypedArray(R.array.batterymeter_color_values);
@@ -606,7 +607,18 @@ public class BatteryMeterDrawable extends Drawable implements
 
         final float widthDiv2 = mWidth / 2f;
         // text size is width / 2 - 2dp for wiggle room
-        final float textSize = widthDiv2 - mContext.getResources().getDisplayMetrics().density * 2;
+        final float textSize;
+        switch(mStyle) {
+            case BATTERY_STYLE_CIRCLE:
+                textSize = widthDiv2 - mContext.getResources().getDisplayMetrics().density / 1.3f;
+                break;
+            case BATTERY_STYLE_LANDSCAPE:
+                textSize = widthDiv2 * 1.3f;
+                break;
+            default:
+                textSize = widthDiv2;
+                break;
+        }
         mTextAndBoltPaint.setTextSize(textSize);
         mWarningTextPaint.setTextSize(textSize);
 
