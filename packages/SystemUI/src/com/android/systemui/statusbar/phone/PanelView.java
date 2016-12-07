@@ -108,6 +108,7 @@ public abstract class PanelView extends FrameLayout {
      * Whether an instant expand request is currently pending and we are just waiting for layout.
      */
     private boolean mInstantExpanding;
+    private boolean mAnimateAfterExpanding;
 
     PanelBar mBar;
 
@@ -893,6 +894,7 @@ public abstract class PanelView extends FrameLayout {
         }
 
         mInstantExpanding = true;
+        mAnimateAfterExpanding = animate;
         mUpdateFlingOnLayout = false;
         abortAnimations();
         cancelPeek();
@@ -917,7 +919,7 @@ public abstract class PanelView extends FrameLayout {
                         if (mStatusBar.getStatusBarWindow().getHeight()
                                 != mStatusBar.getStatusBarHeight()) {
                             getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                            if (animate) {
+                            if (mAnimateAfterExpanding) {
                                 notifyExpandingStarted();
                                 fling(0, true /* expand */);
                             } else {
