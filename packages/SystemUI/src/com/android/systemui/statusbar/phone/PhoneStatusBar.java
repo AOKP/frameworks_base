@@ -675,6 +675,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.CLEAR_RECENTS_STYLE_ENABLE),
                     false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.BATTERY_LARGE_TEXT),
+                    false, this, UserHandle.USER_ALL);
             update();
         }
 
@@ -718,20 +721,14 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                                         mContext.getContentResolver(),
                                         Settings.System.TRANSLUCENT_HEADER_PREFERENCE_KEY,
                                         0, UserHandle.USER_CURRENT) == 1;
-                    updateRowStates();
-                    updateSpeedbump();
-                    updateClearAll();
-                    updateEmptyShadeView();
+                    UpdateViews();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.TRANSLUCENT_QUICK_SETTINGS_PREFERENCE_KEY))) {
                     mTranslucentQuickSettings = Settings.System.getIntForUser(
                                         mContext.getContentResolver(),
                                         Settings.System.TRANSLUCENT_QUICK_SETTINGS_PREFERENCE_KEY,
                                         0, UserHandle.USER_CURRENT) == 1;
-                    updateRowStates();
-                    updateSpeedbump();
-                    updateClearAll();
-                    updateEmptyShadeView();
+                    UpdateViews();
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.RECENT_APPS_ENABLED_PREFERENCE_KEY))) {
                     mBlurredRecents = Settings.System.getIntForUser(
@@ -751,11 +748,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                     Settings.System.CLEAR_RECENTS_STYLE))
                     || uri.equals(Settings.System.getUriFor(
                     Settings.System.CLEAR_RECENTS_STYLE_ENABLE))) {
-                    updateRowStates();
-                    updateSpeedbump();
                     checkBarModes();
-                    updateClearAll();
-                    updateEmptyShadeView();
+                    UpdateViews();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.BATTERY_LARGE_TEXT))) {
+                    UpdateViews();
             }
             update();
         }
@@ -5603,6 +5600,15 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mVisualStabilityManager.setScreenOn(true);
         mNotificationPanel.setTouchDisabled(false);
         updateVisibleToUser();
+    }
+
+    public void UpdateViews() {
+        onDensityOrFontScaleChanged();
+        updateRowStates();
+        updateSpeedbump();
+        updateClearAll();
+        updateEmptyShadeView();
+        updateNotifications();
     }
 
     public void onScreenTurningOn() {

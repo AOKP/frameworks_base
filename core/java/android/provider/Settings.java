@@ -4993,6 +4993,12 @@ public final class Settings {
         public static final String HOME_RESIZE_DURATION = "home_resize_anim_duration";
 
         /**
+         * Whether tdisplay large text for statusbar battery percentage
+         * @hide
+         */
+        public static final String BATTERY_LARGE_TEXT = "battery_large_text";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
