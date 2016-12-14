@@ -108,4 +108,7 @@
   <java-symbol type="anim" name="du_app_in" />
   <java-symbol type="anim" name="du_app_out" />
 
+  <!-- Dynamic Navbar -->
+  <java-symbol type="color" name="input_method_navigation_guard_dynamic" />
+
 </resources>

@@ -4189,6 +4189,12 @@ public final class Settings {
         public static final String KEYGUARD_SHOW_CLOCK = "keyguard_show_clock";
 
         /**
+        * Dynamic Navbar Switch
+        * @hide
+        */
+        public static final String NAVBAR_DYNAMIC = "navbar_dynamic";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
