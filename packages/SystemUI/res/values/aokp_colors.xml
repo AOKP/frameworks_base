@@ -85,4 +85,7 @@
     <!-- Separate QS text label tint from icon tint -->
     <color name="qs_tile_label_tint_unavailable">@color/qs_tile_tint_unavailable</color>
 
+    <!-- Pixel theme -->
+    <color name="pixel_primary_color">#242424</color>
+
 </resources>
