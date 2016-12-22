@@ -557,6 +557,7 @@ public class StatusBar extends SystemUI implements DemoMode,
 
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
+
             resolver.registerContentObserver(LineageSettings.Global.getUriFor(
                     LineageSettings.Global.DEV_FORCE_SHOW_NAVBAR), false, this,
                     UserHandle.USER_ALL);
@@ -982,8 +983,8 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
 
         createAndAddWindows();
-
         mSettingsObserver.onChange(false); // set up
+        mUserSettingsObserver.observe();
         mCommandQueue.disable(switches[0], switches[6], false /* animate */);
         setSystemUiVisibility(switches[1], switches[7], switches[8], 0xffffffff,
                 fullscreenStackBounds, dockedStackBounds);
@@ -6146,6 +6147,29 @@ public class StatusBar extends SystemUI implements DemoMode,
             updateNotifications();
         }
     };
+
+    private UserSettingsObserver mUserSettingsObserver = new UserSettingsObserver(mHandler);
+    private class UserSettingsObserver extends ContentObserver {
+        UserSettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            update();
+        }
+
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange);
+            ContentResolver resolver = mContext.getContentResolver();
+        }
+
+        public void update() {
+
+        }
+
+    }
 
     private RemoteViews.OnClickHandler mOnClickHandler = new RemoteViews.OnClickHandler() {
 
