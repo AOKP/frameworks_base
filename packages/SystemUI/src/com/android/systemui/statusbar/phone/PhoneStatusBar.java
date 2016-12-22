@@ -148,6 +148,7 @@ import com.android.systemui.R;
 import com.android.systemui.SystemUIFactory;
 import com.android.systemui.classifier.FalsingLog;
 import com.android.systemui.classifier.FalsingManager;
+import com.android.systemui.cm.UserContentObserver;
 import com.android.systemui.doze.DozeHost;
 import com.android.systemui.doze.DozeLog;
 import com.android.systemui.keyguard.KeyguardViewMediator;
@@ -480,15 +481,16 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     };
 
-    class DevForceNavbarObserver extends ContentObserver {
-        DevForceNavbarObserver(Handler handler) {
+    class SettingsObserver extends UserContentObserver {
+        SettingsObserver(Handler handler) {
             super(handler);
         }
 
-        void observe() {
+        @Override
+        protected void observe() {
+            super.observe();
+
             ContentResolver resolver = mContext.getContentResolver();
-            resolver.registerContentObserver(CMSettings.Global.getUriFor(
-                    CMSettings.Global.DEV_FORCE_SHOW_NAVBAR), false, this, UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.BATTERY_SAVER_MODE_COLOR),
                     false, this, UserHandle.USER_ALL);
@@ -504,30 +506,25 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                    Settings.Secure.QS_COLUMNS),
                    false, this, UserHandle.USER_ALL);
-            CurrentUserTracker userTracker = new CurrentUserTracker(mContext) {
-                @Override
-                public void onUserSwitched(int newUserId) {
-                    update();
-                }
-            };
-            userTracker.startTracking();
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            super.onChange(selfChange);
             update();
         }
 
         @Override
+        protected void unobserve() {
+            super.unobserve();
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.unregisterContentObserver(this);
+        }
+
+        @Override
         public void onChange(boolean selfChange, Uri uri) {
-            super.onChange(selfChange, uri);
+            ContentResolver resolver = mContext.getContentResolver();
+
             if (uri.equals(Settings.System.getUriFor(
                     Settings.System.BATTERY_SAVER_MODE_COLOR))) {
                     mBatterySaverWarningColor = Settings.System.getIntForUser(
-                            mContext.getContentResolver(),
-                            Settings.System.BATTERY_SAVER_MODE_COLOR, 1,
-                            UserHandle.USER_CURRENT);
+                            resolver, Settings.System.BATTERY_SAVER_MODE_COLOR,
+                            1, UserHandle.USER_CURRENT);
                     if (mBatterySaverWarningColor != 0) {
                         mBatterySaverWarningColor = mContext.getResources()
                                 .getColor(com.android.internal.R.color.battery_saver_mode_color);
@@ -544,6 +541,45 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             update();
         }
 
+        @Override
+        public void update() {
+            ContentResolver resolver = mContext.getContentResolver();
+            int sidebarPosition = Settings.System.getInt(
+                    resolver, Settings.System.APP_SIDEBAR_POSITION,
+                    AppSidebar.SIDEBAR_POSITION_LEFT);
+            if (sidebarPosition != mSidebarPosition) {
+                mSidebarPosition = sidebarPosition;
+                removeSidebarView();
+                addSidebarView();
+            }
+        }
+    }
+
+    class DevForceNavbarObserver extends ContentObserver {
+        DevForceNavbarObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(CMSettings.Global.getUriFor(
+                    CMSettings.Global.DEV_FORCE_SHOW_NAVBAR), false, this, UserHandle.USER_ALL);
+
+            CurrentUserTracker userTracker = new CurrentUserTracker(mContext) {
+                @Override
+                public void onUserSwitched(int newUserId) {
+                    update();
+                }
+            };
+            userTracker.startTracking();
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            update();
+        }
+
         private void update() {
             boolean visible = CMSettings.Global.getIntForUser(mContext.getContentResolver(),
                     CMSettings.Global.DEV_FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) == 1;
@@ -552,14 +588,6 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 forceAddNavigationBar();
             } else {
                 removeNavigationBar();
-            }
-            ContentResolver resolver = mContext.getContentResolver();
-            int sidebarPosition = Settings.System.getInt(
-                    resolver, Settings.System.APP_SIDEBAR_POSITION, AppSidebar.SIDEBAR_POSITION_LEFT);
-            if (sidebarPosition != mSidebarPosition) {
-                mSidebarPosition = sidebarPosition;
-                removeSidebarView();
-                addSidebarView();
             }
         }
     }
@@ -854,6 +882,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         // in session state
 
         addNavigationBar();
+
+        SettingsObserver sobserver = new SettingsObserver(mHandler);
+        sobserver.observe();
 
         // Developer options - Force Navigation bar
         try {
