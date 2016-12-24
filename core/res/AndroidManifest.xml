@@ -524,6 +524,9 @@
 
     <protected-broadcast android:name="projekt.substratum.APP_CRASHED" />
 
+    <protected-broadcast
+            android:name="com.android.server.policy.PhoneWindowManager.ACTION_TORCH_OFF" />
+
     <!-- ====================================================================== -->
     <!--                          RUNTIME PERMISSIONS                           -->
     <!-- ====================================================================== -->
