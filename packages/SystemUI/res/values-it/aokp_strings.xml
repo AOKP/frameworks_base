@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+/* Copyright 2016, AOKP project
+**
+** Licensed under the Apache License, Version 2.0 (the "License");
+** you may not use this file except in compliance with the License.
+** You may obtain a copy of the License at
+**
+**     http://www.apache.org/licenses/LICENSE-2.0
+**
+** Unless required by applicable law or agreed to in writing, software
+** distributed under the License is distributed on an "AS IS" BASIS,
+** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+** See the License for the specific language governing permissions and
+** limitations under the License.
+*/
+-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <!-- Screenrecord Notification Ticker -->
+    <string name="screenrecord_notif_ticker">Lo schermo è in fase di registrazione</string>
+
+    <!-- Screenrecord notification title -->
+    <string name="screenrecord_notif_title">Schermata di registrazione</string>
+
+    <!-- Screenrecord notification action: Stop -->
+    <string name="screenrecord_notif_stop">Ferma</string>
+
+    <!-- Screenrecord notification action: show/hide pointer -->
+    <string name="screenrecord_notif_pointer_on">Visualizza puntatore</string>
+    <string name="screenrecord_notif_pointer_off">Nascondi puntatore</string>
+
+    <!-- Screen record notification error title -->
+    <string name="screenrecord_notif_error">Impossibile registrare lo schermo</string>
+
+    <!-- Quick Settings tiles -->
+    <string name="quick_settings_screenshot_label">Screenshot</string>
+    <string name="quick_settings_adb_network">Rete ADB</string>
+    <string name="quick_settings_network_adb_enabled_label">Abilitato</string>
+    <string name="quick_settings_network_adb_disabled_label">Disabilitato</string>
+    <string name="quick_settings_sync_label">Sync</string>
+    <string name="accessibility_quick_settings_sync_off">Sync spenta</string>
+    <string name="accessibility_quick_settings_sync_on">Sync accesa</string>
+    <string name="accessibility_quick_settings_sync_changed_off">Sync spento</string>
+    <string name="accessibility_quick_settings_sync_changed_on">Sync acceso</string>
+    <string name="quick_settings_expanded_desktop_label">Desktop espanso</string>
+    <string name="quick_settings_expanded_desktop">Espandi</string>
+    <string name="quick_settings_expanded_desktop_off">Normale</string>
+    <string name="quick_settings_reboot_label">Riavvio</string>
+    <string name="quick_settings_reboot_recovery_label">Recovery</string>
+    <string name="accessibility_quick_settings_usb_tether_off">USB tethering spenta</string>
+    <string name="accessibility_quick_settings_usb_tether_on">USB tethering accesa</string>
+    <string name="accessibility_quick_settings_usb_tether_changed_off">USB tethering spento</string>
+    <string name="accessibility_quick_settings_usb_tether_changed_on">USB tethering acceso</string>
+    <string name="quick_settings_usb_tether_label">USB tethering</string>
+    <string name="quick_settings_music_label">Musica</string>
+    <string name="quick_settings_music_play">Play</string>
+    <string name="quick_settings_music_pause">Pausa</string>
+    <string name="quick_settings_ime_tile_label">Metodo d\'immisione</string>
+    <string name="quick_settings_caffeine_label">Caffeina</string>
+    <string name="accessibility_quick_settings_caffeine_off">Caffeina spenta</string>
+    <string name="accessibility_quick_settings_caffeine_on">Caffeina accesa</string>
+    <string name="quick_settings_powermenu_label">Menù alimentazioen</string>
+    <string name="quick_settings_screenrecord">Registra schermo</string>
+    <string name="quick_settings_screenrecord_on">Registrazione ...</string>
+    <string name="quick_settings_sleepscreen_label">Schermo spento</string>
+    <string name="quick_settings_romcontrol_label">AOKP</string>
+
+    <!-- Gesture Anywhere -->
+    <string name="gestures_message">Disegna i tui gesti qui</string>
+
+    <!-- App circle sidebar -->
+    <string name="app_float_maximize_item_title">Massimizzare</string>
+    <string name="app_float_item_title">Vista fluttuante</string>
+    <string name="app_stop_item_title">Termina app</string>
+
+    <!-- App sidebar -->
+    <string name="default_folder_text">Cartella</string>
+    <string name="title_activity_sidebar_configuration">Imposta contenuti Appbar</string>
+    <string name="action_save">Salva</string>
+    <string name="toast_items_saved">Elementi in Appbar sono state salvate.</string>
+    <string name="content_setup_instructions">Aggiungi gli elementi nella Appbar premendo a lungo su qualsiasi elemento a destra e trascinarlo verso l\'Appbar.\n\nUnisci gli elementi nelle cartelle trascinando un oggetto su qualsiasi elemento esistente nella appbar.\n\nPer rimuovere un elemento basta semplicemente trascinare fuori dall\' \@appbar.</string>
+    <string name="content_setup_dismiss">Continua</string>
+    <string name="toast_not_installed">App non è installata</string>
+
+</resources>
