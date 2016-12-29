@@ -161,4 +161,7 @@
   <!-- Config.xml entries -->
   <java-symbol type="integer" name="config_backKillTimeout" />
 
+  <!-- Screenshoot edit action -->
+  <java-symbol type="string" name="edit" />
+
 </resources>

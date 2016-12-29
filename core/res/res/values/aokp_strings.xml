@@ -42,4 +42,7 @@
     <!-- Long-press back kill application -->
     <string name="app_killed_message">Application killed</string>
 
+    <!-- Screenshoot edit action -->
+    <string name="edit">Edit</string>
+
 </resources>
