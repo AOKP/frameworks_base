@@ -34,7 +34,7 @@
     <string name="screenrecord_notif_error">Impossibile registrare lo schermo</string>
 
     <!-- Quick Settings tiles -->
-    <string name="quick_settings_screenshot_label">Screenshot</string>
+    <string name="quick_settings_screenshot_label">Istantanea</string>
     <string name="quick_settings_adb_network">Rete ADB</string>
     <string name="quick_settings_network_adb_enabled_label">Abilitato</string>
     <string name="quick_settings_network_adb_disabled_label">Disabilitato</string>
@@ -56,18 +56,18 @@
     <string name="quick_settings_music_label">Musica</string>
     <string name="quick_settings_music_play">Play</string>
     <string name="quick_settings_music_pause">Pausa</string>
-    <string name="quick_settings_ime_tile_label">Metodo d\'immisione</string>
-    <string name="quick_settings_caffeine_label">Caffeina</string>
-    <string name="accessibility_quick_settings_caffeine_off">Caffeina spenta</string>
-    <string name="accessibility_quick_settings_caffeine_on">Caffeina accesa</string>
-    <string name="quick_settings_powermenu_label">Menù alimentazioen</string>
+    <string name="quick_settings_ime_tile_label">Metodo d\'immissione</string>
+    <string name="quick_settings_caffeine_label">Caffeine</string>
+    <string name="accessibility_quick_settings_caffeine_off">Caffeine spenta</string>
+    <string name="accessibility_quick_settings_caffeine_on">Caffeine accesa</string>
+    <string name="quick_settings_powermenu_label">Power Menù</string>
     <string name="quick_settings_screenrecord">Registra schermo</string>
     <string name="quick_settings_screenrecord_on">Registrazione ...</string>
-    <string name="quick_settings_sleepscreen_label">Schermo spento</string>
+    <string name="quick_settings_sleepscreen_label">Stand-by</string>
     <string name="quick_settings_romcontrol_label">AOKP</string>
 
     <!-- Gesture Anywhere -->
-    <string name="gestures_message">Disegna i tui gesti qui</string>
+    <string name="gestures_message">Disegna le tue gesture qui</string>
 
     <!-- App circle sidebar -->
     <string name="app_float_maximize_item_title">Massimizzare</string>
@@ -76,11 +76,11 @@
 
     <!-- App sidebar -->
     <string name="default_folder_text">Cartella</string>
-    <string name="title_activity_sidebar_configuration">Imposta contenuti Appbar</string>
+    <string name="title_activity_sidebar_configuration">Imposta contenuti della Appbar</string>
     <string name="action_save">Salva</string>
-    <string name="toast_items_saved">Elementi in Appbar sono state salvate.</string>
+    <string name="toast_items_saved">Gli elementi della Appbar sono state salvati</string>
     <string name="content_setup_instructions">Aggiungi gli elementi nella Appbar premendo a lungo su qualsiasi elemento a destra e trascinarlo verso l\'Appbar.\n\nUnisci gli elementi nelle cartelle trascinando un oggetto su qualsiasi elemento esistente nella appbar.\n\nPer rimuovere un elemento basta semplicemente trascinare fuori dall\' \@appbar.</string>
     <string name="content_setup_dismiss">Continua</string>
-    <string name="toast_not_installed">App non è installata</string>
+    <string name="toast_not_installed">La App non è installata</string>
 
 </resources>
