@@ -955,7 +955,7 @@ public class StorageManager {
         } catch (Exception e) {
             Slog.e(TAG, "readLong(): Unknown exception while opening " + path + ": " + e);
             return 0;
-        }
+       }
     }
 
     /** @removed */
