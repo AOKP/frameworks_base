@@ -755,13 +755,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
             mDt2lCameraVibrateConfig = Settings.System.getIntForUser(resolver,
                     Settings.System.DT2L_CAMERA_VIBRATE_CONFIG, 1, mCurrentUserId);
-            }
         }
     }
 
     // ensure quick settings is disabled until the current user makes it through the setup wizard
     private boolean mUserSetup = false;
     private ContentObserver mUserSetupObserver = new ContentObserver(new Handler()) {
+
         @Override
         public void onChange(boolean selfChange) {
             final boolean userSetup = 0 != Settings.Secure.getIntForUser(
@@ -1235,6 +1235,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mBatterySaverWarningColor = mContext.getResources()
                    .getColor(com.android.internal.R.color.battery_saver_mode_color);
         }
+        addSidebarView();
 
         // set the inital view visibility
         setAreThereNotifications();
