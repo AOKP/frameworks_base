@@ -555,6 +555,7 @@ public final class PowerManagerService extends SystemService
     private static native int nativeGetFeature(int featureId);
 
     private boolean mForceNavbar;
+    private boolean mForceHWButtons;
 
     private PerformanceManagerInternal mPerf;
 
@@ -762,6 +763,9 @@ public final class PowerManagerService extends SystemService
             resolver.registerContentObserver(Settings.Secure.getUriFor(
                     Settings.Secure.NAVIGATION_BAR_VISIBLE),
                     false, mSettingsObserver, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                    Settings.Secure.ENABLE_HW_KEYS),
+                    false, mSettingsObserver, UserHandle.USER_ALL);
             resolver.registerContentObserver(CMSettings.System.getUriFor(
                     CMSettings.System.PROXIMITY_ON_WAKE),
                     false, mSettingsObserver, UserHandle.USER_ALL);
@@ -924,6 +928,8 @@ public final class PowerManagerService extends SystemService
                 UserHandle.USER_CURRENT);
         mForceNavbar = Settings.Secure.getIntForUser(resolver,
                 Settings.Secure.NAVIGATION_BAR_VISIBLE, 0, UserHandle.USER_CURRENT) == 1;
+        mForceHWButtons = Settings.Secure.getIntForUser(resolver,
+                Settings.Secure.ENABLE_HW_KEYS, 0, UserHandle.USER_CURRENT) == 1;         
         mProximityWakeEnabled = CMSettings.System.getInt(resolver,
                 CMSettings.System.PROXIMITY_ON_WAKE,
                 mProximityWakeEnabledByDefaultConfig ? 1 : 0) == 1;
@@ -1878,7 +1884,7 @@ public final class PowerManagerService extends SystemService
                                 buttonBrightness = mButtonBrightnessOverrideFromWindowManager;
                                 keyboardBrightness = mButtonBrightnessOverrideFromWindowManager;
                             } else {
-                                if (!mForceNavbar) {
+                                if (mForceHWButtons) {
                                     buttonBrightness = mButtonBrightness;
                                 } else {
                                     buttonBrightness = 0;
