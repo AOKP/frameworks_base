@@ -5806,6 +5806,12 @@ public final class Settings {
         public static final int LOCATION_MODE_HIGH_ACCURACY = 3;
 
         /**
+         * Enable HW keys
+         * @hide
+         */
+        public static final String ENABLE_HW_KEYS = "enable_hw_keys";
+
+        /**
          * A flag containing settings used for biometric weak
          * @hide
          */

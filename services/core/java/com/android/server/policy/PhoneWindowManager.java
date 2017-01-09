@@ -1009,6 +1009,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_WIDTH), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                    Settings.Secure.ENABLE_HW_KEYS), false, this,
+                    UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_SHOW), false, this,
                     UserHandle.USER_ALL);
@@ -2045,9 +2048,12 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private void updateKeyAssignments() {
         int activeHardwareKeys = mDeviceHardwareKeys;
 
+<<<<<<< HEAD
         if (!hasHwKeysEnabled()) {
              activeHardwareKeys = 0;
         }
+=======
+>>>>>>> 5d41524... Fw_base - provide the bool for HW_Keys switch
         final boolean hasMenu = (activeHardwareKeys & KEY_MASK_MENU) != 0;
         final boolean hasHome = (activeHardwareKeys & KEY_MASK_HOME) != 0;
         final boolean hasAssist = (activeHardwareKeys & KEY_MASK_ASSIST) != 0;
@@ -2355,6 +2361,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 updateWakeGestureListenerLp();
             }
 
+<<<<<<< HEAD
             final boolean useEdgeService = CMSettings.System.getIntForUser(resolver,
                     CMSettings.System.USE_EDGE_SERVICE_FOR_GESTURES, 0, UserHandle.USER_CURRENT) == 1;
             if (useEdgeService ^ mUsingEdgeGestureServiceForGestures && mSystemReady) {
@@ -2366,6 +2373,14 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     mWindowManagerFuncs.registerPointerEventListener(mSystemGestures);
                 }
                 updateEdgeGestureListenerState();
+=======
+            boolean doShowNavbar = Settings.Secure.getIntForUser(resolver,
+                    Settings.Secure.NAVIGATION_BAR_VISIBLE,
+                    DUActionUtils.hasNavbarByDefault(mContext) ? 1 : 0,
+                    UserHandle.USER_CURRENT) == 1;
+            if (doShowNavbar != mNavbarVisible) {
+                mNavbarVisible = doShowNavbar;
+>>>>>>> 5d41524... Fw_base - provide the bool for HW_Keys switch
             }
 
             mNavigationBarLeftInLandscape = CMSettings.System.getIntForUser(resolver,
