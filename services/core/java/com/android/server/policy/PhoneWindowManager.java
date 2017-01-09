@@ -1009,6 +1009,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_WIDTH), false, this,
                     UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                    Settings.Secure.ENABLE_HW_KEYS), false, this,
+                    UserHandle.USER_ALL);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.NAVIGATION_BAR_SHOW), false, this,
                     UserHandle.USER_ALL);
@@ -2045,9 +2048,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     private void updateKeyAssignments() {
         int activeHardwareKeys = mDeviceHardwareKeys;
 
-        if (!hasHwKeysEnabled()) {
-             activeHardwareKeys = 0;
-        }
         final boolean hasMenu = (activeHardwareKeys & KEY_MASK_MENU) != 0;
         final boolean hasHome = (activeHardwareKeys & KEY_MASK_HOME) != 0;
         final boolean hasAssist = (activeHardwareKeys & KEY_MASK_ASSIST) != 0;
@@ -2264,9 +2264,6 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
         } else {
             mHasNavigationBar = hasNavigationBar == 1;
-        }
-        if (mCMHardware.isSupported(CMHardwareManager.FEATURE_KEY_DISABLE)) {
-            mCMHardware.set(CMHardwareManager.FEATURE_KEY_DISABLE, mHasNavigationBar);
         }
     }
 
