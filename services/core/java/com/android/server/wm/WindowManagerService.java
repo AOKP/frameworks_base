@@ -10476,6 +10476,11 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     @Override
+    public boolean hasPermanentMenuKey() {
+        return true;
+    }
+
+    @Override
     public void lockNow(Bundle options) {
         mPolicy.lockNow(options);
     }

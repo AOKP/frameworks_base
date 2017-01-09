@@ -1329,6 +1329,11 @@ public interface WindowManagerPolicy {
     public boolean needsNavigationBar();
 
     /**
+     * Device has a permanent menu key.
+     */
+    public boolean hasPermanentMenuKey();
+
+    /**
      * Lock the device now.
      */
     public void lockNow(Bundle options);
