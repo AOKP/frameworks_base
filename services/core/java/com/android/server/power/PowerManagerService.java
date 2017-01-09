@@ -676,6 +676,8 @@ public final class PowerManagerService extends SystemService
     private static native void nativeSetFeature(int featureId, int data);
     private static native int nativeGetFeature(int featureId);
 
+    private boolean mForceHWButtons;
+
     // Whether proximity check on wake is enabled by default
     private boolean mProximityWakeEnabledByDefaultConfig;
 
@@ -884,6 +886,9 @@ public final class PowerManagerService extends SystemService
         resolver.registerContentObserver(LineageSettings.Secure.getUriFor(
                 LineageSettings.Secure.BUTTON_BACKLIGHT_TIMEOUT),
                 false, mSettingsObserver, UserHandle.USER_ALL);
+        resolver.registerContentObserver(Settings.Secure.getUriFor(
+                Settings.Secure.ENABLE_HW_KEYS),
+                false, mSettingsObserver, UserHandle.USER_ALL);
         resolver.registerContentObserver(Settings.System.getUriFor(
                 Settings.System.WAKELOCK_BLOCKING_ENABLED),
                 false, mSettingsObserver, UserHandle.USER_ALL);
@@ -1077,6 +1082,8 @@ public final class PowerManagerService extends SystemService
         mButtonBrightness = LineageSettings.Secure.getIntForUser(resolver,
                 LineageSettings.Secure.BUTTON_BRIGHTNESS, mButtonBrightnessSettingDefault,
                 UserHandle.USER_CURRENT);
+        mForceHWButtons = Settings.Secure.getIntForUser(resolver,
+                Settings.Secure.ENABLE_HW_KEYS, 0, UserHandle.USER_CURRENT) == 1;
         mButtonLightOnKeypressOnly = LineageSettings.System.getIntForUser(resolver,
                 LineageSettings.System.BUTTON_BACKLIGHT_ONLY_WHEN_PRESSED,
                 0, UserHandle.USER_CURRENT) == 1;
@@ -2101,7 +2108,7 @@ public final class PowerManagerService extends SystemService
                             if (mButtonBrightnessOverrideFromWindowManager >= 0) {
                                 buttonBrightness = mButtonBrightnessOverrideFromWindowManager;
                             } else {
-                                if (!mDevForceNavbar) {
+                                if (mForceHWButtons) {
                                     buttonBrightness = mButtonBrightness;
                                 } else {
                                     buttonBrightness = 0;
