@@ -18,6 +18,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -172,14 +173,6 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
         mBackgroundImage = (ImageView) findViewById(R.id.background_image);
 
         updateResources();
-
-        post(new Runnable() {
-            public void run() {
-                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mBackgroundImage.getLayoutParams();
-                params.height = getExpandedHeight();
-                mBackgroundImage.setLayoutParams(params);
-            }
-        });
     }
 
     @Override
@@ -210,6 +203,14 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
 
         mQsPanelOffsetNormal = getResources().getDimensionPixelSize(R.dimen.qs_panel_top_offset_normal);
         mQsPanelOffsetHeader = getResources().getDimensionPixelSize(R.dimen.qs_panel_top_offset_header);
+
+        post(new Runnable() {
+            public void run() {
+                setHeaderImageHeight();
+                // the dimens could have been changed
+                setQsPanelOffset();
+            }
+        });
     }
 
     protected void updateSettingsAnimator() {
@@ -424,6 +425,12 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
                 true /* dismissShade */);
     }
 
+    private void startROMControlActivity() {
+        mActivityStarter.startActivity(new Intent().setComponent(new ComponentName(
+                "com.aokp.romcontrol", "com.aokp.romcontrol.MainActivity")),
+                true /* dismissShade */);
+    }
+
     @Override
     public void setNextAlarmController(NextAlarmController nextAlarmController) {
         mNextAlarmController = nextAlarmController;
@@ -474,12 +481,7 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
             // to have more space for the header image
             post(new Runnable() {
                 public void run() {
-                    final boolean customHeader = Settings.System.getIntForUser(mContext.getContentResolver(),
-                            Settings.System.STATUS_BAR_CUSTOM_HEADER, 0,
-                            UserHandle.USER_CURRENT) != 0;
-                    FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mQsPanel.getLayoutParams();
-                    params.setMargins(0, customHeader ? mQsPanelOffsetHeader : mQsPanelOffsetNormal, 0, 0);
-                    mQsPanel.setLayoutParams(params);
+                    setQsPanelOffset();
                 }
             });
         }
@@ -557,5 +559,31 @@ public class QuickStatusBarHeader extends BaseStatusBarHeader implements
     @Override
     public void onClosingFinished() {
         mQuickQsPanelScroller.scrollTo(0, 0);
+    }
+
+    private OnLongClickListener mAOKPLongClickListener = new OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            if (v == mSettingsButton) {
+                startROMControlActivity();
+                return true;
+            }
+            return false;
+        }
+    };
+
+    private void setQsPanelOffset() {
+        final boolean customHeader = Settings.System.getIntForUser(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_CUSTOM_HEADER, 0,
+                UserHandle.USER_CURRENT) != 0;
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mQsPanel.getLayoutParams();
+        params.setMargins(0, customHeader ? mQsPanelOffsetHeader : mQsPanelOffsetNormal, 0, 0);
+        mQsPanel.setLayoutParams(params);
+    }
+
+    private void setHeaderImageHeight() {
+        LinearLayout.LayoutParams p = (LinearLayout.LayoutParams) mBackgroundImage.getLayoutParams();
+        p.height = getExpandedHeight();
+        mBackgroundImage.setLayoutParams(p);
     }
 }
