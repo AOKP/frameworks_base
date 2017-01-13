@@ -14,7 +14,9 @@
 -->
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="action_null">Vuoto</string>
+    <!-- Vendor mismatched fingerprint warning [CHAR LIMIT=NONE] -->
+    <string name="system_error_vendorprint">Sembra che la vostra immagine del fornitore può non essere aggiornata. Si prega di installare un\'immagine del fornitore più recente per il vostro dispositivo.</string>
+
     <string name="default_string">Predefinito</string>
 
     <!-- AOKP custom system animations -->
@@ -32,5 +34,9 @@
     <string name="animation_grow_shrink_bottom">Espandi (dal basso)</string>
     <string name="animation_grow_shrink_left">Espandi (da sinistra)</string>
     <string name="animation_grow_shrink_right">Espandi (da destra)</string>
+    <string name="action_null">Nulla</string>
+
+    <!-- Long-press back kill application -->
+    <string name="app_killed_message">App terminata</string>
 
 </resources>
