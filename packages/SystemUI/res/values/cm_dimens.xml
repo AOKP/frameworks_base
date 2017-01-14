@@ -27,4 +27,7 @@
     <dimen name="queue_row_height">52dp</dimen>
     <dimen name="queue_top_shadow">3dp</dimen>
 
+    <dimen name="burnin_protection_horizontal_shift">3dp</dimen>
+    <dimen name="burnin_protection_vertical_shift">1dp</dimen>
+
 </resources>

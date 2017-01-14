@@ -205,6 +205,7 @@ import com.android.systemui.statusbar.policy.BatteryController.BatteryStateChang
 import com.android.systemui.statusbar.policy.BatteryControllerImpl;
 import com.android.systemui.statusbar.policy.BluetoothControllerImpl;
 import com.android.systemui.statusbar.policy.BrightnessMirrorController;
+import com.android.systemui.statusbar.policy.BurnInProtectionController;
 import com.android.systemui.statusbar.policy.CastControllerImpl;
 import com.android.systemui.statusbar.policy.EncryptionHelper;
 import com.android.systemui.statusbar.policy.FlashlightController;
@@ -342,6 +343,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             "system:" + Settings.System.SCREEN_BRIGHTNESS_MODE;
     private static final String STATUS_BAR_BRIGHTNESS_CONTROL =
             "cmsystem:" + CMSettings.System.STATUS_BAR_BRIGHTNESS_CONTROL;
+    private static final String SYSTEMUI_BURNIN_PROTECTION =
+            "cmsecure:" + CMSettings.System.SYSTEMUI_BURNIN_PROTECTION;
 
     static {
         boolean onlyCoreApps;
@@ -387,6 +390,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     WeatherControllerImpl mWeatherController;
     SuControllerImpl mSuController;
     MinitBatteryController mMinitBatteryController;
+    private BurnInProtectionController mBurnInProtectionController;
 
     int mNaturalBarHeight = -1;
 
@@ -944,6 +948,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private VisualizerView mVisualizerView;
     private boolean mScreenOn;
     private boolean mKeyguardShowingMedia;
+    private boolean mBurnInProtectionEnabled;
 
     private MediaSessionManager mMediaSessionManager;
     private MediaController mMediaController;
@@ -1247,6 +1252,11 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
             mNotificationPanelDebugText = (TextView) mNotificationPanel.findViewById(
                     R.id.header_debug_info);
             mNotificationPanelDebugText.setVisibility(View.VISIBLE);
+        }
+
+        if (mContext.getResources().getBoolean(
+                org.cyanogenmod.platform.internal.R.bool.config_enableBurnInProtection)) {
+            mBurnInProtectionController = new BurnInProtectionController(mContext, mStatusBarView);
         }
 
         addAppCircleSidebar();
@@ -5611,6 +5621,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mStackScroller.setAnimationsEnabled(false);
         mVisualStabilityManager.setScreenOn(false);
         updateVisibleToUser();
+        if (mBurnInProtectionController != null) {
+            mBurnInProtectionController.stopShiftTimer(mBurnInProtectionEnabled);
+        }
         if (mLaunchCameraOnFinishedGoingToSleep) {
             mLaunchCameraOnFinishedGoingToSleep = false;
 
@@ -5631,6 +5644,9 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         mVisualStabilityManager.setScreenOn(true);
         mNotificationPanel.setTouchDisabled(false);
         updateVisibleToUser();
+        if (mBurnInProtectionController != null) {
+            mBurnInProtectionController.startShiftTimer(mBurnInProtectionEnabled);
+        }
     }
 
     public void onScreenTurningOn() {
@@ -5985,6 +6001,17 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
                 break;
             case STATUS_BAR_BRIGHTNESS_CONTROL:
                 mBrightnessControl = newValue != null && Integer.parseInt(newValue) == 1;
+                break;
+            case SYSTEMUI_BURNIN_PROTECTION:
+                mBurnInProtectionEnabled = newValue != null && Integer.parseInt(newValue) == 1;
+                if (mBurnInProtectionController != null) {
+                    if (mBurnInProtectionEnabled) {
+                        mBurnInProtectionController.startShiftTimer(true);
+                    } else {
+                        // Forcefully disable it
+                        mBurnInProtectionController.stopShiftTimer(true);
+                    }
+                }
                 break;
             default:
                 break;
