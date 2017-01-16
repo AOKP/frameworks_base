@@ -929,7 +929,7 @@ public final class PowerManagerService extends SystemService
         mForceNavbar = Settings.Secure.getIntForUser(resolver,
                 Settings.Secure.NAVIGATION_BAR_VISIBLE, 0, UserHandle.USER_CURRENT) == 1;
         mForceHWButtons = Settings.Secure.getIntForUser(resolver,
-                Settings.Secure.ENABLE_HW_KEYS, 0, UserHandle.USER_CURRENT) == 1;         
+                Settings.Secure.ENABLE_HW_KEYS, 0, UserHandle.USER_CURRENT) == 1;
         mProximityWakeEnabled = CMSettings.System.getInt(resolver,
                 CMSettings.System.PROXIMITY_ON_WAKE,
                 mProximityWakeEnabledByDefaultConfig ? 1 : 0) == 1;
@@ -1884,7 +1884,7 @@ public final class PowerManagerService extends SystemService
                                 buttonBrightness = mButtonBrightnessOverrideFromWindowManager;
                                 keyboardBrightness = mButtonBrightnessOverrideFromWindowManager;
                             } else {
-                                if (mForceHWButtons) {
+                                if (mForceHWButtons || !mForceNavbar) {
                                     buttonBrightness = mButtonBrightness;
                                 } else {
                                     buttonBrightness = 0;

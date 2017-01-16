@@ -2525,6 +2525,10 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
             updateNavigationBarSize();
 
+            if (!mNavbarVisible && mCMHardware.isSupported(CMHardwareManager.FEATURE_KEY_DISABLE)) {
+                  mCMHardware.set(CMHardwareManager.FEATURE_KEY_DISABLE, mNavbarVisible);
+            }
+
             updateKeyAssignments();
 
             // Configure rotation lock.
