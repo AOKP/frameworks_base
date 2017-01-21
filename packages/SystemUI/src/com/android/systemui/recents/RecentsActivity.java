@@ -443,6 +443,9 @@ public class RecentsActivity extends Activity implements ViewTreeObserver.OnPreD
 
         setImmersiveRecents();
 
+        boolean showClearAllRecents = Settings.System.getIntForUser(getContentResolver(),
+                Settings.System.SHOW_CLEAR_ALL_RECENTS, 0, UserHandle.USER_CURRENT) != 0;
+
         // After we have resumed, set the visible state until the next onStop() call
         mIsVisible = true;
     }

@@ -1993,7 +1993,7 @@ public final class Settings {
             }
         }
 
-	/**
+    /**
          * Convenience function for updating a single settings value as a
          * boolean. This will either create a new entry in the table if the
          * given name does not exist, or modify the value of the existing row
@@ -3945,7 +3945,7 @@ public final class Settings {
          */
         public static final String STATUS_BAR_DATE = "status_bar_date";
 
-	/**
+    /**
          * show the membar in recents
          *  @hide
          */
@@ -4387,11 +4387,42 @@ public final class Settings {
          */
         public static final String AMBIENT_DISPLAY_SHOW_BATTERY = "ambient_display_show_battery";
 
+        /*
+         * show clear all recents button
+         *  @hide
+         */
+        public static final String SHOW_CLEAR_ALL_RECENTS = "show_clear_all_recents";
+
+        /**
+         * location of the clear all rectents button
+         * @hide
+         */
+        public static final String  RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";
+
         /**
          * Whether to allow fullscreen screenshots or let the user select which area to screenshot
          * @hide
          */
         public static final String SCREENSHOT_TYPE = "screenshot_type";
+
+        /**
+         * Whether the proximity sensor will adjust call to speaker
+         * @hide
+         */
+        public static final String PROXIMITY_AUTO_SPEAKER = "proximity_auto_speaker";
+
+        /**
+         * Time delay to activate speaker after proximity sensor triggered
+         * @hide
+         */
+        public static final String PROXIMITY_AUTO_SPEAKER_DELAY = "proximity_auto_speaker_delay";
+
+        /**
+         * Whether the proximity sensor will adjust call to speaker,
+         * only while in call (not while ringing on outgoing call)
+         * @hide
+         */
+        public static final String PROXIMITY_AUTO_SPEAKER_INCALL_ONLY = "proximity_auto_speaker_incall_only";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
@@ -7053,6 +7084,18 @@ public final class Settings {
          */
         public static final int INCALL_POWER_BUTTON_BEHAVIOR_DEFAULT =
                 INCALL_POWER_BUTTON_BEHAVIOR_SCREEN_OFF;
+
+        /**
+         * Enable single click to turn WiFi on or off.
+         * @hide
+         */
+        public static final String QS_WIFI_EASY_TOGGLE = "qs_wifi_easy_toggle";
+
+        /**
+         * Enable single click to turn Bluetooth on or off.
+         * @hide
+         */
+        public static final String QS_BT_EASY_TOGGLE = "qs_bt_easy_toggle";
 
         /**
          * Whether the device should wake when the wake gesture sensor detects motion.
