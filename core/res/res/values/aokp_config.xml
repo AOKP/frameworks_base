@@ -44,4 +44,8 @@
          kill the foreground app. -->
     <integer name="config_backKillTimeout">2000</integer>
 
+    <!-- True if the notification's dynamic app icon/title tint should be optimised for dark
+    backgrounds (requires config_allowNotificationIconTextTinting to be true)-->
+    <bool name="config_useDarkBgNotificationIconTextTinting">false</bool>
+
 </resources>
