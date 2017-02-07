@@ -46,6 +46,7 @@
     </style>
 
     <style name="BatteryMeterViewDrawable.Solid"/>
+    <style name="BatteryMeterViewDrawable.aokp"/>
 
     <!-- Date and Clock shadow -->
     <style name="TextAppearance.StatusBar.Expanded.Clock.Shadow" parent="TextAppearance.StatusBar.Expanded.Clock" >
