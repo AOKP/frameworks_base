@@ -190,4 +190,9 @@
   <java-symbol type="string" name="singlehandmode_slide_hint_message" />
 
   <java-symbol type="layout" name="single_hand_window" />
+
+  <!-- Powermenu Torch -->
+  <java-symbol type="drawable" name="ic_lock_torch" />
+  <java-symbol type="string" name="global_action_torch" />
+
 </resources>
