@@ -154,4 +154,7 @@
     <string name="dlg_cancel">Cancel</string>
     <string name="kill">Kill App</string>
 
+    <!-- volte icon switch -->
+    <string name="status_bar_volte">VOLTE</string>
+
 </resources>
