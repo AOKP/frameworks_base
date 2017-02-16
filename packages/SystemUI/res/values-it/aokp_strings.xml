@@ -83,4 +83,25 @@
     <string name="content_setup_dismiss">Continua</string>
     <string name="toast_not_installed">La App non è installata</string>
 
+    <!-- Navigation bar Tile -->
+    <string name="quick_settings_navigation_bar">Barra di navigazione</string>
+    <string name="quick_settings_smartbar">SmartBar</string>
+    <string name="quick_settings_smartbar_off">SmartBar off</string>
+    <string name="quick_settings_fling">Fling</string>
+    <string name="quick_settings_fling_off">Fling off</string>
+
+    <!-- Heads up snooze toast -->
+    <string name="heads_up_snooze_message_one_minute"><xliff:g id="string">%s</xliff:g> - le notifiche Heads up sono disattivate per 1 minuto.</string>
+    <string name="heads_up_snooze_message"><xliff:g id="string">%s</xliff:g> - le notifiche Heads up sono disattivate per <xliff:g id="number">%d</xliff:g> minuti.</string>
+
+    <!-- PA Pie controls -->
+    <string name="pie_date_format" translatable="false">ccc, dd MMM yyyy</string>
+    <string name="pie_hour_format_12">hh:mm</string>
+    <string name="pie_hour_format_24">HH:mm</string>
+    <string name="pie_am_pm">un</string>
+
+    <!-- PA Pie Tile -->
+    <string name="quick_settings_pie">Pie</string>
+    <string name="quick_settings_pie_off">Pie off</string>
+    <string name="quick_settings_pie_on">Pie on</string>
 </resources>
