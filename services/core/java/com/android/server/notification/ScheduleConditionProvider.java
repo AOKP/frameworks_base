@@ -156,16 +156,26 @@ public class ScheduleConditionProvider extends SystemConditionProviderService {
         }
         setRegistered(!mSubscriptions.isEmpty());
         final long now = System.currentTimeMillis();
-        mNextAlarmTime = 0;
-        long nextUserAlarmTime = getNextAlarm();
-        for (Uri conditionId : mSubscriptions.keySet()) {
-            final ScheduleCalendar cal = mSubscriptions.get(conditionId);
-            if (cal != null && cal.isInSchedule(now)) {
-                if (conditionSnoozed(conditionId) || cal.shouldExitForAlarm(now)) {
-                    notifyCondition(conditionId, Condition.STATE_FALSE, "alarmCanceled");
-                    addSnoozed(conditionId);
+        synchronized (mSubscriptions) {
+            setRegistered(!mSubscriptions.isEmpty());
+            mNextAlarmTime = 0;
+            long nextUserAlarmTime = getNextAlarm();
+            for (Uri conditionId : mSubscriptions.keySet()) {
+                final ScheduleCalendar cal = mSubscriptions.get(conditionId);
+                if (cal != null && cal.isInSchedule(now)) {
+                    if (conditionSnoozed(conditionId) || cal.shouldExitForAlarm(now)) {
+                        notifyCondition(conditionId, Condition.STATE_FALSE, "alarmCanceled");
+                        addSnoozed(conditionId);
+                    } else {
+                        notifyCondition(conditionId, Condition.STATE_TRUE, "meetsSchedule");
+                    }
+                    cal.maybeSetNextAlarm(now, nextUserAlarmTime);
                 } else {
-                    notifyCondition(conditionId, Condition.STATE_TRUE, "meetsSchedule");
+                    notifyCondition(conditionId, Condition.STATE_FALSE, "!meetsSchedule");
+                    removeSnoozed(conditionId);
+                    if (cal != null && nextUserAlarmTime == 0) {
+                        cal.maybeSetNextAlarm(now, nextUserAlarmTime);
+                    }
                 }
                 cal.maybeSetNextAlarm(now, nextUserAlarmTime);
             } else {
