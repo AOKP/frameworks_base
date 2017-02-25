@@ -118,7 +118,7 @@
 
     <!-- AOKP - Extra tiles to display in QuickSettings -->
     <string name="quick_settings_tiles_extra" translatable="false">
-        screenshot,expanded_desktop,reboot,power_menu,sleepscreen,romcontrol,app_picker,navigation_bar
+        screenshot,expanded_desktop,reboot,power_menu,sleepscreen,romcontrol,app_picker,navigation_bar,weather
     </string>
 
     <!-- The tiles to display in QuickSettings -->
