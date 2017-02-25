@@ -112,7 +112,7 @@
     <string name="quick_settings_tiles_extra" translatable="false">
         hotspot,inversion,saver,work,cast,screenshot,adb_network,sync,expanded_desktop,reboot,usb_tether,music,
             ime,caffeine,power_menu,screenrecord,sleepscreen,romcontrol,app_picker,heads_up,navigation_bar,
-            app_circle_bar,app_side_bar,gesture_anywhere,pulse,volume,pie
+            app_circle_bar,app_side_bar,gesture_anywhere,pulse,volume,pie,weather
     </string>
 
     <!-- The tiles to display in QuickSettings -->

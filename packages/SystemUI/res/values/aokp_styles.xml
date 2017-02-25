@@ -72,4 +72,16 @@
     <!-- Phyisical Keyboard Dialog style -->
     <style name="KeyboardShortcutsDialog" parent="@*android:style/Theme.DeviceDefault.Light" />
 
+   <style name="TextAppearance.StatusBar.Expanded.Weather">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="TextAppearance.StatusBar.Expanded.Weather.Detailed">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+
 </resources>
