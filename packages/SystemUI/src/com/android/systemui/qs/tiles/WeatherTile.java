@@ -140,7 +140,7 @@ public class WeatherTile extends QSTile<QSTile.BooleanState> implements OmniJaws
 
     @Override
     public Intent getLongClickIntent() {
-        if (AicpUtils.isPackageInstalled(mContext, "com.google.android.googlequicksearchbox")) {
+        if (AOKPUtils.isPackageInstalled(mContext, "com.google.android.googlequicksearchbox")) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("dynact://velour/weather/ProxyActivity"));
             intent.setComponent(new ComponentName("com.google.android.googlequicksearchbox",

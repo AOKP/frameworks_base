@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.systemui.BatteryLevelTextView;
@@ -85,6 +86,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
     private ImageView mAokpLogo;
     private ImageView mAokpLogoRight;
     private ImageView mAokpLogoLeft;
+    private TextView mWeatherTextView;
+    private ImageView mWeatherImageView;
 
     private int mIconSize;
     private int mIconHPadding;
@@ -149,6 +152,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
         mHandler = new Handler();
         mClockController = new ClockController(statusBar, mNotificationIconAreaController, mHandler);
         mCenterClockLayout = statusBar.findViewById(R.id.center_clock_layout);
+        mWeatherTextView = (TextView) statusBar.findViewById(R.id.weather_temp);
+        mWeatherImageView = (ImageView) statusBar.findViewById(R.id.weather_image);
         loadDimens();
 
         mBatteryLevelView = (BatteryLevelTextView) statusBar.findViewById(R.id.battery_level);
@@ -580,6 +585,8 @@ public class StatusBarIconController extends StatusBarIconList implements Tunabl
                 mAokpLogoRight.setImageTintList(ColorStateList.valueOf(mIconTint));
                 mAokpLogoLeft.setImageTintList(ColorStateList.valueOf(mIconTint));
         }
+        mWeatherTextView.setTextColor(mIconTint);
+        mWeatherImageView.setImageTintList(ColorStateList.valueOf(mIconTint));
     }
 
     public void appTransitionPending() {
