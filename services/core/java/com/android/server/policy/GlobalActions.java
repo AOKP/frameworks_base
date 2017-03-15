@@ -448,7 +448,7 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
             } else if (GLOBAL_ACTION_KEY_RESTART.equals(actionKey)) {
                 mItems.add(new RestartAction());
             } else if (GLOBAL_ACTION_KEY_SCREENSHOT.equals(actionKey)) {
-                mItems.add(new ScreenshotAction());
+                mItems.add(new getScreenshotAction());
             } else if (GLOBAL_ACTION_KEY_SCREENRECORD.equals(actionKey)) {
                 mItems.add(getScreenrecordAction());
             } else if (GLOBAL_ACTION_KEY_AIRPLANE.equals(actionKey)) {
@@ -591,8 +591,8 @@ class GlobalActions implements DialogInterface.OnDismissListener, DialogInterfac
         }
     }
 
-    private final class ScreenshotAction extends SinglePressAction implements LongPressAction {
-        private ScreenshotAction() {
+    private final class getScreenshotAction extends SinglePressAction implements LongPressAction {
+        private getScreenshotAction() {
             super(com.android.internal.R.drawable.ic_lock_screenshot,
                     R.string.global_action_screenshot);
         }
