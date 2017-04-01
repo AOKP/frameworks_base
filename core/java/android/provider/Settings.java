@@ -4881,6 +4881,54 @@ public final class Settings {
         public static final String NAVBAR_BUTON_CUSTOM_ICON_SWITCH = "navbar_button_custom_icon_switch";
 
         /**
+         * Pixel Anim Duration
+         * @hide
+         */
+        public static final String OPA_ANIM_DURATION_Y = "opa_anim_duration_y";
+
+        /**
+         * Pixel Anim Duration
+         * @hide
+         */
+        public static final String OPA_ANIM_DURATION_X = "opa_anim_duration_x";
+
+        /**
+         * Pixel Anim Duration
+         * @hide
+         */
+        public static final String COLLAPSE_ANIMATION_DURATION_RY = "collapse_anim_duration_ry";
+
+        /**
+         * Pixel Anim Duration
+         * @hide
+         */
+        public static final String COLLAPSE_ANIMATION_DURATION_BG = "collapse_anim_duration_bg";
+
+        /**
+         * Pixel Anim Duration
+         * @hide
+         */
+        public static final String RETRACT_ANIMATION_DURATION = "retract_anim_duration";
+
+        /**
+         * Pixel Anim Duration
+         * @hide
+         */
+        public static final String DIAMOND_ANIMATION_DURATION = "diamond_anim_duration";
+
+        /**
+         * Pixel Anim Duration
+         * @hide
+         */
+        public static final String DOTS_RESIZE_DURATION = "dots_anim_duration";
+
+        /**
+         * Pixel Anim Duration
+         * @hide
+         */
+        public static final String HOME_RESIZE_DURATION = "home_resize_anim_duration";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
