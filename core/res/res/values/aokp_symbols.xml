@@ -195,4 +195,8 @@
   <java-symbol type="drawable" name="ic_lock_torch" />
   <java-symbol type="string" name="global_action_torch" />
 
+  <!-- call removeCient in cancelAuthentification after stop to 
+       avoid 3s delay for certain fpc HALs -->
+  <java-symbol type="bool" name="config_fingerprintRemoveClientOnCancel" />
+
 </resources>
