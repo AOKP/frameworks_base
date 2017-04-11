@@ -1339,7 +1339,7 @@ public class DecorView extends FrameLayout implements RootViewSurfaceTaker, Wind
         return insets;
     }
 
-    private void updateNavigationGuard(WindowInsets insets) {
+    private WindowInsets updateNavigationGuard(WindowInsets insets) {
         boolean isDynamic = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.NAV_BAR_DYNAMIC, 0) == 1;
         // IME windows lay out below the nav bar, but the content view must not (for back compat)
