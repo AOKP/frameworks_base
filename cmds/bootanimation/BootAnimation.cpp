@@ -61,8 +61,6 @@
 #include "BootAnimation.h"
 #include "audioplay.h"
 
-#include <private/regionalization/Environment.h>
-
 namespace android {
 
 static const char OEM_BOOTANIMATION_FILE[] = "/oem/media/bootanimation.zip";
@@ -421,17 +419,17 @@ status_t BootAnimation::readyToRun() {
 
     bool encryptedAnimation = atoi(decrypt) != 0 || !strcmp("trigger_restart_min_framework", decrypt);
 
-    if (encryptedAnimation && (access(getAnimationFileName(IMG_ENC), R_OK) == 0)) {
-        mZipFileName = getAnimationFileName(IMG_ENC);
+    if (encryptedAnimation && (access(SYSTEM_ENCRYPTED_BOOTANIMATION_FILE, R_OK) == 0)) {
+        mZipFileName = SYSTEM_ENCRYPTED_BOOTANIMATION_FILE;
+    }
+    else if (access(OEM_BOOTANIMATION_FILE, R_OK) == 0) {
+        mZipFileName = OEM_BOOTANIMATION_FILE;
     }
     else if (access(getAnimationFileName(IMG_THM), R_OK) == 0) {
         mZipFileName = getAnimationFileName(IMG_THM);
     }
-    else if (access(getAnimationFileName(IMG_OEM), R_OK) == 0) {
-        mZipFileName = getAnimationFileName(IMG_OEM);
-    }
-    else if (access(getAnimationFileName(IMG_SYS), R_OK) == 0) {
-        mZipFileName = getAnimationFileName(IMG_SYS);
+    else if (access(SYSTEM_BOOTANIMATION_FILE, R_OK) == 0) {
+        mZipFileName = SYSTEM_BOOTANIMATION_FILE;
     }
 
 #ifdef PRELOAD_BOOTANIMATION
