@@ -1844,6 +1844,13 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
         }
     };
 
+    private View.OnLongClickListener mLongPressBackListener = new View.OnLongClickListener() {
+        @Override
+        public boolean onLongClick(View v) {
+            return handleLongPressBack();
+        }
+    };
+
     @Override
     protected void toggleSplitScreenMode(int metricsDockAction, int metricsUndockAction) {
         if (mRecents == null) {
