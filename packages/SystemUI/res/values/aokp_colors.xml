@@ -75,4 +75,7 @@
     <!-- Alarm status color -->
     <color name="alarm_status_color">#E0E0E0</color>
 
+    <!-- Screenshot action colors -->
+    <color name="screenshot_flash_color">@android:color/white</color>
+    <color name="screenshot_background_color">@android:color/black</color>
 </resources>
