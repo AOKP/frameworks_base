@@ -5801,6 +5801,9 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         // incremented in the following "changeViewPosition" calls so that its value is correct for
         // subsequent calls.
         int offsetFromEnd = 1;
+        int visibleNotifications = 0;
+        boolean onKeyguard = mState == StatusBarState.KEYGUARD;
+		int maxNotifications = -1;
         if (mFooterView != null) {
             mStackScroller.changeViewPosition(mFooterView,
                     mStackScroller.getChildCount() - offsetFromEnd++);
@@ -5816,6 +5819,19 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
 
         // Scrim opacity varies based on notification count
         mScrimController.setNotificationCount(mStackScroller.getNotGoneChildCount());
+
+        if (onKeyguard) {
+            hideWeatherPanelIfNecessary(visibleNotifications, maxNotifications);
+        }
+    }
+
+    private void hideWeatherPanelIfNecessary(int visibleNotifications, int maxKeyguardNotifications) {
+        final ContentResolver resolver = mContext.getContentResolver();
+        int notifications = visibleNotifications;
+        if (mNotificationShelf.getChildCount() > 0) {
+            notifications += 1;
+        }
+        maxKeyguardNotifications = getMaxNotificationsWhileLocked(true);
     }
 
     protected void notifyHeadsUpGoingToSleep() {
