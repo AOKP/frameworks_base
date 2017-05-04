@@ -372,7 +372,7 @@ public class NotificationPanelView extends PanelView implements
             }
         });
         mSettingsObserver = new SettingsObserver(mHandler);
-        mKeyguardWeatherInfo = (TextView) mKeyguardStatusView.findViewById(R.id.weather_info);
+        mKeyguardWeatherInfo = (TextView) mKeyguardStatusView.findViewById(R.id.current_temp);
 
         mNotificationPanelView = this;
 
@@ -2742,6 +2742,15 @@ public class NotificationPanelView extends PanelView implements
         mGroupManager = groupManager;
     }
 
+    @Override
+    public void onWeatherChanged(WeatherController.WeatherInfo info) {
+        if (!mKeyguardWeatherEnabled || Double.isNaN(info.temp) || info.condition == null) {
+            mKeyguardWeatherInfo.setVisibility(GONE);
+        } else {
+            mKeyguardWeatherInfo.setVisibility(VISIBLE);
+        }
+    }
+
     class SettingsObserver extends UserContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
@@ -2911,19 +2920,6 @@ public class NotificationPanelView extends PanelView implements
                 qSGd.setCornerRadius(mCustomCornerRadius);
                 mQsContainer.setBackground(qSGd);
             }
-        }
-    }
-
-    @Override
-    public void onWeatherChanged(WeatherController.WeatherInfo info) {
-        if (!mKeyguardWeatherEnabled || Double.isNaN(info.temp) || info.condition == null) {
-            mKeyguardWeatherInfo.setVisibility(GONE);
-        } else {
-            mKeyguardWeatherInfo.setText(mContext.getString(
-                    R.string.keyguard_status_view_weather_format,
-                    WeatherUtils.formatTemperature(info.temp, info.tempUnit),
-                    info.condition));
-            mKeyguardWeatherInfo.setVisibility(VISIBLE);
         }
     }
 
