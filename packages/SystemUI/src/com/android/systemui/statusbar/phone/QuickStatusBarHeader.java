@@ -69,8 +69,11 @@ import com.android.systemui.statusbar.policy.NextAlarmController;
 import com.android.systemui.statusbar.policy.NextAlarmController.NextAlarmChangeCallback;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.statusbar.policy.UserInfoController.OnUserInfoChangedListener;
+
+import com.android.internal.util.omni.OmniJawsClient;
+
 import com.android.systemui.statusbar.policy.WeatherController;
-import com.android.systemui.omni.OmniJawsClient;
+
 import com.android.systemui.tuner.TunerService;
 
 public class QuickStatusBarHeader extends BaseStatusBarHeader implements
