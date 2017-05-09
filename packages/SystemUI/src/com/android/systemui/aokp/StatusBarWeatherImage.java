@@ -34,10 +34,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.android.internal.util.omni.OmniJawsClient;
+
 import com.android.systemui.R;
 import com.android.systemui.Dependency;
 import com.android.systemui.omni.DetailedWeatherView;
-import com.android.systemui.omni.OmniJawsClient;
 import com.android.systemui.statusbar.policy.DarkIconDispatcher;
 
 public class StatusBarWeatherImage extends ImageView implements
