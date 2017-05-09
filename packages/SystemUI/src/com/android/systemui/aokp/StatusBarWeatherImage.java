@@ -28,9 +28,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.android.internal.util.omni.OmniJawsClient;
+
 import com.android.systemui.R;
 import com.android.systemui.omni.DetailedWeatherView;
-import com.android.systemui.omni.OmniJawsClient;
 
 public class StatusBarWeatherImage extends ImageView implements
         OmniJawsClient.OmniJawsObserver {
