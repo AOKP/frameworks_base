@@ -4537,6 +4537,12 @@ public final class Settings {
         public static final String LOCK_SCREEN_WEATHER_CONDITION_ICON = "lock_screen_weather_condition_icon";
 
         /**
+         * Whether to show the weather wind speed in km/h or m/s
+         * @hide
+         */
+        public static final String OMNIJAWS_WINDSPEED_M_S = "omnijaws_windspeed_m_s";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
