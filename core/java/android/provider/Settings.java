@@ -4433,6 +4433,32 @@ public final class Settings {
         public static final String SMART_PIXELS_ON_POWER_SAVE = "smart_pixels_on_power_save";
 
         /**
+         * Statusbar AOKP logo
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO = "status_bar_logo";
+
+        /**
+         * Statusbar AOKP logo color setting
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO_COLOR = "status_bar_logo_color";
+
+        /**
+         * Position of Status bar AICP logo
+         * 0 - Left (default)
+         * 1 - Right
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO_POSITION = "status_bar_logo_position";
+
+        /**
+         * Statusbar AICP logo custom style
+         * @hide
+         */
+        public static final String STATUS_BAR_AOKP_LOGO_STYLE = "status_bar_logo_style";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *

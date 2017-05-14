@@ -58,6 +58,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private KeyguardMonitor mKeyguardMonitor;
     private NetworkController mNetworkController;
     private LinearLayout mSystemIconArea;
+    private View mStatusBarLogo, mStatusBarLogoRight;
     private View mNotificationIconAreaInner;
     private int mDisabled1;
     private StatusBar mStatusBarComponent;
@@ -102,6 +103,8 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         Dependency.get(StatusBarIconController.class).addIconGroup(mDarkIconManager);
         mSystemIconArea = mStatusBar.findViewById(R.id.system_icon_area);
         mClockController = new ClockController(mStatusBar);
+        mStatusBarLogo = mStatusBar.findViewById(R.id.statusbar_logo);
+        mStatusBarLogoRight = mStatusBar.findViewById(R.id.statusbar_logo_right);
         showSystemIconArea(false);
         showClock(false);
         initEmergencyCryptkeeperText();
@@ -222,8 +225,10 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void hideSystemIconArea(boolean animate) {
-        animateHide(mSystemIconArea, animate);
-        animateHide(mClockController.getClockLayout(), animate);
+        animateHiddenState(mSystemIconArea, animate, true);
+        animateHiddenState(mClockController.getClockLayout(), animate, true);
+        animateHiddenState(mStatusBarLogo, animate, true);
+        animateHiddenState(mStatusBarLogoRight, animate, true);
     }
 
     public void showSystemIconArea(boolean animate) {
@@ -232,7 +237,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void hideClock(boolean animate) {
-        animateHiddenState(mClockController.getClock(), clockHiddenMode(), animate);
+        animateHiddenState(mClockController.getClock(), animate, true);
     }
 
     public void showClock(boolean animate) {
@@ -251,18 +256,22 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void hideNotificationIconArea(boolean animate) {
-        animateHide(mNotificationIconAreaInner, animate);
-        animateHide(mClockController.getClockLayout(), animate);
+        animateHiddenState(mNotificationIconAreaInner, animate, true);
+        animateHiddenState(mClockController.getClockLayout(), animate, true);
+        animateHiddenState(mStatusBarLogo, animate, true);
+        animateHiddenState(mStatusBarLogoRight, animate, true);
     }
 
     public void showNotificationIconArea(boolean animate) {
         animateShow(mNotificationIconAreaInner, animate);
+        animateShow(mStatusBarLogo, animate);
+        animateShow(mStatusBarLogoRight, animate);
         animateShow(mClockController.getClockLayout(), animate);
     }
 
     public void hideOperatorName(boolean animate) {
         if (mOperatorNameFrame != null) {
-            animateHide(mOperatorNameFrame, animate);
+            animateHiddenState(mOperatorNameFrame, animate, true);
         }
     }
 
@@ -275,11 +284,11 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     /**
      * Animate a view to INVISIBLE or GONE
      */
-    private void animateHiddenState(final View v, int state, boolean animate) {
+    private void animateHiddenState(final View v, boolean animate, final boolean invisible)  {
         v.animate().cancel();
         if (!animate) {
             v.setAlpha(0f);
-            v.setVisibility(state);
+            v.setVisibility(invisible ? View.INVISIBLE : View.GONE);;
             return;
         }
 
@@ -288,14 +297,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
                 .setDuration(160)
                 .setStartDelay(0)
                 .setInterpolator(Interpolators.ALPHA_OUT)
-                .withEndAction(() -> v.setVisibility(state));
-    }
-
-    /**
-     * Hides a view.
-     */
-    private void animateHide(final View v, boolean animate) {
-        animateHiddenState(v, View.INVISIBLE, animate);
+                .withEndAction(() -> v.setVisibility(invisible ? View.INVISIBLE : View.GONE));
     }
 
     /**
