@@ -2940,4 +2940,8 @@
 
     <!-- Allow the flashlight to use wakelocks -->
     <bool name="config_useWakeLockForFlashlight">false</bool>
+
+    <!-- If enabled, capacitive keys will only light up when pressed.
+         Otherwise, the buttons will light up whenever the user interacts with the device -->
+    <bool name="config_buttonLightOnKeypressOnly">false</bool>
 </resources>
