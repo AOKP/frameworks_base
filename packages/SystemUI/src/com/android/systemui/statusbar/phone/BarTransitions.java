@@ -51,8 +51,8 @@ public class BarTransitions {
     public static final int MODE_LIGHTS_OUT_TRANSPARENT = 6;
     public static final int MODE_POWERSAVE_WARNING = 7;
 
-    public static final int LIGHTS_IN_DURATION = 250;
-    public static final int LIGHTS_OUT_DURATION = 1500;
+    public static final int LIGHTS_IN_DURATION = 240;
+    public static final int LIGHTS_OUT_DURATION = 720;
     public static final int BACKGROUND_DURATION = 200;
 
     private final String mTag;
