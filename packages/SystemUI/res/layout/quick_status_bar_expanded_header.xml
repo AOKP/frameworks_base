@@ -26,11 +26,19 @@
     android:clickable="false"
     android:clipChildren="false"
     android:clipToPadding="false"
+    android:elevation="4dp"
     android:paddingTop="0dp"
     android:paddingEnd="0dp"
     android:paddingStart="0dp">
 
     <include layout="@layout/quick_status_bar_header_system_icons" />
+
+    <ImageView
+        android:id="@+id/qs_header_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:paddingBottom="@dimen/qs_panel_footer_height"/>
 
     <com.android.systemui.qs.QuickQSPanel
         android:id="@+id/quick_qs_panel"
