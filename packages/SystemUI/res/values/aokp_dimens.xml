@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
- * Copyright (c) 2018, The AOKP Project
+ * Copyright (c) 2018 AOKP
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,4 +31,9 @@
     <dimen name="floating_action_button_margin_bottom">46dp</dimen>
 
     <dimen name="qs_scroller_margin">8dp</dimen>
+    <dimen name="qs_scroller_top_margin">40dp</dimen>
+    <dimen name="qs_panel_margin_top">28dp</dimen>
+    <dimen name="qs_panel_margin_top_header">85dp</dimen>
+    <dimen name="qs_panel_footer_height">48dp</dimen>
+
 </resources>
