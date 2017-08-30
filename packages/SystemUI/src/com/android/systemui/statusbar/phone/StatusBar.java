@@ -193,10 +193,10 @@ import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.navigation.Navigator;
+import com.android.systemui.omni.StatusBarHeaderMachine;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.MenuItem;
-import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper.SnoozeOption;
 import com.android.systemui.qs.QSFragment;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.QSTileHost;
@@ -487,6 +487,7 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     // settings
     private QSPanel mQSPanel;
+    private QuickStatusBarHeader mQuickStatusBarHeader;
 
     // top bar
     protected KeyguardStatusBarView mKeyguardStatusBar;
@@ -884,6 +885,7 @@ public class StatusBar extends SystemUI implements DemoMode,
     private NavigationBarFragment mNavigationBar;
     private View mNavigationBarView;
     private FlashlightController mFlashlightController;
+    private StatusBarHeaderMachine mStatusBarHeaderMachine;
 
     @Override
     public void start() {
@@ -1292,6 +1294,8 @@ public class StatusBar extends SystemUI implements DemoMode,
             createUserSwitcher();
         }
 
+        mStatusBarHeaderMachine = new StatusBarHeaderMachine(mContext);
+
         // Set up the quick settings tile panel
         View container = mStatusBarWindow.findViewById(R.id.qs_frame);
         if (container != null) {
@@ -1314,6 +1318,8 @@ public class StatusBar extends SystemUI implements DemoMode,
                     mQSPanel = ((QSFragment) qs).getQsPanel();
                     mQSPanel.setBrightnessMirror(mBrightnessMirrorController);
                     mKeyguardStatusBar.setQSPanel(mQSPanel);
+                    mStatusBarHeaderMachine.addObserver(mQuickStatusBarHeader);
+                    mStatusBarHeaderMachine.updateEnablement();
                 }
             });
         }
