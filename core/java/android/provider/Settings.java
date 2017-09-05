@@ -4394,11 +4394,26 @@ public final class Settings {
          * Defines the shortcuts to be shown on lockscreen
          * Usage is like this: target:icon|target:icon|target:icon
          * if :icon is not set, default application icon will be used
+         * show clear all recents button
          * @hide
          */
+
         public static final String LOCKSCREEN_SHORTCUTS = "lockscreen_shortcuts";
 
-        /**
+       /**
+         * show clear all recents button
+         * @hide
+         */
+
+        public static final String SHOW_CLEAR_ALL_RECENTS = "show_clear_all_recents";
+        
+       /**
+         * location of the clear all rectents button
+         * @hide
+         */
+        public static final String  RECENTS_CLEAR_ALL_LOCATION = "recents_clear_all_location";
+
+       /**
          * Whether shorcuts open with normal or longpress
          * @hide
          */
