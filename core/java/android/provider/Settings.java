@@ -4447,7 +4447,7 @@ public final class Settings {
 
         /**
          * Volume dialog stroke custom thickness
-         * 4dp is default for AICP
+         * 4dp is default for AOKP
          * @hide
          */
         public static final String VOLUME_DIALOG_STROKE_THICKNESS = "volume_dialog_stroke_thickness";
@@ -4468,7 +4468,7 @@ public final class Settings {
 
         /**
          * Volume dialog custom stroke dash gap
-         * 10 is default for AICP
+         * 10 is default for AOKP
          * @hide
          */
         public static final String VOLUME_DIALOG_STROKE_DASH_GAP = "volume_dialog_stroke_dash_gap";
@@ -4606,7 +4606,7 @@ public final class Settings {
         public static final String STATUS_BAR_AOKP_LOGO_COLOR = "status_bar_logo_color";
 
         /**
-         * Position of Status bar AICP logo
+         * Position of Status bar AOKP logo
          * 0 - Left (default)
          * 1 - Right
          * @hide
@@ -4614,10 +4614,16 @@ public final class Settings {
         public static final String STATUS_BAR_AOKP_LOGO_POSITION = "status_bar_logo_position";
 
         /**
-         * Statusbar AICP logo custom style
+         * Statusbar AOKP logo custom style
          * @hide
          */
         public static final String STATUS_BAR_AOKP_LOGO_STYLE = "status_bar_logo_style";
+
+        /**
+        * Whether to show Qs panel footer warnings like for active VPN
+        * @hide
+        */
+        public static final String QS_FOOTER_WARNINGS = "qs_footer_warnings";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings
