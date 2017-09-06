@@ -4620,6 +4620,17 @@ public final class Settings {
         public static final String STATUS_BAR_AOKP_LOGO_STYLE = "status_bar_logo_style";
 
         /**
+        * Whether to show Qs panel footer warnings like for active VPN
+        * @hide
+        */
+        public static final String QS_FOOTER_WARNINGS = "qs_footer_warnings";
+
+        /**
+         * --- AICP System settings end
+         *  Add new system settings above this comment
+         */
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
