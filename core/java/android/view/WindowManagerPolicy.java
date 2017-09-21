@@ -68,6 +68,7 @@ import android.annotation.Nullable;
 import android.annotation.SystemApi;
 import android.app.ActivityManager.StackId;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.CompatibilityInfo;
 import android.content.res.Configuration;
@@ -1594,9 +1595,9 @@ public interface WindowManagerPolicy {
     public boolean hasNavigationBar();
 
     /**
-     * Specifies whether the device needs a navigation bar (because it has no hardware buttons)
+     * Send some ActionHandler commands to WindowManager.
      */
-    public boolean needsNavigationBar();
+    public void sendCustomAction(Intent intent);
 
     /**
      * Lock the device now.
