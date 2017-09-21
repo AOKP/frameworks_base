@@ -6328,9 +6328,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             if (uri.equals(Settings.Secure.getUriFor(
                         Settings.Secure.QS_ROWS_PORTRAIT))
                     || uri.equals(Settings.Secure.getUriFor(
-                        Settings.Secure.QS_ROWS_LANDSCAPE))
-                    || uri.equals(Settings.System.getUriFor(
-                        Settings.System.QS_TILE_TITLE_VISIBILITY))) {
+                        Settings.Secure.QS_ROWS_LANDSCAPE))) {
                     updateResources();
             } else if (uri.equals(Settings.Secure.getUriFor(
                     Settings.Secure.QS_COLUMNS))) {
@@ -6364,6 +6362,8 @@ public class StatusBar extends SystemUI implements DemoMode,
                 }
             } else if (uri.equals(Settings.System.getUriFor(
                     Settings.System.QS_FOOTER_WARNINGS))) {
+                updateQsPanelResources();
+            } else if (uri.equals(Settings.System.getUriFor(Settings.System.QS_TILE_TITLE_VISIBILITY))) {
                 updateQsPanelResources();
             }
         }
