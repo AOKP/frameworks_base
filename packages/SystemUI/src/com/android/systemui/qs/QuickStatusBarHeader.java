@@ -22,6 +22,7 @@ import android.graphics.Rect;
 import android.support.annotation.VisibleForTesting;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.RelativeLayout;
 import android.widget.TextClock;
 
@@ -49,6 +50,7 @@ public class QuickStatusBarHeader extends RelativeLayout {
     protected QSTileHost mHost;
 
     private BatteryMeterView mBatteryView;
+    private HorizontalScrollView mQuickQsPanelScroller;
 
     public QuickStatusBarHeader(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -78,6 +80,9 @@ public class QuickStatusBarHeader extends RelativeLayout {
         mBatteryView.setIsQuickSbHeaderOrKeyguard(true);
 
         mActivityStarter = Dependency.get(ActivityStarter.class);
+
+        mQuickQsPanelScroller = (HorizontalScrollView) findViewById(R.id.quick_qs_panel_scroll);
+        mQuickQsPanelScroller.setHorizontalScrollBarEnabled(false);
     }
 
     public void updateBatterySettings() {
@@ -159,5 +164,13 @@ public class QuickStatusBarHeader extends RelativeLayout {
 
     public void setCallback(Callback qsPanelCallback) {
         mHeaderQsPanel.setCallback(qsPanelCallback);
+    }
+
+    public void onClosingFinished() {
+        mQuickQsPanelScroller.scrollTo(0, 0);
+    }
+
+    public void updateSettings() {
+        mHeaderQsPanel.updateSettings();
     }
 }
