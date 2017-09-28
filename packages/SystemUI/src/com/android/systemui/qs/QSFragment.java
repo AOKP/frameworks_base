@@ -21,6 +21,8 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -30,6 +32,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.HorizontalScrollView;
 
 import com.android.systemui.Interpolators;
 import com.android.systemui.R;
@@ -64,6 +67,8 @@ public class QSFragment extends Fragment implements QS {
     private int mLayoutDirection;
     private QSFooter mFooter;
 
+    private HorizontalScrollView mQuickQsPanelScroller;
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
             Bundle savedInstanceState) {
@@ -81,8 +86,10 @@ public class QSFragment extends Fragment implements QS {
         mContainer = view.findViewById(id.quick_settings_container);
 
         mQSDetail.setQsPanel(mQSPanel, mHeader, (View) mFooter);
+        mQuickQsPanelScroller =
+                (HorizontalScrollView) mHeader.findViewById(R.id.quick_qs_panel_scroll);
         mQSAnimator = new QSAnimator(this,
-                mHeader.findViewById(R.id.quick_qs_panel), mQSPanel);
+                mHeader.findViewById(R.id.quick_qs_panel), mQSPanel, mQuickQsPanelScroller);
 
         mQSCustomizer = view.findViewById(R.id.qs_customize);
         mQSCustomizer.setQs(this);
@@ -127,6 +134,10 @@ public class QSFragment extends Fragment implements QS {
 
     @Override
     public View getHeader() {
+        return mHeader;
+    }
+
+    public QuickStatusBarHeader getQuickStatusBarHeader() {
         return mHeader;
     }
 
