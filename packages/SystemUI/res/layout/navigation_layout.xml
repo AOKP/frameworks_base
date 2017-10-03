@@ -16,13 +16,33 @@
 
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:systemui="http://schemas.android.com/apk/res-auto"
+    xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginStart="@dimen/rounded_corner_content_padding"
     android:layout_marginEnd="@dimen/rounded_corner_content_padding"
     android:paddingStart="@dimen/nav_content_padding"
     android:paddingEnd="@dimen/nav_content_padding">
+
+    <RelativeLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <com.android.systemui.statusbar.policy.BatteryBarController
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            systemui:viewLocation="2"
+            android:layout_alignParentTop="true" />
+
+        <com.android.systemui.statusbar.policy.BatteryBarController
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:visibility="gone"
+            systemui:viewLocation="3"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
 
     <com.android.systemui.statusbar.phone.NearestTouchFrame
         android:id="@+id/nav_buttons"
