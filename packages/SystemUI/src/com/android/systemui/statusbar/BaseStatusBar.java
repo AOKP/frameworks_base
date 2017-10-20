@@ -2894,6 +2894,7 @@ public abstract class BaseStatusBar extends SystemUI implements
                 mHDL.postDelayed(mScreenshotTimeout, 10000);
             }
         }
+    }
 
     public boolean isCameraAllowedByAdmin() {
        if (mDevicePolicyManager.getCameraDisabled(null, mCurrentUserId)) {
