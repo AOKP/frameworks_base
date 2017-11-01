@@ -25,6 +25,7 @@ import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private ClockController mClockController;
     private boolean mIsClockBlacklisted;
 
+    private View mWeatherImageView;
+    private View mWeatherTextView;
+    private int mShowWeather;
     private final Handler mHandler = new Handler();
 
     private class UserSettingsObserver extends ContentObserver {
@@ -78,6 +82,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         }
 
         void observe() {
+            getContext().getContentResolver().registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
@@ -125,6 +132,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         mClockController = new ClockController(mStatusBar);
         mStatusBarLogo = mStatusBar.findViewById(R.id.statusbar_logo);
         mStatusBarLogoRight = mStatusBar.findViewById(R.id.statusbar_logo_right);
+        mWeatherTextView = mStatusBar.findViewById(R.id.weather_temp);
+        mWeatherImageView = mStatusBar.findViewById(R.id.weather_image);
+        updateSettings(false);
         showSystemIconArea(false);
         showClock(false);
         initEmergencyCryptkeeperText();
@@ -381,6 +391,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void updateSettings(boolean animate) {
         mStatusBarComponent.updateBatterySettings();
+        mShowWeather = Settings.System.getIntForUser(
+                getContext().getContentResolver(), Settings.System.STATUS_BAR_SHOW_WEATHER_TEMP, 0,
+                UserHandle.USER_CURRENT);
     }
 
 }
