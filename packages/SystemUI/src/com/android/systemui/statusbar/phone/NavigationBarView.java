@@ -851,10 +851,6 @@ public class NavigationBarView extends FrameLayout implements Navigator,
         pw.println();
     }
 
-    public interface OnVerticalChangedListener {
-        void onVerticalChanged(boolean isVertical);
-    }
-
     public void updateDpadKeys() {
         if (mShowDpadArrowKeys) { // overrides IME button
             final boolean showingIme = ((mNavigationIconHints
