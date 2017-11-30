@@ -5944,7 +5944,7 @@ public final class Settings {
         public static final String FLING_KEYBOARD_CURSORS = "fling_keyboard_cursors";
 
         /**
-         * Whether to enable double tap to sleep for smartbar
+         * Whether to enable double tap to sleep for navbar/smartbar
          * @hide
          */
         public static final String SMARTBAR_DOUBLETAP_SLEEP = "smartbar_doubletap_sleep";
