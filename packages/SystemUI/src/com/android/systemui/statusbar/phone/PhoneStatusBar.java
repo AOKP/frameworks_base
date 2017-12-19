@@ -344,7 +344,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
     private static final String STATUS_BAR_BRIGHTNESS_CONTROL =
             "cmsystem:" + CMSettings.System.STATUS_BAR_BRIGHTNESS_CONTROL;
     private static final String SYSTEMUI_BURNIN_PROTECTION =
-            "cmsecure:" + CMSettings.System.SYSTEMUI_BURNIN_PROTECTION;
+            "cmsystem:" + CMSettings.System.SYSTEMUI_BURNIN_PROTECTION;
 
     static {
         boolean onlyCoreApps;
@@ -1151,7 +1151,8 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
 
         TunerService.get(mContext).addTunable(this,
                 SCREEN_BRIGHTNESS_MODE,
-                STATUS_BAR_BRIGHTNESS_CONTROL);
+                STATUS_BAR_BRIGHTNESS_CONTROL,
+                SYSTEMUI_BURNIN_PROTECTION);
 
         // Lastly, call to the icon policy to install/update all the icons.
         mIconPolicy = new PhoneStatusBarPolicy(mContext, mIconController, mCastController,
