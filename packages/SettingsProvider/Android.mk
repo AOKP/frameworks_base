@@ -14,11 +14,6 @@ LOCAL_PACKAGE_NAME := SettingsProvider
 LOCAL_CERTIFICATE := platform
 LOCAL_PRIVILEGED_MODULE := true
 
-ifndef LOCAL_JACK_ENABLED
-LOCAL_PROGUARD_ENABLED := disabled
-LOCAL_DX_FLAGS := --multi-dex
-endif
-
 include $(BUILD_PACKAGE)
 
 ########################
