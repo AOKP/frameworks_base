@@ -229,6 +229,10 @@ public class QSFragment extends Fragment implements QS, CommandQueue.Callbacks {
     public QSPanel getQsPanel() {
         return mQSPanel;
     }
+    
+    public QuickStatusBarHeader getQsHeader() {
+		return mHeader;
+    }
 
     public QSCustomizer getCustomizer() {
         return mQSCustomizer;

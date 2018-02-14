@@ -241,6 +241,12 @@ public class QuickStatusBarHeader extends RelativeLayout implements
                 !Objects.equals(originalAlarmText, mNextAlarmTextView.getText());
     }
 
+    public void updateBatterySettings() {
+        if (mBatteryMeterView != null) {
+            mBatteryMeterView.updateSettings(true);
+        }
+    }
+
     private void applyDarkness(int id, Rect tintArea, float intensity, int color) {
         View v = findViewById(id);
         if (v instanceof DarkReceiver) {
