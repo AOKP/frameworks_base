@@ -119,6 +119,12 @@ public class KeyguardStatusBarView extends RelativeLayout
         mBatteryController = Dependency.get(BatteryController.class);
     }
 
+    public void updateBatterySettings() {
+        if (mBatteryView != null) {
+            mBatteryView.updateSettings(true);
+        }
+    }
+
     @Override
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
