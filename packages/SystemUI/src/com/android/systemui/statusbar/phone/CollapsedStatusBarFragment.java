@@ -21,7 +21,10 @@ import static android.app.StatusBarManager.DISABLE_SYSTEM_INFO;
 import android.annotation.Nullable;
 import android.app.Fragment;
 import android.app.StatusBarManager;
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.UserHandle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +70,23 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private ClockController mClockController;
     private boolean mIsClockBlacklisted;
 
+    private final Handler mHandler = new Handler();
+
+    private class UserSettingsObserver extends ContentObserver {
+        UserSettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings(true);
+        }
+    }
+    private UserSettingsObserver mUserSettingsObserver;
+
     private SignalCallback mSignalCallback = new SignalCallback() {
         @Override
         public void setIsAirplaneMode(NetworkController.IconState icon) {
@@ -80,9 +100,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         mKeyguardMonitor = Dependency.get(KeyguardMonitor.class);
         mNetworkController = Dependency.get(NetworkController.class);
         mStatusBarComponent = SysUiServiceProvider.getComponent(getContext(), StatusBar.class);
-
         Dependency.get(TunerService.class).addTunable(this,
                 StatusBarIconController.ICON_BLACKLIST);
+        mUserSettingsObserver = new UserSettingsObserver(mHandler);
     }
 
     @Override
@@ -109,6 +129,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         showClock(false);
         initEmergencyCryptkeeperText();
         initOperatorName();
+        mUserSettingsObserver.observe();
     }
 
     @Override
@@ -357,4 +378,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             mOperatorNameFrame = stub.inflate();
         }
     }
+
+    public void updateSettings(boolean animate) {
+        mStatusBarComponent.updateBatterySettings();
+    }
+
 }
