@@ -6305,15 +6305,12 @@ public class StatusBar extends SystemUI implements DemoMode,
         }
     }
 
-    private void updateBatterySettings() {
+    public void updateBatterySettings() {
         if (mStatusBarView != null) {
             mStatusBarView.updateBatterySettings();
         }
         if (mKeyguardStatusBar != null) {
             mKeyguardStatusBar.updateBatterySettings();
-        }
-        if (mQuickStatusBarHeader != null) {
-            mQuickStatusBarHeader.updateBatterySettings();
         }
     }
 

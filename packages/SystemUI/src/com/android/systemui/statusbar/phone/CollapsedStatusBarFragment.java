@@ -22,7 +22,10 @@ import static com.android.systemui.statusbar.phone.StatusBar.reinflateSignalClus
 import android.annotation.Nullable;
 import android.app.Fragment;
 import android.app.StatusBarManager;
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.UserHandle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,6 +64,23 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private DarkIconManager mDarkIconManager;
     private SignalClusterView mSignalClusterView;
 
+    private final Handler mHandler = new Handler();
+
+    private class UserSettingsObserver extends ContentObserver {
+        UserSettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            updateSettings(true);
+        }
+    }
+    private UserSettingsObserver mUserSettingsObserver;
+
     private SignalCallback mSignalCallback = new SignalCallback() {
         @Override
         public void setIsAirplaneMode(NetworkController.IconState icon) {
@@ -74,6 +94,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         mKeyguardMonitor = Dependency.get(KeyguardMonitor.class);
         mNetworkController = Dependency.get(NetworkController.class);
         mStatusBarComponent = SysUiServiceProvider.getComponent(getContext(), StatusBar.class);
+        mUserSettingsObserver = new UserSettingsObserver(mHandler);
     }
 
     @Override
@@ -97,6 +118,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         // Default to showing until we know otherwise.
         showSystemIconArea(false);
         initEmergencyCryptkeeperText();
+        mUserSettingsObserver.observe();
     }
 
     @Override
@@ -268,4 +290,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             parent.removeView(emergencyViewStub);
         }
     }
+
+    public void updateSettings(boolean animate) {
+        mStatusBarComponent.updateBatterySettings();
+    }
+
 }
