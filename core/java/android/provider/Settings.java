@@ -4340,6 +4340,14 @@ public final class Settings {
         public static final String QS_HEADER_BATTERY_PERCENT = "qs_header_force_battery_percent";
 
         /**
+         * Whether to show the kill app button in notification guts
+         *
+         * @hide
+         */
+        public static final String NOTIFICATION_GUTS_KILL_APP_BUTTON =
+                "notification_guts_kill_app_button";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
