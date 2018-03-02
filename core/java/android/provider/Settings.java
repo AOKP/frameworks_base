@@ -4326,6 +4326,14 @@ public final class Settings {
         public static final String TOAST_TEXT_COLOR = "toast_text_color";
 
         /**
+         * Setting to determine whether or not to force the battery percentage in qs header & keyguard.
+         *    0 - Don't show percentage
+         *    1 - Show percentage
+         * @hide
+         */
+        public static final String QS_HEADER_BATTERY_PERCENT = "qs_header_force_battery_percent";
+
+        /**
          * Settings to backup. This is here so that it's in the same place as the settings
          * keys and easy to update.
          *
