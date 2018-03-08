@@ -32,4 +32,20 @@
     <!-- Button backlight -->
     <integer name="config_buttonBrightnessSettingDefault">255</integer>
     <bool name="config_deviceHasVariableButtonBrightness">false</bool>
+    <!-- Any package that has one of the package names defined below will be prevented
+     from using specific sensors in order to stop battery drain -->
+<string-array name="config_blockPackagesSensorDrain">
+    <item>com.facebook.katana</item>
+    <item>com.facebook.orca</item>
+    <item>com.gbwhatsapp</item>
+    <item>com.Slack</item>
+    <item>com.snapchat.android</item>
+    <item>com.whatsapp</item>
+    <item>com.whatsapp.plus</item>
+    <item>com.yowhatsapp</item>
+    <item>org.telegram.messenger</item>
+    <item>org.telegram.plus</item>
+    <item>com.bsb.hike</item>
+    <item>com.gbinsta.android</item>
+</string-array>
 </resources>
