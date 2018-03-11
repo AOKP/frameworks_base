@@ -1,5 +1,5 @@
 /*
-* Copyright (C) 2013 SlimRoms Project
+* Copyright (C) 2013-2017 SlimRoms Project
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -35,9 +35,32 @@ import android.graphics.Shader.TileMode;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.VectorDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.util.TypedValue;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader.TileMode;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.VectorDrawable;
+import android.graphics.drawable.Drawable;
+
 public class ImageHelper {
+
+    private static final String TAG = "ImageHelper";
 
     public static Drawable getColoredDrawable(Drawable d, int color) {
         if (d == null) {
@@ -45,6 +68,10 @@ public class ImageHelper {
         }
         if (d instanceof VectorDrawable) {
             d.setTint(color);
+            return d;
+        }
+        if (!(d instanceof BitmapDrawable)) {
+            Log.e(TAG, "Tinting not implemented for type " + d.getClass().getSimpleName());
             return d;
         }
         Bitmap colorBitmap = ((BitmapDrawable) d).getBitmap();
@@ -61,13 +88,40 @@ public class ImageHelper {
     }
 
     public static Bitmap drawableToBitmap (Drawable drawable) {
-        if (drawable instanceof BitmapDrawable) {
+        if (drawable == null) {
+            return null;
+        } else if (drawable instanceof BitmapDrawable) {
             return ((BitmapDrawable) drawable).getBitmap();
         }
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
                 drawable.getIntrinsicHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bitmap;
+    }
+
+    public static Bitmap drawableToShortcutIconBitmap (
+            Context context, Drawable drawable, int dp) {
+        if (drawable == null) {
+            return null;
+        } else if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+
+       int size = Converter.dpToPx(context, dp);
+
+        // ensure that the drawable is not larger than target size
+        while (size < drawable.getIntrinsicHeight()
+                || size < drawable.getIntrinsicWidth()) {
+            size = size + 12;
+        }
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds((size - drawable.getIntrinsicWidth()) / 2,
+                (size - drawable.getIntrinsicHeight()) / 2,
+                (size + drawable.getIntrinsicWidth()) / 2,
+                (size + drawable.getIntrinsicHeight()) / 2);
         drawable.draw(canvas);
         return bitmap;
     }
@@ -95,7 +149,7 @@ public class ImageHelper {
         if (image == null || context == null) {
             return null;
         }
-        if (image instanceof VectorDrawable) {
+        if (!(image instanceof VectorDrawable)) {
             return image;
         } else {
             int newSize = Converter.dpToPx(context, size);
@@ -163,5 +217,4 @@ public class ImageHelper {
 
         return output;
     }
-
 }
