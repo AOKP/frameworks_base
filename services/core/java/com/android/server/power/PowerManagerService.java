@@ -875,8 +875,8 @@ public final class PowerManagerService extends SystemService
         resolver.registerContentObserver(LineageSettings.System.getUriFor(
                 LineageSettings.System.PROXIMITY_ON_WAKE),
                 false, mSettingsObserver, UserHandle.USER_ALL);
-        resolver.registerContentObserver(LineageSettings.Global.getUriFor(
-                LineageSettings.Global.DEV_FORCE_SHOW_NAVBAR),
+        resolver.registerContentObserver(Settings.Secure.getUriFor(
+                Settings.Secure.NAVIGATION_BAR_VISIBLE),
                 false, mSettingsObserver, UserHandle.USER_ALL);
         resolver.registerContentObserver(LineageSettings.Secure.getUriFor(
                 LineageSettings.Secure.BUTTON_BRIGHTNESS),
@@ -1069,8 +1069,8 @@ public final class PowerManagerService extends SystemService
         mProximityWakeEnabled = LineageSettings.System.getInt(resolver,
                 LineageSettings.System.PROXIMITY_ON_WAKE,
                 mProximityWakeEnabledByDefaultConfig ? 1 : 0) == 1;
-        mDevForceNavbar = LineageSettings.Global.getIntForUser(resolver,
-                LineageSettings.Global.DEV_FORCE_SHOW_NAVBAR, 0, UserHandle.USER_CURRENT) == 1;
+        mDevForceNavbar = Settings.Secure.getIntForUser(resolver,
+                Settings.Secure.NAVIGATION_BAR_VISIBLE, 0, UserHandle.USER_CURRENT) == 1;
         mButtonTimeout = LineageSettings.Secure.getIntForUser(resolver,
                 LineageSettings.Secure.BUTTON_BACKLIGHT_TIMEOUT,
                 DEFAULT_BUTTON_ON_DURATION, UserHandle.USER_CURRENT);

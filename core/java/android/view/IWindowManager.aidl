@@ -296,6 +296,11 @@ interface IWindowManager
     oneway void setPipVisibility(boolean visible);
 
     /**
+     * Device requires a software navigation bar.
+     */
+    boolean needsNavigationBar();
+
+    /**
      * Device has a software navigation bar (separate from the status bar).
      */
     boolean hasNavigationBar();

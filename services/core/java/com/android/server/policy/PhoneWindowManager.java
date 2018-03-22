@@ -482,6 +482,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     WindowState mStatusBar = null;
     int mStatusBarHeight;
     WindowState mNavigationBar = null;
+    boolean mHasNavigationBar = false;
     // User defined bar visibility, regardless of factory configuration
     boolean mNavbarVisible = false;
     boolean mNavigationBarCanMove = false; // can the navigation bar ever move to the side?
@@ -2516,6 +2517,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         if (mDevForceNavbar == 1) {
             activeHardwareKeys = 0;
+        } else if (mNavbarVisible) {
+            activeHardwareKeys = 0;
         }
 
         final boolean hasMenu = (activeHardwareKeys & KEY_MASK_MENU) != 0;
@@ -2640,6 +2643,18 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
         // Allow the navigation bar to move on non-square small devices (phones).
         mNavigationBarCanMove = width != height && shortSizeDp < 600;
+
+        // reflects original device state from config or build prop, regardless of user settings
+        mHasNavigationBar = DUActionUtils.hasNavbarByDefault(mContext);
+
+        // Allow a system property to override this. Used by the emulator.
+        // See also hasNavigationBar().
+        String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
+        if ("1".equals(navBarOverride)) {
+            mHasNavigationBar = false;
+        } else if ("0".equals(navBarOverride)) {
+            mHasNavigationBar = true;
+        }
 
         // For demo purposes, allow the rotation of the HDMI display to be controlled.
         // By default, HDMI locks rotation to landscape.
@@ -2829,6 +2844,9 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     UserHandle.USER_CURRENT) == 1;
             if (doShowNavbar != mNavbarVisible) {
                 mNavbarVisible = doShowNavbar;
+                if (mLineageHardware.isSupported(LineageHardwareManager.FEATURE_KEY_DISABLE)) {
+                    mLineageHardware.set(LineageHardwareManager.FEATURE_KEY_DISABLE, mNavbarVisible);
+                }
             }
             updateNavigationBarSize();
         }
@@ -6645,6 +6663,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         final boolean down = event.getAction() == KeyEvent.ACTION_DOWN;
         final boolean canceled = event.isCanceled();
         final int keyCode = event.getKeyCode();
+        final int scanCode = event.getScanCode();
 
         final boolean isInjected = (policyFlags & WindowManagerPolicy.FLAG_INJECTED) != 0;
 
@@ -9090,6 +9109,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     @Override
     public boolean hasNavigationBar() {
         return mNavbarVisible || mDevForceNavbar == 1;
+    }
+
+    @Override
+    public boolean needsNavigationBar() {
+        return mHasNavigationBar;
     }
 
     /*
