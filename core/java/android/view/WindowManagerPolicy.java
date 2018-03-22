@@ -1595,6 +1595,11 @@ public interface WindowManagerPolicy {
     public boolean hasNavigationBar();
 
     /**
+     * Device requires a software navigation bar.
+     */
+    public boolean needsNavigationBar();
+
+    /**
      * Send some ActionHandler commands to WindowManager.
      */
     public void sendCustomAction(Intent intent);

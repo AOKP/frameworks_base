@@ -6430,6 +6430,11 @@ public class WindowManagerService extends IWindowManager.Stub
     }
 
     @Override
+    public boolean needsNavigationBar() {
+        return mPolicy.needsNavigationBar();
+    }
+
+    @Override
     public void sendCustomAction(Intent intent) {
         mPolicy.sendCustomAction(intent);
     }

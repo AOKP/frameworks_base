@@ -22,6 +22,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Slog;
 import android.view.IWindowManager;
 import android.view.WindowManager;
@@ -29,6 +31,7 @@ import android.view.WindowManagerGlobal;
 import android.widget.Toast;
 
 import com.android.internal.R;
+import com.android.internal.utils.du.DUActionUtils;
 
 /**
  *  Helper to manage showing/hiding a image to notify them that they are entering
@@ -99,7 +102,9 @@ public class LockTaskNotify {
         } catch (RemoteException e) {
             // ignore
         }
-        return false;
+        return DUActionUtils.hasNavbarByDefault(mContext)
+                || Settings.Secure.getIntForUser(mContext.getContentResolver(),
+                        Settings.Secure.NAVIGATION_BAR_VISIBLE, 0, UserHandle.USER_CURRENT) == 1;
     }
 
     private final class H extends Handler {
