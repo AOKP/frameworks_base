@@ -1541,6 +1541,7 @@ public class StatusBar extends SystemUI implements DemoMode,
                                 R.dimen.signal_cluster_margin_start),
                         0, 0, 0);
                 newCluster.setLayoutParams(layoutParams);
+                newCluster.setIsKeyguard(true);
                 viewParent.addView(newCluster, index);
                 return newCluster;
             }
