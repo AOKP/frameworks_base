@@ -107,18 +107,18 @@
 
     <!-- The default tiles to display in QuickSettings -->
     <string name="quick_settings_tiles_default" translatable="false">
-        wifi,bt,dnd,flashlight,rotation,battery,cell,airplane,cast
+        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane
     </string>
 
     <!-- Tiles native to System UI. Order should match "quick_settings_tiles_default" -->
     <string name="quick_settings_tiles_stock" translatable="false">
-        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,nfc,location,hotspot,inversion,saver,work,cast,night,adb_network,ambient_display,caffeine,heads_up,livedisplay,sync,usb_tether,volume_panel
+        wifi,cell,battery,dnd,flashlight,rotation,bt,airplane,nfc,location,hotspot,inversion,saver,work,
+                cast,night,adb_network,ambient_display,caffeine,heads_up,livedisplay,sync,usb_tether,volume_panel
     </string>
 
-    <!-- The default tiles to display in QuickSettings -->
+    <!-- AOKP - Extra tiles to display in QuickSettings -->
     <string name="quick_settings_tiles_extra" translatable="false">
-        hotspot,inversion,saver,work,cast,screenshot,expanded_desktop,reboot,power_menu,sleepscreen,romcontrol,
-            app_picker,navigation_bar
+        screenshot,expanded_desktop,reboot,power_menu,sleepscreen,romcontrol,app_picker,navigation_bar
     </string>
 
     <!-- The tiles to display in QuickSettings -->
