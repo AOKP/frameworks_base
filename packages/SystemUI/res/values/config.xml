@@ -128,7 +128,7 @@
 
     <!-- The default tiles to display in QuickSettings -->
     <string name="quick_settings_tiles_extra" translatable="false">
-        hotspot,inversion,saver,work,cast,screenshot,sleepscreen,pie,reboot,romcontrol,expanded_desktop,compass,weather
+        hotspot,inversion,saver,work,cast,screenshot,sleepscreen,pie,reboot,romcontrol,expanded_desktop,compass,weather,aod
     </string>
 
     <!-- The tiles to display in QuickSettings -->
