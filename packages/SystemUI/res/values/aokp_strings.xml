@@ -31,5 +31,8 @@
     
     <!-- Sleep Screen QS Tile -->
     <string name="quick_settings_sleepscreen_label">Sleep Screen</string>
+    
+    <!-- AOD QS tile -->
+    <string name="quick_settings_aod_label">AOD</string>
 
 </resources>
