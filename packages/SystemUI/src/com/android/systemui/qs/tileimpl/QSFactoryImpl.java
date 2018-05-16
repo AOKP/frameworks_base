@@ -46,6 +46,7 @@ import com.android.systemui.qs.tiles.NavigationBarTile;
 import com.android.systemui.qs.tiles.NfcTile;
 import com.android.systemui.qs.tiles.NightDisplayTile;
 import com.android.systemui.qs.tiles.PowerMenuTile;
+import com.android.systemui.qs.tiles.ReadingModeTile;
 import com.android.systemui.qs.tiles.RebootTile;
 import com.android.systemui.qs.tiles.ROMControlTile;
 import com.android.systemui.qs.tiles.RotationLockTile;
@@ -93,6 +94,7 @@ public class QSFactoryImpl implements QSFactory {
         else if (tileSpec.equals("caffeine")) return new CaffeineTile(mHost);
         else if (tileSpec.equals("heads_up")) return new HeadsUpTile(mHost);
         else if (tileSpec.equals("livedisplay")) return new LiveDisplayTile(mHost);
+        else if (tileSpec.equals("reading_mode")) return new ReadingModeTile(mHost);
         else if (tileSpec.equals("sync")) return new SyncTile(mHost);
         else if (tileSpec.equals("usb_tether")) return new UsbTetherTile(mHost);
         else if (tileSpec.equals("volume_panel")) return new VolumeTile(mHost);
