@@ -57,6 +57,7 @@ public class MiniThumbFile {
     private RandomAccessFile mMiniThumbFile;
     private FileChannel mChannel;
     private ByteBuffer mBuffer;
+    private ByteBuffer mEmptyBuffer;
     private static final Hashtable<String, MiniThumbFile> sThumbFiles =
         new Hashtable<String, MiniThumbFile>();
 
@@ -184,11 +185,10 @@ public class MiniThumbFile {
         return mMiniThumbFile;
     }
 
-
-
-    public MiniThumbFile(Uri uri) {
+    private MiniThumbFile(Uri uri) {
         mUri = uri;
         mBuffer = ByteBuffer.allocateDirect(BYTES_PER_MINTHUMB);
+        mEmptyBuffer = ByteBuffer.allocateDirect(BYTES_PER_MINTHUMB);
     }
 
     public synchronized void deactivate() {
@@ -290,34 +290,34 @@ public class MiniThumbFile {
         return 0;
     }
 
-    // Get the magic number for the specified id in the mini-thumb file.
-    // Returns 0 if the magic is not available.
-    public synchronized long getMagic(long id) {
-        // check the mini thumb file for the right data.  Right is
-        // defined as having the right magic number at the offset
-        // reserved for this "id".
+    public synchronized void eraseMiniThumb(long id) {
         RandomAccessFile r = miniThumbDataFile();
-
         if (r != null) {
-
-            long pos = getIndex(id, false);
-            if(pos < 0) return 0;
-
-            pos *= BYTES_PER_MINTHUMB;
-
+            long pos = id * BYTES_PER_MINTHUMB;
             FileLock lock = null;
             try {
                 mBuffer.clear();
                 mBuffer.limit(1 + 8);
 
-                lock = mChannel.lock(pos, 1 + 8, true);
+                lock = mChannel.lock(pos, BYTES_PER_MINTHUMB, false);
                 // check that we can read the following 9 bytes
                 // (1 for the "status" and 8 for the long)
                 if (mChannel.read(mBuffer, pos) == 9) {
                     mBuffer.position(0);
                     if (mBuffer.get() == 1) {
-                        return mBuffer.getLong();
+                        long currentMagic = mBuffer.getLong();
+                        if (currentMagic == 0) {
+                            // there is no thumbnail stored here
+                            Log.i(TAG, "no thumbnail for id " + id);
+                            return;
+                        }
+                        // zero out the thumbnail slot
+                        // Log.v(TAG, "clearing slot " + id + ", magic " + currentMagic
+                        //         + " at offset " + pos);
+                        mChannel.write(mEmptyBuffer, pos);
                     }
+                } else {
+                    // Log.v(TAG, "No slot");
                 }
             } catch (IOException ex) {
                 Log.v(TAG, "Got exception checking file magic: ", ex);
@@ -333,8 +333,9 @@ public class MiniThumbFile {
                     // ignore it.
                 }
             }
+        } else {
+            // Log.v(TAG, "No data file");
         }
-        return 0;
     }
 
     public synchronized void saveMiniThumbToFile(byte[] data, long id, long magic)
