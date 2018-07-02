@@ -23,6 +23,7 @@
     <!-- QS tiles and label colors -->
     <color name="qs_tiles_active_tint">@*android:color/primary_text_default_material_dark</color>
     <color name="qs_tiles_inactive_tint">@*android:color/hint_foreground_material_dark</color>
+    <color name="qs_tiles_unavailable_tint">@*android:color/foreground_material_dark</color>
     <color name="qs_tiles_underline_color">@*android:color/foreground_material_dark</color>
 
 </resources>
