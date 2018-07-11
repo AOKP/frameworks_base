@@ -104,6 +104,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/newwavelabs/Voila.ogg:system/media/audio/notifications/Voila.ogg \
     $(LOCAL_PATH)/notifications/ogg/Xenon.ogg:system/media/audio/notifications/Xenon.ogg \
     $(LOCAL_PATH)/notifications/ogg/Zirconium.ogg:system/media/audio/notifications/Zirconium.ogg \
+    $(LOCAL_PATH)/notifications/arcturus.ogg:system/media/audio/notifications/arcturus.ogg \
     $(LOCAL_PATH)/notifications/moonbeam.ogg:system/media/audio/notifications/moonbeam.ogg \
     $(LOCAL_PATH)/notifications/pixiedust.ogg:system/media/audio/notifications/pixiedust.ogg \
     $(LOCAL_PATH)/notifications/pizzicato.ogg:system/media/audio/notifications/pizzicato.ogg \
@@ -246,5 +247,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/notifications/material/ogg/Tethys.ogg:system/media/audio/notifications/Tethys.ogg \
     $(LOCAL_PATH)/notifications/material/ogg/Titan.ogg:system/media/audio/notifications/Titan.ogg \
     $(LOCAL_PATH)/effects/ogg/InCallNotification.ogg:system/media/audio/ui/InCallNotification.ogg \
-
-    
+    $(LOCAL_PATH)/effects/ogg/NFCFailure.ogg:system/media/audio/ui/NFCFailure.ogg \
+    $(LOCAL_PATH)/effects/ogg/NFCInitiated.ogg:system/media/audio/ui/NFCInitiated.ogg \
+    $(LOCAL_PATH)/effects/ogg/NFCSuccess.ogg:system/media/audio/ui/NFCSuccess.ogg \
+    $(LOCAL_PATH)/effects/ogg/NFCTransferComplete.ogg:system/media/audio/ui/NFCTransferComplete.ogg \
+    $(LOCAL_PATH)/effects/ogg/NFCTransferInitiated.ogg:system/media/audio/ui/NFCTransferInitiated.ogg \
