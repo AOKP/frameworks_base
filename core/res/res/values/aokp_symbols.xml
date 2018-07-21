@@ -135,6 +135,10 @@
   <java-symbol type="string" name="systemui_restart_message" />
   
   <!-- Screen off delay -->
-  <java-symbol type="integer" name="config_screen_off_delay" />  
+  <java-symbol type="integer" name="config_screen_off_delay" /> 
+  
+  <!-- Bottom gestures -->
+  <java-symbol type="dimen" name="nav_gesture_swipe_min_length" />
+  <java-symbol type="dimen" name="nav_gesture_long_press_max_length" /> 
 
 </resources>
