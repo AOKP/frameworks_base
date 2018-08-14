@@ -46,6 +46,7 @@ import android.widget.Toast;
 
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.nano.MetricsProto.MetricsEvent;
+import com.android.internal.util.aokp.OmniSwitchConstants;
 import com.android.systemui.Dependency;
 import com.android.systemui.EventLogConstants;
 import com.android.systemui.EventLogTags;
@@ -259,6 +260,11 @@ public class Recents extends SystemUI
             return;
         }
 
+        if (isOmniSwitchRecents()) {
+            OmniSwitchConstants.toggleOmniSwitchRecents(mContext, UserHandle.CURRENT);
+            return;
+        }
+
         IOverviewProxy overviewProxy = mOverviewProxyService.getProxy();
         if (overviewProxy != null) {
             try {
@@ -304,6 +310,11 @@ public class Recents extends SystemUI
             return;
         }
 
+        if (isOmniSwitchRecents()) {
+            OmniSwitchConstants.hideOmniSwitchRecents(mContext, UserHandle.CURRENT);
+            return;
+        }
+
         IOverviewProxy overviewProxy = mOverviewProxyService.getProxy();
         if (overviewProxy != null) {
             try {
@@ -342,6 +353,11 @@ public class Recents extends SystemUI
         // Ensure the device has been provisioned before allowing the user to interact with
         // recents
         if (!isUserSetup()) {
+            return;
+        }
+
+        if (isOmniSwitchRecents()) {
+            OmniSwitchConstants.toggleOmniSwitchRecents(mContext, UserHandle.CURRENT);
             return;
         }
 
@@ -404,6 +420,11 @@ public class Recents extends SystemUI
             return;
         }
 
+        if (isOmniSwitchRecents()) {
+            OmniSwitchConstants.preloadOmniSwitchRecents(mContext, UserHandle.CURRENT);
+            return;
+        }
+
         if (mOverviewProxyService.getProxy() != null) {
             // TODO: Proxy to Launcher
             return;
@@ -434,6 +455,10 @@ public class Recents extends SystemUI
         // Ensure the device has been provisioned before allowing the user to interact with
         // recents
         if (!isUserSetup()) {
+            return;
+        }
+
+        if (isOmniSwitchRecents()) {
             return;
         }
 
@@ -890,5 +915,11 @@ public class Recents extends SystemUI
     public void dump(FileDescriptor fd, PrintWriter pw, String[] args) {
         pw.println("Recents");
         pw.println("  currentUserId=" + SystemServicesProxy.getInstance(mContext).getCurrentUser());
+    }
+
+    private boolean isOmniSwitchRecents() {
+        return Settings.System.getIntForUser(mContext.getContentResolver(),
+                    Settings.System.OMNI_NAVIGATION_BAR_RECENTS, 0,
+                    UserHandle.USER_CURRENT) == 1;
     }
 }
