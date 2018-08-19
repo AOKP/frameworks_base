@@ -766,7 +766,6 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
     private boolean mListAnimationModeSet = false;
     private int mWidth, mHeight = 0;
     private int mPositionV;
-    private boolean mIsTap = false;
 
     /**
      * Interface definition for a callback to be invoked when the list or grid
@@ -3933,12 +3932,6 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
         return false;
     }
 
-    private final Handler mInverse = new Handler() {
-        public void handleMessage(Message msg) {
-            mIsTap = !mIsTap;
-        }
-    };
-
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (!isEnabled()) {
@@ -4039,10 +4032,8 @@ public abstract class AbsListView extends AdapterView<ListAdapter> implements Te
     }
 
     private void onTouchDown(MotionEvent ev) {
-        mIsTap = true;
         mHasPerformedLongPress = false;
         mActivePointerId = ev.getPointerId(0);
-        mInverse.sendEmptyMessageDelayed(0, 100);
         if (mTouchMode == TOUCH_MODE_OVERFLING) {
             // Stopped the fling. It is a scroll.
             mFlingRunnable.endFling();
