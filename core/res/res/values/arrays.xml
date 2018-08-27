@@ -166,6 +166,7 @@
     </string-array>
 
     <array name="sim_colors">
+        <item>@color/accent_device_default_light</item>
         <item>@color/Teal_700</item>
         <item>@color/Blue_700</item>
         <item>@color/Indigo_700</item>
