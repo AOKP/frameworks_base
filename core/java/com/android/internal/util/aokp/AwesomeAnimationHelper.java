@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.crdroid;
+package com.android.internal.util.aokp;
 
 import android.content.Context;
 import android.content.res.Resources;
