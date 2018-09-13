@@ -46,7 +46,7 @@ public class AppBackupUtils {
      */
     public static boolean appIsEligibleForBackup(ApplicationInfo app) {
         // 1. their manifest states android:allowBackup="false"
-        if ((app.flags & ApplicationInfo.FLAG_ALLOW_BACKUP) == 0) {
+        if (!app.allowBackup()) {
             return false;
         }
 
