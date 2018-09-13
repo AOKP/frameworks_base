@@ -786,10 +786,13 @@ public class BackupManagerService implements BackupManagerServiceInterface {
 
     // High level policy: apps are generally ineligible for backup if certain conditions apply
     public static boolean appIsEligibleForBackup(ApplicationInfo app, PackageManager pm) {
+        Slog.i(TAG, "appIsEligibleForBackup: enter");
         // 1. their manifest states android:allowBackup="false"
-        if ((app.flags&ApplicationInfo.FLAG_ALLOW_BACKUP) == 0) {
-            return false;
+        if (!app.allowBackup()) {
+            Slog.i(TAG, "... allowBackup false");
+            return true; //false;
         }
+        Slog.i(TAG, "... allowBackup true");
 
         // 2. they run as a system-level uid but do not supply their own backup agent
         if ((app.uid < Process.FIRST_APPLICATION_UID) && (app.backupAgentName == null)) {
@@ -2173,7 +2176,7 @@ public class BackupManagerService implements BackupManagerServiceInterface {
             PackageInfo pkg = packages.get(a);
             try {
                 ApplicationInfo app = pkg.applicationInfo;
-                if (((app.flags&ApplicationInfo.FLAG_ALLOW_BACKUP) == 0)
+                if (!app.allowBackup()
                         || app.backupAgentName == null
                         || (app.flags&ApplicationInfo.FLAG_FULL_BACKUP_ONLY) != 0) {
                     packages.remove(a);
@@ -6303,7 +6306,7 @@ public class BackupManagerService implements BackupManagerServiceInterface {
                         try {
                             PackageInfo pkg = mPackageManager.getPackageInfo(info.packageName,
                                     PackageManager.GET_SIGNATURES);
-                            if ((pkg.applicationInfo.flags & ApplicationInfo.FLAG_ALLOW_BACKUP) == 0) {
+                            if (!pkg.applicationInfo.allowBackup()) {
                                 Slog.w(TAG, "Restore stream contains apk of package "
                                         + info.packageName + " but it disallows backup/restore");
                                 okay = false;
@@ -6506,7 +6509,7 @@ public class BackupManagerService implements BackupManagerServiceInterface {
                                         info.packageName, PackageManager.GET_SIGNATURES);
                                 // Fall through to IGNORE if the app explicitly disallows backup
                                 final int flags = pkgInfo.applicationInfo.flags;
-                                if ((flags & ApplicationInfo.FLAG_ALLOW_BACKUP) != 0) {
+                                if (pkgInfo.applicationInfo.allowBackup()) {
                                     // Restore system-uid-space packages only if they have
                                     // defined a custom backup agent
                                     if ((pkgInfo.applicationInfo.uid >= Process.FIRST_APPLICATION_UID)
@@ -7856,7 +7859,7 @@ if (MORE_DEBUG) Slog.v(TAG, "   + got " + nRead + "; now wanting " + (size - soF
                         try {
                             PackageInfo pkg = mPackageManager.getPackageInfo(info.packageName,
                                     PackageManager.GET_SIGNATURES);
-                            if ((pkg.applicationInfo.flags & ApplicationInfo.FLAG_ALLOW_BACKUP) == 0) {
+                            if (!pkg.applicationInfo.allowBackup()) {
                                 Slog.w(TAG, "Restore stream contains apk of package "
                                         + info.packageName + " but it disallows backup/restore");
                                 okay = false;
@@ -8032,7 +8035,7 @@ if (MORE_DEBUG) Slog.v(TAG, "   + got " + nRead + "; now wanting " + (size - soF
                                         info.packageName, PackageManager.GET_SIGNATURES);
                                 // Fall through to IGNORE if the app explicitly disallows backup
                                 final int flags = pkgInfo.applicationInfo.flags;
-                                if ((flags & ApplicationInfo.FLAG_ALLOW_BACKUP) != 0) {
+                                if (pkgInfo.applicationInfo.allowBackup()) {
                                     // Restore system-uid-space packages only if they have
                                     // defined a custom backup agent
                                     if ((pkgInfo.applicationInfo.uid >= Process.FIRST_APPLICATION_UID)

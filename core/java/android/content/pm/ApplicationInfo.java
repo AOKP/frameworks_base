@@ -28,6 +28,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.os.storage.StorageManager;
 import android.text.TextUtils;
@@ -1170,6 +1171,15 @@ public class ApplicationInfo extends PackageItemInfo implements Parcelable {
 
         private final Collator   sCollator = Collator.getInstance();
         private PackageManager   mPM;
+    }
+
+    public static final String PROPERTY_FORCE_ALLOW_BACKUP = "persist.sys.force_allow_backup";
+
+    /** {@hide} */
+    public boolean allowBackup() {
+        boolean allowBackup = (flags & FLAG_ALLOW_BACKUP) != 0;
+        boolean forceAllowBackup = SystemProperties.getBoolean(PROPERTY_FORCE_ALLOW_BACKUP, false);
+        return (allowBackup || forceAllowBackup);
     }
 
     public ApplicationInfo() {
