@@ -16030,9 +16030,7 @@ public class PackageManagerService extends IPackageManager.Stub
                 // package has not opted out of backup participation.
                 final boolean update = res.removedInfo != null
                         && res.removedInfo.removedPackage != null;
-                final int flags = (res.pkg == null) ? 0 : res.pkg.applicationInfo.flags;
-                boolean doRestore = !update
-                        && ((flags & ApplicationInfo.FLAG_ALLOW_BACKUP) != 0);
+                boolean doRestore = !update && (res.pkg != null && res.pkg.applicationInfo.allowBackup());
 
                 // Set up the post-install work request bookkeeping.  This will be used
                 // and cleaned up by the post-install event handling regardless of whether

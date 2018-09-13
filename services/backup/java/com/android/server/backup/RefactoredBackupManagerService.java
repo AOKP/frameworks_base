@@ -1390,7 +1390,7 @@ public class RefactoredBackupManagerService implements BackupManagerServiceInter
             PackageInfo pkg = packages.get(a);
             try {
                 ApplicationInfo app = pkg.applicationInfo;
-                if (((app.flags & ApplicationInfo.FLAG_ALLOW_BACKUP) == 0)
+                if (!app.allowBackup()
                         || app.backupAgentName == null
                         || (app.flags & ApplicationInfo.FLAG_FULL_BACKUP_ONLY) != 0) {
                     packages.remove(a);

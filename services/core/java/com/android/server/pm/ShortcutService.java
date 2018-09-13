@@ -3363,11 +3363,12 @@ public class ShortcutService extends IShortcutService.Stub {
     // === Backup & restore ===
 
     boolean shouldBackupApp(String packageName, int userId) {
-        return isApplicationFlagSet(packageName, userId, ApplicationInfo.FLAG_ALLOW_BACKUP);
+        final ApplicationInfo ai = injectApplicationInfoWithUninstalled(packageName, userId);
+        return ai.allowBackup();
     }
 
     boolean shouldBackupApp(PackageInfo pi) {
-        return (pi.applicationInfo.flags & ApplicationInfo.FLAG_ALLOW_BACKUP) != 0;
+        return pi.applicationInfo.allowBackup();
     }
 
     @Override
