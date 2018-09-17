@@ -5833,6 +5833,17 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             case LOCKSCREEN_MEDIA_METADATA:
                 mShowMediaMetadata = newValue == null || Integer.parseInt(newValue) != 0;
                 break;
+            case FORCE_SHOW_NAVBAR:
+                if (mWindowManagerService == null) break;
+                boolean forcedVisibility =
+                        newValue != null && Integer.parseInt(newValue) == 1;
+				if (forcedVisibility && mNavigationBarView == null) {
+					createNavigationBar();
+				} else if (mNavigationBarView != null) {
+					mWindowManager.removeViewImmediate(mNavigationBarView);
+					mNavigationBarView = null;
+				}
+                break;
             case QS_TILE_TITLE_VISIBILITY:
             case QS_ROWS_PORTRAIT:
             case QS_ROWS_LANDSCAPE:
