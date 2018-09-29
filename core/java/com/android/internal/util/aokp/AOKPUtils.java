@@ -40,6 +40,7 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.os.UserHandle;
 import android.os.SystemClock;
+import android.os.SystemProperties; 
 import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyCharacterMap;
@@ -234,6 +235,18 @@ public class AOKPUtils {
             // Ignore
         }
         return false;
+    }
+    
+    public static boolean hasNavbarByDefault(Context context) {
+        boolean needsNav = context.getResources().getBoolean(
+                com.android.internal.R.bool.config_showNavigationBar);
+        String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
+        if ("1".equals(navBarOverride)) {
+            needsNav = false;
+        } else if ("0".equals(navBarOverride)) {
+            needsNav = true;
+        }
+        return needsNav;
     }
 
     // Omni Switch Constants
