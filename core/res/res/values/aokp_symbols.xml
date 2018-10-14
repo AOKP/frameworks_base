@@ -132,6 +132,9 @@
   
   <!-- SystemUI Restart -->
   <java-symbol type="string" name="systemui_restart_title" />
-  <java-symbol type="string" name="systemui_restart_message" />  
+  <java-symbol type="string" name="systemui_restart_message" />
+  
+  <!-- Screen off delay -->
+  <java-symbol type="integer" name="config_screen_off_delay" />  
 
 </resources>
