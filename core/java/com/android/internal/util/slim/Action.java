@@ -234,7 +234,7 @@ public class Action {
             return;
         }
         try {
-            WindowManagerGlobal.getWindowManagerService().dismissKeyguard(null);
+            WindowManagerGlobal.getWindowManagerService().dismissKeyguard(null, null);
         } catch (RemoteException e) {
             Log.w("Action", "Error dismissing keyguard", e);
         }
