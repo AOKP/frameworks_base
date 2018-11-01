@@ -106,4 +106,9 @@ interface IStatusBarService
     
     void toggleRecentApps();
     void toggleOrientationListener(boolean enable);
+
+    /**
+     * AOKP
+     */
+    void leftInLandscapeChanged(boolean isLeft);
 }
