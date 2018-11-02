@@ -256,7 +256,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void hideNotificationIconArea(boolean animate) {
-        animateHiddenState(mNotificationIconAreaInner, animate, true);
+        animateHiddenState(mNotificationIconAreaInner, animate, false);
         animateHiddenState(mClockController.getClockLayout(), animate, true);
         animateHiddenState(mStatusBarLogo, animate, true);
         animateHiddenState(mStatusBarLogoRight, animate, true);
