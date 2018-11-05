@@ -3964,6 +3964,12 @@ public final class Settings {
          * @hide
          */
         public static final String LOCKSCREEN_SOUNDS_ENABLED = "lockscreen_sounds_enabled";
+        
+        /**
+ 	* Whether to use partial screenshot when using volume keys
+ 	* @hide
+ 	*/
+        public static final String SCREENSHOT_TYPE = "screenshot_type";
 
         /** @hide */
         public static final Validator LOCKSCREEN_SOUNDS_ENABLED_VALIDATOR = BOOLEAN_VALIDATOR;
