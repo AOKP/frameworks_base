@@ -35,6 +35,10 @@ import static android.app.NotificationManager.Policy.SUPPRESSED_EFFECT_PEEK;
 import static android.app.NotificationManager.Policy.SUPPRESSED_EFFECT_SCREEN_OFF;
 import static android.app.NotificationManager.Policy.SUPPRESSED_EFFECT_SCREEN_ON;
 import static android.app.NotificationManager.Policy.SUPPRESSED_EFFECT_STATUS_BAR;
+import static android.content.Context.BIND_ADJUST_BELOW_PERCEPTIBLE;
+import static android.content.Context.BIND_ALLOW_WHITELIST_MANAGEMENT;
+import static android.content.Context.BIND_AUTO_CREATE;
+import static android.content.Context.BIND_FOREGROUND_SERVICE;
 import static android.content.pm.PackageManager.FEATURE_LEANBACK;
 import static android.content.pm.PackageManager.FEATURE_TELEVISION;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -335,6 +339,8 @@ public class NotificationManagerService extends SystemService {
 
     private long[] mFallbackVibrationPattern;
     private boolean mUseAttentionLight;
+    boolean mHasLight = true;
+    boolean mLightEnabled;
     boolean mSystemReady;
 
     private boolean mDisableNotificationEffects;
@@ -349,9 +355,9 @@ public class NotificationManagerService extends SystemService {
     private int mInterruptionFilter = NotificationListenerService.INTERRUPTION_FILTER_UNKNOWN;
 
     // for enabling and disabling notification pulse behavior
-    private boolean mScreenOn = true;
+    boolean mScreenOn = true;
     protected boolean mInCall = false;
-    private boolean mNotificationPulseEnabled;
+    boolean mNotificationPulseEnabled;
 
     private Uri mInCallNotificationUri;
     private AudioAttributes mInCallNotificationAudioAttributes;
@@ -1220,7 +1226,8 @@ public class NotificationManagerService extends SystemService {
             ContentResolver resolver = getContext().getContentResolver();
             if (uri == null || NOTIFICATION_LIGHT_PULSE_URI.equals(uri)) {
                 boolean pulseEnabled = Settings.System.getIntForUser(resolver,
-                            Settings.System.NOTIFICATION_LIGHT_PULSE, 0, UserHandle.USER_CURRENT) != 0;
+                            Settings.System.NOTIFICATION_LIGHT_PULSE, 0, UserHandle.USER_CURRENT)
+                        != 0;
                 if (mNotificationPulseEnabled != pulseEnabled) {
                     mNotificationPulseEnabled = pulseEnabled;
                     updateNotificationPulse();
@@ -1489,6 +1496,8 @@ public class NotificationManagerService extends SystemService {
         mInCallNotificationVolume = resources.getFloat(R.dimen.config_inCallNotificationVolume);
 
         mUseAttentionLight = resources.getBoolean(R.bool.config_useAttentionLight);
+        mHasLight =
+                resources.getBoolean(com.android.internal.R.bool.config_intrusiveNotificationLed);
 
         // Don't start allowing notifications until the setup wizard has run once.
         // After that, including subsequent boots, init with notifications turned on.
@@ -2151,6 +2160,10 @@ public class NotificationManagerService extends SystemService {
             enforceSystemOrSystemUI("setNotificationsEnabledForPackage");
 
             mRankingHelper.setEnabled(pkg, uid, enabled);
+            mMetricsLogger.write(new LogMaker(MetricsEvent.ACTION_BAN_APP_NOTES)
+                    .setType(MetricsEvent.TYPE_ACTION)
+                    .setPackageName(pkg)
+                    .setSubtype(enabled ? 1 : 0));
             // Now, cancel any outstanding notifications that are part of a just-disabled app
             if (!enabled) {
                 cancelAllNotificationsInt(MY_UID, MY_PID, pkg, null, 0, 0, true,
@@ -3862,6 +3875,7 @@ public class NotificationManagerService extends SystemService {
                         pw.println("  ");
                     }
                     pw.println("  mUseAttentionLight=" + mUseAttentionLight);
+                    pw.println("  mHasLight=" + mHasLight);
                     pw.println("  mNotificationPulseEnabled=" + mNotificationPulseEnabled);
                     pw.println("  mSoundNotificationKey=" + mSoundNotificationKey);
                     pw.println("  mVibrateNotificationKey=" + mVibrateNotificationKey);
@@ -4559,6 +4573,15 @@ public class NotificationManagerService extends SystemService {
     @GuardedBy("mNotificationLock")
     @VisibleForTesting
     protected boolean isVisuallyInterruptive(NotificationRecord old, NotificationRecord r) {
+        // Ignore summary updates because we don't display most of the information.
+        if (r.sbn.isGroup() && r.sbn.getNotification().isGroupSummary()) {
+            if (DEBUG_INTERRUPTIVENESS) {
+                Log.v(TAG, "INTERRUPTIVENESS: "
+                        +  r.getKey() + " is not interruptive: summary");
+            }
+            return false;
+        }
+
         if (old == null) {
             if (DEBUG_INTERRUPTIVENESS) {
                 Log.v(TAG, "INTERRUPTIVENESS: "
@@ -4592,15 +4615,6 @@ public class NotificationManagerService extends SystemService {
             if (DEBUG_INTERRUPTIVENESS) {
                 Log.v(TAG, "INTERRUPTIVENESS: "
                         +  r.getKey() + " is not interruptive: foreground service");
-            }
-            return false;
-        }
-
-        // Ignore summary updates because we don't display most of the information.
-        if (r.sbn.isGroup() && r.sbn.getNotification().isGroupSummary()) {
-            if (DEBUG_INTERRUPTIVENESS) {
-                Log.v(TAG, "INTERRUPTIVENESS: "
-                        +  r.getKey() + " is not interruptive: summary");
             }
             return false;
         }
@@ -4880,8 +4894,7 @@ public class NotificationManagerService extends SystemService {
         // light
         // release the light
         boolean wasShowLights = mLights.remove(key);
-        if (record.getLight() != null
-                && (aboveThreshold || isLedForcedOn(record))) {
+        if (canShowLightsLocked(record, aboveThreshold)) {
             mLights.add(key);
             updateLightsLocked();
             if (mUseAttentionLight) {
@@ -4892,7 +4905,19 @@ public class NotificationManagerService extends SystemService {
             updateLightsLocked();
         }
         if (buzz || beep || blink) {
-            record.setInterruptive(true);
+            // Ignore summary updates because we don't display most of the information.
+            if (record.sbn.isGroup() && record.sbn.getNotification().isGroupSummary()) {
+                if (DEBUG_INTERRUPTIVENESS) {
+                    Log.v(TAG, "INTERRUPTIVENESS: "
+                            + record.getKey() + " is not interruptive: summary");
+                }
+            } else {
+                if (DEBUG_INTERRUPTIVENESS) {
+                    Log.v(TAG, "INTERRUPTIVENESS: "
+                            + record.getKey() + " is interruptive: alerted");
+                }
+                record.setInterruptive(true);
+            }
             MetricsLogger.action(record.getLogMaker()
                     .setCategory(MetricsEvent.NOTIFICATION_ALERT)
                     .setType(MetricsEvent.TYPE_OPEN)
@@ -4902,11 +4927,47 @@ public class NotificationManagerService extends SystemService {
     }
 
     @GuardedBy("mNotificationLock")
+    boolean canShowLightsLocked(final NotificationRecord record, boolean aboveThreshold) {
+        // device lacks light
+        if (!mHasLight) {
+            return false;
+        }
+        // Forced on
+        // Used by LineageParts light picker
+        // eg to allow selecting battery light color when notification led is turned off.
+        if (isLedForcedOn(record)) {
+            return true;
+        }
+        // user turned lights off globally
+        if (!mNotificationPulseEnabled) {
+            return false;
+        }
+        // the notification/channel has no light
+        if (record.getLight() == null) {
+            return false;
+        }
+        // unimportant notification
+        if (!aboveThreshold) {
+            return false;
+        }
+        // Suppressed because it's a silent update
+        final Notification notification = record.getNotification();
+        if (record.isUpdate && (notification.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0) {
+            return false;
+        }
+        // Suppressed because another notification in its group handles alerting
+        if (record.sbn.isGroup() && record.getNotification().suppressAlertingDueToGrouping()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @GuardedBy("mNotificationLock")
     boolean shouldMuteNotificationLocked(final NotificationRecord record) {
         // Suppressed because it's a silent update
         final Notification notification = record.getNotification();
-        if(record.isUpdate
-                && (notification.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0) {
+        if (record.isUpdate && (notification.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0) {
             return true;
         }
 
@@ -6530,6 +6591,16 @@ public class NotificationManagerService extends SystemService {
         public NotificationListeners(IPackageManager pm) {
             super(getContext(), mNotificationLock, mUserProfiles, pm);
 
+        }
+
+        @Override
+        protected int getBindFlags() {
+            // Most of the same flags as the base, but also add BIND_ADJUST_BELOW_PERCEPTIBLE
+            // because too many 3P apps could be kept in memory as notification listeners and
+            // cause extreme memory pressure.
+            // TODO: Change the binding lifecycle of NotificationListeners to avoid this situation.
+            return BIND_AUTO_CREATE | BIND_FOREGROUND_SERVICE
+                    | BIND_ADJUST_BELOW_PERCEPTIBLE | BIND_ALLOW_WHITELIST_MANAGEMENT;
         }
 
         @Override
