@@ -32,10 +32,6 @@
     <!-- Sleep Screen QS Tile -->
     <string name="quick_settings_sleepscreen_label">Sleep Screen</string>
     
-    <!-- AOD QS tile -->
-    <string name="quick_settings_aod_label">AOD</string>
-    
-
     <!-- App circle sidebar -->  
     <string name="app_float_maximize_item_title">Maximize</string>  
     <string name="app_float_item_title">Float view</string>  
