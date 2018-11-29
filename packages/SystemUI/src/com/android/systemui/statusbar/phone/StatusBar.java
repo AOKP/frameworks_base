@@ -1833,7 +1833,6 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         if (mScrimController != null) {
             mScrimController.setHasBackdrop(hasArtwork);
         }
-
         if (!mKeyguardFadingAway && keyguardVisible && hasArtwork && mScreenOn) {
             // if there's album art, ensure visualizer is visible
             mVisualizerView.setPlaying(mMediaManager.getMediaController() != null
@@ -1847,6 +1846,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             // always use current backdrop to color eq
             mVisualizerView.setBitmap(((BitmapDrawable)artworkDrawable).getBitmap());
         }
+
 
         if ((hasArtwork || DEBUG_MEDIA_FAKE_ARTWORK)
                 && (mState != StatusBarState.SHADE || allowWhenShade)
@@ -4201,23 +4201,7 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
         final boolean nightModeWantsDarkTheme = DARK_THEME_IN_NIGHT_MODE
                 && (config.uiMode & Configuration.UI_MODE_NIGHT_MASK)
                     == Configuration.UI_MODE_NIGHT_YES;
-        final boolean useDarkTheme;
-
-        switch (globalStyleSetting) {
-            case 1:
-                useDarkTheme = isLiveDisplayNightModeOn();
-                break;
-            case 2:
-                useDarkTheme = false;
-                break;
-            case 3:
-                useDarkTheme = true;
-                break;
-            default:
-                useDarkTheme = wallpaperWantsDarkTheme || nightModeWantsDarkTheme;
-                break;
-        }
-
+        final boolean useDarkTheme = wallpaperWantsDarkTheme || nightModeWantsDarkTheme;
         if (isUsingDarkTheme() != useDarkTheme) {
             mUiOffloadThread.submit(() -> {
                 try {
