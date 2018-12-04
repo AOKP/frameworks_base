@@ -118,6 +118,7 @@ public class KeyguardStatusView extends GridLayout implements
                 refreshTime();
                 updateOwnerInfo();
                 updateLogoutView();
+                updateSettings(false);
             }
         }
 
@@ -204,8 +205,24 @@ public class KeyguardStatusView extends GridLayout implements
         mOwnerInfo = findViewById(R.id.owner_info);
         mKeyguardSlice = findViewById(R.id.keyguard_status_area);
         mClockSeparator = findViewById(R.id.clock_separator);
-        mVisibleInDoze = Sets.newArraySet(mClockView, mKeyguardSlice);
         mTextColor = mClockView.getCurrentTextColor();
+        
+        mWeatherView = findViewById(R.id.keyguard_weather_view);
+        mWeatherCity = (TextView) findViewById(R.id.city);
+        mWeatherConditionImage = (ImageView) findViewById(R.id.weather_image);
+        mWeatherCurrentTemp = (TextView) findViewById(R.id.current_temp);
+        mWeatherConditionText = (TextView) findViewById(R.id.condition);
+        
+        mVisibleInDoze = Sets.newArraySet();
+        if (mWeatherView != null) {
+            mVisibleInDoze.add(mWeatherView);
+        }
+        if (mClockView != null) {
+            mVisibleInDoze.add(mClockView);
+        }
+        if (mKeyguardSlice != null) {
+            mVisibleInDoze.add(mKeyguardSlice);
+        }
 
         int clockStroke = getResources().getDimensionPixelSize(R.dimen.widget_small_font_stroke);
         mClockView.getPaint().setStrokeWidth(clockStroke);
@@ -213,11 +230,6 @@ public class KeyguardStatusView extends GridLayout implements
         mClockSeparator.addOnLayoutChangeListener(this);
         mKeyguardSlice.setContentChangeListener(this::onSliceContentChanged);
         onSliceContentChanged();
-        mWeatherView = findViewById(R.id.keyguard_weather_view);
-        mWeatherCity = (TextView) findViewById(R.id.city);
-        mWeatherConditionImage = (ImageView) findViewById(R.id.weather_image);
-        mWeatherCurrentTemp = (TextView) findViewById(R.id.current_temp);
-        mWeatherConditionText = (TextView) findViewById(R.id.condition);
 
         boolean shouldMarquee = KeyguardUpdateMonitor.getInstance(mContext).isDeviceInteractive();
         setEnableMarquee(shouldMarquee);
@@ -583,6 +595,9 @@ public class KeyguardStatusView extends GridLayout implements
             animate = false;
         }
         mKeyguardSlice.setPulsing(pulsing, animate);
+        if (mWeatherView != null) {
+            mWeatherView.setVisibility((mShowWeather && !mPulsing) ? View.VISIBLE : View.GONE);
+        }
         updateDozeVisibleViews();
     }
 
