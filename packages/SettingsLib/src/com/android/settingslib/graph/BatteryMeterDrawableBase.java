@@ -173,8 +173,6 @@ public class BatteryMeterDrawableBase extends Drawable {
         mPowersavePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPowersavePaint.setColor(mPlusPaint.getColor());
         mPowersavePaint.setStyle(Style.STROKE);
-        mPowersavePaint.setStrokeWidth(context.getResources()
-                .getDimensionPixelSize(R.dimen.battery_powersave_outline_thickness));
         mPathEffect = new DashPathEffect(new float[]{3,2},0);
 
         mIntrinsicWidth = context.getResources().getDimensionPixelSize(R.dimen.battery_width);
@@ -378,6 +376,9 @@ public class BatteryMeterDrawableBase extends Drawable {
         mBatteryPaint.setStrokeWidth(0);
         mBatteryPaint.setStyle(Paint.Style.FILL_AND_STROKE);
 
+        mPowersavePaint.setStrokeWidth(mContext.getResources()
+                .getDimensionPixelSize(R.dimen.battery_powersave_outline_thickness));
+
         mFrame.set(left, top, width + left, height + top);
         mFrame.offset(px, 0);
 
@@ -578,6 +579,8 @@ public class BatteryMeterDrawableBase extends Drawable {
 
         mBatteryPaint.setStrokeWidth(strokeWidth);
         mBatteryPaint.setStyle(Paint.Style.STROKE);
+
+        mPowersavePaint.setStrokeWidth(strokeWidth);
 
         if (mMeterStyle == BATTERY_STYLE_DOTTED_CIRCLE) {
             mBatteryPaint.setPathEffect(mPathEffect);
