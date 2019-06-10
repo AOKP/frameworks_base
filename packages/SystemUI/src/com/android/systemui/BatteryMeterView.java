@@ -63,6 +63,10 @@ public class BatteryMeterView extends LinearLayout implements
     private final CurrentUserTracker mUserTracker;
     private TextView mBatteryPercentView;
 
+    private boolean mCharging;
+    private boolean mBatteryHidden;
+    private int mBatteryStyle = BATTERY_STYLE_PORTRAIT;
+
     private BatteryController mBatteryController;
 
     private int mTextColor;
@@ -204,6 +208,18 @@ public class BatteryMeterView extends LinearLayout implements
     @Override
     public boolean hasOverlappingRendering() {
         return false;
+
+    public void onTuningChanged(String key, String newValue) {
+        if (StatusBarIconController.ICON_BLACKLIST.equals(key)) {
+            ArraySet<String> icons = StatusBarIconController.getIconBlacklist(newValue);
+            mBatteryHidden = icons.contains(mSlotBattery);
+            Dependency.get(IconLogger.class).onIconVisibility(mSlotBattery, !mBatteryHidden);
+            setVisibility(mBatteryHidden ? View.GONE : View.VISIBLE);
+        } else if (STATUS_BAR_BATTERY_STYLE.equals(key) && newValue != null) {
+            mBatteryStyle = Integer.parseInt(newValue);
+            updateBatteryStyle();
+            updateShowPercent();
+        }
     }
 
     @Override
@@ -393,6 +409,7 @@ public class BatteryMeterView extends LinearLayout implements
         }
         updateShowPercent();
         updatePercentText();
+        setVisibility(mBatteryHidden ? View.GONE : View.VISIBLE);
     }
 
     public void updateSettings(boolean fromObserver) {
