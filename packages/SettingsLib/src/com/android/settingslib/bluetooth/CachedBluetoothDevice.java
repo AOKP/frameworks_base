@@ -964,7 +964,7 @@ public class CachedBluetoothDevice implements Comparable<CachedBluetoothDevice> 
                    (mDevice.getBluetoothClass().getDeviceClass()
                         == BluetoothClass.Device.AUDIO_VIDEO_HANDSFREE ||
                     mDevice.getBluetoothClass().getDeviceClass()
-                        == BluetoothClass.Device.AUDIO_VIDEO_WEARABLE_HEADSET) {
+                        == BluetoothClass.Device.AUDIO_VIDEO_WEARABLE_HEADSET)) {
                     EventLog.writeEvent(0x534e4554, "138529441", -1, "");
                 }
                 setPhonebookPermissionChoice(CachedBluetoothDevice.ACCESS_REJECTED);
