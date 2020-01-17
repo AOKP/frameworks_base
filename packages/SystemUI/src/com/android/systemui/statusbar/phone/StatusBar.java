@@ -1027,9 +1027,10 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
             mNotificationPanelDebugText.setVisibility(View.VISIBLE);
         }
 
-        boolean showNav = LineageSettings.System.getIntForUser(mContext.getContentResolver(),
-                LineageSettings.System.FORCE_SHOW_NAVBAR,
-                AOKPUtils.hasNavbarByDefault(mContext) ? 1 : 0, UserHandle.USER_CURRENT) != 0;
+        boolean showNav = AOKPUtils.hasNavbarByDefault(mContext) ||
+                LineageSettings.System.getIntForUser(mContext.getContentResolver(),
+                        LineageSettings.System.FORCE_SHOW_NAVBAR,
+                        0, UserHandle.USER_CURRENT) != 0;
         if (DEBUG)
             Log.v(TAG, "hasNavigationBar=" + showNav);
         if (showNav) {
@@ -6071,14 +6072,12 @@ public class StatusBar extends SystemUI implements DemoMode, TunerService.Tunabl
                 mShowMediaMetadata = newValue == null || Integer.parseInt(newValue) != 0;
                 break;
             case FORCE_SHOW_NAVBAR:
-                boolean mNavbarVisible =
-                    newValue == null ? AOKPUtils.hasNavbarByDefault(mContext) :
-                                Integer.parseInt(newValue) != 0;
-
-                if (mNavbarVisible && mNavigationBarView == null) {
-					createNavigationBar();
-                }else if (!mNavbarVisible && mNavigationBarView != null) {
-					removeNavigationBar(); 
+                boolean navbarVisible = AOKPUtils.hasNavbarByDefault(mContext) ||
+                        (newValue != null && Integer.parseInt(newValue) != 0);
+                if (navbarVisible && mNavigationBarView == null) {
+                    createNavigationBar();
+                } else if (!navbarVisible && mNavigationBarView != null) {
+                    removeNavigationBar();
                 }
                 break;
             case BERRY_GLOBAL_STYLE:

@@ -3049,10 +3049,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.System.OMNI_NAVIGATION_BAR_RECENTS, 0,
                     UserHandle.USER_CURRENT) == 1;
 
-            mNavbarVisible = LineageSettings.System.getIntForUser(resolver,
-                    LineageSettings.System.FORCE_SHOW_NAVBAR,
-                    AOKPUtils.hasNavbarByDefault(mContext) ? 1 : 0,
-                    UserHandle.USER_CURRENT) == 1;
+            mNavbarVisible = AOKPUtils.hasNavbarByDefault(mContext) ||
+                    LineageSettings.System.getIntForUser(resolver,
+                            LineageSettings.System.FORCE_SHOW_NAVBAR,
+                            0, UserHandle.USER_CURRENT) != 0;
+
             mUseGestureButton = Settings.System.getIntForUser(resolver,
                     Settings.System.USE_BOTTOM_GESTURE_NAVIGATION, 0,
                     UserHandle.USER_CURRENT) != 0;
