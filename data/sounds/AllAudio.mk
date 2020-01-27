@@ -111,9 +111,11 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/notifications/regulus.ogg:system/media/audio/notifications/regulus.ogg \
     $(LOCAL_PATH)/notifications/sirius.ogg:system/media/audio/notifications/sirius.ogg \
     $(LOCAL_PATH)/notifications/tweeters.ogg:system/media/audio/notifications/tweeters.ogg \
+    $(LOCAL_PATH)/notifications/vega.ogg:system/media/audio/notifications/vega.ogg \
     $(LOCAL_PATH)/ringtones/ogg/Andromeda.ogg:system/media/audio/ringtones/Andromeda.ogg \
     $(LOCAL_PATH)/ringtones/ogg/Aquila.ogg:system/media/audio/ringtones/Aquila.ogg \
     $(LOCAL_PATH)/ringtones/ogg/ArgoNavis.ogg:system/media/audio/ringtones/ArgoNavis.ogg \
+    $(LOCAL_PATH)/ringtones/ogg/Atria.ogg:system/media/audio/ringtones/Atria.ogg \
     $(LOCAL_PATH)/ringtones/BOOTES.ogg:system/media/audio/ringtones/BOOTES.ogg \
     $(LOCAL_PATH)/newwavelabs/Backroad.ogg:system/media/audio/ringtones/Backroad.ogg \
     $(LOCAL_PATH)/newwavelabs/BeatPlucker.ogg:system/media/audio/ringtones/BeatPlucker.ogg \
@@ -175,6 +177,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/ringtones/ogg/Pegasus.ogg:system/media/audio/ringtones/Pegasus.ogg \
     $(LOCAL_PATH)/ringtones/ogg/Perseus.ogg:system/media/audio/ringtones/Perseus.ogg \
     $(LOCAL_PATH)/newwavelabs/Playa.ogg:system/media/audio/ringtones/Playa.ogg \
+    $(LOCAL_PATH)/ringtones/ogg/Pyxis.ogg:system/media/audio/ringtones/Pyxis.ogg \
     $(LOCAL_PATH)/ringtones/ogg/Rasalas.ogg:system/media/audio/ringtones/Rasalas.ogg \
     $(LOCAL_PATH)/newwavelabs/Revelation.ogg:system/media/audio/ringtones/Revelation.ogg \
     $(LOCAL_PATH)/ringtones/ogg/Rigel.ogg:system/media/audio/ringtones/Rigel.ogg \
